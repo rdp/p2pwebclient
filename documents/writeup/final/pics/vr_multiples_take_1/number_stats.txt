@@ -1,0 +1,203 @@
+-----------
+Doing stats on runs runs just numbers ["multiples_take_1_peersPerSecond_at1_run1_of_4_major_1_of_8", "multiples_take_1_peersPerSecond_at1_run2_of_4_major_1_of_8", "multiples_take_1_peersPerSecond_at1_run3_of_4_major_1_of_8", "multiples_take_1_peersPerSecond_at1_run4_of_4_major_1_of_8"]
+download times %'iles'
+0.45 0.87 1.3 1.79 7.78
+download total times %'iles'
+0.52 1.04 1.65 2.27 16.82
+death methods
+dR 3.25 dT 2.5 http_straight 94.25
+server upload [received] distinct seconds [instantaneous server upload per second] %'iles'
+4156.0 69235.0 90209.0 117917.0 161986.0
+ instantaneous tenth of second throughput %'iles'
+16903.0 79904.0 100977.0 123109.0 180002.75
+upload bytes %'iles'
+0 0 0 0 159186
+dht gets
+0.0589999999999975 0.253999999999998 0.410000000000011 0.677 60.372
+dht puts
+0.0459999999999994 0.302 0.440999999999988 0.654 60.571
+dht removes
+0.100999999999999 0.333000000000002 0.491 0.710999999999999 60.51
+percentiles of percent received from just peers (not origin)
+0.0 0.0 0.0 0.0 0.997928534438115
+client upload sum percentiles:
+0 0 0 0 159186
+ :totalBytesReceivedFromPeersAcrossAllRuns 2482462.0, :totalBytesUploadedByServerAcrossAllRuns 39268287.0 :totalBytesServedFromPeersAcrossAllRuns 6828681.0
+-----------
+Doing stats on runs runs just numbers ["multiples_take_1_peersPerSecond_at2_run1_of_4_major_2_of_8", "multiples_take_1_peersPerSecond_at2_run2_of_4_major_2_of_8", "multiples_take_1_peersPerSecond_at2_run3_of_4_major_2_of_8", "multiples_take_1_peersPerSecond_at2_run4_of_4_major_2_of_8"]
+download times %'iles'
+0.54 1.21 1.86 2.57 11.04
+download total times %'iles'
+0.66 1.42 2.17 2.97 17.75
+death methods
+dR 14.75 dT 3.75 http_straight 181.5
+server upload [received] distinct seconds [instantaneous server upload per second] %'iles'
+26341.0 174528.0 191609.0 207162.0 255406.0
+ instantaneous tenth of second throughput %'iles'
+0.0 175930.0 202310.25 226333.0 378363.0
+upload bytes %'iles'
+0 0 0 37781 183775
+dht gets
+0.0460000000000065 0.228000000000002 0.401 0.785000000000004 61.044
+dht puts
+0.0450000000000017 0.311999999999999 0.487000000000009 0.780999999999999 63.632
+dht removes
+0.0699999999999932 0.342000000000006 0.535999999999987 0.811000000000007 60.362
+percentiles of percent received from just peers (not origin)
+0.0 0.0 0.0 0.0 0.956920033365567
+client upload sum percentiles:
+0 0 0 37781 183775
+ :totalBytesReceivedFromPeersAcrossAllRuns 8347212.0, :totalBytesUploadedByServerAcrossAllRuns 78337400.0 :totalBytesServedFromPeersAcrossAllRuns 22112263.0
+-----------
+Doing stats on runs runs just numbers ["multiples_take_1_peersPerSecond_at3_run1_of_4_major_3_of_8", "multiples_take_1_peersPerSecond_at3_run2_of_4_major_3_of_8", "multiples_take_1_peersPerSecond_at3_run3_of_4_major_3_of_8", "multiples_take_1_peersPerSecond_at3_run4_of_4_major_3_of_8"]
+download times %'iles'
+1.03 2.89 3.59 4.53 16.42
+download total times %'iles'
+1.82 3.23 4.03 5.2 20.17
+death methods
+dR 283.75 dT 9.75 http_straight 6.5
+server upload [received] distinct seconds [instantaneous server upload per second] %'iles'
+20075.75 151500.75 160961.75 170576.25 190649.0
+ instantaneous tenth of second throughput %'iles'
+4322.0 365565.25 418128.75 487427.5 684897.5
+upload bytes %'iles'
+0 118685 239614 401294 1083163
+dht gets
+0.0420000000000016 0.286999999999992 0.541999999999994 1.194 61.071
+dht puts
+0.102000000000004 0.383000000000001 0.623000000000001 1.019 60.96
+dht removes
+0.0899999999999963 0.390999999999998 0.663000000000011 1.121 60.63
+percentiles of percent received from just peers (not origin)
+0.0 0.467072039575389 0.596316214785298 0.705291337811477 0.965907414965753
+client upload sum percentiles:
+0 118685 239614 401294 1083163
+ :totalBytesReceivedFromPeersAcrossAllRuns 111231245.0, :totalBytesUploadedByServerAcrossAllRuns 66995296.0 :totalBytesServedFromPeersAcrossAllRuns 341325192.0
+-----------
+Doing stats on runs runs just numbers ["multiples_take_1_peersPerSecond_at6_run1_of_4_major_4_of_8", "multiples_take_1_peersPerSecond_at6_run2_of_4_major_4_of_8", "multiples_take_1_peersPerSecond_at6_run3_of_4_major_4_of_8", "multiples_take_1_peersPerSecond_at6_run4_of_4_major_4_of_8"]
+download times %'iles'
+1.65 3.8 6.95 9.93 40.63
+download total times %'iles'
+1.88 4.14 7.31 10.58 41.98
+death methods
+dR 372.5 dT 226.5 http_straight 1.0
+server upload [received] distinct seconds [instantaneous server upload per second] %'iles'
+11973.5 109738.5 131765.0 144991.25 167804.0
+ instantaneous tenth of second throughput %'iles'
+0.0 41541.25 785316.5 968751.25 1394548.25
+upload bytes %'iles'
+0 29150 224229 471915 3106955
+dht gets
+0.0579999999999927 0.525 2.809 53.669 62.65
+dht puts
+0.120000000000005 0.457999999999998 0.867000000000004 2.602 60.891
+dht removes
+0.112000000000009 0.517000000000003 0.97999999999999 3.64100000000001 60.738
+percentiles of percent received from just peers (not origin)
+0.0 0.768439903278003 0.841025256969538 0.912692189345588 0.998822010284756
+client upload sum percentiles:
+0 29150 224229 471915 3106955
+ :totalBytesReceivedFromPeersAcrossAllRuns 329628975.0, :totalBytesUploadedByServerAcrossAllRuns 60024532.0 :totalBytesServedFromPeersAcrossAllRuns 932910401.0
+-----------
+Doing stats on runs runs just numbers ["multiples_take_1_peersPerSecond_at10_run1_of_4_major_5_of_8", "multiples_take_1_peersPerSecond_at10_run2_of_4_major_5_of_8", "multiples_take_1_peersPerSecond_at10_run3_of_4_major_5_of_8", "multiples_take_1_peersPerSecond_at10_run4_of_4_major_5_of_8"]
+download times %'iles'
+1.48 6.4 17.97 135.66 276.82
+download total times %'iles'
+2.01 7.28 18.27 105.81 277.5
+death methods
+dR 30.5 dT 968.0 http_straight 1.75
+server upload [received] distinct seconds [instantaneous server upload per second] %'iles'
+819.0 39638.75 51825.75 61955.25 83716.0
+ instantaneous tenth of second throughput %'iles'
+0.0 24037.75 58136.25 282233.75 3402104.25
+upload bytes %'iles'
+0 0 7149 277936 7199416
+dht gets
+0.069 0.954999999999998 5.646 59.324 62.698
+dht puts
+0.138999999999999 0.685 1.42800000000001 4.00900000000001 60.717
+dht removes
+0.116 0.691000000000003 1.505 4.863 60.454
+percentiles of percent received from just peers (not origin)
+0.0 0.888561406221312 0.999556867638555 1.0 1.0
+client upload sum percentiles:
+0 0 7149 277936 7199416
+ :totalBytesReceivedFromPeersAcrossAllRuns 591223163.0, :totalBytesUploadedByServerAcrossAllRuns 83633591.0 :totalBytesServedFromPeersAcrossAllRuns 1690944877.0
+-----------
+Doing stats on runs runs just numbers ["multiples_take_1_peersPerSecond_at15_run1_of_4_major_6_of_8", "multiples_take_1_peersPerSecond_at15_run2_of_4_major_6_of_8", "multiples_take_1_peersPerSecond_at15_run3_of_4_major_6_of_8", "multiples_take_1_peersPerSecond_at15_run4_of_4_major_6_of_8"]
+download times %'iles'
+1.67 10.08 24.34 39.59 63.92
+download total times %'iles'
+9.7 37.11 63.61 89.96 116.84
+death methods
+dR 1.0 dT 1497.75 http_straight 1.25
+server upload [received] distinct seconds [instantaneous server upload per second] %'iles'
+0.0 4656.0 80549.5 169551.0 326254.0
+ instantaneous tenth of second throughput %'iles'
+0.0 2048.0 141304.25 2136716.0 13620490.5
+upload bytes %'iles'
+0 0 0 0 14841501
+dht gets
+0.109000000000002 2.601 6.903 14.828 62.986
+dht puts
+0.216000000000001 2.51 6.642 13.228 60.276
+dht removes
+0.132000000000005 1.812 5.187 9.18799999999999 60.582
+percentiles of percent received from just peers (not origin)
+0.222088063261448 0.996378289637331 0.997951661461411 0.999284040998487 1.0
+client upload sum percentiles:
+0 0 0 0 14841501
+ :totalBytesReceivedFromPeersAcrossAllRuns 1151178986.0, :totalBytesUploadedByServerAcrossAllRuns 42394006.0 :totalBytesServedFromPeersAcrossAllRuns 3628117154.0
+-----------
+Doing stats on runs runs just numbers ["multiples_take_1_peersPerSecond_at20_run1_of_4_major_7_of_8", "multiples_take_1_peersPerSecond_at20_run2_of_4_major_7_of_8", "multiples_take_1_peersPerSecond_at20_run3_of_4_major_7_of_8", "multiples_take_1_peersPerSecond_at20_run4_of_4_major_7_of_8"]
+download times %'iles'
+1.96 17.77 40.94 63.54 101.64
+download total times %'iles'
+14.17 43.86 70.5 97.53 128.68
+death methods
+dR 0.0 dT 1999.5 http_straight 0.75
+server upload [received] distinct seconds [instantaneous server upload per second] %'iles'
+0.0 113122.0 164526.75 214279.0 316738.0
+ instantaneous tenth of second throughput %'iles'
+0.0 684.0 51977.75 208677.75 38098271.25
+upload bytes %'iles'
+0 0 0 0 20358994
+dht gets
+0.125999999999999 3.58199999999999 8.047 16.743 61.299
+dht puts
+0.182000000000016 4.874 10.953 23.422 60.782
+dht removes
+0.141999999999996 3.64699999999999 8.732 17.674 61.021
+percentiles of percent received from just peers (not origin)
+0.0 0.996378289637331 0.997702382830993 0.998743341262252 1.0
+client upload sum percentiles:
+0 0 0 0 20358994
+ :totalBytesReceivedFromPeersAcrossAllRuns 1569234382.0, :totalBytesUploadedByServerAcrossAllRuns 69930094.0 :totalBytesServedFromPeersAcrossAllRuns 5162349841.0
+-----------
+Doing stats on runs runs just numbers ["multiples_take_1_peersPerSecond_at25_run1_of_4_major_8_of_8", "multiples_take_1_peersPerSecond_at25_run2_of_4_major_8_of_8", "multiples_take_1_peersPerSecond_at25_run3_of_4_major_8_of_8", "multiples_take_1_peersPerSecond_at25_run4_of_4_major_8_of_8"]
+download times %'iles'
+2.98 39.5 73.85 109.58 262.84
+download total times %'iles'
+36.95 103.75 146.25 193.07 272.22
+death methods
+dR 0.0 dT 2501.5 http_straight 0.75
+server upload [received] distinct seconds [instantaneous server upload per second] %'iles'
+5479.25 34201.75 70650.75 118308.75 238417.0
+ instantaneous tenth of second throughput %'iles'
+0.0 33313.0 146947.75 267730.0 20582246.25
+upload bytes %'iles'
+0 0 0 0 18445409
+dht gets
+0.177 5.48999999999998 12.56 30.928 63.624
+dht puts
+0.206999999999994 4.958 12.445 27.431 60.959
+dht removes
+0.163999999999987 5.19799999999998 12.779 25.541 60.729
+percentiles of percent received from just peers (not origin)
+0.0 0.997219527472444 1.0 1.0 1.0
+client upload sum percentiles:
+0 0 0 0 18445409
+ :totalBytesReceivedFromPeersAcrossAllRuns 1674485197.0, :totalBytesUploadedByServerAcrossAllRuns 134413497.0 :totalBytesServedFromPeersAcrossAllRuns 5154874300.0
+@totalBytesReceivedFromPeersAcrossAllRuns: 5437811622.0
+     @totalBytesUploadedByServerAcrossAllRuns = 574996703.0
+     @totalBytesServedFromPeersAcrossAllRuns = 16939462709.0

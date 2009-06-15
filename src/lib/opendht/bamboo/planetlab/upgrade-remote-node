@@ -1,0 +1,35 @@
+#!/bin/bash
+# 
+# $Id: upgrade-remote-node,v 1.4 2003/11/22 01:22:37 srhea Exp $
+#
+# Adds the distribution host's key to the remote host's .ssh/known_hosts file,
+# copies over the setup-node script, and runs it.
+
+DIST_USER=srhea
+DIST_HOST=gibbon.cs.berkeley.edu
+DIST_SRC_DIR=/home/srhea/planetlab-deployment
+
+if [[ $# != 1 ]]
+then 
+    echo "usage: upgrade-remote-node <remote host>"
+    exit 1
+fi
+
+echo "Upgrading code."
+
+rsync -e ssh -avL \
+    --exclude=bamboo/javadoc \
+    --exclude=bamboo/jar/bamboo.jar \
+    $DIST_SRC_DIR/bamboo ucb8@$1:/home/ucb8/srhea \
+    || { echo "Couldn't upgrade code."; exit 1; }
+
+echo "Removing old logs."
+
+ssh ucb8@$1 "rm -f srhea/log-*"
+
+echo "Killing existing Bamboo processes."
+
+ssh ucb8@$1 "killall -9 java"
+
+exit 0
+

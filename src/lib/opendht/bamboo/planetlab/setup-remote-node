@@ -1,0 +1,37 @@
+#!/bin/bash
+# 
+# $Id: setup-remote-node,v 1.6 2003/11/30 19:23:40 srhea Exp $
+#
+# Copies over the JVM and the bamboo/planetlab directory of the Bamboo
+# distribution, then calls bamboo/planetlab/setup-node on the remote node.
+
+JVM=/home/srhea/public_html/bamboo/j2sdk1.4.1_03.tgz
+DIST_SRC_DIR=/home/srhea
+
+if [[ $# != 1 ]]
+then 
+    echo "usage: setup-remote-node <remote host>"
+    exit 1
+fi
+
+echo "Setting up srhea directory."
+ssh ucb8@$1 "if ! test -d srhea/bamboo; then mkdir -p srhea/bamboo; fi" || \
+{ echo "Could not make srhea/bamboo directory."; exit 1; }
+ssh ucb8@$1 "if ! test -f srhea/hostname; then echo $1 > srhea/hostname; fi" \
+|| { echo "Could not make hostname file."; exit 1; }
+
+echo "Setting up JVM."
+if ! ssh ucb8@$1 "test -d srhea/j2sdk1.4.1_03"
+then
+    scp $JVM ucb8@$1:srhea || { echo "Could not copy over JVM."; exit 1; }
+    ssh ucb8@$1 "cd srhea && tar zxf j2sdk1.4.1_03.tgz && rm -f j2sdk1.4.1_03.tgz" || { echo "Could not untar JVM."; exit 1; }
+fi
+
+echo "Setting up Bamboo distribution."
+rsync -e ssh -avL $DIST_SRC_DIR/bamboo/planetlab ucb8@$1:/home/ucb8/srhea/bamboo || { echo "Could rsync Bamboo distribution."; exit 1; }
+
+ssh -A ucb8@$1 "srhea/bamboo/planetlab/setup-node" || \
+{ echo "Couldn't run setup-node."; exit 1; }
+
+exit 0
+

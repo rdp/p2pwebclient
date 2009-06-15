@@ -1,0 +1,39 @@
+home:
+
+60s 60 clients, 1MB file, localhost, look for asserts (load test up and up)
+todo's
+
+school:
+beat it up and make it go fast!
+distribute to ilab, do some tests [mini-fix anything, cept corruption]
+
+Distribute to one planet-lab, get it to work with localhost :)
+
+unit tests there
+then one with itself [$DEBUG]
+then two, get it to work with non localhost
+then 10. 
+then do some file size tests. [debugging phase]
+ruby-proc on the timeself
+
+PL
+"first run -> fix it so it works 'normally well' [run it against C/S, bug fixing]
+then optimize (two optimizations promised -- few on the original host, kill slow peer)
+then examine it intricately
+then compare it to BT (the 'basic' experiment)..."
+
+
+free time (school/home):
+better listener...flexible peer
+todo's
+'bytes bad' bug !!!
+
+Create ability to collect logs on the fly [An example of graphs I currently generate is attached--generation of graphs works]
+(at school, or download rsync...)
+setup apache2 
+poisson
+lodo make sure p2pserver only serves the right file name!
+
+
+graph -1, wider
+lodo new graph numbers

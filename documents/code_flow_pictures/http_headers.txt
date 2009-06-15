@@ -1,0 +1,52 @@
+14.5 Accept-Ranges
+
+      The Accept-Ranges response-header field allows the server to
+      indicate its acceptance of range requests for a resource:
+
+          Accept-Ranges     = "Accept-Ranges" ":" acceptable-ranges
+          acceptable-ranges = 1#range-unit | "none"
+
+      Origin servers that accept byte-range requests MAY send
+
+          Accept-Ranges: bytes
+
+      but are not required to do so. Clients MAY generate byte-range
+      requests without having received this header for the resource
+      involved. Range units are defined in section 3.12.
+
+      Servers that do not accept any kind of range request for a
+      resource MAY send
+
+          Accept-Ranges: none
+
+      to advise the client not to attempt a range request.
+
+
+3.12 Range Units
+
+HTTP/1.1 allows a client to request that only part (a range of) the response entity be included within the response. HTTP/1.1 uses range units in the Range (section 14.35) and Content-Range (section 14.16) header fields. An entity can be broken down into subranges according to various structural units.
+
+      range-unit       = bytes-unit | other-range-unit
+      bytes-unit       = "bytes"
+      other-range-unit = token
+
+The only range unit defined by HTTP/1.1 is "bytes". HTTP/1.1 implementations MAY ignore ranges specified using other units.
+
+HTTP/1.1 has been designed to allow implementations of applications that do not depend on knowledge of ranges. 
+
+
+GET /sounds/WAV/Rafiki.zip HTTP/1.1
+Host: www.lionking.org
+Range: bytes=0-2
+User-Agent: GetRight/3.02
+Accept: *.*, */*
+Range-If: Fri, 25 Apr 1997 20:28:04 GMT # who cares about this bad boy...seems to be a date checker, though
+
+HTTP/1.1 206 Partial Content
+Date: Sun, 23 Nov 1997 21:20:17 GMT
+Server: Apache/1.3b3 mod_perl/1.06
+Last-Modified: Fri, 25 Apr 1997 20:28:04 GMT
+ETag: "4b46f-1a80fb-336113d4"
+Content-Length: 1676428
+Content-Range: bytes 60527-1736954/1736955 (has length of this...1736955)
+Content-Type: application/zip

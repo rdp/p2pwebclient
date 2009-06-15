@@ -1,0 +1,68 @@
+\section{Future Work}
+Several possibilities are also left to future work.
+
+An unstudied option would be to lookup file blocks and peers with those blocks pre-emptively (during the idle time of browsing), similar to an Internet download manager which pre-fetches pages.  Ours would pre-fetch peer lists.  %To prevent peers from needlessly downloading the same blocks from the server, each could leave a message in the DHT saying 'am currently downloading block x', so that other peers will note that and download other, different blocks from the central server.  
+Our system also does not do any special ordering of blocks, for example rarest blocks first.  % todo thesis cite Bullet Prime, a lot of others in gmail
+We do not look into more intelligent ways to create block sections in files, such as using Rabin encoding to find good block divisions \cite{Rabin} \cite{shark}.  We also do not examine block updates between slightly changed files, as zsync does \cite{zsync}.
+We also do not attempt 'backward blocking' or having the original connection to the origin server continue, then requesting the same block from a peer and having it give the bytes in reverse order, such that the two meet in the middle regardless of which one is faster.
+
+Another possibility for helping 'fast' peers give more than 'slow' peers would be to have the DHT contain a counter, per peer, of the number of peers that are currently accessing them (a load counter per peer).  Those peers that are very fast would almost always have a low count, so they would be more frequently contacted, which would be the appropriate action.  This is left to future work.
+
+Another optimization would be to augment this system with peer gossip; i.e. if you download a block from a peer, you also ask that peer if it has other blocks you may be interested in, or even other files from the same server, to save from having to access the DHT as often.  One could use Bloom Filters for more efficient gossip (or perhaps Bloom filters which are shared to a certain degree), as in Bullet \cite{bullet}.
+
+We are not using any Forward Error Correction coding (FEC), which would allow for the avoidance of rare blocks in the system by only requiring peers to download a percentage of all blocks relating to a file \cite{avalanche}.  We also do no encryption of data, nor obfuscation of peers.
+
+We are not looking at the possibility of dynamic peer adding, i.e. ramping up to the number of peers to an appropriate max \cite{slurpie, bullet_prime}.
+
+This system does not deal explicitly with the problem of downloading dynamic content.  It is assumed that files will be static, to simplify the tests.  Unfortunately, as shown in Squirrel \cite{squirrel}, approximatly 20\% of Internet traffic is static.  Some attempts have been made to leverage caching despite dynamic content, for example creating and caching diffs of files \cite{google_cache}.  In our system we do, however, allow for some caching among different versions of a file; if a version of a file happens to share the same block as another, then the blocks will already be cached (so a client could request blocks of previous files to get the new file).  Another useful possibility would be to store on the DHT whether ceratin files are cacheable or not.  One possibility would be to, if a server is down or it is impossible to get the 'head' of a file, to get for its cachability, to then check the DHT.  The DHT could then have a flag if it is cachable or not (in reality, if it exists in the system then that should mean it was cachable).  In that way it would check the original server then the backup servers. % final -> or even if the changes resulted in the same files (guesses about true cacheability could be stored there).
+Dynamic content should almost always come straight from the source, so requesting any dynamic pages through these systems results in unreliable results (for example requesting a file and seeing the words 'welcome Coral DNS' when it should have your name).  This problem is more easily overcome in our system than in Coral, in that we can query the web server first, find out if the content is dynamic or not, and thus preserve its correct freshness.  Also it may be possible to come up with a 'measure of  dynamism' for each web page, or a measure of how often it changes, to help double check freshness and provide smarter browsing.
+
+A smarter transition method might employ a comparison of, per block, whether the origin server of one of the peers would be faster (ideally it should just pick, among all available peers and the server, the fastest).  Or it could, as mentioned above, retain the connection with the server, as well (though that might have side effects).
+
+It might be possible to use a congestion controlled UDP flow (like DCCP) to provide a slightly faster transport than TCP.  This would be acceptable since, in the case of large files, we don't need to get the whole packet in order, necessarily, just get all the blocks eventually, so UDP may be faster and appropriate.  Another interesting protocol would be to only use UDP so that one could use entry such as STUN (NAT punching), also employed by Dijjer and a few BitTorrent clients. %% http://digg.com/tech_news/Dijjer,_better_than_BitTorrent_ says that some BT clients can traverse NAT's.
+
+% final maybe so it does slightly handle dynamic content.  If a file is added to (only) users can still contact previous downloaders of the same file and download unchanged portions (see also \cite{Rabin} and \cite{zsync}).  An interesting note is that if files have the same content but different filenames, they will also be combined as if they were the same file, thanks to the MD5 hashes.  Google web cache also uses file diffs.}.
+
+This system does not deal with incentives, or why a peer would choose to act as a cooperative peer to serve content which it has already downloaded.  It currently allows for free-loaders or ``leeches" to the system.  One possibility is to only use unused upload bandwidth to benefit others, as this would guarantee little or no negative effects on users.  Possibilities might include histories and kernel level meters of used bandwidth (see knetload program).  BT uses incentives to overcome this question.  The rational of having altruistic seeds is viewed as truly altruistic in BitTorrent.  In a system such as this some other reputation system might be useful which rewards peers for being altruistic.  To look for peers interested in a TFT way using a DHT there could be an NXN key lookup system, i.e.  'have this block, want this one,' perhaps.  Another incentive might be system wide versus file-wide, or to also combine all files associated with a web page into one file (see WebTorrent \cite{webtorrent}).
+
+CFS stores block contents on the DHT itself, which we rejected as being too intrusive, but may be a viable option \cite{cfs}.
+
+We are also not using the BitTorrent protocol, per se, so our protocol is not yet backward compatible with BitTorrent clients wishing to download an arbitrary web object which has been cached by our system.  One potential idea would be to search for large file's .torrent files (filename.torrent), to check for possibly fastest downloads.
+
+It would also be interesting to see if a php page could be created which would use this protocol to fetch pages, thus acting as a network proxy with swarming, or an alternative way to use this sytem.  If this were created it might make it more popular (i.e. install this php page, use it).
+
+%Another helpful addition would be for peers to have a set percent of the file that they wish to `for sure download from the original source' -- i.e. a kind of double check on these other blocks that were received from peers.  This is also left for further work.
+
+One possibility for lingering would be to have clients 'take themselves off' lists when they go off-line, and then, if they see that they are the only client with a certain block, choose to continue lingering, so that that block never disappears from the system.
+
+Another improvement would be a better algorithm for deciding when to switch to the swarming download.  One might take into consideration a history of download speeds, for instance.  Or combine peer-to-peer and traditional downloads, or test them both, etc.  It may be possible to keep a `running average' of both download from the web and download from p2p totals, and then if the peer begins to download a file at a rate slower than the estimated p2p download, switch-over.  Or do both simultaneously, even.
+
+To simulate a flash crowd, we could increase client rate requesting a file suddenly, then drop it back down again, and see what the reaction of the system is. Because this situation is similar to the basic experiments (that of stressing a server), these tests are left for later work.
+
+Another would be to attempt to locate and download blocks from peers that are close in network proximity.  We could use Internet land-marks to determine locality \cite{landmarks}, or broadcast UDP as in the LURP protocol \cite{lurp}.  Peers would locate, from a list of well-known locations in the Internet, the closest.  See also ChunkCast \cite{chunkcast}, which sees a 32\% gain by doing this.  Use of the Leopard DHT search might be an option for this \cite{leopard}.  It seems that the smartest block strategy would be to connect to as many 'close' peers as possible (until saturation), and, if there are not enough close 'interesting' peers from whom to connect, then to connect with other 'farther' peers (those with blocks we need, especially to benefit the local scene--i.e. blocks not found anywhere locally) and to connect with those 'farther' peers who have the 'most' free upload bandwidth (the dynamic algorithm lifted from slurpie and bullet prime, the local peers from chunkcast).  They should also prefer blocks 'rarer' in the system and locally (rarest first).  This answer would then incorporate good block selection, good use of peer bandwidth, and locality.  Another locality optimizer may be to check for the local AS and rendezvous peers from that (as in the game system), or use Vivaldi.  To do this one might discover an algorithm such as running a trace path to a central source and discovering the first subdomain in routers, or if it is "very close" the second.
+
+It may be possible to get the server upload rate to go down to zero, with enough lingering time of other peers.  This could be worked on.
+
+It might be nice to make a firefox plugin that did what this thesis proposes.
+
+It would be very interesting to see if a shared universal directory structure, similar to that of the AllPeers system \cite{allpeers}, would be possible leveraging this system.  It would also be interesting to see if it were possible to use it as an alternate DNS lookup (kind of like internet that uses this instead of DNS, and uses it for publishing, so works as an alternative to typical Internet look-up, like prefixing a url with shared://abx yields a call straight to this system).  Also interesting would be to establish some online proxies to 'boost' the system by continuously seeding and downloading requested data.
+
+Another possibility would be to have (aware of the system) servers, when they publish content, make a note in the DHT that they have done so--i.e. basically only server content from the p2p system, but be able to ensure themselves that it is accurate.  Then the p2p system would become a "permanent" overlay to the Internet.
+
+One possibility would be to have a distributedly updated list of the good versus bad peers for each block.
+
+Another possibility (already thought of for BitTorrent) would be a php page that could serve up certain pieces of a file, and thus give more definite control and ease of use and contribution from arbitrary sites. 
+Files of 1KB or less could also be stored directly on the DHT to decrease lookup latency.
+
+It would be interesting to see if a system such as this could be also combined with those existing, such as Coral and CoDeen, such that it returns the best of 3 or 4 worlds--direct download, this one, and simultaneous download Coral and CoDeen.
+
+One could also compare our solution with those existing to understand the limitations of the differing systems and gain insight across the various platforms.  These might include Dijjer, CoDeen, and Coral, etc.  It may also be an interesting study to create a system such as Coral that automatically downloads and caches content (kind of an "incentivator" to this system--some nodes designated solely as caching agents).  This would create a Coral/CoDeen competitor and could be effective.  It might be possible by logging requested web pages and having them downloaded by proximal coordinate nodes.  The extreme use would be to provide a service which allowed "normal" web pages to also download exclusively from this pool (a download CDN service), as well.
+
+It may be possible to (almost) create a second type of mini-web, as well, with content arbitrarily published under names only accessible through this system (via cached copies).  
+
+There may also be a security concern with files being placed by people who are not the original owners.
+
+The use of Ruby may also slightly prejudice speed.
+
+These will be left to future work.
+

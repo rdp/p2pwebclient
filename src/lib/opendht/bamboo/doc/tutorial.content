@@ -1,0 +1,18 @@
+<!-- $Id: tutorial.content,v 1.4 2005/07/01 17:45:46 srhea Exp $ -->
+
+I've started writing a 
+<a href="async-tutorial/async-tutorial.pdf">tutorial</a> on programming Bamboo
+and ASyncCore.  It's pretty rough, but I want to post it anyway, in case it's
+useful to anyone.  All the source code for this tutorial can be found <a
+href="async-tutorial">here</a>.
+
+<p> Also, Marcel Dischinger has graciously written a much-needed <a
+href="md-tutorial/md-tutorial.pdf">tutorial</a> on using Bamboo.  This
+tutorial is pretty old now, but it might still be useful.  The source code for
+this tutorial can be found <a href="md-tutorial">here</a>.
+
+<p>Marcel has also written a 
+<a href="http://www.cl.cam.ac.uk/Research/SRG/netos/futuregrid/dischinger-report.pdf">report</a>
+about his experiences building a multicast protocol on top of Bamboo.  It may
+also be useful for tutorial purposes.
+

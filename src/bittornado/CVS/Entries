@@ -1,0 +1,33 @@
+D/BitTornado////
+D/docs////
+D/icons////
+D/multitracker////
+D/targets////
+D/thosts////
+D/test////
+/.cvsignore/1.1/Sat Dec 23 20:20:48 2006//
+/LICENSE.txt/1.1/Sat Dec 23 20:20:48 2006//
+/README.txt/1.1/Sat Dec 23 20:20:48 2006//
+/bittorrent.nsi/1.32/Sat Dec 23 20:20:48 2006//
+/bt-t-make.py/1.6/Sat Dec 23 20:20:50 2006//
+/bt_MakeCreateIcons.py/1.5/Sat Dec 23 20:20:50 2006//
+/btcompletedir.py/1.7/Sat Dec 23 20:20:50 2006//
+/btcompletedirgui.py/1.6/Sat Dec 23 20:20:50 2006//
+/btcopyannounce.py/1.2/Sat Dec 23 20:20:50 2006//
+/btdownloadcurses.py/1.40/Sat Dec 23 20:20:51 2006//
+/btdownloadgui.py/1.90/Sat Dec 23 20:20:54 2006//
+/btdownloadheadless.py/1.26/Sat Dec 23 20:20:54 2006//
+/btlaunchmany.py/1.25/Sat Dec 23 20:20:54 2006//
+/btlaunchmanycurses.py/1.33/Sat Dec 23 20:20:54 2006//
+/btmakemetafile.py/1.5/Sat Dec 23 20:20:54 2006//
+/btmaketorrentgui.py/1.7/Sat Dec 23 20:20:54 2006//
+/btreannounce.py/1.2/Sat Dec 23 20:20:55 2006//
+/btrename.py/1.2/Sat Dec 23 20:20:55 2006//
+/btsethttpseeds.py/1.2/Sat Dec 23 20:20:55 2006//
+/btshowmetainfo.py/1.2/Sat Dec 23 20:20:55 2006//
+/bttrack.py/1.4/Sat Dec 23 20:20:55 2006//
+/completedir.nsi/1.1/Sat Dec 23 20:20:55 2006//
+/ipranges.portugal.txt/1.1/Sat Dec 23 20:20:55 2006//
+/setup.py/1.7/Sat Dec 23 20:20:55 2006//
+/wincompletedirsetup.py/1.1/Sat Dec 23 20:20:55 2006//
+/winsetup.py/1.2/Sat Dec 23 20:20:55 2006//

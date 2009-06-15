@@ -1,0 +1,11 @@
+Roger's Thesis project. p2p web client. This is a project that allows you to instantly download any internet file and share it among your peers--kind of like an instant bittorrent for any arbitrary file! 
+
+How to get it to work: 
+gem install eventmachine 
+then ./long_running_proxy.rb [doesn't really work yet, sorry--still in the research/development phase, not release/production phase]
+
+now request files from http://localhost:8000/host_name/file_name.whatever and it will instantly share with those those who have already downloaded it!
+
+Please email me if it doesn't work. Note: this is in alpha and, though it does work, is subject to optimizations in the near future so you may want to do svn up often.
+
+Competitors: google web accelerator, dijjer. Related: bittorrent, getright.

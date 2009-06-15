@@ -1,0 +1,35 @@
+actually really todo (in order of priority):
+
+write a proxy that actually works :P
+
+re-run the "one" that required it. dr
+
+make a final that looks more appropro
+
+there was a future_work doc in the proposal...useful?
+
+---------------------------later todo (unordered):
+an opendht why do you stink test
+
+do a test against apache with 4 max. (large file)
+
+%% ltodo: compare ilab3/4 dw with opendht few, dw with opendht many (i.e. an opendht test)
+
+%% todo add a picture showing 'this was basically useless, anyway!  count(dt) versus count(dr)'
+%% ltodo: add a "percent T, percent R, percent normal" graph, per multiples run.
+
+%% TODO uh...are we tracing the right line in our graphs?
+%% todo better colors! what the heck? (5 of them!)
+%% lodo logarithmic scale option graph (work off the new code base :P)
+%%
+%% TODO profile a single single run in depth.
+
+
+%% TODO server speed test...check the proposal first though :)
+%% TODO make sure I use all my results' pics (one from each dir)
+
+%% ltodo: why does my large test have 20s DHT's? What in the world?
+%% ltodo fix large file transfer :) (backoff the origin, I'd wager)--
+%% LODO appendix with buckets and buckets of pics
+
+

@@ -1,0 +1,3 @@
+0-50/10 * * * * /home/ucb8/srhea/bamboo/planetlab/check-running 5850
+3-53/10 * * * * /home/ucb8/srhea/bamboo/planetlab/check-running 5860
+6-56/10 * * * * /home/ucb8/srhea/bamboo/planetlab/check-running 5870

@@ -1,0 +1,50 @@
+run server on alice.cs.princeton.edu
+distinct files [avoid some slowdown]
+real apache
+logs faster
+
+
+
+
+lodo's:
+
+
+wbo distro tar NO
+do single verified 30, then 60
+lodo ilab doing single threaded recreateBug
+
+lodo compare CS multi and single (just for fun)
+
+
+lodo compare 'fastest' with CS of itself both
+todo graphs have one broke
+
+
+Old runs:
+
+here2800 is 30 single here p2p [mostly server given] 680 whoot whoot
+2747 is 30 multi here p2p 180 [30,30e]
+
+
+there:
+9004 is multi thread [400-800s] 115 started, 101e
+383 was single [332 s] [85s,67e]
+5391 multi threaded 60 on ilab1 [some opendht gets forever...] [57s,57e, CS action only it seems ignored localhost] 330 s
+4395 "57 single thread" (fake 60) [57, 57e] (yes p2p) LOOK AT p2p 120s!!!
+3596 single threaded 60 straight LOOK AT was yes p2p 120, some even faster 
+5040 multi threaded 60 straight LOOK AT all CS! WHY? 310  equivalent of CS
+8138 may be 60 'real' there 40s!!! that creams single threaded, which creams CS.  We ROCK CS :)
+
+
+here:
+2800 I think was 30 single threaded p2p here, with average download 680 (!)
+multi_verified_1 (30) yielded 315 here [ugh]
+  again yielded 330 30_verified_2 [ugh] wow
+non verified 30 => 130
+
+
+note: do NOT use normal Ruby threads and sockets for high powered multi threaded uni-process apps.  Do something else.  It gets creamed :)
+appears to not corrupt, esp. with multi thread
+
+
+it freezes in win32 -revision 193 even if run single thread at school after Errno::EINVAL on a peer server socket, once. also throws 'invalid arguments' which are...AFAICT impossible.

@@ -1,0 +1,32 @@
+<!-- $Id: pubs.content,v 1.8 2005/12/15 21:57:59 srhea Exp $ -->
+
+Sean Rhea, Byung-Gon Chun, John Kubiatowicz, and Scott Shenker.  <a
+href="http://srhea.net/papers/opendht-worlds05.pdf">Fixing the Embarrassing
+Slowness of OpenDHT on PlanetLab</a>.  <i>Proceedings of USENIX WORLDS
+2005</i>, December 2005.  
+
+<p>
+Michael J. Freedman, Karthik Lakshminarayanan, Sean Rhea, and Ion Stoica.  <a
+href="http://srhea.net/papers/ntr-worlds05.pdf">Non-Transitive Connectivity
+and DHTs</a>.  <i>Proceedings of USENIX WORLDS 2005</i>, December 2005.
+
+<p>
+Sean Rhea, Brighten Godfrey, Brad Karp, John Kubiatowicz, Sylvia Ratnasamy,
+Scott Shenker, Ion Stoica, and Harlan Yu.  <a
+href="http://srhea.net/papers/f230-rhea.pdf">OpenDHT: A Public DHT Service and
+Its Uses</a>.  <i>Proceedings of ACM SIGCOMM 2005</i>, August 2005.
+
+<p>
+Brad Karp, Sylvia Ratnasamy, Sean Rhea, and Scott Shenker.  
+<a href="http://srhea.net/papers/karp-openhash.pdf">Spurring Adoption of DHTs
+with OpenHash, a Public DHT Service</a>.  <i>Proceedings of the 3nd
+International Workshop on Peer-to-Peer Systems (IPTPS '04)</i>, February 2004.
+
+<p>
+Sean Rhea, Dennis Geels, Timothy Roscoe, and John Kubiatowicz.  
+<a href="http://srhea.net/papers/bamboo-usenix.pdf">Handling Churn in a DHT</a>.
+<em>Proceedings of the USENIX Annual Technical Conference</em>, June 2004.
+
+<p><em>An earlier version of the USENIX paper is available as a 
+<a href="http://srhea.net/papers/csd-03-1299.pdf">technical report</a>.
+

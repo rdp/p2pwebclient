@@ -1,0 +1,1026 @@
+63.829[66]: starting up logger (version 51.03_yeslastblockfix)
+63.829[66]: DEBUG:doing reversion as true with dR 229500.0, dW 3.0 http://128.112.139.80:7777/1000K.file3, 1, 229500.0, 3.0, 100000, 3, ../logs/216.165.109.82/51.03_cs_120_dClient_1_dTotal_120_dw_3.0_blockSize_100000_linger_3_dr_229500.0_dt_1_serverBpS_255000/peer_number_66_start_63.829.log.txt, 63.829, 66
+63.830[66]: p2p server 46478:listening 216.165.109.82 port 46478
+63.831[66]: Start HTTP normal innocent get http://128.112.139.80:7777/1000K.file3 dT 1.000000 dR 229500.000000 dW 3.000000 blockSize 100000
+63.831[66]: DEBUG:using CS intro...(normal)
+63.831[66]: DEBUG: asked block keeper if file was done without starting up the blocks (knowing size of file...) returning without checking any for now
+63.831[66]: DEBUG:http opening to 128.112.139.80:7777 byte 0
+63.854[66]: DEBUG:http just created socket, nextsending req for file
+63.855[66]: DEBUG:post write request for file
+63.855[66]: DEBUG: asked block keeper if file was done without starting up the blocks (knowing size of file...) returning without checking any for now
+64.058[66]: DEBUG:gauntlet falling still waiting for dT (0.227679014205933 < 1)
+64.058[66]: DEBUG: asked block keeper if file was done without starting up the blocks (knowing size of file...) returning without checking any for now
+64.271[66]: DEBUG:gauntlet falling still waiting for dT (0.440562009811401 < 1)
+64.271[66]: DEBUG: asked block keeper if file was done without starting up the blocks (knowing size of file...) returning without checking any for now
+64.482[66]: DEBUG:gauntlet falling still waiting for dT (0.651669025421143 < 1)
+64.482[66]: DEBUG: asked block keeper if file was done without starting up the blocks (knowing size of file...) returning without checking any for now
+64.683[66]: DEBUG:gauntlet falling still waiting for dT (0.852406024932861 < 1)
+64.683[66]: DEBUG: asked block keeper if file was done without starting up the blocks (knowing size of file...) returning without checking any for now
+64.887[66]: failed dT gauntlet 1.0564239025116 > 1 -- it was too late!
+64.887[66]: failed dRfailed dT gauntlet 1.0564239025116 > 1 -- it was too late!
+64.909[66]: DEBUG:p2p client starting p2p client to complete download of http://128.112.139.80:7777/1000K.file3
+64.909[66]: DEBUG:p2p client using 3 peer download threads
+64.909[66]: DEBUG:p2p client using origin revert optimization
+64.909[66]: p2p client thread 0 block 4: start p2p with origin backup [yes origin fix]
+64.910[66]: DEBUG:p2p client using origin revert optimization
+64.910[66]: p2p client thread 1 block 1: start p2p with origin backup [yes origin fix]
+64.910[66]: DEBUG:p2p client thread 0 block 4: p2p start get/use cycle
+64.910[66]: p2p client thread 0 block 4: getting peer list 
+64.910[66]: pre opendht request [http://128.112.139.80:7777/1000K.file3_4] block 4
+64.910[66]: DEBUG:getting http://128.112.139.80:7777/1000K.file3_4
+64.911[66]: DEBUG:p2p client thread 0 block 4: beginning origin looping peer
+64.911[66]: DEBUG:p2p client thread 0 block 4: origin looping peer begin
+64.911[66]: p2p client thread 0 block 4: starting (re?) 'safety' to origin, just for kicks 
+64.911[66]: p2p client thread 0 block 4: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 0 
+64.911[66]: DEBUG:p2p client thread 0 block 4: beginning TCP open to 128.112.139.80:7777
+64.912[66]: DEBUG:p2p client using origin revert optimization
+64.912[66]: p2p client thread 2 block 9: start p2p with origin backup [yes origin fix]
+64.912[66]: DEBUG:p2p client thread 1 block 1: p2p start get/use cycle
+64.912[66]: p2p client thread 1 block 1: getting peer list 
+64.912[66]: pre opendht request [http://128.112.139.80:7777/1000K.file3_1] block 1
+64.912[66]: DEBUG:getting http://128.112.139.80:7777/1000K.file3_1
+64.913[66]: DEBUG:p2p client thread 1 block 1: beginning origin looping peer
+64.913[66]: DEBUG:p2p client thread 1 block 1: origin looping peer begin
+64.913[66]: p2p client thread 1 block 1: starting (re?) 'safety' to origin, just for kicks 
+64.914[66]: p2p client thread 1 block 1: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 0 
+64.914[66]: DEBUG:p2p client thread 1 block 1: beginning TCP open to 128.112.139.80:7777
+64.997[66]: DEBUG:p2p client thread 2 block 9: p2p start get/use cycle
+64.997[66]: p2p client thread 2 block 9: getting peer list 
+64.997[66]: pre opendht request [http://128.112.139.80:7777/1000K.file3_9] block 9
+64.997[66]: DEBUG:getting http://128.112.139.80:7777/1000K.file3_9
+65.003[66]: DEBUG:p2p client thread 2 block 9: beginning origin looping peer
+65.003[66]: DEBUG:p2p client thread 2 block 9: origin looping peer begin
+65.003[66]: p2p client thread 2 block 9: starting (re?) 'safety' to origin, just for kicks 
+65.003[66]: p2p client thread 2 block 9: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 0 
+65.003[66]: DEBUG:p2p client thread 2 block 9: beginning TCP open to 128.112.139.80:7777
+65.070[66]: DEBUG:p2p client thread 0 block 4: done TCP open to 128.112.139.80:7777
+65.074[66]: DEBUG:p2p client thread 1 block 1: done TCP open to 128.112.139.80:7777
+65.176[66]: DEBUG:p2p client thread 0 block 4: sending request to 128.112.139.80:7777
+65.177[66]: DEBUG:p2p client thread 2 block 9: done TCP open to 128.112.139.80:7777
+65.178[66]: DEBUG:p2p client thread 1 block 1: sending request to 128.112.139.80:7777
+65.180[66]: DEBUG:p2p client thread 2 block 9: sending request to 128.112.139.80:7777
+65.183[66]: DEBUG:p2p client thread 0 block 4: sent request
+65.185[66]: DEBUG:p2p client thread 1 block 1: sent request
+65.261[66]: DEBUG:p2p client thread 2 block 9: sent request
+65.771[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dfef00>]!
+67.130[66]: DEBUG:ping 3
+67.750[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dfd1f0>]!
+67.995[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dea7bc>]!
+68.144[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7df92bc>]!
+68.254[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7df0f90>]!
+68.485[66]: DEBUG:p2p client thread 2 block 9: got (at least) one header block (one second later for data if from origin)
+68.485[66]: p2p client thread 2 block 9: P2P HTTP received 8000 B @ block 9:([my]0/100000.0) from 128.112.139.80:7777 thread 2 total for file  0/1000000
+68.612[66]: DEBUG:p2p client thread 1 block 1: got (at least) one header block (one second later for data if from origin)
+68.612[66]: p2p client thread 1 block 1: P2P HTTP received 8000 B @ block 1:([my]0/100000.0) from 128.112.139.80:7777 thread 1 total for file  8000/1000000
+68.665[66]: DEBUG:p2p client thread 0 block 4: got (at least) one header block (one second later for data if from origin)
+68.665[66]: p2p client thread 0 block 4: P2P HTTP received 8000 B @ block 4:([my]0/100000.0) from 128.112.139.80:7777 thread 0 total for file  16000/1000000
+69.217[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dfdf9c>]!
+69.489[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dfef00>]!
+69.721[66]: p2p client thread 2 block 9: P2P HTTP received 8000 B @ block 9:([my]8000/100000.0) from 128.112.139.80:7777 thread 2 total for file  24000/1000000
+70.139[66]: p2p client thread 1 block 1: P2P HTTP received 8000 B @ block 1:([my]8000/100000.0) from 128.112.139.80:7777 thread 1 total for file  32000/1000000
+70.141[66]: p2p client thread 0 block 4: P2P HTTP received 8000 B @ block 4:([my]8000/100000.0) from 128.112.139.80:7777 thread 0 total for file  40000/1000000
+70.700[66]: DEBUG:ping 3
+71.479[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dea7bc>]!
+71.630[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dfd1f0>]!
+71.742[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7df0f90>]!
+71.751[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7df92bc>]!
+72.612[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dfef00>]!
+72.632[66]: p2p client thread 0 block 4: P2P HTTP received 8000 B @ block 4:([my]16000/100000.0) from 128.112.139.80:7777 thread 0 total for file  48000/1000000
+72.642[66]: p2p client thread 1 block 1: P2P HTTP received 8000 B @ block 1:([my]16000/100000.0) from 128.112.139.80:7777 thread 1 total for file  56000/1000000
+72.744[66]: p2p client thread 2 block 9: P2P HTTP received 8000 B @ block 9:([my]16000/100000.0) from 128.112.139.80:7777 thread 2 total for file  64000/1000000
+74.096[66]: DEBUG:ping 3
+74.101[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7df92bc>]!
+74.562[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7df0f90>]!
+74.597[66]: DEBUG:got pm not != blank [after processing 10 incoming #<OpenDHT::ExtendedKeyValue:0xb7dea7bc>]!
+74.716[66]: DEBUG:got pm not != blank [after processing 10 incoming #<OpenDHT::ExtendedKeyValue:0xb7dfd1f0>]!
+75.838[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dfdf9c>]!
+76.746[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dfef00>]!
+76.796[66]: p2p client thread 0 block 4: P2P HTTP received 8000 B @ block 4:([my]24000/100000.0) from 128.112.139.80:7777 thread 0 total for file  72000/1000000
+76.803[66]: p2p client thread 2 block 9: P2P HTTP received 8000 B @ block 9:([my]24000/100000.0) from 128.112.139.80:7777 thread 2 total for file  80000/1000000
+76.876[66]: p2p client thread 1 block 1: P2P HTTP received 8000 B @ block 1:([my]24000/100000.0) from 128.112.139.80:7777 thread 1 total for file  88000/1000000
+77.102[66]: DEBUG:ping 3
+79.659[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7df0f90>]!
+79.785[66]: DEBUG:second fastest gateway won http://128.112.139.80:7777/1000K.file3_1 => #<OpenDHT::ExtendedKeyValues:0xb7dfd1dc>
+79.934[66]: p2p client thread 0 block 4: P2P HTTP received 8000 B @ block 4:([my]32000/100000.0) from 128.112.139.80:7777 thread 0 total for file  96000/1000000
+79.940[66]: p2p client thread 2 block 9: P2P HTTP received 8000 B @ block 9:([my]32000/100000.0) from 128.112.139.80:7777 thread 2 total for file  104000/1000000
+79.965[66]: p2p client thread 1 block 1: P2P HTTP received 8000 B @ block 1:([my]32000/100000.0) from 128.112.139.80:7777 thread 1 total for file  104000/1000000
+80.125[66]: DEBUG:ping 3
+80.775[66]: post opendht request [http://128.112.139.80:7777/1000K.file3_1] block 1 [=> 37] Time elapsed: 15.863178
+80.818[66]: p2p client thread 1 block 1: just found 37 peers listed
+80.819[66]: DEBUG:p2p client thread 1 block 1: trying peer 128.112.139.71, 4955
+80.990[66]: DEBUG:p2p client thread 1 block 1: got a good peer 128.112.139.71, 4955 -- sending origin an interrupt/sleep message!
+80.993[66]: DEBUG:p2p client thread 1 block 1: caught2 this exception -- assume a dead origin-server -- interrupt (not dead!) 128.112.139.80:7777! got a good peer! give me that block 1 1! Go to sleep!P2PTransferInterrupt
+80.993[66]: DEBUG:p2p client thread 1 block 1: some success in origin thread to get something!  nowbyte =40000, were at 0
+81.001[66]: p2p client thread 0 block 4: P2P HTTP received 8000 B @ block 4:([my]40000/100000.0) from 128.112.139.80:7777 thread 0 total for file  120000/1000000
+81.034[66]: p2p client thread 1 block 1: P2P connecting to [p2p] peer 128.112.139.71:4955 for offset 40000 
+81.042[66]: DEBUG:got pm not != blank [after processing 10 incoming #<OpenDHT::ExtendedKeyValue:0xb7df92bc>]!
+81.046[66]: p2p client thread 2 block 9: P2P HTTP received 8000 B @ block 9:([my]40000/100000.0) from 128.112.139.80:7777 thread 2 total for file  128000/1000000
+81.057[66]: DEBUG:p2p client thread 1 block 1: sending request to 128.112.139.71:4955
+81.161[66]: DEBUG:p2p client thread 1 block 1: sent request
+81.375[66]: DEBUG:second fastest gateway won http://128.112.139.80:7777/1000K.file3_4 => #<OpenDHT::ExtendedKeyValues:0xb7dfeeec>
+81.647[66]: DEBUG:got pm not != blank [after processing 10 incoming #<OpenDHT::ExtendedKeyValue:0xb7dfdf9c>]!
+81.667[66]: post opendht request [http://128.112.139.80:7777/1000K.file3_4] block 4 [=> 46] Time elapsed: 16.756925
+81.669[66]: p2p client thread 0 block 4: just found 46 peers listed
+81.669[66]: DEBUG:p2p client thread 0 block 4: trying peer 216.165.109.79, 41539
+81.670[66]: DEBUG:p2p client thread 0 block 4: bad peer 216.165.109.79, 41539
+81.670[66]: DEBUG:p2p client thread 0 block 4: trying peer 128.112.139.97, 29864
+81.684[66]: DEBUG:p2p client thread 0 block 4: got a good peer 128.112.139.97, 29864 -- sending origin an interrupt/sleep message!
+81.684[66]: DEBUG:p2p client thread 0 block 4: caught2 this exception -- assume a dead origin-server -- interrupt (not dead!) 128.112.139.80:7777! got a good peer! give me that block 4 0! Go to sleep!P2PTransferInterrupt
+81.684[66]: DEBUG:p2p client thread 0 block 4: some success in origin thread to get something!  nowbyte =48000, were at 0
+81.685[66]: p2p client thread 0 block 4: P2P connecting to [p2p] peer 128.112.139.97:29864 for offset 48000 
+81.685[66]: DEBUG:p2p client thread 0 block 4: sending request to 128.112.139.97:29864
+81.686[66]: DEBUG:p2p client thread 0 block 4: sent request
+81.691[66]: DEBUG:p2p client thread 1 block 1: got (at least) one header block (one second later for data if from origin)
+81.692[66]: p2p client thread 1 block 1: P2P p2p received 36408 B @ block 1:([my]40000/100000.0) from 128.112.139.71:4955 thread 1 total for file  136000/1000000
+81.694[66]: p2p client thread 1 block 1: P2P p2p received 23592 B @ block 1:([my]76408/100000.0) from 128.112.139.71:4955 thread 1 total for file  172408/1000000
+81.695[66]: BM reporting block 1 done
+81.696[66]: p2p client thread 1 block 1: p2p done receiving 100000/100000.0 from 128.112.139.71:4955 stopping that block !
+81.696[66]: DEBUG:p2p client thread 1 block 1: waking up origin -- its sleeping!
+81.697[66]: DEBUG:p2p client thread 1 block 1: done with peer get/use cycle
+81.697[66]: DEBUG:p2p client thread 1 block 1: sleeping 5
+81.697[66]: DEBUG:doing set http://128.112.139.80:7777/1000K.file3_1 => peer:216.165.109.82:46478
+81.697[66]: pre opendht set [http://128.112.139.80:7777/1000K.file3_1 => peer:216.165.109.82:46478] block 1
+81.701[66]: DEBUG:p2p client thread 1 block 1: end origin looping peer
+81.703[66]: DEBUG:p2p client thread 1 block 1: origin raising on the p2p thread, origin thread ending
+81.703[66]: DEBUG:p2p client thread 1 block 1: p2p probably won block 1! ha ha!  local-variable [origin's done you should stop that stuff! [possibly because you finished it, we both noticed that before throwing, even]] might not have if they both terminated gracefully somehow or other
+81.704[66]: DEBUG:p2p client thread 1 block 1: done p2p with origin backup
+81.705[66]: p2p client thread 1 block 8: start p2p with origin backup [yes origin fix]
+81.706[66]: DEBUG:p2p client thread 1 block 8: p2p start get/use cycle
+81.706[66]: p2p client thread 1 block 8: getting peer list 
+81.706[66]: pre opendht request [http://128.112.139.80:7777/1000K.file3_8] block 8
+81.706[66]: DEBUG:getting http://128.112.139.80:7777/1000K.file3_8
+81.708[66]: DEBUG:p2p client thread 1 block 8: beginning origin looping peer
+81.708[66]: DEBUG:p2p client thread 1 block 8: origin looping peer begin
+81.708[66]: p2p client thread 1 block 8: starting (re?) 'safety' to origin, just for kicks 
+81.708[66]: p2p client thread 1 block 8: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 0 
+81.708[66]: DEBUG:p2p client thread 1 block 8: beginning TCP open to 128.112.139.80:7777
+82.241[66]: DEBUG:p2p client thread 1 block 8: done TCP open to 128.112.139.80:7777
+82.368[66]: DEBUG:p2p client thread 1 block 8: sending request to 128.112.139.80:7777
+82.418[66]: DEBUG:p2p client thread 1 block 8: sent request
+82.639[66]: DEBUG:second fastest gateway won http://128.112.139.80:7777/1000K.file3_9 => #<OpenDHT::ExtendedKeyValues:0xb7df9244>
+82.785[66]: post opendht request [http://128.112.139.80:7777/1000K.file3_9] block 9 [=> 45] Time elapsed: 17.787805
+82.787[66]: p2p client thread 2 block 9: just found 45 peers listed
+82.787[66]: DEBUG:p2p client thread 2 block 9: trying peer 128.112.139.75, 15739
+82.952[66]: DEBUG:p2p client thread 2 block 9: got a good peer 128.112.139.75, 15739 -- sending origin an interrupt/sleep message!
+82.952[66]: DEBUG:p2p client thread 2 block 9: caught2 this exception -- assume a dead origin-server -- interrupt (not dead!) 128.112.139.80:7777! got a good peer! give me that block 9 2! Go to sleep!P2PTransferInterrupt
+82.952[66]: DEBUG:p2p client thread 2 block 9: some success in origin thread to get something!  nowbyte =48000, were at 0
+83.164[66]: DEBUG:ping 3
+83.164[66]: p2p client thread 2 block 9: P2P connecting to [p2p] peer 128.112.139.75:15739 for offset 48000 
+83.191[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dffedc>]!
+83.266[66]: DEBUG:p2p client thread 2 block 9: sending request to 128.112.139.75:15739
+83.284[66]: post opendht set [http://128.112.139.80:7777/1000K.file3_1 => peer:216.165.109.82:46478] block 1 Time elapsed: 1.58755
+84.032[66]: DEBUG:p2p client thread 2 block 9: sent request
+84.325[66]: DEBUG:p2p client thread 0 block 4: got (at least) one header block (one second later for data if from origin)
+84.658[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e0bb38>]!
+84.693[66]: p2p client thread 0 block 4: P2P p2p received 52000 B @ block 4:([my]48000/100000.0) from 128.112.139.97:29864 thread 0 total for file  196000/1000000
+84.696[66]: BM reporting block 4 done
+84.772[66]: DEBUG:doing set http://128.112.139.80:7777/1000K.file3_4 => peer:216.165.109.82:46478
+84.772[66]: pre opendht set [http://128.112.139.80:7777/1000K.file3_4 => peer:216.165.109.82:46478] block 4
+84.780[66]: p2p client thread 0 block 4: p2p done receiving 100000/100000.0 from 128.112.139.97:29864 stopping that block !
+84.781[66]: DEBUG:p2p client thread 0 block 4: waking up origin -- its sleeping!
+84.781[66]: DEBUG:p2p client thread 0 block 4: done with peer get/use cycle
+84.781[66]: DEBUG:p2p client thread 0 block 4: sleeping 5
+84.791[66]: DEBUG:p2p client thread 0 block 4: end origin looping peer
+84.791[66]: DEBUG:p2p client thread 0 block 4: origin raising on the p2p thread, origin thread ending
+84.798[66]: DEBUG:p2p client thread 0 block 4: p2p probably won block 4! ha ha!  local-variable [origin's done you should stop that stuff! [possibly because you finished it, we both noticed that before throwing, even]] might not have if they both terminated gracefully somehow or other
+84.803[66]: DEBUG:p2p client thread 2 block 9: caught2 this exception -- assume a dead peer-neighbor 128.112.139.75:15739! Broken pipeErrno::EPIPE
+84.803[66]: DEBUG:p2p client thread 2 block 9: waking up origin -- its sleeping!
+84.803[66]: DEBUG:p2p client thread 2 block 9: trying peer 128.112.139.71, 25222
+84.816[66]: p2p client thread 2 block 9: starting (re?) 'safety' to origin, just for kicks 
+84.816[66]: p2p client thread 2 block 9: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 48000 
+84.816[66]: DEBUG:p2p client thread 2 block 9: beginning TCP open to 128.112.139.80:7777
+84.819[66]: DEBUG:p2p client thread 0 block 4: done p2p with origin backup
+84.822[66]: p2p client thread 0 block 3: start p2p with origin backup [yes origin fix]
+85.014[66]: DEBUG:p2p client thread 1 block 8: got (at least) one header block (one second later for data if from origin)
+85.014[66]: p2p client thread 1 block 8: P2P HTTP received 8000 B @ block 8:([my]0/100000.0) from 128.112.139.80:7777 thread 1 total for file  248000/1000000
+85.017[66]: DEBUG:p2p client thread 0 block 3: p2p start get/use cycle
+85.017[66]: p2p client thread 0 block 3: getting peer list 
+85.017[66]: pre opendht request [http://128.112.139.80:7777/1000K.file3_3] block 3
+85.017[66]: DEBUG:getting http://128.112.139.80:7777/1000K.file3_3
+85.022[66]: DEBUG:p2p client thread 0 block 3: beginning origin looping peer
+85.022[66]: DEBUG:p2p client thread 0 block 3: origin looping peer begin
+85.022[66]: p2p client thread 0 block 3: starting (re?) 'safety' to origin, just for kicks 
+85.022[66]: p2p client thread 0 block 3: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 0 
+85.022[66]: DEBUG:p2p client thread 0 block 3: beginning TCP open to 128.112.139.80:7777
+85.140[66]: DEBUG:p2p client thread 2 block 9: bad peer 128.112.139.71, 25222
+85.141[66]: DEBUG:p2p client thread 2 block 9: trying peer 140.247.60.123, 45345
+85.141[66]: DEBUG:p2p client thread 2 block 9: done TCP open to 128.112.139.80:7777
+85.177[66]: DEBUG:p2p client thread 2 block 9: sending request to 128.112.139.80:7777
+85.279[66]: DEBUG:p2p client thread 0 block 3: done TCP open to 128.112.139.80:7777
+85.407[66]: DEBUG:p2p client thread 0 block 3: sending request to 128.112.139.80:7777
+85.410[66]: DEBUG:p2p client thread 2 block 9: bad peer 140.247.60.123, 45345
+85.410[66]: DEBUG:p2p client thread 2 block 9: trying peer 158.130.6.253, 41562
+85.479[66]: DEBUG:p2p client thread 2 block 9: sent request
+85.769[66]: DEBUG:p2p client thread 0 block 3: sent request
+85.824[66]: DEBUG:p2p client thread 2 block 9: bad peer 158.130.6.253, 41562
+85.824[66]: DEBUG:p2p client thread 2 block 9: trying peer 128.112.139.75, 32336
+86.377[66]: post opendht set [http://128.112.139.80:7777/1000K.file3_4 => peer:216.165.109.82:46478] block 4 Time elapsed: 1.605748
+86.378[66]: DEBUG:ping 3
+86.443[66]: DEBUG:p2p client thread 2 block 9: got a good peer 128.112.139.75, 32336 -- sending origin an interrupt/sleep message!
+86.444[66]: DEBUG:p2p client thread 2 block 9: caught2 this exception -- assume a dead origin-server -- interrupt (not dead!) 128.112.139.80:7777! got a good peer! give me that block 9 2! Go to sleep!P2PTransferInterrupt
+86.444[66]: DEBUG:p2p client thread 2 block 9: unsuccess in origin thread to get anything! 
+86.454[66]: p2p client thread 2 block 9: P2P connecting to [p2p] peer 128.112.139.75:32336 for offset 48000 
+86.455[66]: DEBUG:got pm not != blank [after processing 10 incoming #<OpenDHT::ExtendedKeyValue:0xb7dffedc>]!
+86.456[66]: DEBUG:p2p client thread 2 block 9: sending request to 128.112.139.75:32336
+86.573[66]: DEBUG:p2p client thread 2 block 9: sent request
+87.338[66]: DEBUG:got pm not != blank [after processing 10 incoming #<OpenDHT::ExtendedKeyValue:0xb7e0bb38>]!
+87.712[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e61bdc>]!
+87.716[66]: p2p client thread 1 block 8: P2P HTTP received 8000 B @ block 8:([my]8000/100000.0) from 128.112.139.80:7777 thread 1 total for file  256000/1000000
+87.916[66]: DEBUG:p2p client thread 2 block 9: caught2 this exception -- assume a dead peer-neighbor 128.112.139.75:32336! Broken pipeErrno::EPIPE
+87.916[66]: DEBUG:p2p client thread 2 block 9: waking up origin -- its sleeping!
+87.916[66]: DEBUG:p2p client thread 2 block 9: trying peer 155.98.35.3, 47222
+87.916[66]: p2p client thread 2 block 9: starting (re?) 'safety' to origin, just for kicks 
+87.916[66]: p2p client thread 2 block 9: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 48000 
+87.916[66]: DEBUG:p2p client thread 2 block 9: beginning TCP open to 128.112.139.80:7777
+88.481[66]: DEBUG:p2p client thread 2 block 9: bad peer 155.98.35.3, 47222
+88.481[66]: DEBUG:p2p client thread 2 block 9: trying peer 128.112.139.75, 15180
+88.481[66]: DEBUG:p2p client thread 2 block 9: done TCP open to 128.112.139.80:7777
+88.484[66]: DEBUG:p2p client thread 2 block 9: sending request to 128.112.139.80:7777
+88.548[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e62d20>]!
+88.702[66]: DEBUG:p2p client thread 0 block 3: got (at least) one header block (one second later for data if from origin)
+88.709[66]: p2p client thread 0 block 3: P2P HTTP received 8000 B @ block 3:([my]0/100000.0) from 128.112.139.80:7777 thread 0 total for file  264000/1000000
+88.709[66]: DEBUG:p2p client thread 2 block 9: bad peer 128.112.139.75, 15180
+88.709[66]: DEBUG:p2p client thread 2 block 9: trying peer 155.98.35.3, 50528
+88.735[66]: DEBUG:p2p client thread 2 block 9: sent request
+90.123[66]: DEBUG:ping 3
+90.458[66]: DEBUG:p2p client thread 2 block 9: got a good peer 155.98.35.3, 50528 -- sending origin an interrupt/sleep message!
+90.458[66]: DEBUG:p2p client thread 2 block 9: caught2 this exception -- assume a dead origin-server -- interrupt (not dead!) 128.112.139.80:7777! got a good peer! give me that block 9 2! Go to sleep!P2PTransferInterrupt
+90.459[66]: DEBUG:p2p client thread 2 block 9: unsuccess in origin thread to get anything! 
+90.494[66]: p2p client thread 2 block 9: P2P connecting to [p2p] peer 155.98.35.3:50528 for offset 48000 
+90.495[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dffedc>]!
+90.496[66]: p2p client thread 1 block 8: P2P HTTP received 8000 B @ block 8:([my]16000/100000.0) from 128.112.139.80:7777 thread 1 total for file  272000/1000000
+90.497[66]: DEBUG:p2p client thread 2 block 9: sending request to 155.98.35.3:50528
+90.500[66]: p2p client thread 0 block 3: P2P HTTP received 8000 B @ block 3:([my]8000/100000.0) from 128.112.139.80:7777 thread 0 total for file  280000/1000000
+90.590[66]: DEBUG:p2p client thread 2 block 9: sent request
+92.989[66]: DEBUG:got pm not != blank [after processing 10 incoming #<OpenDHT::ExtendedKeyValue:0xb7e61bdc>]!
+92.991[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e0bb38>]!
+94.034[66]: DEBUG:ping 3
+94.122[66]: p2p client thread 0 block 3: P2P HTTP received 8000 B @ block 3:([my]16000/100000.0) from 128.112.139.80:7777 thread 0 total for file  288000/1000000
+94.160[66]: p2p client thread 1 block 8: P2P HTTP received 8000 B @ block 8:([my]24000/100000.0) from 128.112.139.80:7777 thread 1 total for file  296000/1000000
+94.312[66]: DEBUG:p2p client thread 2 block 9: caught2 this exception -- assume a dead peer-neighbor 155.98.35.3:50528! Broken pipeErrno::EPIPE
+94.312[66]: DEBUG:p2p client thread 2 block 9: waking up origin -- its sleeping!
+94.312[66]: DEBUG:p2p client thread 2 block 9: trying peer 140.247.60.126, 32381
+94.313[66]: p2p client thread 2 block 9: starting (re?) 'safety' to origin, just for kicks 
+94.419[66]: p2p client thread 2 block 9: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 48000 
+94.419[66]: DEBUG:p2p client thread 2 block 9: beginning TCP open to 128.112.139.80:7777
+94.452[66]: DEBUG:p2p client thread 2 block 9: done TCP open to 128.112.139.80:7777
+94.465[66]: DEBUG:p2p client thread 2 block 9: bad peer 140.247.60.126, 32381
+94.543[66]: DEBUG:p2p client thread 2 block 9: trying peer 132.239.17.226, 7939
+94.544[66]: DEBUG:p2p client thread 2 block 9: sending request to 128.112.139.80:7777
+95.401[66]: DEBUG:p2p client thread 2 block 9: sent request
+95.801[66]: DEBUG:p2p client thread 2 block 9: bad peer 132.239.17.226, 7939
+95.801[66]: DEBUG:p2p client thread 2 block 9: trying peer 132.239.17.226, 8039
+96.151[66]: DEBUG:got pm not != blank [after processing 10 incoming #<OpenDHT::ExtendedKeyValue:0xb7dffedc>]!
+96.151[66]: p2p client thread 1 block 8: P2P HTTP received 8000 B @ block 8:([my]32000/100000.0) from 128.112.139.80:7777 thread 1 total for file  304000/1000000
+96.166[66]: p2p client thread 0 block 3: P2P HTTP received 8000 B @ block 3:([my]24000/100000.0) from 128.112.139.80:7777 thread 0 total for file  312000/1000000
+96.500[66]: DEBUG:p2p client thread 2 block 9: bad peer 132.239.17.226, 8039
+96.590[66]: DEBUG:p2p client thread 2 block 9: trying peer 155.98.35.3, 28845
+97.311[66]: DEBUG:ping 3
+99.050[66]: DEBUG:p2p client thread 2 block 9: bad peer 155.98.35.3, 28845
+99.050[66]: DEBUG:p2p client thread 2 block 9: trying peer 216.165.109.79, 47493
+99.770[66]: DEBUG:p2p server 46478:got a peer incoming connection (to my port 46478) about to (loop then) parse request connection number 2 (155.98.35.3:43569) thread count 0
+99.771[66]: p2p client thread 1 block 8: P2P HTTP received 16000 B @ block 8:([my]40000/100000.0) from 128.112.139.80:7777 thread 1 total for file  320000/1000000
+99.905[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e61bdc>]!
+99.905[66]: p2p client thread 0 block 3: P2P HTTP received 8000 B @ block 3:([my]32000/100000.0) from 128.112.139.80:7777 thread 0 total for file  336000/1000000
+100.166[66]: p2p server 46478:got request for file /1000K.file3 port 7777 startByte 440000 endByte 499999 from : conn 2 (155.98.35.3:43569)
+100.167[66]: DEBUG:p2p server 46478:pre write header
+100.167[66]: DEBUG:p2p client thread 2 block 9: bad peer 216.165.109.79, 47493
+100.167[66]: DEBUG:p2p client thread 2 block 9: trying peer 155.98.35.3, 45306
+100.170[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e62d20>]!
+100.172[66]: DEBUG:got pm not != blank [after processing 10 incoming #<OpenDHT::ExtendedKeyValue:0xb7e0bb38>]!
+100.347[66]: p2p client thread 0 block 3: P2P HTTP received 8000 B @ block 3:([my]40000/100000.0) from 128.112.139.80:7777 thread 0 total for file  344000/1000000
+100.354[66]: p2p server 46478:post write header length 125
+100.422[66]: DEBUG:ping 3
+100.475[66]: DEBUG:p2p client thread 2 block 9: bad peer 155.98.35.3, 45306
+100.475[66]: DEBUG:p2p client thread 2 block 9: trying peer 140.247.60.123, 10643
+100.476[66]: DEBUG:p2p client thread 2 block 9: got (at least) one header block (one second later for data if from origin)
+100.481[66]: p2p client thread 2 block 9: P2P HTTP received 16000 B @ block 9:([my]48000/100000.0) from 128.112.139.80:7777 thread 2 total for file  352000/1000000
+100.797[66]: DEBUG:p2p client thread 2 block 9: bad peer 140.247.60.123, 10643
+100.797[66]: DEBUG:p2p client thread 2 block 9: trying peer 216.165.109.79, 12829
+101.445[66]: DEBUG:p2p client thread 2 block 9: bad peer 216.165.109.79, 12829
+101.498[66]: DEBUG:p2p client thread 2 block 9: trying peer 128.112.139.71, 4955
+101.635[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7dffedc>]!
+102.195[66]: DEBUG:p2p client thread 2 block 9: bad peer 128.112.139.71, 4955
+102.195[66]: DEBUG:p2p client thread 2 block 9: trying peer 128.112.139.71, 13902
+102.515[66]: p2p client thread 2 block 9: P2P HTTP received 8000 B @ block 9:([my]64000/100000.0) from 128.112.139.80:7777 thread 2 total for file  368000/1000000
+103.057[66]: p2p client thread 1 block 8: P2P HTTP received 8000 B @ block 8:([my]56000/100000.0) from 128.112.139.80:7777 thread 1 total for file  376000/1000000
+103.241[66]: p2p client thread 0 block 3: P2P HTTP received 8000 B @ block 3:([my]48000/100000.0) from 128.112.139.80:7777 thread 0 total for file  384000/1000000
+103.269[66]: DEBUG:p2p client thread 2 block 9: bad peer 128.112.139.71, 13902
+103.269[66]: DEBUG:p2p client thread 2 block 9: trying peer 216.165.109.79, 36636
+103.280[66]: DEBUG:second fastest gateway won http://128.112.139.80:7777/1000K.file3_3 => #<OpenDHT::ExtendedKeyValues:0xb7e61bc8>
+103.575[66]: DEBUG:ping 3
+103.777[66]: DEBUG:p2p client thread 2 block 9: got a good peer 216.165.109.79, 36636 -- sending origin an interrupt/sleep message!
+103.780[66]: DEBUG:p2p client thread 2 block 9: caught2 this exception -- assume a dead origin-server -- interrupt (not dead!) 128.112.139.80:7777! got a good peer! give me that block 9 2! Go to sleep!P2PTransferInterrupt
+103.780[66]: DEBUG:p2p client thread 2 block 9: some success in origin thread to get something!  nowbyte =72000, were at 48000
+103.788[66]: DEBUG:p2p server 46478:prewrite large 60000 2 (155.98.35.3:43569)
+103.788[66]: p2p client thread 2 block 9: P2P connecting to [p2p] peer 216.165.109.79:36636 for offset 72000 
+103.789[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e0bb38>]!
+103.982[66]: post opendht request [http://128.112.139.80:7777/1000K.file3_3] block 3 [=> 34] Time elapsed: 18.964347
+103.992[66]: DEBUG:p2p client thread 2 block 9: sending request to 216.165.109.79:36636
+104.024[66]: p2p client thread 0 block 3: just found 34 peers listed
+104.024[66]: DEBUG:p2p client thread 0 block 3: trying peer 132.239.17.226, 62623
+104.127[66]: DEBUG:p2p client thread 2 block 9: sent request
+106.278[66]: DEBUG:p2p client thread 0 block 3: got a good peer 132.239.17.226, 62623 -- sending origin an interrupt/sleep message!
+106.279[66]: DEBUG:p2p client thread 0 block 3: caught2 this exception -- assume a dead origin-server -- interrupt (not dead!) 128.112.139.80:7777! got a good peer! give me that block 3 0! Go to sleep!P2PTransferInterrupt
+106.279[66]: DEBUG:p2p client thread 0 block 3: some success in origin thread to get something!  nowbyte =56000, were at 0
+106.280[66]: DEBUG:second fastest gateway won http://128.112.139.80:7777/1000K.file3_8 => #<OpenDHT::ExtendedKeyValues:0xb7dffea0>
+106.281[66]: p2p client thread 0 block 3: P2P connecting to [p2p] peer 132.239.17.226:62623 for offset 56000 
+106.282[66]: p2p client thread 1 block 8: P2P HTTP received 8000 B @ block 8:([my]64000/100000.0) from 128.112.139.80:7777 thread 1 total for file  392000/1000000
+106.283[66]: DEBUG:p2p client thread 0 block 3: sending request to 132.239.17.226:62623
+106.310[66]: post opendht request [http://128.112.139.80:7777/1000K.file3_8] block 8 [=> 52] Time elapsed: 24.604662
+106.312[66]: p2p client thread 1 block 8: just found 52 peers listed
+106.312[66]: DEBUG:p2p client thread 1 block 8: trying peer 206.207.248.35, 25401
+106.313[66]: DEBUG:p2p client thread 0 block 3: sent request
+106.313[66]: DEBUG:p2p client thread 2 block 9: caught2 this exception -- assume a dead peer-neighbor 216.165.109.79:36636! Broken pipeErrno::EPIPE
+106.313[66]: DEBUG:p2p client thread 2 block 9: waking up origin -- its sleeping!
+106.313[66]: DEBUG:p2p client thread 2 block 9: trying peer 140.247.60.126, 23965
+106.314[66]: p2p client thread 2 block 9: starting (re?) 'safety' to origin, just for kicks 
+106.314[66]: p2p client thread 2 block 9: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 72000 
+106.314[66]: DEBUG:p2p client thread 2 block 9: beginning TCP open to 128.112.139.80:7777
+106.361[66]: DEBUG:p2p client thread 2 block 9: bad peer 140.247.60.126, 23965
+106.361[66]: DEBUG:p2p client thread 2 block 9: trying peer 140.247.60.123, 29377
+106.361[66]: DEBUG:p2p client thread 2 block 9: done TCP open to 128.112.139.80:7777
+106.362[66]: DEBUG:p2p client thread 2 block 9: sending request to 128.112.139.80:7777
+106.362[66]: DEBUG:p2p client thread 2 block 9: sent request
+106.393[66]: DEBUG:p2p client thread 2 block 9: bad peer 140.247.60.123, 29377
+106.393[66]: DEBUG:p2p client thread 2 block 9: trying peer 140.247.60.126, 59648
+106.409[66]: DEBUG:p2p client thread 1 block 8: bad peer 206.207.248.35, 25401
+106.409[66]: DEBUG:p2p client thread 1 block 8: trying peer 128.112.139.97, 39044
+106.415[66]: DEBUG:p2p client thread 1 block 8: bad peer 128.112.139.97, 39044
+106.415[66]: DEBUG:p2p client thread 1 block 8: trying peer 216.165.109.82, 34991
+106.441[66]: DEBUG:p2p client thread 1 block 8: bad peer 216.165.109.82, 34991
+106.441[66]: DEBUG:p2p client thread 1 block 8: trying peer 216.165.109.79, 5413
+106.441[66]: DEBUG:p2p client thread 2 block 9: bad peer 140.247.60.126, 59648
+106.441[66]: DEBUG:p2p client thread 2 block 9: trying peer 128.112.139.97, 39044
+106.443[66]: DEBUG:p2p client thread 1 block 8: bad peer 216.165.109.79, 5413
+106.443[66]: DEBUG:p2p client thread 1 block 8: trying peer 140.247.60.126, 32131
+106.444[66]: DEBUG:p2p client thread 0 block 3: got (at least) one header block (one second later for data if from origin)
+106.444[66]: p2p client thread 0 block 3: P2P p2p received 2896 B @ block 3:([my]56000/100000.0) from 132.239.17.226:62623 thread 0 total for file  400000/1000000
+106.488[66]: DEBUG:p2p client thread 2 block 9: bad peer 128.112.139.97, 39044
+106.488[66]: DEBUG:p2p client thread 2 block 9: trying peer 140.247.60.123, 3908
+106.489[66]: DEBUG:p2p client thread 1 block 8: bad peer 140.247.60.126, 32131
+106.489[66]: DEBUG:p2p client thread 1 block 8: trying peer 206.207.248.35, 16626
+106.538[66]: DEBUG:p2p server 46478:postwrite large are these ever interrupted? 2 (155.98.35.3:43569)
+106.538[66]: p2p server 46478:just successfully wrote 60000 next B is 500000 out of 499999 conn 2 (155.98.35.3:43569) thread count 1
+106.538[66]: p2p server 46478:success in transferring all startByte 440000 endByte 499999 to : header bytes 125 data bytes actually thought wrote 60000 my port 7777 conn 2 (155.98.35.3:43569)
+106.538[66]: DEBUG:p2p server 46478:done (whatever reason) with peer conn 2 (155.98.35.3:43569) [sleep 1 then close]
+106.566[66]: DEBUG:p2p client thread 2 block 9: got a good peer 140.247.60.123, 3908 -- sending origin an interrupt/sleep message!
+106.567[66]: DEBUG:p2p client thread 2 block 9: caught2 this exception -- assume a dead origin-server -- interrupt (not dead!) 128.112.139.80:7777! got a good peer! give me that block 9 2! Go to sleep!P2PTransferInterrupt
+106.567[66]: DEBUG:p2p client thread 2 block 9: unsuccess in origin thread to get anything! 
+106.567[66]: p2p client thread 2 block 9: P2P connecting to [p2p] peer 140.247.60.123:3908 for offset 72000 
+106.568[66]: p2p client thread 0 block 3: P2P p2p received 8192 B @ block 3:([my]58896/100000.0) from 132.239.17.226:62623 thread 0 total for file  402896/1000000
+106.568[66]: DEBUG:p2p client thread 2 block 9: sending request to 140.247.60.123:3908
+106.568[66]: DEBUG:p2p client thread 2 block 9: sent request
+106.614[66]: DEBUG:ping 3
+106.654[66]: DEBUG:p2p client thread 1 block 8: got a good peer 206.207.248.35, 16626 -- sending origin an interrupt/sleep message!
+106.655[66]: DEBUG:p2p client thread 1 block 8: caught2 this exception -- assume a dead origin-server -- interrupt (not dead!) 128.112.139.80:7777! got a good peer! give me that block 8 1! Go to sleep!P2PTransferInterrupt
+106.655[66]: DEBUG:p2p client thread 1 block 8: some success in origin thread to get something!  nowbyte =72000, were at 0
+106.655[66]: p2p client thread 1 block 8: P2P connecting to [p2p] peer 206.207.248.35:16626 for offset 72000 
+106.656[66]: DEBUG:p2p client thread 1 block 8: sending request to 206.207.248.35:16626
+106.656[66]: p2p client thread 0 block 3: P2P p2p received 12288 B @ block 3:([my]67088/100000.0) from 132.239.17.226:62623 thread 0 total for file  411088/1000000
+106.657[66]: DEBUG:p2p client thread 1 block 8: sent request
+106.658[66]: DEBUG:p2p client thread 2 block 9: got (at least) one header block (one second later for data if from origin)
+106.658[66]: p2p client thread 2 block 9: P2P p2p received 4344 B @ block 9:([my]72000/100000.0) from 140.247.60.123:3908 thread 2 total for file  423376/1000000
+106.696[66]: p2p client thread 2 block 9: P2P p2p received 7944 B @ block 9:([my]76344/100000.0) from 140.247.60.123:3908 thread 2 total for file  427720/1000000
+106.830[66]: p2p client thread 0 block 3: P2P p2p received 17376 B @ block 3:([my]79376/100000.0) from 132.239.17.226:62623 thread 0 total for file  435664/1000000
+106.831[66]: p2p client thread 2 block 9: P2P p2p received 2896 B @ block 9:([my]84288/100000.0) from 140.247.60.123:3908 thread 2 total for file  453040/1000000
+107.350[66]: DEBUG:p2p client thread 1 block 8: got (at least) one header block (one second later for data if from origin)
+107.351[66]: p2p client thread 1 block 8: P2P p2p received 11088 B @ block 8:([my]72000/100000.0) from 206.207.248.35:16626 thread 1 total for file  455936/1000000
+107.449[66]: p2p client thread 0 block 3: P2P p2p received 3248 B @ block 3:([my]96752/100000.0) from 132.239.17.226:62623 thread 0 total for file  467024/1000000
+107.450[66]: BM reporting block 3 done
+107.597[66]: p2p client thread 0 block 3: p2p done receiving 100000/100000.0 from 132.239.17.226:62623 stopping that block !
+107.597[66]: DEBUG:p2p client thread 0 block 3: waking up origin -- its sleeping!
+107.598[66]: DEBUG:p2p client thread 0 block 3: done with peer get/use cycle
+107.598[66]: DEBUG:p2p client thread 0 block 3: sleeping 5
+107.628[66]: DEBUG:doing set http://128.112.139.80:7777/1000K.file3_3 => peer:216.165.109.82:46478
+107.633[66]: pre opendht set [http://128.112.139.80:7777/1000K.file3_3 => peer:216.165.109.82:46478] block 3
+107.642[66]: DEBUG:p2p client thread 0 block 3: end origin looping peer
+107.642[66]: DEBUG:p2p client thread 0 block 3: origin raising on the p2p thread, origin thread ending
+107.648[66]: DEBUG:p2p client thread 0 block 3: p2p probably won block 3! ha ha!  local-variable [origin's done you should stop that stuff! [possibly because you finished it, we both noticed that before throwing, even]] might not have if they both terminated gracefully somehow or other
+107.659[66]: p2p client thread 2 block 9: P2P p2p received 12816 B @ block 9:([my]87184/100000.0) from 140.247.60.123:3908 thread 2 total for file  470272/1000000
+107.845[66]: BM reporting block 9 done
+107.851[66]: DEBUG:p2p client thread 0 block 3: done p2p with origin backup
+107.851[66]: p2p client thread 0 block 0: start p2p with origin backup [yes origin fix]
+107.872[66]: p2p client thread 2 block 9: p2p done receiving 100000/100000.0 from 140.247.60.123:3908 stopping that block !
+108.024[66]: DEBUG:p2p client thread 2 block 9: waking up origin -- its sleeping!
+108.024[66]: DEBUG:p2p client thread 2 block 9: done with peer get/use cycle
+108.024[66]: DEBUG:p2p client thread 2 block 9: sleeping 5
+108.024[66]: DEBUG:doing set http://128.112.139.80:7777/1000K.file3_9 => peer:216.165.109.82:46478
+108.024[66]: pre opendht set [http://128.112.139.80:7777/1000K.file3_9 => peer:216.165.109.82:46478] block 9
+108.193[66]: DEBUG:p2p client thread 2 block 9: end origin looping peer
+108.193[66]: DEBUG:p2p client thread 2 block 9: origin raising on the p2p thread, origin thread ending
+108.193[66]: DEBUG:p2p client thread 2 block 9: p2p probably won block 9! ha ha!  local-variable [origin's done you should stop that stuff! [possibly because you finished it, we both noticed that before throwing, even]] might not have if they both terminated gracefully somehow or other
+108.258[66]: DEBUG:p2p client thread 0 block 0: p2p start get/use cycle
+108.258[66]: p2p client thread 0 block 0: getting peer list 
+108.258[66]: pre opendht request [http://128.112.139.80:7777/1000K.file3_0] block 0
+108.259[66]: DEBUG:getting http://128.112.139.80:7777/1000K.file3_0
+108.360[66]: DEBUG:p2p client thread 0 block 0: beginning origin looping peer
+108.361[66]: DEBUG:p2p client thread 0 block 0: origin looping peer begin
+108.361[66]: p2p client thread 0 block 0: starting (re?) 'safety' to origin, just for kicks 
+108.361[66]: p2p client thread 0 block 0: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 0 
+108.372[66]: DEBUG:p2p client thread 0 block 0: beginning TCP open to 128.112.139.80:7777
+108.386[66]: DEBUG:p2p client thread 2 block 9: done p2p with origin backup
+108.386[66]: p2p client thread 2 block 5: start p2p with origin backup [yes origin fix]
+108.393[66]: p2p client thread 1 block 8: P2P p2p received 16912 B @ block 8:([my]83088/100000.0) from 206.207.248.35:16626 thread 1 total for file  483088/1000000
+108.456[66]: BM reporting block 8 done
+109.355[66]: DEBUG:p2p client thread 2 block 5: p2p start get/use cycle
+109.355[66]: p2p client thread 2 block 5: getting peer list 
+109.355[66]: pre opendht request [http://128.112.139.80:7777/1000K.file3_5] block 5
+109.355[66]: DEBUG:getting http://128.112.139.80:7777/1000K.file3_5
+109.395[66]: DEBUG:p2p client thread 2 block 5: beginning origin looping peer
+109.395[66]: DEBUG:p2p client thread 2 block 5: origin looping peer begin
+109.395[66]: p2p client thread 2 block 5: starting (re?) 'safety' to origin, just for kicks 
+109.395[66]: p2p client thread 2 block 5: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 0 
+109.395[66]: DEBUG:p2p client thread 2 block 5: beginning TCP open to 128.112.139.80:7777
+109.408[66]: p2p client thread 1 block 8: p2p done receiving 100000/100000.0 from 206.207.248.35:16626 stopping that block !
+109.409[66]: DEBUG:p2p client thread 1 block 8: waking up origin -- its sleeping!
+109.409[66]: DEBUG:p2p client thread 1 block 8: done with peer get/use cycle
+109.409[66]: DEBUG:p2p client thread 1 block 8: sleeping 5
+109.409[66]: DEBUG:doing set http://128.112.139.80:7777/1000K.file3_8 => peer:216.165.109.82:46478
+109.409[66]: pre opendht set [http://128.112.139.80:7777/1000K.file3_8 => peer:216.165.109.82:46478] block 8
+109.424[66]: DEBUG:p2p client thread 1 block 8: end origin looping peer
+109.424[66]: DEBUG:p2p client thread 1 block 8: origin raising on the p2p thread, origin thread ending
+109.485[66]: DEBUG:p2p client thread 1 block 8: p2p probably won block 8! ha ha!  local-variable [origin's done you should stop that stuff! [possibly because you finished it, we both noticed that before throwing, even]] might not have if they both terminated gracefully somehow or other
+109.628[66]: DEBUG:ping 3
+109.789[66]: DEBUG:p2p client thread 1 block 8: done p2p with origin backup
+109.789[66]: p2p client thread 1 block 6: start p2p with origin backup [yes origin fix]
+109.851[66]: DEBUG:p2p client thread 0 block 0: done TCP open to 128.112.139.80:7777
+110.538[66]: DEBUG:p2p client thread 1 block 6: p2p start get/use cycle
+110.538[66]: p2p client thread 1 block 6: getting peer list 
+110.538[66]: pre opendht request [http://128.112.139.80:7777/1000K.file3_6] block 6
+110.538[66]: DEBUG:getting http://128.112.139.80:7777/1000K.file3_6
+110.543[66]: DEBUG:p2p client thread 1 block 6: beginning origin looping peer
+110.543[66]: DEBUG:p2p client thread 1 block 6: origin looping peer begin
+110.543[66]: p2p client thread 1 block 6: starting (re?) 'safety' to origin, just for kicks 
+110.543[66]: p2p client thread 1 block 6: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 0 
+110.543[66]: DEBUG:p2p client thread 1 block 6: beginning TCP open to 128.112.139.80:7777
+110.586[66]: DEBUG:p2p client thread 0 block 0: sending request to 128.112.139.80:7777
+110.807[66]: DEBUG:p2p client thread 2 block 5: done TCP open to 128.112.139.80:7777
+111.128[66]: DEBUG:p2p client thread 2 block 5: sending request to 128.112.139.80:7777
+111.412[66]: DEBUG:p2p server 46478:got a peer incoming connection (to my port 46478) about to (loop then) parse request connection number 3 (140.247.60.126:58085) thread count 0
+111.803[66]: DEBUG:p2p client thread 1 block 6: done TCP open to 128.112.139.80:7777
+111.818[66]: DEBUG:p2p client thread 0 block 0: sent request
+111.879[66]: DEBUG:p2p client thread 1 block 6: sending request to 128.112.139.80:7777
+111.935[66]: p2p server 46478:got request for file /1000K.file3 port 7777 startByte 400000 endByte 499999 from : conn 3 (140.247.60.126:58085)
+111.935[66]: DEBUG:p2p server 46478:pre write header
+112.000[66]: DEBUG:p2p client thread 2 block 5: sent request
+112.280[66]: DEBUG:p2p client thread 1 block 6: sent request
+112.280[66]: p2p server 46478:post write header length 126
+112.794[66]: DEBUG:ping 3
+113.080[66]: post opendht set [http://128.112.139.80:7777/1000K.file3_9 => peer:216.165.109.82:46478] block 9 Time elapsed: 5.055284
+113.940[66]: post opendht set [http://128.112.139.80:7777/1000K.file3_8 => peer:216.165.109.82:46478] block 8 Time elapsed: 4.530919
+116.504[66]: DEBUG:ping 3
+118.401[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e7a844>]!
+118.467[66]: DEBUG:p2p server 46478:got a peer incoming connection (to my port 46478) about to (loop then) parse request connection number 4 (158.130.6.253:39835) thread count 1
+118.488[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e67118>]!
+118.666[66]: p2p server 46478:got request for file /1000K.file3 port 7777 startByte 124000 endByte 199999 from : conn 4 (158.130.6.253:39835)
+118.666[66]: DEBUG:p2p server 46478:pre write header
+118.669[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e657c8>]!
+118.755[66]: DEBUG:p2p server 46478:got a peer incoming connection (to my port 46478) about to (loop then) parse request connection number 5 (158.130.6.253:39947) thread count 2
+118.785[66]: DEBUG:p2p client thread 1 block 6: got (at least) one header block (one second later for data if from origin)
+118.785[66]: p2p client thread 1 block 6: P2P HTTP received 8000 B @ block 6:([my]0/100000.0) from 128.112.139.80:7777 thread 1 total for file  500000/1000000
+118.787[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e56994>]!
+118.788[66]: DEBUG:p2p client thread 0 block 0: got (at least) one header block (one second later for data if from origin)
+118.788[66]: p2p client thread 0 block 0: P2P HTTP received 10242 B @ block 0:([my]0/100000.0) from 128.112.139.80:7777 thread 0 total for file  508000/1000000
+118.789[66]: p2p server 46478:got request for file /1000K.file3 port 7777 startByte 932000 endByte 999999 from : conn 5 (158.130.6.253:39947)
+118.789[66]: DEBUG:p2p server 46478:pre write header
+118.789[66]: p2p server 46478:post write header length 125
+118.790[66]: DEBUG:p2p client thread 2 block 5: got (at least) one header block (one second later for data if from origin)
+118.791[66]: p2p client thread 2 block 5: P2P HTTP received 16000 B @ block 5:([my]0/100000.0) from 128.112.139.80:7777 thread 2 total for file  518242/1000000
+119.082[66]: p2p client thread 1 block 6: P2P HTTP received 8000 B @ block 6:([my]8000/100000.0) from 128.112.139.80:7777 thread 1 total for file  534242/1000000
+119.242[66]: p2p server 46478:post write header length 125
+119.279[66]: p2p client thread 0 block 0: P2P HTTP received 10019 B @ block 0:([my]10242/100000.0) from 128.112.139.80:7777 thread 0 total for file  542242/1000000
+119.612[66]: DEBUG:ping 3
+123.496[66]: DEBUG:ping 3
+123.724[66]: p2p client thread 2 block 5: P2P HTTP received 8000 B @ block 5:([my]16000/100000.0) from 128.112.139.80:7777 thread 2 total for file  552261/1000000
+124.356[66]: p2p client thread 1 block 6: P2P HTTP received 8000 B @ block 6:([my]16000/100000.0) from 128.112.139.80:7777 thread 1 total for file  560261/1000000
+124.397[66]: p2p client thread 0 block 0: P2P HTTP received 10454 B @ block 0:([my]20261/100000.0) from 128.112.139.80:7777 thread 0 total for file  568261/1000000
+124.693[66]: DEBUG:p2p server 46478:prewrite large 100000 3 (140.247.60.126:58085)
+124.704[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e7a844>]!
+124.845[66]: DEBUG:p2p server 46478:got a peer incoming connection (to my port 46478) about to (loop then) parse request connection number 6 (12.108.127.137:55242) thread count 3
+124.849[66]: p2p client thread 2 block 5: P2P HTTP received 8000 B @ block 5:([my]24000/100000.0) from 128.112.139.80:7777 thread 2 total for file  578715/1000000
+125.178[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e657c8>]!
+125.179[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e67118>]!
+125.181[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e56994>]!
+125.245[66]: p2p client thread 1 block 6: P2P HTTP received 8000 B @ block 6:([my]24000/100000.0) from 128.112.139.80:7777 thread 1 total for file  586715/1000000
+125.248[66]: DEBUG:p2p server 46478:prewrite large 76000 4 (158.130.6.253:39835)
+125.249[66]: DEBUG:p2p server 46478:prewrite large 68000 5 (158.130.6.253:39947)
+125.598[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e7a844>]!
+125.700[66]: p2p client thread 0 block 0: P2P HTTP received 8148 B @ block 0:([my]30715/100000.0) from 128.112.139.80:7777 thread 0 total for file  594715/1000000
+125.906[66]: DEBUG:p2p server 46478:exception Connection reset by peer and almost certain unsuccess in transferring fully from port 7777  -- odd because probably something weird happened for the client to drop itstartByte 400000 endByte 499999:header bytes 126 data bytes actually wrote at least 0} conn 3 (140.247.60.126:58085) threads: 4 Errno::ECONNRESET
+125.907[66]: DEBUG:p2p server 46478:done (whatever reason) with peer conn 3 (140.247.60.126:58085) [sleep 1 then close]
+128.576[66]: DEBUG:p2p server 46478:postwrite large are these ever interrupted? 5 (158.130.6.253:39947)
+128.576[66]: p2p server 46478:just successfully wrote 68000 next B is 1000000 out of 999999 conn 5 (158.130.6.253:39947) thread count 4
+128.576[66]: p2p server 46478:success in transferring all startByte 932000 endByte 999999 to : header bytes 125 data bytes actually thought wrote 68000 my port 7777 conn 5 (158.130.6.253:39947)
+128.576[66]: DEBUG:p2p server 46478:done (whatever reason) with peer conn 5 (158.130.6.253:39947) [sleep 1 then close]
+128.597[66]: DEBUG:ping 3
+129.207[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e657c8>]!
+129.559[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e56994>]!
+129.662[66]: p2p client thread 1 block 6: P2P HTTP received 8000 B @ block 6:([my]32000/100000.0) from 128.112.139.80:7777 thread 1 total for file  602863/1000000
+129.675[66]: p2p client thread 0 block 0: P2P HTTP received 8440 B @ block 0:([my]38863/100000.0) from 128.112.139.80:7777 thread 0 total for file  610863/1000000
+129.681[66]: DEBUG:p2p server 46478:postwrite large are these ever interrupted? 4 (158.130.6.253:39835)
+129.681[66]: p2p server 46478:just successfully wrote 76000 next B is 200000 out of 199999 conn 4 (158.130.6.253:39835) thread count 3
+129.683[66]: p2p server 46478:success in transferring all startByte 124000 endByte 199999 to : header bytes 125 data bytes actually thought wrote 76000 my port 7777 conn 4 (158.130.6.253:39835)
+129.683[66]: DEBUG:p2p server 46478:done (whatever reason) with peer conn 4 (158.130.6.253:39835) [sleep 1 then close]
+129.834[66]: p2p client thread 2 block 5: P2P HTTP received 16000 B @ block 5:([my]32000/100000.0) from 128.112.139.80:7777 thread 2 total for file  619303/1000000
+129.878[66]: p2p server 46478:got request for file /1000K.file3 port 7777 startByte 132000 endByte 199999 from : conn 6 (12.108.127.137:55242)
+129.878[66]: DEBUG:p2p server 46478:pre write header
+129.878[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e67118>]!
+129.969[66]: p2p client thread 1 block 6: P2P HTTP received 8000 B @ block 6:([my]40000/100000.0) from 128.112.139.80:7777 thread 1 total for file  635303/1000000
+129.975[66]: p2p server 46478:post write header length 125
+130.965[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e7a844>]!
+132.050[66]: DEBUG:ping 3
+132.887[66]: DEBUG:got pm not != blank [after processing 10 incoming #<OpenDHT::ExtendedKeyValue:0xb7e657c8>]!
+133.037[66]: p2p client thread 0 block 0: P2P HTTP received 8865 B @ block 0:([my]47303/100000.0) from 128.112.139.80:7777 thread 0 total for file  643303/1000000
+133.080[66]: DEBUG:p2p server 46478:prewrite large 68000 6 (12.108.127.137:55242)
+133.080[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e67118>]!
+133.202[66]: p2p client thread 2 block 5: P2P HTTP received 8000 B @ block 5:([my]48000/100000.0) from 128.112.139.80:7777 thread 2 total for file  652168/1000000
+135.450[66]: DEBUG:ping 3
+135.635[66]: p2p client thread 1 block 6: P2P HTTP received 8000 B @ block 6:([my]48000/100000.0) from 128.112.139.80:7777 thread 1 total for file  660168/1000000
+135.976[66]: DEBUG:got pm not != blank [after processing 10 incoming #<OpenDHT::ExtendedKeyValue:0xb7e56994>]!
+135.986[66]: p2p client thread 0 block 0: P2P HTTP received 10063 B @ block 0:([my]56168/100000.0) from 128.112.139.80:7777 thread 0 total for file  668168/1000000
+136.043[66]: p2p client thread 2 block 5: P2P HTTP received 8000 B @ block 5:([my]56000/100000.0) from 128.112.139.80:7777 thread 2 total for file  678231/1000000
+136.212[66]: p2p client thread 1 block 6: P2P HTTP received 8000 B @ block 6:([my]56000/100000.0) from 128.112.139.80:7777 thread 1 total for file  686231/1000000
+136.992[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e7a844>]!
+138.159[66]: p2p client thread 2 block 5: P2P HTTP received 8000 B @ block 5:([my]64000/100000.0) from 128.112.139.80:7777 thread 2 total for file  694231/1000000
+138.357[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e657c8>]!
+138.461[66]: DEBUG:p2p server 46478:postwrite large are these ever interrupted? 6 (12.108.127.137:55242)
+138.461[66]: p2p server 46478:just successfully wrote 68000 next B is 200000 out of 199999 conn 6 (12.108.127.137:55242) thread count 1
+138.461[66]: p2p server 46478:success in transferring all startByte 132000 endByte 199999 to : header bytes 125 data bytes actually thought wrote 68000 my port 7777 conn 6 (12.108.127.137:55242)
+138.461[66]: DEBUG:p2p server 46478:done (whatever reason) with peer conn 6 (12.108.127.137:55242) [sleep 1 then close]
+138.461[66]: DEBUG:ping 3
+138.465[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e67118>]!
+138.696[66]: p2p client thread 1 block 6: P2P HTTP received 8000 B @ block 6:([my]64000/100000.0) from 128.112.139.80:7777 thread 1 total for file  702231/1000000
+138.774[66]: p2p client thread 0 block 0: P2P HTTP received 10732 B @ block 0:([my]66231/100000.0) from 128.112.139.80:7777 thread 0 total for file  710231/1000000
+139.220[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e56994>]!
+139.729[66]: DEBUG:second fastest gateway won http://128.112.139.80:7777/1000K.file3_5 => #<OpenDHT::ExtendedKeyValues:0xb7e7a7e0>
+139.749[66]: p2p client thread 2 block 5: P2P HTTP received 8000 B @ block 5:([my]72000/100000.0) from 128.112.139.80:7777 thread 2 total for file  720963/1000000
+139.778[66]: p2p client thread 0 block 0: P2P HTTP received 8192 B @ block 0:([my]76963/100000.0) from 128.112.139.80:7777 thread 0 total for file  728963/1000000
+139.785[66]: post opendht request [http://128.112.139.80:7777/1000K.file3_5] block 5 [=> 51] Time elapsed: 30.430008
+139.871[66]: p2p client thread 2 block 5: just found 51 peers listed
+139.871[66]: DEBUG:p2p client thread 2 block 5: trying peer 155.98.35.3, 36607
+140.962[66]: DEBUG:p2p client thread 2 block 5: bad peer 155.98.35.3, 36607
+140.962[66]: DEBUG:p2p client thread 2 block 5: trying peer 216.165.109.82, 22940
+141.064[66]: p2p client thread 1 block 6: P2P HTTP received 16000 B @ block 6:([my]72000/100000.0) from 128.112.139.80:7777 thread 1 total for file  737155/1000000
+141.068[66]: p2p client thread 2 block 5: P2P HTTP received 8000 B @ block 5:([my]80000/100000.0) from 128.112.139.80:7777 thread 2 total for file  753155/1000000
+141.484[66]: DEBUG:ping 3
+141.485[66]: DEBUG:p2p client thread 2 block 5: bad peer 216.165.109.82, 22940
+141.485[66]: DEBUG:p2p client thread 2 block 5: trying peer 140.247.60.123, 10643
+141.575[66]: DEBUG:second fastest gateway won http://128.112.139.80:7777/1000K.file3_6 => #<OpenDHT::ExtendedKeyValues:0xb7e657b4>
+141.615[66]: post opendht request [http://128.112.139.80:7777/1000K.file3_6] block 6 [=> 51] Time elapsed: 31.048043
+141.622[66]: p2p client thread 1 block 6: just found 51 peers listed
+141.622[66]: DEBUG:p2p client thread 1 block 6: trying peer 155.98.35.3, 62652
+141.627[66]: p2p client thread 0 block 0: P2P HTTP received 9414 B @ block 0:([my]85155/100000.0) from 128.112.139.80:7777 thread 0 total for file  761155/1000000
+141.634[66]: DEBUG:p2p client thread 2 block 5: bad peer 140.247.60.123, 10643
+141.634[66]: DEBUG:p2p client thread 2 block 5: trying peer 132.239.17.226, 62623
+141.693[66]: DEBUG:p2p client thread 1 block 6: bad peer 155.98.35.3, 62652
+141.693[66]: DEBUG:p2p client thread 1 block 6: trying peer 132.239.17.226, 62623
+141.738[66]: DEBUG:p2p client thread 2 block 5: bad peer 132.239.17.226, 62623
+141.738[66]: DEBUG:p2p client thread 2 block 5: trying peer 128.112.139.71, 4955
+141.744[66]: DEBUG:p2p client thread 2 block 5: bad peer 128.112.139.71, 4955
+141.744[66]: DEBUG:p2p client thread 2 block 5: trying peer 155.98.35.3, 5325
+141.803[66]: DEBUG:p2p client thread 1 block 6: bad peer 132.239.17.226, 62623
+141.803[66]: DEBUG:p2p client thread 1 block 6: trying peer 140.247.60.126, 53040
+141.804[66]: DEBUG:p2p client thread 2 block 5: bad peer 155.98.35.3, 5325
+141.804[66]: DEBUG:p2p client thread 2 block 5: trying peer 158.130.6.253, 27487
+141.831[66]: DEBUG:p2p client thread 2 block 5: got a good peer 158.130.6.253, 27487 -- sending origin an interrupt/sleep message!
+141.832[66]: DEBUG:p2p client thread 2 block 5: caught2 this exception -- assume a dead origin-server -- interrupt (not dead!) 128.112.139.80:7777! got a good peer! give me that block 5 2! Go to sleep!P2PTransferInterrupt
+141.832[66]: DEBUG:p2p client thread 2 block 5: some success in origin thread to get something!  nowbyte =88000, were at 0
+141.832[66]: p2p client thread 2 block 5: P2P connecting to [p2p] peer 158.130.6.253:27487 for offset 88000 
+141.832[66]: DEBUG:p2p client thread 2 block 5: sending request to 158.130.6.253:27487
+141.833[66]: DEBUG:p2p client thread 2 block 5: sent request
+141.847[66]: DEBUG:p2p client thread 1 block 6: got a good peer 140.247.60.126, 53040 -- sending origin an interrupt/sleep message!
+141.848[66]: DEBUG:p2p client thread 1 block 6: caught2 this exception -- assume a dead origin-server -- interrupt (not dead!) 128.112.139.80:7777! got a good peer! give me that block 6 1! Go to sleep!P2PTransferInterrupt
+141.848[66]: DEBUG:p2p client thread 1 block 6: some success in origin thread to get something!  nowbyte =88000, were at 0
+141.848[66]: p2p client thread 1 block 6: P2P connecting to [p2p] peer 140.247.60.126:53040 for offset 88000 
+141.848[66]: DEBUG:p2p client thread 1 block 6: sending request to 140.247.60.126:53040
+141.848[66]: DEBUG:p2p client thread 1 block 6: sent request
+142.251[66]: DEBUG:p2p client thread 2 block 5: got (at least) one header block (one second later for data if from origin)
+142.251[66]: p2p client thread 2 block 5: P2P p2p received 12000 B @ block 5:([my]88000/100000.0) from 158.130.6.253:27487 thread 2 total for file  770569/1000000
+142.252[66]: BM reporting block 5 done
+142.252[66]: DEBUG:p2p client thread 1 block 6: got (at least) one header block (one second later for data if from origin)
+142.253[66]: p2p client thread 1 block 6: P2P p2p received 12000 B @ block 6:([my]88000/100000.0) from 140.247.60.126:53040 thread 1 total for file  782569/1000000
+142.253[66]: BM reporting block 6 done
+142.254[66]: p2p client thread 2 block 5: p2p done receiving 100000/100000.0 from 158.130.6.253:27487 stopping that block !
+142.254[66]: DEBUG:p2p client thread 2 block 5: waking up origin -- its sleeping!
+142.254[66]: DEBUG:p2p client thread 2 block 5: done with peer get/use cycle
+142.254[66]: DEBUG:p2p client thread 2 block 5: sleeping 5
+142.254[66]: DEBUG:doing set http://128.112.139.80:7777/1000K.file3_5 => peer:216.165.109.82:46478
+142.254[66]: pre opendht set [http://128.112.139.80:7777/1000K.file3_5 => peer:216.165.109.82:46478] block 5
+142.255[66]: DEBUG:p2p client thread 2 block 5: end origin looping peer
+142.255[66]: DEBUG:p2p client thread 2 block 5: origin raising on the p2p thread, origin thread ending
+142.255[66]: DEBUG:p2p client thread 2 block 5: p2p probably won block 5! ha ha!  local-variable [origin's done you should stop that stuff! [possibly because you finished it, we both noticed that before throwing, even]] might not have if they both terminated gracefully somehow or other
+142.257[66]: p2p client thread 1 block 6: p2p done receiving 100000/100000.0 from 140.247.60.126:53040 stopping that block !
+142.379[66]: DEBUG:p2p client thread 1 block 6: waking up origin -- its sleeping!
+142.380[66]: DEBUG:p2p client thread 1 block 6: done with peer get/use cycle
+142.380[66]: DEBUG:p2p client thread 1 block 6: sleeping 5
+142.380[66]: DEBUG:doing set http://128.112.139.80:7777/1000K.file3_6 => peer:216.165.109.82:46478
+142.380[66]: pre opendht set [http://128.112.139.80:7777/1000K.file3_6 => peer:216.165.109.82:46478] block 6
+142.381[66]: DEBUG:p2p client thread 1 block 6: end origin looping peer
+142.381[66]: DEBUG:p2p client thread 1 block 6: origin raising on the p2p thread, origin thread ending
+142.381[66]: DEBUG:p2p client thread 1 block 6: p2p probably won block 6! ha ha!  local-variable [origin's done you should stop that stuff! [possibly because you finished it, we both noticed that before throwing, even]] might not have if they both terminated gracefully somehow or other
+142.383[66]: DEBUG:p2p client thread 2 block 5: done p2p with origin backup
+142.383[66]: p2p client thread 2 block 2: start p2p with origin backup [yes origin fix]
+142.383[66]: DEBUG:p2p client thread 1 block 6: done p2p with origin backup
+142.383[66]: p2p client thread 1 block 7: start p2p with origin backup [yes origin fix]
+142.384[66]: DEBUG:p2p client thread 2 block 2: p2p start get/use cycle
+142.384[66]: p2p client thread 2 block 2: getting peer list 
+142.384[66]: pre opendht request [http://128.112.139.80:7777/1000K.file3_2] block 2
+142.384[66]: DEBUG:getting http://128.112.139.80:7777/1000K.file3_2
+142.385[66]: DEBUG:p2p client thread 2 block 2: beginning origin looping peer
+142.385[66]: DEBUG:p2p client thread 2 block 2: origin looping peer begin
+142.385[66]: p2p client thread 2 block 2: starting (re?) 'safety' to origin, just for kicks 
+142.385[66]: p2p client thread 2 block 2: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 0 
+142.385[66]: DEBUG:p2p client thread 2 block 2: beginning TCP open to 128.112.139.80:7777
+142.386[66]: DEBUG:p2p client thread 1 block 7: p2p start get/use cycle
+142.386[66]: p2p client thread 1 block 7: getting peer list 
+142.386[66]: pre opendht request [http://128.112.139.80:7777/1000K.file3_7] block 7
+142.386[66]: DEBUG:getting http://128.112.139.80:7777/1000K.file3_7
+142.386[66]: DEBUG:p2p client thread 1 block 7: beginning origin looping peer
+142.386[66]: DEBUG:p2p client thread 1 block 7: origin looping peer begin
+142.387[66]: p2p client thread 1 block 7: starting (re?) 'safety' to origin, just for kicks 
+142.387[66]: p2p client thread 1 block 7: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 0 
+142.387[66]: DEBUG:p2p client thread 1 block 7: beginning TCP open to 128.112.139.80:7777
+142.522[66]: DEBUG:p2p client thread 2 block 2: done TCP open to 128.112.139.80:7777
+142.525[66]: DEBUG:p2p client thread 2 block 2: sending request to 128.112.139.80:7777
+142.719[66]: DEBUG:p2p client thread 1 block 7: done TCP open to 128.112.139.80:7777
+142.722[66]: DEBUG:p2p client thread 1 block 7: sending request to 128.112.139.80:7777
+142.725[66]: DEBUG:p2p client thread 2 block 2: sent request
+142.728[66]: DEBUG:p2p client thread 1 block 7: sent request
+143.023[66]: post opendht set [http://128.112.139.80:7777/1000K.file3_6 => peer:216.165.109.82:46478] block 6 Time elapsed: 0.643152
+143.023[66]: post opendht set [http://128.112.139.80:7777/1000K.file3_5 => peer:216.165.109.82:46478] block 5 Time elapsed: 0.768913
+143.199[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e2feac>]!
+143.263[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e36900>]!
+144.086[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e36900>]!
+144.134[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e2feac>]!
+144.135[66]: p2p client thread 0 block 0: P2P HTTP received 5870 B @ block 0:([my]94569/100000.0) from 128.112.139.80:7777 thread 0 total for file  794569/1000000
+144.135[66]: DEBUG:lopping off HTTP/1.1 414 Request-URI Too Large  Date: Tue, 31 Jul 2007 18:17:58 GMT  Server: Apache/2.2.4 (Unix)  Content-Length: 250  Connection: close  Content-Type: text/html; charset=iso-8859-1    <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"> <html><head> <title>414 Request-URI Too Large</title> </head><body> <h1>Request-URI Too Large</h1> <p>The requested URL's length exceeds the capacity limit for this server.<br /> </p> </body></html> 
+144.135[66]: BM reporting block 0 done
+144.137[66]: p2p client thread 0 block 0: p2p done receiving 100439/100000.0 from 128.112.139.80:7777 stopping that block !
+144.137[66]: DEBUG:p2p client thread 0 block 0: done via origin
+144.137[66]: DEBUG:p2p client thread 0 block 0: end origin looping peer
+144.138[66]: DEBUG:p2p client thread 0 block 0: origin raising on the p2p thread, origin thread ending
+144.139[66]: DEBUG:doing set http://128.112.139.80:7777/1000K.file3_0 => peer:216.165.109.82:46478
+144.139[66]: pre opendht set [http://128.112.139.80:7777/1000K.file3_0 => peer:216.165.109.82:46478] block 0
+144.288[66]: DEBUG:p2p client thread 1 block 7: got (at least) one header block (one second later for data if from origin)
+144.289[66]: p2p client thread 1 block 7: P2P HTTP received 8000 B @ block 7:([my]0/100000.0) from 128.112.139.80:7777 thread 1 total for file  800000/1000000
+144.289[66]: DEBUG:got an interrupted opendht request [http://128.112.139.80:7777/1000K.file3_0] block 0 Time elapsed: 36.030784, raising it (P2PTransferInterrupt)
+144.289[66]: DEBUG:p2p client thread 0 block 0: p2p probably won block 0! ha ha!  local-variable [origin's done you should stop that stuff! [possibly because you finished it, we both noticed that before throwing, even]] might not have if they both terminated gracefully somehow or other
+144.290[66]: DEBUG:p2p client thread 0 block 0: done p2p with origin backup
+144.290[66]: p2p client thread 0 block 2: start p2p with origin backup [yes origin fix]
+144.290[66]: DEBUG:p2p client thread 2 block 2: got (at least) one header block (one second later for data if from origin)
+144.291[66]: p2p client thread 2 block 2: P2P HTTP received 8000 B @ block 2:([my]0/100000.0) from 128.112.139.80:7777 thread 2 total for file  808000/1000000
+144.292[66]: DEBUG:p2p client thread 0 block 2: p2p start get/use cycle
+144.292[66]: p2p client thread 0 block 2: getting peer list 
+144.292[66]: pre opendht request [http://128.112.139.80:7777/1000K.file3_2] block 2
+144.292[66]: DEBUG:getting http://128.112.139.80:7777/1000K.file3_2
+144.293[66]: DEBUG:p2p client thread 0 block 2: beginning origin looping peer
+144.293[66]: DEBUG:p2p client thread 0 block 2: origin looping peer begin
+144.293[66]: p2p client thread 0 block 2: starting (re?) 'safety' to origin, just for kicks 
+144.293[66]: p2p client thread 0 block 2: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 8000 
+144.293[66]: DEBUG:p2p client thread 0 block 2: beginning TCP open to 128.112.139.80:7777
+144.352[66]: DEBUG:p2p client thread 0 block 2: done TCP open to 128.112.139.80:7777
+144.353[66]: DEBUG:p2p client thread 0 block 2: sending request to 128.112.139.80:7777
+144.462[66]: DEBUG:p2p client thread 0 block 2: sent request
+144.523[66]: DEBUG:ping 3
+145.589[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e36900>]!
+146.688[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e2feac>]!
+146.689[66]: p2p client thread 1 block 7: P2P HTTP received 8000 B @ block 7:([my]8000/100000.0) from 128.112.139.80:7777 thread 1 total for file  816000/1000000
+146.690[66]: p2p client thread 2 block 2: P2P HTTP received 8000 B @ block 2:([my]8000/100000.0) from 128.112.139.80:7777 thread 2 total for file  824000/1000000
+146.918[66]: DEBUG:p2p client thread 0 block 2: got (at least) one header block (one second later for data if from origin)
+146.918[66]: p2p client thread 0 block 2: P2P HTTP received 8000 B @ block 2:([my]8000/100000.0) from 128.112.139.80:7777 thread 0 total for file  832000/1000000
+146.918[66]: DEBUG:Potentially overwriting written bytes! block 2 my current download size is 16000 and you want to write 8000B @ 8000 ignoring!
+146.918[66]: DEBUG:p2p client thread 0 block 2: kicking myself out for being useless -- sleeping 4
+146.937[66]: p2p client thread 1 block 7: P2P HTTP received 8000 B @ block 7:([my]16000/100000.0) from 128.112.139.80:7777 thread 1 total for file  832000/1000000
+146.987[66]: p2p client thread 2 block 2: P2P HTTP received 8000 B @ block 2:([my]16000/100000.0) from 128.112.139.80:7777 thread 2 total for file  840000/1000000
+147.312[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e36900>]!
+147.518[66]: DEBUG:got pm not != blank [after processing 9 incoming #<OpenDHT::ExtendedKeyValue:0xb7e2feac>]!
+147.553[66]: DEBUG:ping 3
+148.747[66]: DEBUG:primary gateway won http://128.112.139.80:7777/1000K.file3_7 => #<OpenDHT::ExtendedKeyValues:0xb7e306f4>
+148.748[66]: p2p client thread 1 block 7: P2P HTTP received 8000 B @ block 7:([my]24000/100000.0) from 128.112.139.80:7777 thread 1 total for file  848000/1000000
+148.749[66]: p2p client thread 2 block 2: P2P HTTP received 8000 B @ block 2:([my]24000/100000.0) from 128.112.139.80:7777 thread 2 total for file  856000/1000000
+148.750[66]: post opendht request [http://128.112.139.80:7777/1000K.file3_7] block 7 [=> 44] Time elapsed: 6.364517
+148.751[66]: p2p client thread 1 block 7: just found 44 peers listed
+148.751[66]: DEBUG:p2p client thread 1 block 7: trying peer 216.165.109.81, 54166
+148.829[66]: DEBUG:p2p client thread 1 block 7: bad peer 216.165.109.81, 54166
+148.829[66]: DEBUG:p2p client thread 1 block 7: trying peer 128.112.139.97, 39044
+148.836[66]: DEBUG:p2p client thread 1 block 7: bad peer 128.112.139.97, 39044
+148.836[66]: DEBUG:p2p client thread 1 block 7: trying peer 128.112.139.75, 15180
+148.888[66]: DEBUG:p2p client thread 1 block 7: bad peer 128.112.139.75, 15180
+148.888[66]: DEBUG:p2p client thread 1 block 7: trying peer 155.98.35.3, 36607
+148.954[66]: DEBUG:p2p client thread 1 block 7: bad peer 155.98.35.3, 36607
+148.955[66]: DEBUG:p2p client thread 1 block 7: trying peer 140.247.60.123, 33964
+149.009[66]: DEBUG:p2p client thread 1 block 7: got a good peer 140.247.60.123, 33964 -- sending origin an interrupt/sleep message!
+149.009[66]: DEBUG:p2p client thread 1 block 7: caught2 this exception -- assume a dead origin-server -- interrupt (not dead!) 128.112.139.80:7777! got a good peer! give me that block 7 1! Go to sleep!P2PTransferInterrupt
+149.009[66]: DEBUG:p2p client thread 1 block 7: some success in origin thread to get something!  nowbyte =32000, were at 0
+149.010[66]: p2p client thread 1 block 7: P2P connecting to [p2p] peer 140.247.60.123:33964 for offset 32000 
+149.010[66]: DEBUG:p2p client thread 1 block 7: sending request to 140.247.60.123:33964
+149.010[66]: DEBUG:p2p client thread 1 block 7: sent request
+149.051[66]: DEBUG:p2p client thread 1 block 7: got (at least) one header block (one second later for data if from origin)
+149.055[66]: p2p client thread 1 block 7: P2P p2p received 2896 B @ block 7:([my]32000/100000.0) from 140.247.60.123:33964 thread 1 total for file  864000/1000000
+149.147[66]: p2p client thread 1 block 7: P2P p2p received 7240 B @ block 7:([my]34896/100000.0) from 140.247.60.123:33964 thread 1 total for file  866896/1000000
+149.148[66]: p2p client thread 1 block 7: P2P p2p received 4344 B @ block 7:([my]42136/100000.0) from 140.247.60.123:33964 thread 1 total for file  874136/1000000
+149.183[66]: p2p client thread 1 block 7: P2P p2p received 4800 B @ block 7:([my]46480/100000.0) from 140.247.60.123:33964 thread 1 total for file  878480/1000000
+149.204[66]: p2p client thread 2 block 2: P2P HTTP received 4344 B @ block 2:([my]32000/100000.0) from 128.112.139.80:7777 thread 2 total for file  883280/1000000
+149.445[66]: p2p client thread 1 block 7: P2P p2p received 20976 B @ block 7:([my]51280/100000.0) from 140.247.60.123:33964 thread 1 total for file  887624/1000000
+149.446[66]: p2p client thread 2 block 2: P2P HTTP received 11656 B @ block 2:([my]36344/100000.0) from 128.112.139.80:7777 thread 2 total for file  908600/1000000
+149.505[66]: p2p client thread 1 block 7: P2P p2p received 4344 B @ block 7:([my]72256/100000.0) from 140.247.60.123:33964 thread 1 total for file  920256/1000000
+149.770[66]: p2p client thread 1 block 7: P2P p2p received 2896 B @ block 7:([my]76600/100000.0) from 140.247.60.123:33964 thread 1 total for file  924600/1000000
+149.899[66]: p2p client thread 1 block 7: P2P p2p received 5792 B @ block 7:([my]79496/100000.0) from 140.247.60.123:33964 thread 1 total for file  927496/1000000
+149.944[66]: p2p client thread 1 block 7: P2P p2p received 1448 B @ block 7:([my]85288/100000.0) from 140.247.60.123:33964 thread 1 total for file  933288/1000000
+149.957[66]: p2p client thread 1 block 7: P2P p2p received 2896 B @ block 7:([my]86736/100000.0) from 140.247.60.123:33964 thread 1 total for file  934736/1000000
+149.995[66]: p2p client thread 1 block 7: P2P p2p received 4344 B @ block 7:([my]89632/100000.0) from 140.247.60.123:33964 thread 1 total for file  937632/1000000
+150.059[66]: p2p client thread 1 block 7: P2P p2p received 1448 B @ block 7:([my]93976/100000.0) from 140.247.60.123:33964 thread 1 total for file  941976/1000000
+150.083[66]: p2p client thread 1 block 7: P2P p2p received 4576 B @ block 7:([my]95424/100000.0) from 140.247.60.123:33964 thread 1 total for file  943424/1000000
+150.084[66]: BM reporting block 7 done
+150.084[66]: p2p client thread 1 block 7: p2p done receiving 100000/100000.0 from 140.247.60.123:33964 stopping that block !
+150.085[66]: DEBUG:p2p client thread 1 block 7: waking up origin -- its sleeping!
+150.085[66]: DEBUG:p2p client thread 1 block 7: done with peer get/use cycle
+150.085[66]: DEBUG:p2p client thread 1 block 7: sleeping 5
+150.085[66]: DEBUG:doing set http://128.112.139.80:7777/1000K.file3_7 => peer:216.165.109.82:46478
+150.085[66]: pre opendht set [http://128.112.139.80:7777/1000K.file3_7 => peer:216.165.109.82:46478] block 7
+150.086[66]: DEBUG:p2p client thread 1 block 7: end origin looping peer
+150.086[66]: DEBUG:p2p client thread 1 block 7: origin raising on the p2p thread, origin thread ending
+150.086[66]: DEBUG:p2p client thread 1 block 7: p2p probably won block 7! ha ha!  local-variable [origin's done you should stop that stuff! [possibly because you finished it, we both noticed that before throwing, even]] might not have if they both terminated gracefully somehow or other
+150.088[66]: DEBUG:p2p client thread 1 block 7: done p2p with origin backup
+150.107[66]: p2p client thread 1 block 2: start p2p with origin backup [yes origin fix]
+150.108[66]: DEBUG:p2p client thread 1 block 2: p2p start get/use cycle
+150.108[66]: p2p client thread 1 block 2: getting peer list 
+150.108[66]: pre opendht request [http://128.112.139.80:7777/1000K.file3_2] block 2
+150.108[66]: DEBUG:getting http://128.112.139.80:7777/1000K.file3_2
+150.109[66]: DEBUG:p2p client thread 1 block 2: beginning origin looping peer
+150.109[66]: DEBUG:p2p client thread 1 block 2: origin looping peer begin
+150.109[66]: p2p client thread 1 block 2: starting (re?) 'safety' to origin, just for kicks 
+150.109[66]: p2p client thread 1 block 2: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 48000 
+150.109[66]: DEBUG:p2p client thread 1 block 2: beginning TCP open to 128.112.139.80:7777
+150.143[66]: DEBUG:p2p client thread 1 block 2: done TCP open to 128.112.139.80:7777
+150.144[66]: DEBUG:p2p client thread 1 block 2: sending request to 128.112.139.80:7777
+150.144[66]: DEBUG:p2p client thread 1 block 2: sent request
+150.236[66]: DEBUG:p2p client thread 1 block 2: got (at least) one header block (one second later for data if from origin)
+150.236[66]: p2p client thread 1 block 2: P2P HTTP received 8000 B @ block 2:([my]48000/100000.0) from 128.112.139.80:7777 thread 1 total for file  948000/1000000
+150.529[66]: p2p client thread 2 block 2: P2P HTTP received 8000 B @ block 2:([my]48000/100000.0) from 128.112.139.80:7777 thread 2 total for file  956000/1000000
+150.529[66]: DEBUG:Potentially overwriting written bytes! block 2 my current download size is 56000 and you want to write 8000B @ 48000 ignoring!
+150.529[66]: DEBUG:p2p client thread 2 block 2: kicking myself out for being useless -- sleeping 4
+150.572[66]: DEBUG:ping 3
+150.629[66]: post opendht set [http://128.112.139.80:7777/1000K.file3_7 => peer:216.165.109.82:46478] block 7 Time elapsed: 0.543886
+150.927[66]: DEBUG:p2p client thread 0 block 2: caught2 this exception -- assume a dead origin-server -- LOAD  128.112.139.80:7777! Aww they told me I was writing useless data!P2PWebFailurePerhapsTemporary
+150.927[66]: DEBUG:p2p client thread 0 block 2: origin thread mini sleeping 1-- guess the host was toast!
+150.965[66]: p2p client thread 1 block 2: P2P HTTP received 7240 B @ block 2:([my]56000/100000.0) from 128.112.139.80:7777 thread 1 total for file  956000/1000000
+150.981[66]: p2p client thread 1 block 2: P2P HTTP received 760 B @ block 2:([my]63240/100000.0) from 128.112.139.80:7777 thread 1 total for file  963240/1000000
+151.746[66]: p2p client thread 1 block 2: P2P HTTP received 8000 B @ block 2:([my]64000/100000.0) from 128.112.139.80:7777 thread 1 total for file  964000/1000000
+151.941[66]: p2p client thread 0 block 2: starting (re?) 'safety' to origin, just for kicks 
+151.941[66]: p2p client thread 0 block 2: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 72000 
+151.941[66]: DEBUG:p2p client thread 0 block 2: beginning TCP open to 128.112.139.80:7777
+151.971[66]: DEBUG:p2p client thread 0 block 2: done TCP open to 128.112.139.80:7777
+151.971[66]: DEBUG:p2p client thread 0 block 2: sending request to 128.112.139.80:7777
+151.971[66]: DEBUG:p2p client thread 0 block 2: sent request
+152.010[66]: DEBUG:p2p client thread 0 block 2: got (at least) one header block (one second later for data if from origin)
+152.010[66]: p2p client thread 0 block 2: P2P HTTP received 6950 B @ block 2:([my]72000/100000.0) from 128.112.139.80:7777 thread 0 total for file  972000/1000000
+152.011[66]: p2p client thread 0 block 2: P2P HTTP received 1050 B @ block 2:([my]78950/100000.0) from 128.112.139.80:7777 thread 0 total for file  978950/1000000
+152.403[66]: p2p client thread 1 block 2: P2P HTTP received 8000 B @ block 2:([my]72000/100000.0) from 128.112.139.80:7777 thread 1 total for file  980000/1000000
+152.403[66]: DEBUG:Potentially overwriting written bytes! block 2 my current download size is 80000 and you want to write 8000B @ 72000 ignoring!
+152.403[66]: DEBUG:p2p client thread 1 block 2: kicking myself out for being useless -- sleeping 4
+152.692[66]: p2p client thread 0 block 2: P2P HTTP received 5792 B @ block 2:([my]80000/100000.0) from 128.112.139.80:7777 thread 0 total for file  980000/1000000
+152.693[66]: p2p client thread 0 block 2: P2P HTTP received 1448 B @ block 2:([my]85792/100000.0) from 128.112.139.80:7777 thread 0 total for file  985792/1000000
+152.718[66]: p2p client thread 0 block 2: P2P HTTP received 760 B @ block 2:([my]87240/100000.0) from 128.112.139.80:7777 thread 0 total for file  987240/1000000
+153.497[66]: p2p client thread 0 block 2: P2P HTTP received 8000 B @ block 2:([my]88000/100000.0) from 128.112.139.80:7777 thread 0 total for file  988000/1000000
+153.643[66]: DEBUG:ping 3
+154.534[66]: DEBUG:p2p client thread 2 block 2: caught2 this exception -- assume a dead origin-server -- LOAD  128.112.139.80:7777! Aww they told me I was writing useless data!P2PWebFailurePerhapsTemporary
+154.534[66]: DEBUG:p2p client thread 2 block 2: origin thread mini sleeping 1-- guess the host was toast!
+155.645[66]: p2p client thread 2 block 2: starting (re?) 'safety' to origin, just for kicks 
+155.645[66]: p2p client thread 2 block 2: P2P HTTP connecting to origin host 128.112.139.80:7777 for offset 96000 
+155.645[66]: DEBUG:p2p client thread 2 block 2: beginning TCP open to 128.112.139.80:7777
+155.660[66]: DEBUG:p2p client thread 2 block 2: done TCP open to 128.112.139.80:7777
+155.660[66]: DEBUG:p2p client thread 2 block 2: sending request to 128.112.139.80:7777
+155.660[66]: DEBUG:p2p client thread 2 block 2: sent request
+156.456[66]: DEBUG:p2p client thread 1 block 2: caught2 this exception -- assume a dead origin-server -- LOAD  128.112.139.80:7777! Aww they told me I was writing useless data!P2PWebFailurePerhapsTemporary
+156.456[66]: DEBUG:p2p client thread 1 block 2: origin thread mini sleeping 1-- guess the host was toast!
+156.457[66]: DEBUG:p2p client thread 2 block 2: got (at least) one header block (one second later for data if from origin)
+156.533[66]: p2p client thread 2 block 2: P2P HTTP received 4000 B @ block 2:([my]96000/100000.0) from 128.112.139.80:7777 thread 2 total for file  996000/1000000
+156.533[66]: BM reporting block 2 done
+156.534[66]: p2p client thread 2 block 2: p2p done receiving 100000/100000.0 from 128.112.139.80:7777 stopping that block !
+156.534[66]: p2p client thread 2 block 2: DONE WITH WHOLE FILE P2P!
+156.535[66]: DEBUG:p2p client thread 2 block 2: done via origin
+156.535[66]: DEBUG:p2p client thread 2 block 2: end origin looping peer
+156.535[66]: DEBUG:p2p client thread 2 block 2: origin raising on the p2p thread, origin thread ending
+156.536[66]: DEBUG:doing set http://128.112.139.80:7777/1000K.file3_2 => peer:216.165.109.82:46478
+156.536[66]: pre opendht set [http://128.112.139.80:7777/1000K.file3_2 => peer:216.165.109.82:46478] block 2
+156.539[66]: DEBUG:got an interrupted opendht request [http://128.112.139.80:7777/1000K.file3_2] block 2 Time elapsed: 14.155122, raising it (P2PTransferInterrupt)
+156.539[66]: DEBUG:p2p client thread 2 block 2: p2p probably won block 2! ha ha!  local-variable [origin's done you should stop that stuff! [possibly because you finished it, we both noticed that before throwing, even]] might not have if they both terminated gracefully somehow or other
+156.540[66]: p2p client thread 2 block 2: P2P DONE WITH WHOLE FILE--backup, somebody got it
+156.540[66]: DEBUG:p2p client thread 2 block 2: done p2p with origin backup
+156.540[66]: p2p client thread 2 block 2: running blockdownloader done/stop file probably downloaded!
+156.645[66]: DEBUG:ping 3
+157.461[66]: DEBUG:p2p client thread 1 block 2: end origin looping peer
+157.461[66]: DEBUG:p2p client thread 1 block 2: origin raising on the p2p thread, origin thread ending
+157.468[66]: DEBUG:got an interrupted opendht request [http://128.112.139.80:7777/1000K.file3_2] block 2 Time elapsed: 7.360007, raising it (P2PTransferInterrupt)
+157.468[66]: DEBUG:p2p client thread 1 block 2: p2p probably won block 2! ha ha!  local-variable [origin's done you should stop that stuff! [possibly because you finished it, we both noticed that before throwing, even]] might not have if they both terminated gracefully somehow or other
+157.468[66]: p2p client thread 1 block 2: P2P DONE WITH WHOLE FILE--backup, somebody got it
+157.468[66]: DEBUG:p2p client thread 1 block 2: done p2p with origin backup
+157.469[66]: p2p client thread 1 block 2: running blockdownloader done/stop file probably downloaded!
+159.632[66]: p2p client thread 0 block 2: P2P HTTP received 4000 B @ block 2:([my]96000/100000.0) from 128.112.139.80:7777 thread 0 total for file  1000000/1000000
+159.632[66]: DEBUG:Potentially overwriting written bytes! block 2 my current download size is 100000 and you want to write 4000B @ 96000 ignoring!
+159.632[66]: BM reporting block 2 done
+159.633[66]: DEBUG:p2p client thread 0 block 2: kicking myself out for being useless -- sleeping 4
+159.633[66]: DEBUG:doing set http://128.112.139.80:7777/1000K.file3_2 => peer:216.165.109.82:46478
+159.633[66]: pre opendht set [http://128.112.139.80:7777/1000K.file3_2 => peer:216.165.109.82:46478] block 2
+159.673[66]: DEBUG:ping 3
+162.558[66]: DEBUG:p2p server 46478:got a peer incoming connection (to my port 46478) about to (loop then) parse request connection number 7 (216.165.109.81:56387) thread count 0
+162.682[66]: DEBUG:ping 3
+162.745[66]: p2p server 46478:got request for file /1000K.file3 port 7777 startByte 496000 endByte 499999 from : conn 7 (216.165.109.81:56387)
+162.745[66]: DEBUG:p2p server 46478:pre write header
+162.746[66]: p2p server 46478:post write header length 124
+162.746[66]: DEBUG:p2p server 46478:prewrite large 4000 7 (216.165.109.81:56387)
+162.746[66]: DEBUG:p2p server 46478:postwrite large are these ever interrupted? 7 (216.165.109.81:56387)
+162.746[66]: p2p server 46478:just successfully wrote 4000 next B is 500000 out of 499999 conn 7 (216.165.109.81:56387) thread count 1
+162.746[66]: p2p server 46478:success in transferring all startByte 496000 endByte 499999 to : header bytes 124 data bytes actually thought wrote 4000 my port 7777 conn 7 (216.165.109.81:56387)
+162.747[66]: DEBUG:p2p server 46478:done (whatever reason) with peer conn 7 (216.165.109.81:56387) [sleep 1 then close]
+163.647[66]: DEBUG:p2p client thread 0 block 2: caught2 this exception -- assume a dead origin-server -- LOAD  128.112.139.80:7777! Aww they told me I was writing useless data!P2PWebFailurePerhapsTemporary
+163.650[66]: DEBUG:p2p client thread 0 block 2: done via origin
+163.650[66]: DEBUG:p2p client thread 0 block 2: end origin looping peer
+163.651[66]: DEBUG:p2p client thread 0 block 2: origin raising on the p2p thread, origin thread ending
+163.653[66]: DEBUG:got an interrupted opendht request [http://128.112.139.80:7777/1000K.file3_2] block 2 Time elapsed: 19.360838, raising it (P2PTransferInterrupt)
+163.653[66]: DEBUG:p2p client thread 0 block 2: p2p probably won block 2! ha ha!  local-variable [origin's done you should stop that stuff! [possibly because you finished it, we both noticed that before throwing, even]] might not have if they both terminated gracefully somehow or other
+163.653[66]: p2p client thread 0 block 2: P2P DONE WITH WHOLE FILE--backup, somebody got it
+163.653[66]: DEBUG:p2p client thread 0 block 2: done p2p with origin backup
+163.654[66]: p2p client thread 0 block 2: running blockdownloader done/stop file probably downloaded!
+163.654[66]: p2p client starting lingering 3
+165.684[66]: DEBUG:ping 3
+166.712[66]: p2p client done lingering 3 -- telling server to wrap it up, joining with it
+167.180[66]: DEBUG:p2p server 46478:server done, closing port, starting cleanup
+167.181[66]: DEBUG:p2p server 46478:waiting on all current serving threads
+167.181[66]: DEBUG:p2p client server thread wrapped it up ditching its clients, etc.
+167.669[66]: DEBUG:ack failed a single opendht the 0'th time after 60.036021s-- possibly retrying [put http://128.112.139.80:7777/1000K.file3_3 =>  http://128.112.139.80:7777/1000K.file3_3 peer:216.165.109.82:46478] ...detail[execution expired after 60 secs} Timeout::Error]
+168.181[66]: DEBUG:waiting for all opendhts to finish...
+168.691[66]: DEBUG:ping 3
+169.204[66]: DEBUG:waiting for all opendhts to finish...
+170.205[66]: DEBUG:waiting for all opendhts to finish...
+171.222[66]: DEBUG:waiting for all opendhts to finish...
+171.695[66]: DEBUG:ping 3
+172.224[66]: DEBUG:waiting for all opendhts to finish...
+173.230[66]: DEBUG:waiting for all opendhts to finish...
+174.233[66]: DEBUG:waiting for all opendhts to finish...
+174.740[66]: DEBUG:ping 3
+175.248[66]: DEBUG:waiting for all opendhts to finish...
+176.298[66]: DEBUG:waiting for all opendhts to finish...
+177.379[66]: DEBUG:waiting for all opendhts to finish...
+177.880[66]: DEBUG:ping 3
+178.501[66]: DEBUG:waiting for all opendhts to finish...
+179.502[66]: DEBUG:waiting for all opendhts to finish...
+180.106[66]: post opendht set [http://128.112.139.80:7777/1000K.file3_0 => peer:216.165.109.82:46478] block 0 Time elapsed: 35.966489
+180.502[66]: DEBUG:waiting for all opendhts to finish...
+180.565[66]: post opendht set [http://128.112.139.80:7777/1000K.file3_2 => peer:216.165.109.82:46478] block 2 Time elapsed: 24.028995
+180.592[66]: post opendht set [http://128.112.139.80:7777/1000K.file3_2 => peer:216.165.109.82:46478] block 2 Time elapsed: 20.95934
+180.886[66]: DEBUG:ping 3
+181.503[66]: DEBUG:waiting for all opendhts to finish...
+182.509[66]: DEBUG:waiting for all opendhts to finish...
+183.510[66]: DEBUG:waiting for all opendhts to finish...
+183.925[66]: DEBUG:ping 3
+184.511[66]: DEBUG:waiting for all opendhts to finish...
+185.535[66]: DEBUG:waiting for all opendhts to finish...
+186.545[66]: DEBUG:waiting for all opendhts to finish...
+186.935[66]: DEBUG:ping 3
+187.642[66]: DEBUG:waiting for all opendhts to finish...
+188.660[66]: DEBUG:waiting for all opendhts to finish...
+189.680[66]: DEBUG:waiting for all opendhts to finish...
+189.999[66]: DEBUG:ping 3
+190.696[66]: DEBUG:waiting for all opendhts to finish...
+191.697[66]: DEBUG:waiting for all opendhts to finish...
+192.722[66]: DEBUG:waiting for all opendhts to finish...
+193.003[66]: DEBUG:ping 3
+193.750[66]: DEBUG:waiting for all opendhts to finish...
+194.764[66]: DEBUG:waiting for all opendhts to finish...
+195.932[66]: DEBUG:waiting for all opendhts to finish...
+196.014[66]: DEBUG:ping 3
+196.953[66]: DEBUG:waiting for all opendhts to finish...
+197.956[66]: DEBUG:waiting for all opendhts to finish...
+198.967[66]: DEBUG:waiting for all opendhts to finish...
+199.089[66]: DEBUG:ping 3
+199.984[66]: DEBUG:waiting for all opendhts to finish...
+201.188[66]: DEBUG:waiting for all opendhts to finish...
+202.100[66]: DEBUG:ping 3
+202.196[66]: DEBUG:waiting for all opendhts to finish...
+203.200[66]: DEBUG:waiting for all opendhts to finish...
+204.206[66]: DEBUG:waiting for all opendhts to finish...
+205.118[66]: DEBUG:ping 3
+205.206[66]: DEBUG:waiting for all opendhts to finish...
+206.228[66]: DEBUG:waiting for all opendhts to finish...
+207.229[66]: DEBUG:waiting for all opendhts to finish...
+208.120[66]: DEBUG:ping 3
+208.246[66]: DEBUG:waiting for all opendhts to finish...
+209.246[66]: DEBUG:waiting for all opendhts to finish...
+210.247[66]: DEBUG:waiting for all opendhts to finish...
+211.120[66]: DEBUG:ping 3
+211.249[66]: DEBUG:waiting for all opendhts to finish...
+212.250[66]: DEBUG:waiting for all opendhts to finish...
+213.251[66]: DEBUG:waiting for all opendhts to finish...
+214.121[66]: DEBUG:ping 3
+214.256[66]: DEBUG:waiting for all opendhts to finish...
+215.263[66]: DEBUG:waiting for all opendhts to finish...
+216.263[66]: DEBUG:waiting for all opendhts to finish...
+217.121[66]: DEBUG:ping 3
+217.265[66]: DEBUG:waiting for all opendhts to finish...
+218.265[66]: DEBUG:waiting for all opendhts to finish...
+219.266[66]: DEBUG:waiting for all opendhts to finish...
+220.183[66]: DEBUG:ping 3
+220.267[66]: DEBUG:waiting for all opendhts to finish...
+221.268[66]: DEBUG:waiting for all opendhts to finish...
+222.270[66]: DEBUG:waiting for all opendhts to finish...
+223.184[66]: DEBUG:ping 3
+223.270[66]: DEBUG:waiting for all opendhts to finish...
+224.304[66]: DEBUG:waiting for all opendhts to finish...
+225.304[66]: DEBUG:waiting for all opendhts to finish...
+226.190[66]: DEBUG:ping 3
+226.317[66]: DEBUG:waiting for all opendhts to finish...
+227.322[66]: DEBUG:waiting for all opendhts to finish...
+227.672[66]: DEBUG:ack failed a single opendht the 1'th time after 60.00231s-- possibly retrying [put http://128.112.139.80:7777/1000K.file3_3 =>  http://128.112.139.80:7777/1000K.file3_3 peer:216.165.109.82:46478] ...detail[execution expired after 60 secs} Timeout::Error]
+228.326[66]: DEBUG:waiting for all opendhts to finish...
+229.192[66]: DEBUG:ping 3
+229.326[66]: DEBUG:waiting for all opendhts to finish...
+230.327[66]: DEBUG:waiting for all opendhts to finish...
+231.328[66]: DEBUG:waiting for all opendhts to finish...
+232.192[66]: DEBUG:ping 3
+232.329[66]: DEBUG:waiting for all opendhts to finish...
+233.330[66]: DEBUG:waiting for all opendhts to finish...
+234.331[66]: DEBUG:waiting for all opendhts to finish...
+235.193[66]: DEBUG:ping 3
+235.332[66]: DEBUG:waiting for all opendhts to finish...
+236.333[66]: DEBUG:waiting for all opendhts to finish...
+237.335[66]: DEBUG:waiting for all opendhts to finish...
+238.193[66]: DEBUG:ping 3
+238.336[66]: DEBUG:waiting for all opendhts to finish...
+239.343[66]: DEBUG:waiting for all opendhts to finish...
+240.344[66]: DEBUG:waiting for all opendhts to finish...
+241.194[66]: DEBUG:ping 3
+241.354[66]: DEBUG:waiting for all opendhts to finish...
+242.359[66]: DEBUG:waiting for all opendhts to finish...
+243.359[66]: DEBUG:waiting for all opendhts to finish...
+244.194[66]: DEBUG:ping 3
+244.363[66]: DEBUG:waiting for all opendhts to finish...
+245.376[66]: DEBUG:waiting for all opendhts to finish...
+246.396[66]: DEBUG:waiting for all opendhts to finish...
+247.199[66]: DEBUG:ping 3
+247.402[66]: DEBUG:waiting for all opendhts to finish...
+248.408[66]: DEBUG:waiting for all opendhts to finish...
+249.415[66]: DEBUG:waiting for all opendhts to finish...
+250.212[66]: DEBUG:ping 3
+250.419[66]: DEBUG:waiting for all opendhts to finish...
+251.421[66]: DEBUG:waiting for all opendhts to finish...
+252.424[66]: DEBUG:waiting for all opendhts to finish...
+253.212[66]: DEBUG:ping 3
+253.431[66]: DEBUG:waiting for all opendhts to finish...
+254.436[66]: DEBUG:waiting for all opendhts to finish...
+255.439[66]: DEBUG:waiting for all opendhts to finish...
+256.227[66]: DEBUG:ping 3
+256.440[66]: DEBUG:waiting for all opendhts to finish...
+257.443[66]: DEBUG:waiting for all opendhts to finish...
+258.451[66]: DEBUG:waiting for all opendhts to finish...
+259.234[66]: DEBUG:ping 3
+259.456[66]: DEBUG:waiting for all opendhts to finish...
+259.682[66]: post opendht set [http://128.112.139.80:7777/1000K.file3_3 => peer:216.165.109.82:46478] block 3 Time elapsed: 152.049367
+260.460[66]: DEBUG:waiting for all opendhts to finish...
+260.461[66]: pre opendht rm [remove http://128.112.139.80:7777/1000K.file3_0 => peer:216.165.109.82:46478] block 0
+262.235[66]: DEBUG:ping 3
+263.596[66]: post opendht rm [remove http://128.112.139.80:7777/1000K.file3_0 => peer:216.165.109.82:46478] block 0 Time elapsed: 3.135383
+263.597[66]: pre opendht rm [remove http://128.112.139.80:7777/1000K.file3_1 => peer:216.165.109.82:46478] block 1
+264.107[66]: post opendht rm [remove http://128.112.139.80:7777/1000K.file3_1 => peer:216.165.109.82:46478] block 1 Time elapsed: 0.510567
+264.108[66]: pre opendht rm [remove http://128.112.139.80:7777/1000K.file3_2 => peer:216.165.109.82:46478] block 2
+265.235[66]: DEBUG:ping 3
+268.239[66]: DEBUG:ping 3
+271.242[66]: DEBUG:ping 3
+273.586[66]: post opendht rm [remove http://128.112.139.80:7777/1000K.file3_2 => peer:216.165.109.82:46478] block 2 Time elapsed: 9.47811
+273.586[66]: pre opendht rm [remove http://128.112.139.80:7777/1000K.file3_3 => peer:216.165.109.82:46478] block 3
+274.242[66]: DEBUG:ping 3
+277.243[66]: DEBUG:ping 3
+280.243[66]: DEBUG:ping 3
+283.246[66]: DEBUG:ping 3
+286.261[66]: DEBUG:ping 3
+289.268[66]: DEBUG:ping 3
+292.270[66]: DEBUG:ping 3
+295.271[66]: DEBUG:ping 3
+298.272[66]: DEBUG:ping 3
+301.285[66]: DEBUG:ping 3
+304.295[66]: DEBUG:ping 3
+307.310[66]: DEBUG:ping 3
+310.122[66]: post opendht rm [remove http://128.112.139.80:7777/1000K.file3_3 => peer:216.165.109.82:46478] block 3 Time elapsed: 36.535208
+310.122[66]: pre opendht rm [remove http://128.112.139.80:7777/1000K.file3_4 => peer:216.165.109.82:46478] block 4
+310.310[66]: DEBUG:ping 3
+310.518[66]: post opendht rm [remove http://128.112.139.80:7777/1000K.file3_4 => peer:216.165.109.82:46478] block 4 Time elapsed: 0.395927
+310.518[66]: pre opendht rm [remove http://128.112.139.80:7777/1000K.file3_5 => peer:216.165.109.82:46478] block 5
+310.808[66]: post opendht rm [remove http://128.112.139.80:7777/1000K.file3_5 => peer:216.165.109.82:46478] block 5 Time elapsed: 0.289529
+310.808[66]: pre opendht rm [remove http://128.112.139.80:7777/1000K.file3_6 => peer:216.165.109.82:46478] block 6
+311.097[66]: post opendht rm [remove http://128.112.139.80:7777/1000K.file3_6 => peer:216.165.109.82:46478] block 6 Time elapsed: 0.289326
+311.098[66]: pre opendht rm [remove http://128.112.139.80:7777/1000K.file3_7 => peer:216.165.109.82:46478] block 7
+311.465[66]: post opendht rm [remove http://128.112.139.80:7777/1000K.file3_7 => peer:216.165.109.82:46478] block 7 Time elapsed: 0.36718
+311.465[66]: pre opendht rm [remove http://128.112.139.80:7777/1000K.file3_8 => peer:216.165.109.82:46478] block 8
+312.165[66]: post opendht rm [remove http://128.112.139.80:7777/1000K.file3_8 => peer:216.165.109.82:46478] block 8 Time elapsed: 0.700183
+312.165[66]: pre opendht rm [remove http://128.112.139.80:7777/1000K.file3_9 => peer:216.165.109.82:46478] block 9
+312.893[66]: post opendht rm [remove http://128.112.139.80:7777/1000K.file3_9 => peer:216.165.109.82:46478] block 9 Time elapsed: 0.727727
+312.893[66]: DEBUG:begin verify size 1000000
+313.444[66]: DEBUG:ping 3
+316.456[66]: DEBUG:ping 3
+319.469[66]: DEBUG:ping 3
+322.479[66]: DEBUG:ping 3
+325.501[66]: DEBUG:ping 3
+328.260[66]: DEBUG:file verify => true! size 1000000 time elapsed: 15.366386S
+328.288[66]: closing logger -- you should see this -- congratulations you're done

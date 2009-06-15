@@ -1,0 +1,16 @@
+$Id: COMPILING,v 1.1 2004/11/11 19:18:17 srhea Exp $
+
+To compile, make sure javac version 1.5 or later is in your path, or set
+JAVAHOME, and then make.  If Java 1.5 is not yet available for your platform,
+download the "Prototype for JSR014: Adding Generics to the Java[tm]
+Programming Language v.  2.4" from 
+
+  http://java.sun.com/developer/earlyAccess/adding_generics/
+
+Then add the files
+
+  adding_generics-2_4ea/collect.jar and
+  adding_generics-2_4ea/gjc-rt.jar 
+  
+to bamboo/lib.  Make sure javac version 1.4 or later is in your path, and then
+make.

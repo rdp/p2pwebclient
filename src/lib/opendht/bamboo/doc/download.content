@@ -1,0 +1,251 @@
+<!-- $Id: download.content,v 1.22 2005/12/15 21:57:59 srhea Exp $ -->
+
+<p>
+<big><strong><font face="arial,helvetica,sanserif">
+CVS Snapshots
+</font></strong></big>
+
+<p>
+If you're going to use Bamboo, we prefer that you download the latest CVS
+snapshot below.  Bamboo is under active development, and (usually) the latest
+snapshot includes our best code.  None of these snapshots are "supported" in
+any kind of a contractual sense (see the <a href="license.html">license</a>),
+but we do answer questions about them on the 
+<a href="cgi-bin/mailman/listinfo/bamboo-users">mailing list</a> (but please
+read the <a href="faq.html">FAQ</a> first).  
+
+<p>
+<table cellpadding="2" width="100%">
+<tr><th align="left" width="30%">Date</th>
+    <th align="left">Description</th></tr>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2005-12-16.tgz">2005 December 16</a></td>
+<td> 
+This snapshot has the code we used in <a
+href="http://srhea.net/papers/opendht-worlds05.pdf">our latest WORLDS
+paper</a>.  Gets are now <i>really</i> fast on PlanetLab, especially if you
+issue each one to multiple gateways in parallel.  Here are some timings in
+milliseconds from 155,218 random gets peformed on 15 December 2005, for
+example:
+
+<center>
+<table cellspacing=3 cellpadding=3>
+<tr><td align="center">#GW</td><td align="right">Avg</td><td align="right">50th</td><td align="right">95th</td><td align="right">99th</td></tr>
+<tr><td align="center">1</td><td align="right">188</td><td align="right">68</td><td align="right">311</td><td align="right">4453</td></tr>
+<tr><td align="center">2</td><td align="right">85</td><td align="right">48</td><td align="right">155</td><td align="right">461</td></tr>
+<tr><td align="center">3</td><td align="right">62</td><td align="right">41</td><td align="right">131</td><td align="right">244</td></tr>
+</table>
+</center>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2005-07-01.tgz">2005 July 1</a></td>
+<td> 
+The unauthenticated removes of the last release are no longer supported.
+Instead, we have a much nicer authenticated remove now.  Currently, it's only
+available in the Sun RPC interface, but I will add an XML RPC interface for it
+soon.
+
+<p>To use the new removes, take a look at
+bamboo/src/bamboo/dht/gateway_prot.x.  Note that there is now a version 3
+interface.  To make a put removable, use the version 3 put, and include the
+SHA-1 hash of a random secret with your key and value.  (Be sure to use a
+different secret for each put; java.security.SecureRandom may help here.)  To
+remove the put later, send a version 3 remove with the same key, the SHA-1
+hash of the value, and the secret itself.  See our latest paper, <a
+href="pubs.html">"OpenDHT: A Public DHT Service and Its Uses"</a>, Section
+3.1.1, for a detailed discussion of why we like this remove.  There's sample
+Java code for puts, gets, and removes in bamboo.dht.(Put|Get|Remove).
+
+<p>Also, the new version 3 get call returns not only the values under a key,
+but also the secret hashes included with their puts, and the number of seconds
+remaining in their TTLs.  This is pretty useful if you want to refresh someone
+else's puts for them.
+
+<p>Finally, there are a lot of bug fixes in this release.  The simulator
+(bamboo.sim.Simulator) seems to be working again, at least if you're using the
+Router, and I've incorporated all of the bug fixes sent to the mailing list
+since the April snapshot.  
+</td>
+</tr>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2005-04-05.tgz">2005 April 5</a></td>
+<td> 
+By popular demand, Bamboo now optionally supports unauthenticated removes.
+These are, in my opinion, a bad idea.  I would much rather your
+application instead put a dummy value to indicate that a previously put value
+should no longer be used.  This way, it's easy to see what the sequence of
+puts and (dummy) removes has been after the fact, using only gets.  However,
+some people have begged for "real" removes anyway.  In applications that do
+lots of removes on values with long TTLs, this makes sense performance-wise,
+though it's still not secure.  Long-term, Bamboo will support authenticated
+puts and removes (using public-key cryptography).  As I compromise in the
+meantime, or for deployments where all clients are trusted, I've made
+unauthenticated removes optional.  
+
+<p>To enable them, set the config file parameter "allow_unauth_rm" to "true" in
+bamboo.dht.Gateway stage.  Otherwise, they'll be rejected.
+(This option is turned off in <a href="http://opendht.org/">OpenDHT</a>, the
+public deployment of Bamboo.)  Also, note that remove--like put--takes a TTL.
+You should set this to be at least as large as the TTL for the corresponding
+put; to make things easier at some cost in storage, just set it to
+Integer.MAX_VALUE.
+
+<p>Sample code in both Python and Java for puts, gets, and removes can now
+also be found in <code>bamboo/src/bamboo/dht</code>, under the file names
+<code>Put.java</code>, <code>Get.java</code>, <code>Remove.java</code>,
+<code>put.py</code>, <code>get.py</code>, and <code>remove.py</code>.  
+</td>
+</tr>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2005-02-18.tgz">2005 February 18</a></td>
+<td> 
+This snapshot is mostly bug fixes from the previous one, including a rather
+serious bug in the DataManager stage that could lead to performance
+degredation over time.  Also, the beginnings of a tutorial on
+bamboo.lss.ASyncCore can now be found in bamboo/doc/async-tutorial.  It's
+heavily modelled after the libasync tutorial from MIT, but translated into
+Java.  
+</td>
+</tr>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2004-11-24.tgz">2004 November 24</a></td>
+<td> 
+There was a silly bug in the last snapshot that would cause Bamboo to print
+"unknown protocol 0xffffffff" a lot if <code>mac_key_file</code> wasn't set in
+the Network stage's config file.  That's fixed in this snapshot.
+<p>
+Also, this snapshot is the first to use Java 1.5.  If it's not available for
+your platform, you can still use Java 1.4, though.  See <a
+href="pipermail/bamboo-users/2004-November/000099.html">this email</a> for
+details.
+</td>
+</tr>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2004-11-03.tgz">2004 November 3</a></td>
+<td> 
+<font color="red">Note: this snapshot is buggy.  Please download the November
+24th one, above, instead.</font>
+<p>
+This snapshot contains a pretty stable version of the put/get layer; for the
+first time I can recommend using it without any major qualifications.  As of 4
+November 2004, we've gone eight weeks without losing a value on our <a
+href="http://opendht.org">PlanetLab deployment</a>, and we've gone three weeks
+without any get RPCs timing out (i.e., the values were still there, but
+temporarily unavailable).  Also, we're no longer using the Java version of
+Berkeley DB, so if you run on some platform that I don't run on, you may need
+to compile the Berkeley DB shared library files yourself.
+</td>
+</tr>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2004-08-05.tgz">2004 August 5</a></td>
+<td>
+We've been working on the stability of the put/get layer; it's not 100% yet,
+but this snapshot is a lot more stable that any of the earlier ones.  We're
+also using <a href="http://www.sleepycat.com/products/je.shtml">Berkeley DB
+Java Edition</a> now, so it's possible to run the system as 100% pure Java.
+</td>
+</tr>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2004-03-05.tgz">2004 March 5</a></td>
+<td>
+This snapshot contains a new event-driven client-side interface to the
+OpenHash gateway in <code>bamboo.dht.GatewayClient</code>, along with an
+event-driven version of <code>bamboo.dht.GatewayTest</code> in
+<code>bamboo.dht.GatewayClientTest</code>.  It also contains an implementation
+of the ReDiR algorithm (see our <a href="pubs.html">IPTPS paper</a>).
+Finally, it also contains an implemenation of the <a href="http://nms.lcs.mit.edu/HotNets-II/papers/practical_distributed.pdf">Vivaldi</a>
+network coordinates algorithm in <code>bamboo/src/bamboo/vivaldi</code>.
+</td>
+</tr>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2004-02-23.tgz">2004 February 23</a></td>
+<td>
+This snapshot contains a bug fix for the <code>bamboo.db.StorageManager</code>
+class, which was leaking Berkeley DB cursors, and it contains Berkeley DB
+libraries for Mac OS X.
+</td>
+</tr>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2004-02-13.tgz">2004 February 13</a></td>
+<td>
+The same as the 2004-02-09 snapshot below, but with lots of bug fixes.
+</td>
+</tr>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2004-02-09.tgz">2004 February 9</a></td>
+<td>
+The XDR interface now has placemarks in get responses, and
+<code>gateway_test.c</code> includes a simple demonstration of the
+functionality.
+</td>
+</tr>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2004-02-04.tgz">2004 February 4</a></td>
+<td>
+The same as the 2004-01-24 snapshot below, but with lots of bug fixes.
+</td>
+</tr>
+
+<tr>
+<td valign="top"><a href="bamboo-cvs-2004-01-24.tgz">2004 January 24</a></td>
+<td>
+This snapshot has a better API to the put/get layer (including a
+<code>gateway.x</code> file in <code>bamboo/src/bamboo/dht</code>), and a
+preliminary version of a Bamboo simulator based on the Simple OceanStore
+Simulator (SOSS).
+</td>
+</tr>
+
+</table>
+
+<p>
+<big><strong><font face="arial,helvetica,sanserif">
+Releases
+</font></strong></big>
+
+<p>
+The following release is the code we used to write the Bamboo USENIX paper.
+It's really old, and we don't recommend it over the CVS snapshots above, but
+if you're looking to reproduce our results, it's a good start.
+
+<p>
+<table cellpadding="2" width="100%">
+<tr><th align="left" width="30%">Release</th>
+    <th align="left">Description</th></tr>
+<tr><td valign="top"><a href="bamboo-1.0.1.tgz">Bamboo 1.0.1</a></td>
+    <td>This is the codebase used to produce the numbers in the December 
+        2003 Bamboo technical report.</td></tr>
+</table>
+<p>
+<big><strong><font face="arial,helvetica,sanserif">
+Required Libraries
+</font></strong></big>
+
+<p>
+Bamboo makes use of the Java packages listed below.  Jars for these packages
+are already included in the Bamboo distribution, so <i>you don't need to
+install them yourself in order to run Bamboo</i>.  However, if you're looking
+at the Bamboo code and want the source for one of these packages to help you
+understand it, you can find their source using the links below.
+<ul>
+<li> <a
+href="http://sourceforge.net/project/showfiles.php?group_id=60774&package_id=69115&release_id=193408">OceanStore</a>
+<li> <a href="http://sourceforge.net/projects/seda">SEDA</a>
+<li> <a href="http://sleepycat.com">Berkeley DB</a>
+<li> <a href="http://logging.apache.org/log4j/docs/index.html">Log4j</a>
+<li> <a href="http://embedded.eecs.berkeley.edu/diva/">Diva</a> (used by the Bamboo visualizer)
+<li> <a href="http://remotetea.sourceforge.net/">Remote Tea ONC/RPC for Java</a>
+</ul>
+
+

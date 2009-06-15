@@ -1,0 +1,22 @@
+<!-- $Id: people.content,v 1.3 2006/02/06 22:34:22 srhea Exp $ -->
+
+<center><h2>Project Members</h2></center>
+<menu>
+<li><a href="http://www.cs.berkeley.edu/~bgchun/">Byung-Gon Chun</a>,
+University of California at Berkeley
+<li><a href="http://www.cs.berkeley.edu/~pbg/">Brighten Godfrey</a>,
+University of California at Berkeley
+<li><a href="http://www.cs.cmu.edu/~bkarp/">Brad Karp</a>, Intel Research
+Pittsburgh and Carnegie Mellon University
+<li><a href="http://berkeley.intel-research.net/sylvia/">Sylvia Ratnasamy</a>,
+Intel Research Berkeley
+<li><a href="http://www.srhea.net/">Sean Rhea</a>, MIT (previously University 
+of California at Berkeley)
+<li><a href="http://www.cs.berkeley.edu/~istoica/">Ion Stoica</a>,
+University of California at Berkeley
+<li><a href="http://www.icir.org/shenker/">Scott Shenker</a>, ICSI and
+University of California at Berkeley
+<li><a href="http://www.cs.princeton.edu/~harlanyu/">Harlan Yu</a>, Princeton 
+(previously ICSI and EFF)
+</menu>
+

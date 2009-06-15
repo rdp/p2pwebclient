@@ -1,0 +1,134 @@
+next run:
+
+just in ilab...except for maybe...umm...server resilience, file close resilience, continued code [classes]
+make it 'always keep going for 1000S' or something.
+up the number of peers here ridiculous, just to see things break
+60x 5 peers no interrupts--still fast?
+
+ilab:
+
+
+lodo at school 60x cs look for error
+
+...put back in the loopWait there, retry
+
+slam ilab
+
+
+
+
+lodo driver should ... be more resilient against listeners that are slammed :)
+
+lodo take off relinquishing... Retarded. Uncontrolled.  Scary. Or have it only do it if more threads exist still.
+
+lodo lesser priority a few processes that 'grab' new peers :)
+
+lodo lesser priority I am faster than CS at home with 'p2p interruptions' turned off.  Why?
+
+lodo ror multi thread
+
+lesson: do not bog down your computer, like localhost with 30 peers actually downloading. Bad idea.
+compare with our 'new' real C/S under lesser load, then build up to breakage.  Remember that.  Put the rest of these in lodo.
+
+note: is/was there a server bug of an extra thread?
+
+# so it seems that interruption an http to go to a 'weak' p2p [that will drop you or what not] is bad :)
+
+
+It makes sense...when slammed it's ineffective, but that's not us :) [when opendht is slammed our fix also makes great sense]
+We are not optimizing for the situation of a server that cannot really even answer requests--just one that is bogged down with them or answers them slowly.
+lodo: make sure we scale down...
+
+
+lodo fix localhost to localhost probs -- might be the trillions of threads going around...hmmm...could find out by disabling opendht temporarily. [or pause spontaneously "where are these threads?"]
+
+
+do it with 'all' p2p -- I bet the first few are quick, then it reaches this 'we are collapsing' state of cpu load. [too many threads -- decrease threads, bet it goes down]
+that explains slow turn around, hurting with more peers (smaller block size ???)
+
+the slowness now is not from duplicate blocks, but from unreliable, slow peers.  Hopefully that will go away :) [the reverse thing would be the best! -- but maybenot necessary if this is run on separate machines]
+
+I think we are optimizing on the wrong problem.  We should optimize on what we see in the wild, nothing more.
+
+one p2p causes slowdown thread-wise -> other slowdown...hmm...we need...'just' fewer threads?  I THINK its just load that causes p2p to collapse in on itself.  Even with few peers.  It might be Ruby.
+
+
+ruby-prof it when it slows down -- huh?:) But is it me (ruby-prof to find a bug), or massive threads (cut down on threads), or...a natural limit in open connections by Ruby?
+
+
+another interesting one would be 'a lotta lotta' normal C/S -- does it survive all right? What does p2p add that causes it to not survive?
+or C/S with a few threads chugging--hurts it? or some that create lots of sockets back and forth, then use them...
+
+
+obs.
+right now...if you are being served by the 'slammed' thread...that is not good! They might abort, are really slow...
+
+
+things that did not help: 
+ignoring the other real p2p thread, going directly 'ja ja' to p2p
+
+using one block only did help
+
+file size latency is in there, too, but only limitedly, as you'd imagine.
+one option would be to pass out that socket for block 0 (!) just pass it right in :)
+warm-up phase: using intro socket to find the file size [maybe after dT race to find such]
+ooh the 'hot potatoe' handler could just keep reading from it 'till useless'
+lodo the zero block handler can always start immediately...wait a second any origin HTTP handler 'can' start without knowing the file size...
+
+The kicker seems to be with TONS of threads it REALLY SLOWS DOWN A LOT.  Yuck!
+
+
+then different thing [we haven't used it to receive] pass it straight to the block 0 handler for use (ha ha "it's at here!")
+
+at that point ours 'will' be as fast as C/S :)
+
+
+
+ummm...still I confused with 'p2p one thread'...at a certain point it shoots up (does it not) still? why? it's all one thread, same number
+of connections...
+
+so the main problem for me is CPU with multiple?  Ruby scheduling?
+
+changing block size to 50K slows us down by like 3 seconds a peer LODO why????!!! (todo) 250 K file, 50k 10 peers (might not be us but just...normal like lots of cs compare it with cs)
+
+The real problem is probably when we get to 100% cpu and saturation kills us connecting to ourselves. (?) Some real problem exists.  Seems that ruby is just not real time for these connectiosn or something.  At least on windows
+
+in theory many peers connecting to the origin does NOT help us, anyway, really.  They each slow down...  
+with single peer seemed to slow it down by like a second (?) lodo look into that
+
+using http THEN p2p does not seem to hurt us
+
+2 block, one thread NOT ok.
+
+2 simultaneous even, 2 total -- ok
+
+1 peer goes, 2 start is ok
+
+at 20 at 0.5 increments grows to 35 [cs]
+We can't compete because we don't 'really' serve each other yet.  Too hard for us.
+
+The biggest latency seems not to be in cpu but in connecting...slow socket connects, we'll call them. [or deaths or something]
+
+So if you use 5 threaded guys that DO ditch the main (early, mind you)
+Ruby threads seem to not 'catch up' fast enough to feed when connecting with self to self within same thread (localhost).  Lots of dropped stuff.  Which makes for lag and a lot of it.  Hmm...
+
+
+lodo maybe possibly do only abandon host when you receive bytes [yet very dangerous]...i.e. chuck the interrupt later..scary!
+
+
+p2p is killing us because it's so slow, which thing is a localhost issue, I hope.
+
+So overall establishment is death, and ramp up time is also a (real) factor.  Really real.  Takes like one second. Yeck.
+
+It might be only because we're within the same thread.  Because the 'normal' server (different thread/process) works all right.  Yeck.
+
+
+Hmm.  Ahh well :)  I think we'll be ok.
+
+
+Seems that if we do 60x1MB with '5 peers' NO INTERRUPTIONS it floods the central server and we can't get to it (whose fault probably local).
+
+mine with 'no p2p interruptions' and one block at a time is lock step with the CS 60x.
+
+
+60x with p2p interrupts at home successful 440 instead of 280/300 [or so] but who minds, right?

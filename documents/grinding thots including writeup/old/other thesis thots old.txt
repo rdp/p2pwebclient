@@ -1,0 +1,13 @@
+
+states for the origin thread, raise it 'wake up and read your new state [esp. if negative]!'
+ability to turn off my optimization
+
+'this spot is reached at least once ever since this page modified within 1 day or 5 runs or something'
+two threads do NOT reach here.
+
+mutex for establishing conn's :)
+lodo loops for servers (unless mutex effective...else forget it EventMachine only).
+
+It appears there is a bug in closing files.  Some don't get closed(!) [todo add assertions 1) surrounding file close--same filename, is closed now] and 2) socket establishment.  Is it the right socket? and other close something weird, in error.  If in Linux then lodo shell stuff to manipulate it.Read the file in.
+
+Seems that what may be happening is a C object is being created, then 'swapped' at birth.  Maybe C code is being pre-empted and returning early/some other streams' ret. value?  This could be deep.  Try to fight it, above, then EventMachine.

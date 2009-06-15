@@ -1,0 +1,49 @@
+removes itself from the DHT on shutdown.
+We start listing ourselves as p2p contributors even if we never download (immediately as possible).
+
+If the dT gauntlet is passed just after (like we DO get a block, but then we notice 'hey! that was too late! we're offended! we still drop it :)
+We start the dR only after dW has been passed [like wait dW before starting to keep track of dR at all].
+We will be cutting off 'abruptly' when the linger time is surpassed. note question if that's after the RM or not.hmm...
+
+We now search for file_name_1 for blocks.
+We 'cut off' after p2p and then wait for opendht, then contact peers.
+
+When doing the graphs, for total throughput and 'server throughput' percentiles, I try to avoid
+any 'long tails' (i.e. one very slow peer dragging out the length of the trial, thereby skewing
+data), by only considering the load generated from the 20% - 100% mark (which should give it enough
+time to warm up, and also not include any cool down, as after 100% no new clients are generated so
+this stage is a kind of cool down, which is avoided).
+
+
+Weird bugs:
+So...REXML: disappears when parsing. huh? tell ruby
+
+
+we linger even if only C/S for download.
+Interesting is either allowing multiple concurrent reads or 'just reads instead of w+'s' sped it up consierably. 
+
+
+
+Reasons to not choose ruby: a few weird errors (Ruby just DIED?), recv's take 100% CPU (you can't really control it! it's ruby internal)
+but that's about it.  It shares some 'weirdness' with other programming languages, like race errors, but also with XMLRPC if you re-use an XMLRPC server, then 
+it is still leaving some 'sub threads' of its previousness around, which might conflict with the next run. Nuts-o. [lodo fix within Ruby, submit]
+
+note--choosing to 'revert' to the original host for a block and getting it slowly is abismal.  But still faster than c/s :)
+
+
+v. 140 at least has thrown range errors (not tons...)
+
+
+now I first establish a connection with the origin while waiting for those peers to get here, from the DHT.  When one does, I cut off that connection with
+the origin, and continue with the newly established p2p connection.  When the p2p connection (if it) goes bad, then I re-establish it with the origin and start looking for another p2p.  p2p is really a backup for C/S.
+
+
+
+Interesting notes:  I think that when you 'slam' the central server (say you cut in p2p and you immediately hit it with 5x load) then they all try to slam it, then there are too many threads!
+It's not having many threads that generically hurts us somehow.  It must be the slam on the original server spikes up sharply!  So then we're all slammed, they're slammed.
+
+
+Now I do have the revert to host while peer-connecting.
+
+
+We do openDHT 'piece-wise' now, moving forward from oldest to newest. see notes in constants.rb

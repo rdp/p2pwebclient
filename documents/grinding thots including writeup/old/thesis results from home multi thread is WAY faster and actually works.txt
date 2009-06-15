@@ -1,0 +1,6 @@
+5830 is single threaded not quite 60 [37, 32] 840 all of them (!)
+5044 is multi 60 exact [220] [60, 30e] later are faster, 200 lots still failed, though
+
+could do at home:
+compare with CS multi threaded
+investigate those thirty that died...ugh!

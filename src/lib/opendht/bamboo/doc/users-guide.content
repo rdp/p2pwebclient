@@ -1,0 +1,252 @@
+<!-- $Id: users-guide.content,v 1.9 2004/08/15 01:41:23 srhea Exp $ -->
+
+
+This document describes how to build and run Bamboo.  These instructions
+assume you're running Linux.  Things shouldn't be too different for
+FreeBSD and Windows, as long as you have Java properly installed.  I'm told
+several people have made it work; I'll badger them to write up a HOWTO soon.
+
+<i>Note: this text now refers to the August 5, 2004 snapshot of the code.</i>
+
+<p>
+<big><strong><font face="arial,helvetica,sanserif">
+Installing Java
+</font></strong></big>
+
+<p>
+To compile and run Bamboo, you need a Java compiler and runtime version 
+1.4 or later.  For Linux, the two that I have used are 
+<ul>
+<li> the <a href="http://java.sun.com/j2ee/1.4/download-dr.html">Sun J2EE v1.4
+SDK</a>, version 1.4.1_03 or later and
+<li> the <a href="http://www-106.ibm.com/developerworks/java/jdk/?loc=j">IBM SDK 1.4.1</a>
+</ul>
+Choose one of the above (or another of your choice), download it, and follow
+their instructions for installing it.  Then set the environmental variable
+<code>JAVAHOME</code> to the directory where it was installed.  For example,
+if you're using the <code>bash</code> shell, and you installed Sun's SDK in
+<code>/usr/local/j2sdk1.4.1_03</code>, do this:
+<blockquote>
+<pre>
+export JAVAHOME=/usr/local/j2sdk1.4.1_03
+</pre>
+</blockquote>
+For convenience, you can add this to your <code>.bashrc</code> or similar file
+so that you don't have to do it every time you log in.
+
+<p>
+<big><strong><font face="arial,helvetica,sanserif">
+Building Bamboo
+</font></strong></big>
+
+<p>
+Now that you've got Java installed, 
+you need to <a href="">download</a> and untar the code.  I'll assume
+you have downloaded <code>bamboo-VERSION.tgz</code>, for some appropriate
+value of <code>VERSION</code>, into the directory </code>/tmp</code>, and that
+you want to install it in the directory <code>/home/YOURNAME</code>.  To untar
+the code, do this
+<blockquote>
+<pre>
+cd /home/YOURNAME
+gunzip -c /tmp/bamboo-VERSION.tgz | tar xf -
+</pre>
+</blockquote>
+You should now have a <code>/home/YOURNAME/bamboo</code> directory.  Make sure
+you have your <code>JAVAPATH</code> correctly set as described above, then to
+this to build the code:
+<blockquote>
+<pre>
+cd /home/YOURNAME/bamboo
+make
+</pre>
+</blockquote>
+If you want to make the documentation and javadocs, do this:
+<blockquote>
+<pre>
+cd /home/YOURNAME/bamboo/doc
+make
+cd /home/YOURNAME/bamboo/doc/javadoc
+make
+</pre>
+</blockquote>
+
+<p>
+<big><strong><font face="arial,helvetica,sanserif">
+Testing Bamboo
+</font></strong></big>
+
+<p>
+As a simple test of whether your build worked or not, try this:
+<blockquote>
+<pre>
+cd /home/YOURNAME/bamboo/test
+perl -w location-test-menu.pl
+</pre>
+</blockquote>
+A menu should pop up.  Using it, you can start Bamboo nodes and check that
+they're working.  After each node is started, you should see some output like
+this:
+<blockquote>
+<pre>
+Starting localhost:3630 with gateway localhost:3630.
+cfg=/tmp/experiment-25762-localhost-3630.cfg
+log=/tmp/experiment-25762-localhost-3630.log
+pid=25763
+</pre>
+</blockquote>
+You can look at the log file with <code>less</code> or the editor of your
+choice to see what Bamboo is printing out as it runs.  If you start more than
+one node, they will form a network and replicate some simple data.  Choose the
+menu option "Check object pointers" to see if the replication is working.  The
+output should look something like this:
+<blockquote>
+<pre>
+127.0.0.1:3630: 93f4fc37 to 93f4fc37
+  23fa522b 127.0.0.1:3630
+  c79253ec 127.0.0.1:3632
+
+127.0.0.1:3632: 19d5e887 to 19d5e887
+  23fa522b 127.0.0.1:3630
+  c79253ec 127.0.0.1:3632
+
+23fa522b 127.0.0.1:3630 2
+c79253ec 127.0.0.1:3632 2
+
+All counts okay.
+</pre>
+</blockquote>
+
+If it ends in "All counts okay", then everything is working well.  If not, you
+can check for errors with "Check for exceptions".  Note that you may need to
+wait a while (less than a minute) for the nodes you've started to converge.
+Until that point, you might get the result, "Some objects had bad counts."
+
+<p>
+The output of "Check object pointers" lists each node, starting with its IP
+address and port number, and followed by the set of DHT identifiers for which
+it's responsible.  In the output above, there are only two nodes, and the
+replication level is set to 4, so both nodes are responsible for the whole
+space.  After the first line for each node are listed the objects it's storing
+replicas for.  Finally, after all the nodes are listed, each object is listed,
+followed by the node that put it into the DHT and the current replica count.
+The count will be followed by a "---" if there are not enough replicas for the
+object, or "+++" if there are too many.
+
+<p>
+<big><strong><font face="arial,helvetica,sanserif">
+Running Bamboo
+</font></strong></big>
+
+<p>
+To run Bamboo in some configuration other than a simple test, you need to
+create a configuration file for each node you want to run.  Go ahead and save
+<a href="gateway.cfg">this</a> config file as <code>/tmp/gateway.cfg</code>.
+
+<p>
+Now open it up in your favorite text editor.
+Note that the file is sort of XML-like and is made up of stage descriptions.
+The global argument <code>node_id localhost:3630</code> means that this Bamboo
+node should listen on port 3630 of the local machine.  The
+<code>Network</code> stage must always be present.  
+
+<p>
+The <code>Router</code> stage runs the Bamboo router.  It requires one or more
+gateways; if the only gateway is the node itself, it will start a DHT all by
+itself.  Otherwise, it will try and contact each of the other gateways listed
+(one at a time) and try and join their DHT(s).  As soon as it succeeds with
+one, it will stop trying to contact the others.
+
+<p>
+I'll discuss the <code>WebInterface</code> stage in a minute.
+
+<p>
+Let's start up a Bamboo node.  Do this:
+<blockquote>
+<pre>
+/home/YOURNAME/bamboo/bin/run-java bamboo.lss.DustDevil /tmp/gateway.cfg
+</pre>
+</blockquote>
+It should start printing information to the screen, including a lot of
+messages like this:
+<blockquote>
+<pre>
+Can't find class ostore.replica.RemoteReplicaUpdateReq.  Skipping it.
+</pre>
+</blockquote>
+Ignore them.  As soon as you see a message like this:
+<blockquote>
+<pre>
+INFO  bamboo.router.Router: Joined through gateway 127.0.0.1:3630
+</pre>
+</blockquote>
+launch your web browser of choice and go to this URL:
+<blockquote>
+<pre>
+http://localhost:3631
+</pre>
+</blockquote>
+It should bring up a page with information about the Bamboo node you just
+started.  
+
+Now save
+<a href="second.cfg">this</a> config file as <code>/tmp/second.cfg</code>, and
+launch the second node from another window like this:
+<blockquote>
+<pre>
+/home/YOURNAME/bamboo/bin/run-java bamboo.lss.DustDevil /tmp/second.cfg
+</pre>
+</blockquote>
+Wait until it prints that it has joined, then go press the "reload" button on
+your web browser.  You should see that the gateway node now has the second
+node as a neighbor.  You can also click on the link for the second node to see
+its view of the world.  Also note that the estimate of the number of nodes may
+be wrong; it's computed from each node's share of the identifier space, so it's
+only an estimate (and often a poor one for small networks).  
+
+<p>
+Congratulations.  You've just brought up a two-node Bamboo network.
+
+<p>
+<big><strong><font face="arial,helvetica,sanserif">
+The Bamboo Visualizer
+</font></strong></big>
+
+<p>
+Okay, let's try one last thing:
+<blockquote>
+<pre>
+/home/YOURNAME/bamboo/bin/run-java bamboo.vis.Vis http://localhost:3631
+</pre>
+</blockquote>
+It should pop up a window entitled "Bamboo Visualizer".  If the nodes you
+started above are still running, you should see two green dots on the ring.
+(The visualizer finds the second node by downloading the web page hosted by
+the first and reading off its leaf set and routing table.)
+
+<p>
+You can start additional nodes by making new <code>.cfg</code> files using
+<code>/tmp/second.cfg</code> as a template.  The older visualizer code would
+notice new nodes as they arrived and add them to the picture; the new
+visualizer doesn't do this yet; you have to stop and restart it.  Automatic
+updates will be in the next snapshot.
+
+<p>
+Play around with the other menu items.  You can select nodes with the mouse
+(they'll be highlighted yellow), then use the "View" menu to see their routing
+table links, leaf set links, or GUIDs.
+
+<p>
+<big><strong><font face="arial,helvetica,sanserif">
+Learning More
+</font></strong></big>
+
+<p>
+In the network we built above, we only ran a Bamboo router, StorageManager, and a WebInterface on each node.  You can also run a number of other stages, such as
+<ul>
+<li><a href="javadoc/bamboo/dmgr/DataManager.html">bamboo.dmgr.DataManager</a>
+    -- manages replication of data throughout leaf sets
+<li><a href="javadoc/bamboo/dht/Dht.html">bamboo.dht.Dht</a>
+    -- a put/get interface, needs the DataManager
+</ul>
+

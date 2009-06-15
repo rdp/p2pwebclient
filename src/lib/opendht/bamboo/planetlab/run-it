@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# $Id: run-it,v 1.15 2004/11/10 00:29:32 srhea Exp $
+#
+
+PORT=5850
+HOSTIP=$(hostname -i)
+HOSTIP=${HOSTIP% } # remove spaces
+NODEID=$HOSTIP:$PORT
+GWPORT=$(($PORT+2))
+CFG=/tmp/config-$PORT
+
+cd
+mkdir -p logs
+mkdir -p store
+sed -e "s/\\\${LogFile}/\/home\/ucb_bamboo\/logs\/log-$PORT/" bamboo/planetlab/logger-config > /tmp/logger-config-$PORT
+sed -e "s/\\\${CacheDir}/\/home\/ucb_bamboo\/store\/store-$PORT/" bamboo/planetlab/openhash.cfg | sed -e "s/\\\${NodeID}/$NODEID/" | sed -e "s/\\\${GatewayPort}/$GWPORT/" | sed -e "s/\\\${HostName}/$HOSTIP/" > $CFG
+rm -f core.*
+JAVAHOME=/home/ucb_bamboo/jre1.5.0 nohup bamboo/bin/run-java -mx32M bamboo.lss.DustDevil -l /tmp/logger-config-$PORT $CFG >& /tmp/not-logged & echo $! > /tmp/pid-$PORT

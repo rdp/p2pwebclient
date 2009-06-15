@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# btserver      This shell script enables the automatic use of tragentd
+#
+# chkconfig: 2345 90 60
+#
+# description:  Enable/disable btserver agent, a BitTorrent starter.
+# processname:  btserver
+# pidfile: /var/run/btserver.pid
+#
+
+# source function library
+#. /etc/rc.d/init.d/functions
+
+lockfile=/var/lock/subsys/btserver2
+
+RETVAL=0
+
+start() {
+echo -n $"Enabling btserver2: "
+cd /home/byu_p2pweb/p2pwebclient/src
+. setup_env.sh
+nohup ./listen_forever.sh < /dev/null &
+touch "$lockfile" && success || failure
+RETVAL=$?
+echo
+}
+
+stop() {
+echo -n $"Disabling btserver: "
+      killall -9 ruby
+rm -f "$lockfile" && success || failure
+RETVAL=$?
+echo
+}
+
+restart() {
+stop
+start
+}
+
+case "$1" in
+  start)
+start
+;;
+  stop) 
+stop
+;;
+  restart|force-reload)
+restart
+;;
+  reload)
+;;
+  condrestart)
+[ -f "$lockfile" ] && restart
+;;
+  status)
+if [ -f $lockfile ]; then
+echo $"BT-Server is enabled."
+RETVAL=0
+else
+echo $"BT-Server is disabled."
+RETVAL=3
+fi
+;;
+  *)
+echo $"Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
+exit 1
+esac
+
+exit $RETVAL

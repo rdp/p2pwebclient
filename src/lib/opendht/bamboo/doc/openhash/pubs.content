@@ -1,0 +1,56 @@
+<!-- $Id: pubs.content,v 1.6 2006/02/28 18:34:19 srhea Exp $ -->
+
+<center><h2>Publications Related to OpenDHT</h2></center>
+
+<ul>
+
+<li>
+<a href="http://iptps06.cs.ucsb.edu/papers/Zheng-DST06.pdf">Distributed
+Segment Tree: Support of Range Query and Cover Query over DHT</a>.  Changxi
+Zheng, Guobin Shen, Shipeng Li, and Scott Shenker.  <i>5th International
+Workshop on Peer-to-Peer Systems (IPTPS 2006)</i>, February 2006.
+</li> 
+<br>
+
+<li>
+<a href="http://srhea.net/papers/opendht-worlds05.pdf">Fixing the Embarrassing
+Slowness of OpenDHT on PlanetLab</a>.  Sean Rhea, Byung-Gon Chun, John
+Kubiatowicz, and Scott Shenker.  <i>Proceedings of USENIX WORLDS 2005</i>,
+December 2005.  
+</li> 
+<br>
+
+<li>
+<a href="http://srhea.net/papers/ntr-worlds05.pdf">Non-Transitive Connectivity
+and DHTs</a>.  Michael J. Freedman, Karthik Lakshminarayanan, Sean Rhea, and
+Ion Stoica.  <i>Proceedings of USENIX WORLDS 2005</i>, December 2005.  
+</li>
+<br>
+
+<li>
+<a href="f230-rhea.pdf">OpenDHT: A Public DHT Service and Its Uses</a>.
+Sean Rhea, Brighten Godfrey, Brad Karp, John Kubiatowicz, Sylvia Ratnasamy,
+Scott Shenker, Ion Stoica, and Harlan Yu.  <i>Proceedings of ACM SIGCOMM
+2005</i>, August 2005.
+</li>
+<br>
+
+<li> 
+<a href="http://www.sigcomm.org/sigcomm2005/paper-ChaRam.pdf">A Case
+Study in Building Layered DHT Applications</a>.  Yatin Chawathe, Sriram
+Ramabhadran, Sylvia Ratnasamy, Anthony LaMarca, Scott Shenker, and Joseph
+Hellerstein.  <i>Proceedings of ACM SIGCOMM 2005</i>, August 2005.  
+</li>
+<br>
+
+<li>
+<a href="openhash-iptps2004.pdf">Spurring Adoption of DHTs with OpenHash, a
+Public DHT Service</a>.  Brad Karp, Sylvia Ratnasamy, Sean Rhea, and Scott
+Shenker.  <em>Proceedings of the 3rd International Workshop on
+Peer-to-Peer Systems (IPTPS 2004)</em>, Springer-Verlag Lecture Notes in
+Computer Science Hot Topics Series, San Diego, CA, February, 2004.
+(The OpenDHT project was originally titled "OpenHash".)
+</li>
+
+</ul>
+

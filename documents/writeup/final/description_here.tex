@@ -1,0 +1,31 @@
+\section{Description}
+Our system implements an algorithm for deciding when to transition from client-server to peer-to-peer transport.  It defines a rendezvous mechanism for peers using a DHT.  Communication among peers, once connected, is performed via HTTP.
+
+A client downloads a file in one of two states:
+\begin{enumerate}
+\item Directly from the origin server. When the origin server is serving quickly then the peer downloads the file from the origin.  While thus downloading, it also registers on the DHT that it has various blocks of the file.  For example if the block size is 32KB and a peer downloads the first 32KB of a file, it will register itself as willing to share the first block.  When it successfully downloads the next 32KB it will then add itself to the list of those willing to share the second block of the file, etc.  This so that other peers can contact it during download.
+
+\item Transition to P2P
+
+As the peer downloads the file from the origin, the download may deemed slow.  If at some point one of the following conditions occurs, the download will switch to a peer-to-peer swarming download:
+\begin{enumerate}
+\item the client exceeds a maximum amount of time $T$, after the start of a normal client-server download.  We use a slow first byte's arrival to decide quickly whether the origin server is over-burdened and switch to peer-to-peer if needed.
+\item after the client begin to receive data from the server, the download rate falls below a certain rate.  If the download rates falls below $R$ bytes per second over the last $W$ seconds, the client switches to peer-to-peer delivery.  We begin measuring $R$ after the first $w$ seconds have transpired.
+\end{enumerate}
+
+\item Peer-to-peer download:
+
+Should it switch to peer-to-peer delivery at some point, the client then performs a block-wise download of the remainder of the file.  It first drops its connection with the origin server.  The client may not have received any header information about the file yet at this point--the crucial piece of information lacking is it needs to know the the file's size.  If the peer doesn't yet know this, it queries the DHT for HTTP header information, set there previously by other peers.  Because DHT queries can at times be slow, it also simultaneously performs an HTTP HEAD request of the file from the origin server to discover the file size.  After determining the file size, to download a block, the peer queries for peers by doing a DHT $get$ of a key per block: $url+block+N$, where $N$ is block number for example the key $http://example.com/file.html\_block\_1$).  The return values of this query are IP addresses and ports of peers whot have that block.  The requesting peer contacts these each serially until a live peer is discovered.  It then downloads the block from that peer.  
+Sometimes OpenDHT is slow for its queries, and it is faster to actually still download the block from the slow origin.  To compensate for this, while the query to openDHT is in process, the peer contacts the origin and attempts to download the block.  If no available peers are found when the query returns, the peer continues to download the block from the origin, waits a few seconds, then runs the query again.  It basically downloads the block slowly from the origin, polling the DHT for any peers that might become available, and, when they do, downloads the block from the peers instead of the origin.  After downloading the block, the peer lists itself in the DHT under the same key.
+A slow last block problem is overcome by contacting several redundant peers from which to download the last few blocks.  This allows the fastest peer among several to upload it (similar to BitTorrent \cite{bittorrent}).\footnote{Note also that each peer establishes at most one connection back to the origin.  Note also that peers per block come back in chunks of 9 from the DHT.  It randomizes that list then chooses them one at a time to poll for liveness until it has used all 9, then it gets the next 9, etc.}
+\end{enumerate}
+
+The peer serves blocks of the file it has downloaded while finishing to download the rest of the blocks (even if never transitions to P2P mode).  When the download is complete, the peer waits, serving all blocks of the file, for a fixed linger time.  When the linger time expires, it stops serving and perform serial dht $remove$'s for each block to remove itself from each list.  Peers also register the header information of the file on the DHT when they receive it, so that later peers can determine file size, should the origin server become very overburdened or go offline.
+
+Several subtleties of openDHT are also accounted for.  One is that each peer downloads several blocks in parallel.  This allows us to perform peer lookups in parallel and lessen overall latency.  
+OpenDHT returns queries based on the creation order of the values under each key, and piece-wise.  It always returns first the oldest 9, then the next oldest 9 oldest (numbers 10-18), etc.  This means that, if 31 peers, are listed, 4 serial queries must be performed in order to retrieve the list of all peers available for a block. Because of this latency, we retrieve the first listed (9) peers, try and use them all, then retrieve and try and use the next 9, etc. 
+It should also be noted that we use a dual-gatewayed, dual-keyed interface to OpenDHT to speed key retrieval.  This means that for each query, we request the answer from two different openDHT members, and also request two keys, per block, to attempt to overcome problems if one key or openDHT member is slow.  It also might cause OpenDHT members to become overwhelmed.
+
+This algorithm introduces some overhead not found in a traditional download.  For example it introduces latency during its transition phase from client-server to peer-to-peer transport, and some overhead for OpenDHT packets.  Peers also drop connections with the origin server, and possibly reconnect again, once per block.  However, the benefits of the P2P download outway the drawbacks for poorly provisioned servers.
+
+%# LTODO justify some of my statements of 'makes it faster'.

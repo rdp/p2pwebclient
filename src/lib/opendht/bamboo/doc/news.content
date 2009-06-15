@@ -1,0 +1,112 @@
+<!-- $Id: news.content,v 1.9 2005/04/05 03:17:08 srhea Exp $ -->
+
+<table cellspacing="10">
+<tr><td valign="top" width="20%"><strong>05 Apr 2005</strong></td>
+
+<td><strong>No More Snapshot News</strong>
+
+<p> I'm not posting notices of new snapshots on this page any longer.  They
+can be found on the <a href="download.html">download page</a> instead.
+</td></tr>
+
+<tr><td valign="top" width="20%"><strong>18 Feb 2005</strong></td>
+
+<td><strong>New CVS Snapshot Available</strong>
+
+<p> There's a new snapshot available on the <a href="download.html">download
+page</a>.  It's mostly bug fixes from the previous one, including a rather
+serious bug in the DataManager stage that could lead to performance
+degredation over time.  Also, the beginnings of a tutorial on
+bamboo.lss.ASyncCore can now be found in bamboo/doc/async-tutorial.  It's
+heavily modelled after the libasync tutorial from MIT, but translated into
+Java.  
+</td></tr>
+
+<tr><td valign="top" width="20%"><strong>4 Nov 2004</strong></td>
+<td><strong>Bamboo No Longer 100% Pure Java  :)</strong>
+
+<p> Alas, I've had to roll back to the older, C-based version of Berkeley DB
+to get good reliability in the put/get layer.  That said, it is <em>very</em>
+reliable now.  See the latest snapshot on the <a href="download.html">download
+page</a> for more details.
+
+</td></tr>
+
+<tr><td valign="top" width="20%"><strong>5 Aug 2004</strong></td>
+
+<td><strong>Bamboo Now 100% Pure Java</strong>
+
+<p> The latest snapshot on the <a href="download.html">download page</a> uses
+<a href="http://www.sleepycat.com/products/je.shtml">Berkeley DB Java
+Edition</a>, so Bamboo is now 100% pure Java.
+
+</td></tr>
+
+<tr><td valign="top" width="20%"><strong>27 Apr 2004</strong></td>
+
+<td><strong>Bamboo Tutorial</strong>
+
+<p> Thanks to Marcel Dischinger, there is now a 
+<a href="tutorial.html">tutorial</a> available on using Bamboo.
+Please take a look, and send any questions or comments his way.
+
+</td></tr>
+
+<tr><td valign="top" width="20%"><strong>9 Mar 2004</strong></td>
+
+<td><strong>Vivaldi on Planetlab</strong>
+
+<p> <a href="bamboo-vis.png">Here</a>'s a picture of the Vivaldi
+implementation on PlanetLab.  Note that all of the major geographical areas
+are reasonably well differentiated.
+
+</td></tr>
+
+<tr><td valign="top" width="20%"><strong>5 Mar 2004</strong></td>
+
+<td><strong>ReDiR, Vivaldi implemented and available</strong>
+
+<p> Two big developments today.  First, I added an event-driven client-side
+interface to the OpenHash gateway in <code>bamboo.dht.GatewayClient</code>,
+along with an event-driven version of <code>bamboo.dht.GatewayTest</code> in
+<code>bamboo.dht.GatewayClientTest</code>.  Then I implemented in the ReDiR
+algorithm on top of it; this algorithm allows a client to consistently hash
+across a <em>subset</em> of the nodes in the DHT, as opposed to all of them.
+It can also be used to hash across nodes that are not even in the DHT.  For
+example, you could use this to load balance requests to a small number of
+nodes running an application server, without those nodes having to run a DHT
+of their own.  See our <a href="pubs.html">IPTPS paper</a> for more details.
+
+<p> The second big addition to the code is an implementation of the Vivaldi
+algorithm, which computes virtual network coordinates for each DHT node such
+that the Euclidean distance between two nodes' virtual coordinates is
+proportional to the network latency between them.  As such, the coordinates
+are useful for things like server selection.
+See <a href="http://nms.lcs.mit.edu/HotNets-II/papers/practical_distributed.pdf">this</a> HotNets paper for more information.
+
+<p> Anyway, both of these additions are available in today's CVS snapshot.
+They're both pretty alpha code at this point, but they're also both actively
+being worked on, so please feel free to give them a shot in your application.
+I'm especially interested in anyone using ReDiR, so please <a
+href="contact.html">drop me a line</a> if it sounds interesting to you.
+
+</td></tr>
+
+<tr><td valign="top" width="20%"><strong>23 Feb 2004</strong></td>
+
+<td><strong>Bamboo now works under Mac OS X</strong>
+
+<p> I just got a Powerbook, so I went ahead and compiled the Berkeley DB Java
+libraries for OS X.  They're in <code>bamboo/lib/darwin</code> as of today's
+CVS snapshot, and all of the tests work just fine with them.  This addition
+means that Bamboo should now work out of the box on Linux, FreeBSD, and OS X.
+I don't have any Windows computers, but if someone will send me the relevant
+recompiled libraries, I'll add them, too.
+
+<p>Also, the <code>bamboo.db.StorageManager</code> class was leaking Berkeley
+DB cursors.  Be sure to update to today's snapshot to get the fix.
+    
+</td></tr>
+
+</table>
+

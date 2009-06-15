@@ -1,0 +1,1 @@
+python ./btdownloadheadless.seed.py --saveas ./30000K.file 30000K.file.ilab1.torrent --max_upload_rate 2560

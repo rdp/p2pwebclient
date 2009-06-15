@@ -1,0 +1,457 @@
+\documentclass[11pt]{article}
+
+\usepackage{listings}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{times}
+\usepackage{courier}
+
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9.0in}
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.0in}
+
+\title{A Programmer's Tutorial on Event-Driven Programming,\\
+       Asynchronous Input/Output, and the Bamboo DHT}
+\author{Sean C. Rhea\\ srhea@cs.berkeley.edu}
+
+\begin{document}
+
+\maketitle
+
+\section{Preliminaries}
+
+This document is a tutorial on three related topics: event-driven
+programming, asynchronous input/output (I/O), and the Bamboo DHT.  I
+assume you're already familiar with Java, including the new language
+features for generics (called templates in C++) introduced in Java 1.5.
+If you're not yet aware of what generics are or how they work, please
+first read ``Using and Programming Generics in J2SE 5.0'' on Sun's web
+page.\footnote{\url{http://java.sun.com/developer/technicalArticles/J2SE/generics/}}
+Most of the example code shown in this tutorial is available on the
+Bamboo website.\footnote{\url{WHAT}}  I encourage you to download, run,
+modify, and re-run the example programs; there's no better way to learn
+a new programming style or library.
+
+\section{Introduction}
+
+We'll start the tutorial with an example: assume that you are writing a
+high-performance web server.  A main loop for the web server might look
+something like this:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small}
+\begin{lstlisting}  
+while (true) {
+    Socket sock = acceptConnection();
+    HttpRequest req = parseRequest(sock);
+    HttpResponse resp = createResponse(req);
+    sendResponse(sock, resp);
+    sock.close();
+}
+\end{lstlisting}
+\end{quote}
+
+Presumably, this web server will have a high-bandwidth connection to the
+Internet.  On the other hand, many of the clients of the web server may
+have slow connections, meaning that your code will spend a lot of time
+in the \texttt{sendResponse} function.  In effect, the performance of
+your web server is limited by the bandwidth of whatever client it's
+serving at any given time.  (That's bad.)
+
+To get around this performance limitation, we need to introduce
+\emph{concurrency}: the ability to serve more than one client at a time.
+Historically, there have been at least two popular approaches to adding
+concurrency to a program.  One approach is called \emph{multithreading}.
+In this approach, the above code would be rewritten like this:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small}
+\begin{lstlisting}  
+while (true) {
+    final Socket sock = acceptConnection();
+    Thread t = new Thread() {
+        public void run() {
+            HttpRequest req = parseRequest(sock);
+            HttpResponse resp = createResponse(req);
+            sendResponse(sock, resp);
+            sock.close();
+        }
+    };
+    t.start();
+}
+\end{lstlisting}
+\end{quote}
+
+This code is much better.  Since we have a separate thread for each
+request, and since each thread will run independently of all the others,
+it won't matter if one client has a very slow connection anymore; the
+\texttt{sendResponse} function will still take a long time to complete
+for that client, but it will run in parallel with the
+\texttt{sendResponse} functions for all the other clients we're
+servicing at the same time, rather than blocking them as before.
+
+The above code is still not perfect, however.  First of all, creating a
+new thread is an expensive operation in Java, and programs written like
+the one above can often spend much of their time creating new threads.
+While this problem can be solved with a construct called a \emph{thread
+pool}, there is yet another problem with this style of code: most modern
+operating systems do not perform well when the number of Java threads
+running on them passes beyond several hundreds.  Why this performance
+problem occurs is not important here, but it does mean that we can't
+expect a web server written in the above style to serve more than a
+couple of hundred clients at a time.  
+
+To work around this performance problem, we need to change our style of
+programming to what is often called \emph{event-driven}
+style.\footnote{If you've ever programmed using Java's Swing graphics
+library, you've already done some event-driven programming.}  The main
+idea of this style of programming is that given any function call that
+might block on input or output, such as the \texttt{sendResponse}
+function above, we split that function into a \emph{request event} and a
+\emph{reponse event}, normally represented as function objects.  For
+example, we might define new versions of \texttt{parseRequest} and
+\texttt{sendResponse} like this:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small}
+\begin{lstlisting}  
+public interface ParseDone {
+    public void run(HttpRequest req);
+}
+void parseRequest(Socket sock, ParseDone done) { ... }
+void sendResponse(Socket sock, HttpResponse resp, Runnable done) { ... }
+\end{lstlisting}
+\end{quote}
+
+The idea is that \texttt{parseRequest} will now return immediately after
+being called, and sometime later, when the request has actually been
+read off the network and parsed, the \texttt{run} function of the
+\texttt{ParseDone} object passed into \texttt{parseRequest} will be
+called.  Likewise, \texttt{sendResponse} will also return immediately,
+and the \texttt{run} function of the \texttt{Runnable} object passed
+into \texttt{sendResponse} will be called later, once the response has
+been sent.  
+
+Ignore for a moment how these new versions of \texttt{parseRequest} and
+\texttt{sendResponse} are implemented, and consider only how we might
+use them.  For example, we could rewrite the web server's main loop like
+this:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small, numbers=left, numberstyle=\tiny, 
+        numberfirstline=true, stepnumber=1, numbersep=5pt}
+\begin{lstlisting}  
+while (true) {
+    final Socket sock = acceptConnection();
+    ParseDone parseDone = new ParseDone() {
+        public void run(HttpRequest req) {
+            HttpResponse resp = createResponse(req);
+            Runnable sendResponseDone = new Runnable() {
+                public void run() { sock.close(); }
+            };
+            sendResponse(sock, resp, sendResponseDone);
+        }
+    };
+    parseRequest(sock, parseDone);
+}
+\end{lstlisting}
+\end{quote}
+
+Wow, that's some ugly code!  But look past its ugliness for the moment,
+and let's think about what it does.  First, one line 2 we accept a
+connection as before.  Then, we decide what we're going to do once we've
+parsed a request and write it as a \texttt{ParseDone} object on lines
+3--11.  Next, we call \texttt{parseRequest} on line 12.  That will parse
+the request, and then call \texttt{run} on line 4.  In turn,
+\texttt{run} creates a response (line 5) and decides what it's going to
+do once the response is sent, encoding that knowledge as an object of
+type \texttt{Runnable}.  It then calls \texttt{sendResponse}, which
+sends the response and then calls \texttt{run} on line 7, which closes
+the socket.  Whew!
+
+You're probably thinking that the above code is one seriously convoluted
+way to write a web server.  In part you're right, although we'll
+improve on the readability of the above code later in this tutorial.  At
+the same time, however, notice that we've both eliminated the problem of
+clients blocking on one another and threads from the program.  Since
+there are no longer any blocking calls, each run of the while loop will
+now happen as quickly as possible, bringing us right back to the call to
+\texttt{acceptConnection} where we can begin helping the next client
+right away.  And if you trust me for the moment that we can implement
+the new versions of \texttt{parseRequest} and \texttt{sendResponse} with
+only a single thread, then we've also eliminated our previous need for
+multiple threads.
+
+The remainder of this document is in several parts.  First, I'll
+describe the event model that Bamboo uses, and the various Bamboo
+classes that make event-driven programming easier.  I won't describe how
+these classes are implemented in this tutorial, for that you'll have to
+read the source if you're interested.  (It's not necessary to understand
+the source in order to use it.)  Next, I'll describe how to use the
+Bamboo messaging layer and DHT router, so that you can build your own
+DHT applications on top of Bamboo.  
+
+\section{The Bamboo Event Model}
+
+In this section I'll get into the full details of the event model Bamboo
+uses, staring from the beginning.
+
+\subsection{Callbacks and \texttt{registerTimer}}
+
+Above we saw a use of the interface \texttt{java.lang.Runnable}, which
+is defined like this:
+\begin{quote}
+\lstset{language=Java, basicstyle=\small}
+\begin{lstlisting}  
+public interface Runnable { public void run(); }
+\end{lstlisting}
+\end{quote}
+This kind of interface is often called a \emph{callback}; you pass an
+object of type \texttt{Runnable} to some other function so that it can
+``call you back'' later by calling the \texttt{run} function.  Above, we
+passed one such object as an argument to the \texttt{sendResponse}
+function.  
+
+Events in Bamboo are implemented as either functions or callbacks.  This
+idea is perhaps best explained by example.  Bamboo includes a class,
+\texttt{bamboo.lss.ASyncCore} that contains two functions,
+\texttt{registerTimer} and \texttt{asyncMain}.  You use them like this:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small, numbers=left, numberstyle=\tiny, 
+        numberfirstline=true, stepnumber=1, numbersep=5pt}
+\lstinputlisting{DelayedHelloWorld.java}
+\end{quote}
+
+When you run this program, it will pause for five seconds and then print
+``Hello, World!'' before exiting.  Let's break down the code a line at a
+time.  
+
+First, lines 2--7 define a callback, \texttt{printCallback}, that prints
+``Hello, world.'' to standard output when it's called.  Line 9 creates
+an instance of \texttt{ASyncCore}, and line 10 tells that object to call
+\texttt{printCallback} in 5 seconds (5,000 milliseconds).  Finally, line
+11 calls \texttt{asyncMain}; once this function is called,
+\texttt{ASyncCore} is in charge.  The function \texttt{asyncMain} never
+exits, it simply loops forever, calling the callbacks registered with
+\texttt{registerTimer} when required.  (That's why we call \texttt{exit}
+on line 5; otherwise, the program would run forever.  Remove that call
+and try it to see what I mean.)
+
+In your event-driven programs, you will usually create an object of type
+\texttt{ASyncCore}, perform some other setup including registering timer
+events, and then call \texttt{asyncMain}.  
+
+\subsection{Passing Arguments to Callbacks}
+
+Let's say that instead of wanting to print ``Hello, World!'' after five
+seconds, you instead wanted to print whatever string was passed in on the
+command line.  You might try something like this:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small, numbers=left, numberstyle=\tiny, 
+        numberfirstline=true, stepnumber=1, numbersep=5pt}
+\lstinputlisting{BadDelayedEcho.java}
+\end{quote}
+
+Here we've used what amounts to a global variable, \texttt{str}, to pass the
+string to echo from the \texttt{main} function to \texttt{printCallback}.  Bad
+programmer!  Maybe you're crafty, though, and you've already thought of a way
+around using a global variable, such as this:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small, numbers=left, numberstyle=\tiny, 
+        numberfirstline=true, stepnumber=1, numbersep=5pt}
+\lstinputlisting{BetterDelayedEcho.java}
+\end{quote}
+
+In this program, we've removed the global variable by defining
+\texttt{printCallback} inside of \texttt{main}, and thereby putting
+\texttt{str} within its scope.  Pretty crafty, but it has one
+big downside: what if \texttt{printCallback} itself defined another
+callback, which in turn defined another callback, and so on?
+Pretty soon you'd suffer death through excessive indentation.  
+
+\subsection{The \texttt{curry} Function}
+
+To pass arguments to callbacks without using so much indentation, we'll
+introduce a technique from \emph{functional} programming languages (such
+as Lisp and ML) called \emph{currying}.  In such languages, given a
+function that takes two arguments and a value for one argument, you can
+produce a new function that takes only the second argument.  For
+example, using Java-like syntax, we might have:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small}
+\begin{lstlisting}  
+public int add(int left, int right) { return left + right; }
+public int add42(int right) = curry(add, 42);
+...
+int j = add42(7);
+\end{lstlisting}
+\end{quote}
+
+In other words, we curry the function \texttt{add} with the value 42 to
+produce a new function, \texttt{add42}, that takes one argument and
+returns the value of that argument plus 42.  Right now this technique
+might seem a little pointless, but bear with me; it will be a useful
+technique for passing arguments to callbacks.
+
+It turns out that we can use Java's support for generics (called
+templates in C++) to implement currying.  All we need is a way to refer
+to functions as objects, and we'll use callbacks for this purpose.
+Because of this decision, we will sometimes refer to callbacks as
+\emph{function objects}.
+
+We already have a callback that takes no arguments: the
+\texttt{Runnable} interface used above.  What we'll do is introduce
+another type of callback that takes one argument like this:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small}
+\begin{lstlisting}  
+public interface Thunk1<T> { void run(T t); }
+\end{lstlisting}
+\end{quote}
+
+\emph{Thunk} is the term used in functional programming for a function
+that has return type void.  We've called the above interface
+\texttt{Thunk1} because it takes one argument and returns void.  We can
+create a new \texttt{Thunk1} object that takes an integer argument like
+this:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small}
+\begin{lstlisting}  
+Thunk1<Integer> intThunk = new Thunk1<Integer>() { 
+    void run(Integer i) { System.out.println(i); }
+}
+\end{lstlisting}
+\end{quote}
+Moreover, we can create a \texttt{curry} function that will take a
+\texttt{Thunk1<T>} and an object of type \texttt{T} and return a
+\texttt{Runnable} object like this: 
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small}
+\begin{lstlisting}  
+public static <T> Runnable curry(final Thunk1<T> f, final T t) {
+    return new Runnable() { public void run() { f.run(t); } };
+}
+\end{lstlisting}
+\end{quote}
+We can then use this function to create a function that prints 42 like
+this:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small}
+\begin{lstlisting}  
+Runnable print42 = curry(intThunk, new Integer(42));
+print42.run(); // prints "42" to standard output
+\end{lstlisting}
+\end{quote}
+
+Bamboo contains a class, \texttt{bamboo.util.Curry}, that has
+definitions for \texttt{Thunk1} through \texttt{Thunk9}, and the
+appropriate \texttt{curry} functions for all combinations of them.  You
+can, for example, call \texttt{curry} with a \texttt{Thunk7} and two
+arguments to get a \texttt{Thunk5}.  To use all of these thunks and
+curry functions in your code, include this line at the top of your
+source file:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small}
+\begin{lstlisting}  
+import static bamboo.util.Curry.*;
+\end{lstlisting}
+\end{quote}
+
+Now, if you remember, we were trying to improve the
+\texttt{BetterDelayedEcho} program above.  Here's a new version using
+thunks and curries:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small, numbers=left, numberstyle=\tiny, 
+        numberfirstline=true, stepnumber=1, numbersep=5pt}
+\lstinputlisting{DelayedEcho.java}
+\end{quote}
+
+Lines 3-8 of this program create a new callback, this time one that takes a
+string argument and prints it to standard output.  
+Unfortunately, the \texttt{registerTimer} function only takes arguments of
+type \texttt{Runnable}, so we can't pass it our new version of
+\texttt{printCallback} directly.  We can, however, call \texttt{curry}
+with \texttt{printCallback} and the string we want passed to it as
+arguments to get an object of type \texttt{Runnable}, and we can then
+pass that to \texttt{registerTimer}.
+In other words, line 15 says, ``after
+five seconds, call \texttt{printCallback} with the value in
+\texttt{args[0]}.''  Pretty cool, huh?
+
+\subsection{Using Channels}
+
+Timers are only one of the two main classes of callbacks that
+\texttt{ASyncCore} manages.  The other class is for sockets, Unix's
+stream-based abstraction of the network.  In Java 1.4 and later, sockets
+are accessed through objects called \emph{channels}.  There are
+\texttt{SocketChannels} for TCP clients, \texttt{ServerSocketChannels}
+for TCP servers, and \texttt{DatagramChannels} for UDP sockets.  
+
+The class \texttt{java.nio.channels.SelectionKey} defines the conditions you
+can wait on with a channel: \texttt{OP\_ACCEPT}, \texttt{OP\_CONNECT},
+\texttt{OP\_READ}, and \texttt{OP\_WRITE}.  To wait on any one of these
+conditions, call \texttt{registerSelectable} in \texttt{ASyncCore}; to
+stop waiting on them, call \texttt{unregisterSelectable}.  Here's an
+example:
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small, numbers=left, numberstyle=\tiny, 
+        numberfirstline=true, stepnumber=1, numbersep=5pt}
+\lstinputlisting{HttpGet.java}
+\end{quote}
+
+This program takes the name and port number of an HTTP server on the command
+line, connects to it using TCP, and sends the string ``GET / HTTP/1.0''
+followed by two carriage-return, line-feed pairs.  This string will cause any
+compliant HTTP server to return the resource named by ``/'', usually the file
+\texttt{index.html}.
+
+Important things to note include: on line 84 we call
+\texttt{configureBlocking(false)} on the \texttt{SocketChannel} object.  If
+this is not done, calls to read or write the socket may block.  
+Control will next move to the \texttt{acceptCallback} function once the TCP
+connection is established.  After
+connecting on line 17, we unregister the accept callback on line 18.  We then
+create a \texttt{ByteBuffer} object to hold the string we want to write, and
+register the the write callback function.
+
+The function \texttt{SocketChannel.write} returns zero if no data can be
+written at the moment, and throws an \texttt{IOException} if the socket is
+closed.  Once we have written all the data in the buffer, we unregister the
+write callback and register the read callback (lines 40--44).
+
+Unlike \texttt{write}, \texttt{SocketChannel.read} has two completion cases.
+Like \texttt{write}, if the connection times out or some other error occurs,
+\texttt{read} will throw an \texttt{IOException}.  Unlike \texttt{write},
+if the remote node closes the connection normally, \texttt{read} will return
+-1.  We read until either of these conditions occurs, echoing all bytes read
+to standard output.
+
+\begin{quote}
+\lstset{language=Java, basicstyle=\small, numbers=left, numberstyle=\tiny, 
+        numberfirstline=true, stepnumber=1, numbersep=5pt}
+\lstinputlisting{EchoServer.java}
+\end{quote}
+
+%Bamboo's event-driven model is based on \texttt{libasync}, which is
+%part of the Self-Certifying File
+%System.\footnote{\url{http://www.fs.net/sfswww/}} This document, in
+%turn, is based on the ``\texttt{libasync}
+%tutorial''.\footnote{\url{http://www.pdos.lcs.mit.edu/6.824-2004/async/index.html}}
+%If you're interested in the kind of functionality this document
+%describes, but want to program in C++ instead, be sure to check them
+%out.
+
+\end{document}
+

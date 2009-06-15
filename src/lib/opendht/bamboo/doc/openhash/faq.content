@@ -1,0 +1,68 @@
+<!-- $Id: faq.content,v 1.3 2006/02/06 22:34:22 srhea Exp $ -->
+
+<center><h2>Frequently Asked Questions</h2></center>
+
+<p>
+<h3>How does OpenDHT relate to OpenHash?</h3>
+They're the same project.  We changed the name.
+
+<p>
+<h3>Where does OpenDHT run?</h3>
+OpenDHT runs on a collection of approximately 200 widely distributed
+infrastructure hosts provided by 
+<a href="http://planet-lab.org/">PlanetLab</a>.
+
+<p>
+<h3>What DHT algorithm does OpenDHT use?</h3>
+OpenDHT is built on the <a href="http://www.bamboo-dht.org/">Bamboo</a> DHT.
+In fact, the two projects have the same CVS repository.  OpenDHT is just the
+name we use to refer to the public deployment of Bamboo.
+
+<h3>Why a DHT service?</h3>
+<p>
+While many research prototype DHT implementations
+are available today, a would-be developer cannot easily deploy a DHT.
+First, for a deployed DHT to scale to heavy request workloads, and be robust
+under node failures, the DHT code must be run on a large collection of hosts.
+Non-researcher developers seldom have such host resources at their disposal.
+Second, maintaining a DHT deployment requires significant effort: keeping
+the DHT code running on all the DHT's constituent hosts, and on occasion,
+debugging a complex DHT's implementation both are tasks many application
+developers may be unwilling to take on. OpenDHT frees application developers
+from these two burdens, and thus eases their use of DHTs.
+
+<h3>What kind of applications can be implemented on OpenDHT?</h3>
+<p>
+So far, we've implemented a chat client, a <a
+href="http://freedb.org/">FreeDB</a> cache, a new lookup layer for <a
+href="http://i3.cs.berkeley.edu/">i3</a>, and a CFS-like file storage layer.
+A number of other research projects are using OpenDHT as well.  The most
+mature is <a href="http://sysnet.ucsd.edu/octopod/">Octopod</a>.
+
+<h3>What restrictions does OpenDHT place on keys?</h3>
+<p>
+A key in OpenDHT is any 20-byte value.  There are no other restrictions.  If
+one or more clients put more than one value under the same key, OpenDHT
+stores them all.  On a get, all of the values are returned.  (If there are 
+many values, only some are returned at a time.  Subsequent gets can fetch the
+rest.  See the <a href="users-guide.html">User's Guide</a> for details.)
+
+<h3>How big can values put into OpenDHT be?</h3>
+<p>
+Currently, there's a 1024-byte limit on values in OpenDHT.  To store larger
+values, you'll have to break them into blocks as in (for example) CFS.
+
+<h3>Can I remove or change values that I put?</h3>
+<p>
+Yes!  See the discussion of the new, secure <em>rm</em> function in the 
+<a href="users-guide.html">User's Guide</a>.  In essence, when you perform a
+put, you may now also specify the SHA-1 hash of a secret.  Later, you may
+remove the value by revealing the secret.  The security of this scheme relies
+on the difficulting of inverting SHA-1.  
+
+<h3>Wait, isn't SHA-1 broken?</h3>
+<p>
+That depends on what you mean by broken, but basically, no.  It is getting
+weaker by the day, however, so we plan to support other hash algorithms in the
+future.
+

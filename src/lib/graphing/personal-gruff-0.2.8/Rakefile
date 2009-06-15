@@ -1,0 +1,35 @@
+require 'rubygems'
+require 'hoe'
+$:.unshift(File.dirname(__FILE__) + "/lib")
+require 'gruff'
+
+Hoe.new('Gruff', Gruff::VERSION) do |p|
+  p.name = "gruff"
+  p.author = "Geoffrey Grosenbach"
+  p.description = "Beautiful graphs for one or multiple datasets. Can be used on websites or in documents."
+  p.email = 'boss@topfunky.com'
+  p.summary = "Beautiful graphs for one or multiple datasets."
+  p.url = "http://nubyonrails.com/pages/gruff"
+  p.clean_globs = ['test/output/*.png']
+end
+
+desc "Simple test on packaged files to make sure they are all there"
+task :verify => :package do
+  # An error message will be displayed if files are missing
+  if system %(ruby -e "require 'pkg/gruff-#{Gruff::VERSION}/lib/gruff'")
+    puts "\nThe library files are present"
+  end
+end
+
+##
+# Catch unmatched tasks and run them as a unit test.
+#
+# Makes it possible to do
+#  
+#  rake pie
+#
+# To run the +test/test_pie+ file.
+
+rule '' do |t|
+  system "ruby test/test_#{t.name}.rb"
+end

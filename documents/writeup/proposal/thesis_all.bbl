@@ -1,0 +1,297 @@
+\begin{thebibliography}{10}
+
+\bibitem{shark}
+S.~Annapureddy, M.J. Freedman, and D.~Mazieres.
+\newblock {Shark: Scaling File Servers via Cooperative Caching}.
+\newblock {\em Proceedings of the 2nd USENIX/ACM Symposium on Networked Systems
+  Design and Implementation (NSDI), Boston, USA, May}, 2005.
+ \begin{quotation}\noindent Shark uses block distribution through a DHT named
+  Coral \cite{coral}. It basically uses coral to lookup local peers who have a
+  copy (locally) of a file and downloads it from them. It requires a custom DHT
+  for this, and has a central server which is also cognizant of the protocol.
+  \end{quotation}
+
+\bibitem{bharambe}
+A.R. Bharambe, C.~Herley, and V.N. Padmanabhan.
+\newblock {Analyzing and Improving BitTorrent Performance}.
+\newblock {\em Microsoft Research, Microsoft Corporation One Microsoft Way
+  Redmond, WA}, 98052:2005--03.
+ \begin{quotation}\noindent This paper analyzes some aspects of BitTorrent,
+  such as the fact that outward-degree, or number of peers, increases up to 20,
+  then decreases, though this seems like a relatively little studied aspect.
+  \end{quotation}
+
+\bibitem{onion}
+J.~Chapweske.
+\newblock {HTTP Extensions for a Content-Addressable Web}, May 2002.
+\newblock http://www.open-content.net/specs/draft-jchapweske-caw-03.html.
+ \begin{quotation}\noindent OnionNetworks proposes that HTTP headers be
+  extended to include the lists of file block hashes and peers who have
+  recently downloaded it, allowing a distributed download of files seemlessly.
+  \end{quotation}
+\bibitem{fastreplica}
+L.~Cherkasova and J.~Lee.
+\newblock {FastReplica: Efficient Large File Distribution within Content
+  Delivery Networks}.
+\newblock {\em 4th USENIX Symposium on Internet Technologies and Systems},
+  2003.
+ \begin{quotation}\noindent See mutualcast \cite{mutualcast}. FastReplica
+  performs a similar efficient block wise transfer as it. \end{quotation}
+
+\bibitem{planetlab}
+B.~Chun, D.~Culler, T.~Roscoe, A.~Bavier, L.~Peterson, M.~Wawrzoniak, and
+  M.~Bowman.
+\newblock {PlanetLab: an overlay testbed for broad-coverage services}.
+\newblock {\em ACM SIGCOMM Computer Communication Review}, 33(3):3--12, 2003.
+ \begin{quotation}\noindent PlanetLab is a global distributed test bed
+  available to researchers for internet wide experiments, via using slices of
+  computers which researchers may control. \end{quotation}
+
+\bibitem{freenet}
+I.~Clarke, O.~Sandberg, B.~Wiley, and T.W. Hong.
+\newblock {Freenet: A distributed anonymous information storage and retrieval
+  system}.
+\newblock {\em Workshop on Design Issues in Anonymity and Unobservability},
+  320, 2000.
+ \begin{quotation}\noindent Freenet is an anonymous lookup for web pages. It
+  uses a DHT style lookup where queries tend toward peers that tend to have the
+  block, and uses intermediate caching. \end{quotation}
+
+\bibitem{cohen}
+B.~Cohen.
+\newblock Incentives build robustness in bittorrent.
+\newblock In {\em Proceedings of the Workshop on Economics of Peer-to-Peer
+  Systems}, Berkeley, CA, USA, 2003.
+ \begin{quotation}\noindent BitTorrent's makers recently came out with the
+  capability to search for files without contacting the central server (via a
+  DHT search), bringing that product one step closer to automatically
+  downloading any file. BitTorrent motivates peers' cooperation with a `Tit For
+  Tat' incentive policy. Peers which upload most quickly to others have a
+  higher chance of being in turn uploaded to. Peers accomplish this by choosing
+  four neighboring peers which upload more quickly to it as those to which it
+  will then choose to upload to. \end{quotation}
+\bibitem{coral}
+M.J. Freedman, E.~Freudenthal, and D.~Mazieres.
+\newblock {Democratizing content publication with Coral}.
+\newblock {\em Proceedings of the 1st Symposium on Networked Systems Design and
+  Implementation (NSDI 2004)}, pages 239--252, 2004.
+ \begin{quotation}\noindent The search avoids hot spots and leverages locality
+  by creating concentric DHT's. Each node is a member of several DHT rings
+  representing nodes who are within certain proximity of it (and to each
+  other). It creates these rings with expanding size--i.e. DHT for nodes within
+  100ms, and one within 500ms, and one with global scope. Members first query
+  the DHT of nodes close to them, then the next ring up, then the next, until
+  they find a node that has cached the file, or it is not found. This allows
+  them to use DHT queries for 'close' nodes, first (reducing latency), and to
+  contact members who are close. Coral does well in finding local copies of
+  files quickly. Coral relies on a central access point for redirection, and
+  does not have automatic fall over to swarming download, though it does have
+  excellent locality properties. Coral pages are 'cached' by accessing a url
+  like http://outside.page.nyud.net:8090/subdir/pagename. \end{quotation}
+
+\bibitem{avalanche}
+C.~Gkantsidis, P.~Rodriguez, et~al.
+\newblock {Network Coding for Large Scale Content Distribution}.
+\newblock {\em Proceedings of IEEE Infocom}, 2005.
+ \begin{quotation}\noindent Avalanche is a BitTorrent like protocol that uses
+  Forward Error correcting codes to make it so that clients only need to
+  download a certain percentage of the total blocks to then be able to recreate
+  the entire original file. They show this helps with some rare block problems,
+  especially for faster peers. \end{quotation}
+
+\bibitem{akamai}
+A.T. Inc.
+\newblock {Akamai}.
+\newblock {\em URL http://www.akamai.com/en/html/services/edgesuite.html},
+  October 2006.
+ \begin{quotation}\noindent Akamai provides a large scale Content Distribution
+  Network that consists of 20,000 servers in 71 countries, allowing
+  corporations to effectively avoid flash crowds, who use it. \end{quotation}
+
+\bibitem{squirrel}
+S.~Iyer, A.~Rowstron, and P.~Druschel.
+\newblock {Squirrel: A decentralized, peer-to-peer web cache}.
+\newblock {\em Proceedings of the 21st Annual PODC}, 2002.
+ \begin{quotation}\noindent Squirrel networks the caches of computers residing
+  on a LAN to allow them to lookup files in this shared cache and thereby save
+  on bandwidth, if they have been accessed recently by users. It does not
+  provide a distributed download, however. \end{quotation}
+
+\bibitem{pseudoserving}
+K.~Kong and D.~Ghosal.
+\newblock {Pseudo-Serving: A User-Responsible Paradigm for Internet Access}.
+\newblock {\em WWW6 / Computer Networks}, 29(8-13):1053--1064, 1997.
+ \begin{quotation}\noindent In pseudo serving clients may agree to act as
+  serving backup agents for a server, which then pawns off future requests to
+  them, if it is hammered like a hammer shark. \end{quotation}
+
+\bibitem{bullet_prime}
+D.~Kostic, R.~Braud, C.~Killian, E.~Vandekieft, J.W. Anderson, A.C. Snoeren,
+  and A.~Vahdat.
+\newblock {Maintaining High Bandwidth under Dynamic Network Conditions}.
+ \begin{quotation}\noindent Bullet Prime, described here, is a protocol for
+  downloading a large file--it does peer location using a random percolation
+  through the peers of their neighbors, then has each peer dynamically choose
+  an appropriate number of neighboring peers from which to download. It
+  involves a little bit of overhead with its use of the RanSub routine to
+  connect peers, however. \end{quotation}
+
+\bibitem{mutualcast}
+J.~Li, P.A. Chou, and C.~Zhang.
+\newblock {Mutualcast: An Efficient Mechanism for Content Distribution in a
+  Peer-to-Peer (P2P) Network}.
+\newblock Technical report, MSR-TR-2004-100, Sept. 2004, 2004.
+ \begin{quotation}\noindent Mutualcast connects peers downloading a file with
+  one another. Each block is assigned to exactly one peer, which redistributes
+  that block to all others. Those peers who are more `productive' are given
+  more blocks to distribute. Mutualcast uses a simple queue at each peer of
+  `blocks completed' which, when empty, is filled by the server, to make use of
+  all available bandwidth. The lesson we learn from this protocol is the
+  importance of giving high bandwidth peers more blocks to share.
+  \end{quotation}
+\bibitem{resurrect}
+Anthony Lieuallen, October 2006.
+\newblock https://addons.mozilla.org/firefox/2570/.
+ \begin{quotation}\noindent Resurrect is a FireFox extension which allows
+  users, upon accessing a currently dead link, to search coral CDN
+  \cite{coral}, google, and Yahoo (etc.) caches for the same file.
+  \end{quotation}
+\bibitem{coopnet}
+V.N. Padmanabhan and K.~Sripanidkulchai.
+\newblock {The case for cooperative networking}.
+\newblock {\em Proceedings of IPTPS '02}, 2002.
+ \begin{quotation}\noindent In CoopNet the server assigns peers to others who
+  are 'close in IP' (same prefix at a certain byte range) in an attempt to
+  assign peers to others which are close to them. CoopNet (the Co-operative
+  Network) redirects incoming peers to peers who have recently downloaded the
+  file and have agreed to act as mirrors. They suggest some form of blocking
+  for cached multimedia files but leave the research up to future work.
+  \end{quotation}
+
+\bibitem{coblitz}
+K.S. Park and V.S. Pai.
+\newblock {Scale and Performance in the CoBlitz Large-File Distribution
+  Service}.
+\newblock {\em NSDI '06}, 2006.
+ \begin{quotation}\noindent CoBlitz is used within CoDeen to allow members to
+  cache large files in a distributed way on the system. CoBlitz distributes
+  large files block by block among the different members participating in the
+  system. Files are thus not saved in the cache of single members of the
+  proxy-system, but are instead saved block-wise by several members, and
+  'gathered up,' from those, when the fiel is requested. \end{quotation}
+
+\bibitem{overhaul}
+J.A. Patel and I.~Gupta.
+\newblock {Overhaul: Extending HTTP to combat flash crowds}.
+\newblock {\em Lecture notes in computer science, WCW '04}, pages 34--43, 2004.
+ \begin{quotation}\noindent Overhaul is a server system in which the server
+  starts serving only blocks of a file when it becomes overloaded, while
+  connecting peers to each other to download the various blocks. The authors
+  show that `chunking' (splitting the file into blocks) immensely benefits the
+  system in its strength against flash crowds. \end{quotation}
+
+\bibitem{osprey}
+J.~Reuning and P.~Jones.
+\newblock {Osprey: peer-to-peer enabled content distribution}.
+\newblock {\em Proceedings of the 5th ACM/IEEE-CS joint conference on Digital
+  libraries}, pages 396--396, 2005.
+ \begin{quotation}\noindent Osprey creates .torrent files for arbitrary files
+  in an ftp server directory. \end{quotation}
+
+\bibitem{openDHT}
+S.~Rhea, B.~Godfrey, B.~Karp, J.~Kubiatowicz, S.~Ratnasamy, S.~Shenker,
+  I.~Stoica, and H.~Yu.
+\newblock {OpenDHT: a public DHT service and its uses}.
+\newblock {\em Proceedings of the 2005 conference on Applications,
+  technologies, architectures, and protocols for computer communications},
+  pages 73--84, 2005.
+ \begin{quotation}\noindent OpenDHT provides a globally accessible DHT in which
+  clients can query and set key/value pairs with simple ease of use. It
+  provides set, get, and set with key (which last one is immutable without
+  knowing the key), so it provides a nicely manageable API. It is also stable
+  and good for testing. \end{quotation}
+
+\bibitem{proofs}
+Dan Rubenstein and Sambit Sahu.
+\newblock Can unstructured {P2P} protocols survive flash crowds?
+\newblock {\em IEEE/ACM Trans. Netw}, 13(3):501--512, 2005.
+ \begin{quotation}\noindent PROOFS provides a random, unstructured 'backup' net
+  overlay, in which, if a file is not found on the internet, you can run
+  flooded queries through this overlay (which happens to be robust to conniving
+  peers), to find the file. \end{quotation}
+
+\bibitem{slurpie}
+Rob Sherwood and Ryan Braud.
+\newblock Slurpie: {A} cooperative bulk data transfer protocol.
+\newblock In {\em INFOCOM}, 2004.
+ \begin{quotation}\noindent Slurpie is an alternative protocol to BitTorrent
+  \cite{slurpie} developed at the University of MD. It allows only a few peers
+  to connect to a central seed at a time, allowing those connected to the seed
+  to download unique, rare blocks quickly and begin to share them, thus
+  decreasing the overall download time. Unfortunately they assume
+  well-connected peers and poorly connected seeds, and therefore fail to
+  discover what makes their download system faster than BitTorrent (which it
+  is). \end{quotation}
+\bibitem{webtorrent}
+G.~Sivek, S.~Sivek, J.~Wolfe, and M.~Zhivich.
+\newblock {WebTorrent: a BitTorrent Extension for High Availability Servers}.
+ \begin{quotation}\noindent In Webtorrent Mozilla meets BitTorrent as web pages
+  are packaged into larger files which are then served using BitTorrent. To
+  locate this paper you must use google scholar's cached copy. \end{quotation}
+
+\bibitem{backslash}
+T.~Stading, P.~Maniatis, and M.~Baker.
+\newblock {Peer-to-peer caching schemes to address flash crowds}.
+\newblock {\em 1st International Workshop on Peer-to-Peer Systems (IPTPS
+  2002)}, 2002.
+ \begin{quotation}\noindent Backslash is a server based system in which servers
+  cache each others content to prevent overload. \end{quotation}
+
+\bibitem{zappala}
+D.~Stutzbach, D.~Zappala, and R.~Rejaie.
+\newblock {The Scalability of Swarming Peer-to-Peer Content Delivery}.
+\newblock {\em Proc. of the 4th International IFIP-TC6 Networking Conference},
+  pages 15--26, 2004.
+ \begin{quotation}\noindent Examines the effectiveness of a swarming protocol
+  against order of magnitude larger crowds--it is deemed to be effective.
+  \end{quotation}
+
+\bibitem{dijjer}
+Dijjer~Development Team, 2006.
+\newblock http://www.dijjer.org.
+ \begin{quotation}\noindent Dijjer provides distributed download for any file
+  on the internet via intercepting url's of the form
+  http://www.dijjer.com/linkToThisFile. It uses a DHT similar to Freenet to
+  lookup the different blocks, after first getting the hash values of the
+  blocks saved somewhere in the DHT, as well. It unfortunately is invasive as
+  peers need to cache blocks for which they are not directly concerned, and
+  also its lookup is not totally guaranteed to succeed. \end{quotation}
+\bibitem{codeen}
+L.~Wang, K.~Park, R.~Pang, V.~Pai, and L.~Peterson.
+\newblock {Reliability and Security in the CoDeeN Content Distribution
+  Network}.
+\newblock {\em Proceedings of the USENIX 2004 Annual Technical Conference},
+  2004.
+ \begin{quotation}\noindent CoDeen has heart-beat monitor of its neighbors, so
+  it knows to direct queries only to live neighbors. It accomplishes this by
+  downloading small HTTP files and using pings to determine liveness, among
+  other things. When large files are requested (i.e. many different proxies
+  request the same large file), it uses a kind of 'multi-cast' from one peer
+  through a tree expansion stream to the others (which assumes that the first
+  peer in the stream is fast). This is bad if the tree is non-optimal, but
+  reasonable if the original server is slow so that that won't make a
+  difference. CoDeen at least once in their experiments, ran out of bandwidth
+  (i.e. saturated a single proxy connection which many members were using.
+  \end{quotation}
+
+\bibitem{dotSlash}
+W.~Zhao and H.~Schulzrinne.
+\newblock {DotSlash: A self-configuring and scalable rescue system for handling
+  web hotspots effectively}.
+\newblock {\em International Workshop on Web Caching and Content Distribution
+  (WCW)}, 2004.
+ \begin{quotation}\noindent The DotSlash system operates by contacting backup
+  servers one and a time and asking each to become a redirection cache for an
+  overloaded server. \end{quotation}
+
+\end{thebibliography}

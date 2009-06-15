@@ -1,0 +1,297 @@
+with the "slowest" peers and plot all of their actions over time. (maybe per block) everything
+
+
+
+V. PROPOSED SOLUTION
+Our proposed solution emphasizes a client-only system that automatically switches from client-server
+to a peer-to-peer content delivery without any manual configuration for either clients or servers. The goals
+for our system include:
+1) It should be transparent to servers. This allows the origin servers to remain unchanged, so end users
+can benefit immediately from the system.
+2) It should appear transparent to users by automatically transitioning to peer-to-peer content delivery
+when the server is slow.
+3) It should not require a dedicated special-purpose infrastructure. Using a general-purpose infrastructure,
+coupled with a dependence on the clients for transferring blocks, makes this system easier and
+cheaper to deploy.
+9
+4) It should be non-intrusive, in that peers should not be required to cache blocks of files in which
+they were never interested. Peers will avoid caching files they never downloaded, and will not be
+responsible for content they don’t anticipate. Users would also only be using heir upload bandwidth
+for files in which they are interested, encouraging participation and adoption.
+5) It should be fast for small files.
+Future goals might include ensuring the validity of files and providing explicit incentives.
+The basic system will be to connect interested peers with one another via a DHT that stores peers lists.
+A fundamental design decision is also whether to download the contents of blocks from peers or from the
+DHT itself; peers could store the block contents, and have the DHT serve as a lookup of peers, or could
+store the block contents on the DHT itself. The trade-off is that having the blocks on the DHT puts more
+stress on the DHT and relies on members of the DHT for contributing bandwidth, which is intrusive.
+Imagine for instance caching portions of a file on your personal computer which you never downloaded
+for yourself, and which you are then sharing with others. Members of the DHT would thus intrusively
+cache information for which they are not interested. We therefore choose the case of having peers register
+themselves on a DHT as being willing to serve blocks they own, and have clients download directly from
+peers. This seems more indicative of a realistic web experience.
+A. Basic Algorithm
+In our protocol, a peer first tries to download the file from an origin web server. If at some point one
+of the following conditions occurs, the download will switch to a peer-to-peer swarming download:
+1) First the client waits a maximum amount of time T after the start of a normal HTTP download for
+the first byte of data to arrive. This allows the system to decide quickly whether the origin server
+is over-burdened and switch to peer-to-peer if needed.
+2) Once the client gets some data from the server, then it monitors whether the download rate falls
+below a certain fixed threshold R bits per second over a window of time w. If the origin server
+ever becomes slow, the client switches to peer-to-peer delivery.
+Once a client decides to switch to peer-to-peer downloading it will perform two steps. First the client
+will calculate a hash value for the filename. It will use this as a key value in the DHT to retrieve a list
+of the blocks of the file. The peer will then take each of the blocks’ respective hash value as a key to
+retrieve a list of peers who have the block and are willing to upload it. The peer will choose one peer at
+10
+(a) Peer downloads list of blocks (b) Peer downloads a list of peers which have a
+block
+B. Further Optimizations
+The algorithm described above may not be the most efficient. To improve performance several optimization
+may be necessary.
+First, this protocol may not be resilient against accidentally selecting and downloading from ’slow’
+peers (which could cause a slow last block problem, as well as being generally detrimental to speedy
+download). This will be overcome by using an algorithm similar to that discussed for the origin server.
+11
+Peers will be given a timeout to connect to them of a few seconds, and will have a ”lowest allowable
+rate” hard-coded. This will also happen to accomplish a form of load balancing, in that slower peers are
+dropped more frequently, so fast peers tend to upload more.
+It is also possible to establish a load control to allow only a certain number of peers to access the origin
+server simultaneously. This will be accomplished by limiting the number of peers accessing the origin
+server, per block, to 3 (a good number, according to the Slurpie paper [22]). Having a small number of
+peers contact the origin server allows the server to more quickly upload blocks to those peers. These peers
+can then begin to distribute the blocks.
+VI. METHODOLOGY
+
+
+A. Workload
+In most experiments we will choose a single file or a set of small files to download, then will vary the
+rate of clients requesting the file.
+
+B. Metrics
+We will run experiments and log all events and messages, then process logs to calculate the appropriate
+metrics. Specific measurements will be client download and upload rates and times, server upload rates,
+total throughput of the system, total bytes uploaded by clients, and total bytes uploaded by the server.
+For all experiments we will examine the distribution of these metrics across the peers, using averages and
+percentiles to analyze overall behavior of the system.
+
+C. Experiments
+First we will do a proof-of-concept experiment to see if this system effectively meets the premise of
+the thesis: automatically switching to peer-to-peer content delivery results in improved download time.
+We will use a 100KB file and hold other variables constant (with hard-coded, reasonable values), then
+exert an increasing client load on a server, up to the rate of saturation for the system. We will compare
+this with the same load on a traditional client-server system. We will use Ruby for the implementation
+to speed development. We will consider ourselves successful if we are able to gain two times the speed
+of the traditional server.
+13
+1) Automatic Transition: After proving that the system is viable, we will then run tests to vary
+parameters and see the effect this has on the protocol. We will thereby determine the ’best’ values for T
+(the time before switching to peer to peer content delivery), R (the rate at which we will spontaneously
+decide to give up on the origin server because it is too slow), and W (the time slot of recency in which
+to calculate R). These basic experiments will determine settings for parameters that will be used for the
+rest of the experiments. We will use a fixed file size of 100KB, and a fixed client arrival rate. We will
+fix b, the number of neighboring peers from whom to download, at a max of 20, which is shown to be
+reasonably good [2]). Block size will always be fixed at 32KB, which is shown to be reasonably effective
+in [25]. Lingering time will be set at 0s (no lingering). These experiments will be run for 30 minutes,
+or until 1000 downloads complete, whichever comes first. We will use an Apache server to distribute
+the original files. We will begin by holding all other variables constant and varying T from .5s to 5s.
+Similarly, we will hold all variables constant and vary R from 50Kbps to 1 MBps, and vary W from 1s
+to 10s (possibly using an estimated mean weighted average EMWA for download speeds).
+We will next test the system with varying server bandwidths to ensure these values are appropriate for
+a variety of loads. We will use the original experiments and vary server bandwidths of 32Kbps, 256KBps,
+1Mbps and 2Mbps.
+2) Entire Web Site: We will next examine the ability of our system to serve an entire web site. We
+will examine effectiveness with a typical web sized files by using a copy of the BYU home page and its
+associated objects to examine performance downloading an entire web site. Block size might make a big
+difference for small files. We will experiment with different block sizes to determine the impact of this.
+The supposition is that too small of a block size will be detrimental, as will too large.
+3) Optimizations: Next we will test the effect of lingering times on system performance. These tests
+will be with a fixed file size of 100KB, server bandwidth of 256Kbps, and a request rate of 20/min (10x
+bandwidth). We will perform the original experiments and vary lingering time from 0s to unlimited. We
+expect lingering time on the order of a minute or two will give most of the useful benefit to the system.
+After these we will examine whether optimizations seem necessary, from the above experiments. If
+needed, we will repeat these experiments with these features turned on and examine whether they provide
+a performance improvements. If necessary, we will experiment with imposing a load control of 3 peers per
+block accessing the origin server (shown in [22] to be efficient), and avoid the slow last block problem.
+14
+Finally, we will compare the performance of our protocol with BitTorrent [8]. We will repeat the basic
+experiment with BitTorrent and compare it with our own.
+VII. PROPOSED THESIS SCHEDULE
+Proposal: Nov 12 or so
+Basic implementation: Dec 31
+First experiments completed Feb 1
+Optimizations completed March 1
+First draft March 15
+Final draft April 1
+VIII. CONTRIBUTION TO COMPUTER SCIENCE
+The major contributions of this thesis will be that it creates what we believe to be a unique clientside
+system of cooperative web clients that automatically transitions from client server to peer-to-peer
+delivery as needed. It is transparent to both the server and the user and is non-intrusive in that users
+do not download files they do not want. It will be appropriate for smaller files and will not require a
+special purpose DHT. This contribution could dramatically increase the utility of swarming for everyday
+web browsing. This thesis could serve as a useful landmark for examining the scenarios when this tool
+is helpful, and provide hints for best-practices should it be developed by industry.
+Another interesting feature of the system is that it has the potential to be a kind of ‘backup’ for servers,
+if peers in the system have downloaded files. Since we only lookup files by their URL, it is possible to
+download files for servers that have crashed or deleted the original files. This therefore provides redundancy
+and reliability for servers that go off-line (see Resurrect [15]) (OpenDHT keeps entries for up to a week).
+There has been some concern about the legality of peer-to-peer protocols in the past. This algorithm,
+however, represents a generic peer-to-peer protocol, which will tend to be used with normal web downloads,
+which tend to be legal, so represents a way of using peer-to-peer downloads for a typically legal
+end. File sharing and downloading of movies have given p2p a bad name, so this represents a break from
+that trend, though could still be used for illegal content.
+It therefore provides an automatic transition, and also will help us understand how to combine a larger
+system (BitTorrent style swarming) with a system suitable for small files.
+15
+IX. DELIMITATIONS OF THESIS
+We do not plan on running tests in a mix of normal peers and ‘swarming-enabled’ peers, which would
+be indicative of a real world trial. We are also not looking at the possibility of a server redirecting ”nonaware”
+clients to peers that would be willing to serve it to them (similar to pseudo-servers [12]). Nor
+do we plan on using traces of real world traffic, as the tests listed should be descriptive enough of the
+protocol.
+We also plan on running experiments mostly on clients that tend to have high upload links–which is
+not truly indicative of a real-world experience (where most links are assymetric).
+A means of verifying that content is not corrupted or maliciously modified is also lacking. A server that
+is aware of the protocol could potentially sign checksums and place them in the DHT, or, alternatively,
+clients could form a reputation system, such as ’voting’ on the contents of a block. Analysis of this is
+not included in this work.
+REFERENCES
+[1] S. Annapureddy, M.J. Freedman, and D. Mazieres. Shark: Scaling File Servers via Cooperative Caching. Proceedings of the 2nd
+USENIX/ACM Symposium on Networked Systems Design and Implementation (NSDI), Boston, USA, May, 2005.
+Shark uses block distribution through a DHT named Coral [8]. It basically uses coral to lookup local peers who have a copy
+(locally) of a file and downloads it from them. It requires a custom DHT for this, and has a central server which is also cognizant
+of the protocol.
+[2] A.R. Bharambe, C. Herley, and V.N. Padmanabhan. Analyzing and Improving BitTorrent Performance. Microsoft Research, Microsoft
+Corporation One Microsoft Way Redmond, WA, 98052:2005–03.
+This paper analyzes some aspects of BitTorrent, such as the fact that outward-degree, or number of peers, increases up to 20,
+then decreases, though this seems like a relatively little studied aspect.
+[3] J. Chapweske. HTTP Extensions for a Content-Addressable Web, May 2002. http://www.open-content.net/specs/draft-jchapweske-caw-
+03.html.
+OnionNetworks proposes that HTTP headers be extended to include the lists of file block hashes and peers who have recently
+downloaded it, allowing a distributed download of files seemlessly.
+[4] L. Cherkasova and J. Lee. FastReplica: Efficient Large File Distribution within Content Delivery Networks. 4th USENIX Symposium
+on Internet Technologies and Systems, 2003.
+See mutualcast [14]. FastReplica performs a similar efficient block wise transfer as it.
+[5] B. Chun, D. Culler, T. Roscoe, A. Bavier, L. Peterson, M. Wawrzoniak, and M. Bowman. PlanetLab: an overlay testbed for broadcoverage
+services. ACM SIGCOMM Computer Communication Review, 33(3):3–12, 2003.
+PlanetLab is a global distributed test bed available to researchers for internet wide experiments, via using slices of computers
+which researchers may control.
+16
+[6] I. Clarke, O. Sandberg, B. Wiley, and T.W. Hong. Freenet: A distributed anonymous information storage and retrieval system. Workshop
+on Design Issues in Anonymity and Unobservability, 320, 2000.
+Freenet is an anonymous lookup for web pages. It uses a DHT style lookup where queries tend toward peers that tend to have
+the block, and uses intermediate caching.
+[7] B. Cohen. Incentives build robustness in bittorrent. In Proceedings of the Workshop on Economics of Peer-to-Peer Systems, Berkeley,
+CA, USA, 2003.
+BitTorrent’s makers recently came out with the capability to search for files without contacting the central server (via a DHT
+search), bringing that product one step closer to automatically downloading any file. BitTorrent motivates peers’ cooperation
+with a ‘Tit For Tat’ incentive policy. Peers which upload most quickly to others have a higher chance of being in turn uploaded
+to. Peers accomplish this by choosing four neighboring peers which upload more quickly to it as those to which it will then
+choose to upload to.
+[8] M.J. Freedman, E. Freudenthal, and D. Mazieres. Democratizing content publication with Coral. Proceedings of the 1st Symposium
+on Networked Systems Design and Implementation (NSDI 2004), pages 239–252, 2004.
+The search avoids hot spots and leverages locality by creating concentric DHT’s. Each node is a member of several DHT rings
+representing nodes who are within certain proximity of it (and to each other). It creates these rings with expanding size–i.e.
+DHT for nodes within 100ms, and one within 500ms, and one with global scope. Members first query the DHT of nodes close
+to them, then the next ring up, then the next, until they find a node that has cached the file, or it is not found. This allows
+them to use DHT queries for ’close’ nodes, first (reducing latency), and to contact members who are close. Coral does well
+in finding local copies of files quickly. Coral relies on a central access point for redirection, and does not have automatic fall
+over to swarming download, though it does have excellent locality properties. Coral pages are ’cached’ by accessing a url like
+http://outside.page.nyud.net:8090/subdir/pagename.
+[9] C. Gkantsidis, P. Rodriguez, et al. Network Coding for Large Scale Content Distribution. Proceedings of IEEE Infocom, 2005.
+Avalanche is a BitTorrent like protocol that uses Forward Error correcting codes to make it so that clients only need to download
+a certain percentage of the total blocks to then be able to recreate the entire original file. They show this helps with some rare
+block problems, especially for faster peers.
+[10] A.T. Inc. Akamai. URL http://www.akamai.com/en/html/services/edgesuite.html, October 2006.
+Akamai provides a large scale Content Distribution Network that consists of 20,000 servers in 71 countries, allowing corporations
+to effectively avoid flash crowds, who use it.
+[11] S. Iyer, A. Rowstron, and P. Druschel. Squirrel: A decentralized, peer-to-peer web cache. Proceedings of the 21st Annual PODC,
+2002.
+Squirrel networks the caches of computers residing on a LAN to allow them to lookup files in this shared cache and thereby
+save on bandwidth, if they have been accessed recently by users. It does not provide a distributed download, however.
+[12] K. Kong and D. Ghosal. Pseudo-Serving: A User-Responsible Paradigm for Internet Access. WWW6 / Computer Networks, 29(8-
+13):1053–1064, 1997.
+In pseudo serving clients may agree to act as serving backup agents for a server, which then pawns off future requests to them,
+if it is hammered like a hammer shark.
+[13] D. Kostic, R. Braud, C. Killian, E. Vandekieft, J.W. Anderson, A.C. Snoeren, and A. Vahdat. Maintaining High Bandwidth under
+Dynamic Network Conditions.
+17
+Bullet Prime, described here, is a protocol for downloading a large file–it does peer location using a random percolation through
+the peers of their neighbors, then has each peer dynamically choose an appropriate number of neighboring peers from which to
+download. It involves a little bit of overhead with its use of the RanSub routine to connect peers, however.
+[14] J. Li, P.A. Chou, and C. Zhang. Mutualcast: An Efficient Mechanism for Content Distribution in a Peer-to-Peer (P2P) Network.
+Technical report, MSR-TR-2004-100, Sept. 2004, 2004.
+Mutualcast connects peers downloading a file with one another. Each block is assigned to exactly one peer, which redistributes
+that block to all others. Those peers who are more ‘productive’ are given more blocks to distribute. Mutualcast uses a simple
+queue at each peer of ‘blocks completed’ which, when empty, is filled by the server, to make use of all available bandwidth.
+The lesson we learn from this protocol is the importance of giving high bandwidth peers more blocks to share.
+[15] Anthony Lieuallen, October 2006. https://addons.mozilla.org/firefox/2570/.
+Resurrect is a FireFox extension which allows users, upon accessing a currently dead link, to search coral CDN [8], google, and
+Yahoo (etc.) caches for the same file.
+[16] V.N. Padmanabhan and K. Sripanidkulchai. The case for cooperative networking. Proceedings of IPTPS ’02, 2002.
+In CoopNet the server assigns peers to others who are ’close in IP’ (same prefix at a certain byte range) in an attempt to
+assign peers to others which are close to them. CoopNet (the Co-operative Network) redirects incoming peers to peers who have
+recently downloaded the file and have agreed to act as mirrors. They suggest some form of blocking for cached multimedia files
+but leave the research up to future work.
+[17] K.S. Park and V.S. Pai. Scale and Performance in the CoBlitz Large-File Distribution Service. NSDI ’06, 2006.
+CoBlitz is used within CoDeen to allow members to cache large files in a distributed way on the system. CoBlitz distributes
+large files block by block among the different members participating in the system. Files are thus not saved in the cache of
+single members of the proxy-system, but are instead saved block-wise by several members, and ’gathered up,’ from those, when
+the fiel is requested.
+[18] J.A. Patel and I. Gupta. Overhaul: Extending HTTP to combat flash crowds. Lecture notes in computer science, WCW ’04, pages
+34–43, 2004.
+Overhaul is a server system in which the server starts serving only blocks of a file when it becomes overloaded, while connecting
+peers to each other to download the various blocks. The authors show that ‘chunking’ (splitting the file into blocks) immensely
+benefits the system in its strength against flash crowds.
+[19] J. Reuning and P. Jones. Osprey: peer-to-peer enabled content distribution. Proceedings of the 5th ACM/IEEE-CS joint conference on
+Digital libraries, pages 396–396, 2005.
+Osprey creates .torrent files for arbitrary files in an ftp server directory.
+[20] S. Rhea, B. Godfrey, B. Karp, J. Kubiatowicz, S. Ratnasamy, S. Shenker, I. Stoica, and H. Yu. OpenDHT: a public DHT service and
+its uses. Proceedings of the 2005 conference on Applications, technologies, architectures, and protocols for computer communications,
+pages 73–84, 2005.
+OpenDHT provides a globally accessible DHT in which clients can query and set key/value pairs with simple ease of use. It
+provides set, get, and set with key (which last one is immutable without knowing the key), so it provides a nicely manageable
+API. It is also stable and good for testing.
+[21] Dan Rubenstein and Sambit Sahu. Can unstructured P2P protocols survive flash crowds? IEEE/ACM Trans. Netw, 13(3):501–512,
+2005.
+18
+PROOFS provides a random, unstructured ’backup’ net overlay, in which, if a file is not found on the internet, you can run
+flooded queries through this overlay (which happens to be robust to conniving peers), to find the file.
+[22] Rob Sherwood and Ryan Braud. Slurpie: A cooperative bulk data transfer protocol. In INFOCOM, 2004.
+Slurpie is an alternative protocol to BitTorrent [22] developed at the University of MD. It allows only a few peers to connect
+to a central seed at a time, allowing those connected to the seed to download unique, rare blocks quickly and begin to share
+them, thus decreasing the overall download time. Unfortunately they assume well-connected peers and poorly connected seeds,
+and therefore fail to discover what makes their download system faster than BitTorrent (which it is).
+[23] G. Sivek, S. Sivek, J. Wolfe, and M. Zhivich. WebTorrent: a BitTorrent Extension for High Availability Servers.
+In Webtorrent Mozilla meets BitTorrent as web pages are packaged into larger files which are then served using BitTorrent. To
+locate this paper you must use google scholar’s cached copy.
+[24] T. Stading, P. Maniatis, and M. Baker. Peer-to-peer caching schemes to address flash crowds. 1st International Workshop on Peer-to-Peer
+Systems (IPTPS 2002), 2002.
+Backslash is a server based system in which servers cache each others content to prevent overload.
+[25] D. Stutzbach, D. Zappala, and R. Rejaie. The Scalability of Swarming Peer-to-Peer Content Delivery. Proc. of the 4th International
+IFIP-TC6 Networking Conference, pages 15–26, 2004.
+Examines the effectiveness of a swarming protocol against order of magnitude larger crowds–it is deemed to be effective.
+[26] Dijjer Development Team, 2006. http://www.dijjer.org.
+Dijjer provides distributed download for any file on the internet via intercepting url’s of the form
+http://www.dijjer.com/linkToThisFile. It uses a DHT similar to Freenet to lookup the different blocks, after first getting
+the hash values of the blocks saved somewhere in the DHT, as well. It unfortunately is invasive as peers need to cache blocks
+for which they are not directly concerned, and also its lookup is not totally guaranteed to succeed.
+[27] L. Wang, K. Park, R. Pang, V. Pai, and L. Peterson. Reliability and Security in the CoDeeN Content Distribution Network. Proceedings
+of the USENIX 2004 Annual Technical Conference, 2004.
+CoDeen has heart-beat monitor of its neighbors, so it knows to direct queries only to live neighbors. It accomplishes this by
+downloading small HTTP files and using pings to determine liveness, among other things. When large files are requested (i.e.
+many different proxies request the same large file), it uses a kind of ’multi-cast’ from one peer through a tree expansion stream
+to the others (which assumes that the first peer in the stream is fast). This is bad if the tree is non-optimal, but reasonable if the
+original server is slow so that that won’t make a difference. CoDeen at least once in their experiments, ran out of bandwidth
+(i.e. saturated a single proxy connection which many members were using.
+[28] W. Zhao and H. Schulzrinne. DotSlash: A self-configuring and scalable rescue system for handling web hotspots effectively. International
+Workshop on Web Caching and Content Distribution (WCW), 2004.
+The DotSlash system operates by contacting backup servers one and a time and asking each to become a redirection cache for
+an overloaded server.
+This thesis proposal by Roger Pack is accepted in its present form by the Department of Computer
+Science of Brigham Young University as satisfying the thesis proposal requirement for the degree of
+Master of Science.
+Daniel Zappala, Committee Chair
+Mark Clement, Committee Member
+Christophe Giraud-Carrier, Committee Member
+Parris Egbert, Graduate Coordinator

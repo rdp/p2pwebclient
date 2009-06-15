@@ -1,0 +1,1 @@
+ssh byu_p2pweb@$1 "cd ~/p2pwebclient/logs/2*.*.*.*; cd ~/p2pwebclient/logs/1*.*.*.*; ab=\`ls -srt listenerStdOut*.txt | tail -n $2 | head -n 1 | awk '{print \$2}'\`; cat \$ab" #grep -v \"\[\" \$ab" # pass it a 2 for the penultimate one

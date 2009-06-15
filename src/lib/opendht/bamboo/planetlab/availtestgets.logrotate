@@ -1,0 +1,5 @@
+"/home/srhea/openhash-logs/availtest/getlog" {
+   rotate 52
+   weekly
+   compress
+}

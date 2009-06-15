@@ -1,0 +1,10 @@
+<!-- $Id: docs.content,v 1.4 2005/07/01 17:52:24 srhea Exp $ -->
+
+The following documentation is available:
+<ul> 
+<li> <a href="pubs.html">Publications</a>
+<li> <a href="faq.html">Frequently Asked Questions</a>
+<li> <a href="users-guide.html">User's Guide</a>
+<li> <a href="programmers-guide.html">Programmer's Guide</a>
+<li> <a href="cgi-bin/mailman/listinfo/bamboo-users">Mailing List</a>
+</ul>

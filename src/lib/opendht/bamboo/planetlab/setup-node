@@ -1,0 +1,55 @@
+#!/bin/bash
+# 
+# $Id: setup-node,v 1.7 2003/11/30 19:23:40 srhea Exp $
+#
+# Called from setup-remote-node.  Cleans up a bit, installs rc.vinit so that
+# crond will run on reboot, and starts crond.
+
+cd /home/ucb8/srhea || { echo "Could not cd to srhea directory."; exit 1; }
+
+# Get rid of any old tapas files.
+
+if test -d tapas; then rm -rf tapas; fi
+if test -f tapas.tgz; then rm -f tapas.tgz; fi
+if test -f j2sdk1.4.1_03.tgz; then rm -f j2sdk1.4.1_03.tgz; fi
+if test -f bamboo.tgz; then rm -f bamboo.tgz; fi
+
+# Install the rc.vinit script.
+
+if ls /etc/cron.daily/* >& /dev/null; then sudo rm -rf /etc/cron.daily/*; fi
+if ls /etc/cron.disabled/* >& /dev/null; then sudo rm -rf /etc/cron.disabled/*; fi
+if ls /etc/cron.hourly/* >& /dev/null; then sudo rm -rf /etc/cron.hourly/*; fi
+if ls /etc/cron.montly/* >& /dev/null; then sudo rm -rf /etc/cron.montly/*; fi
+if ls /etc/cron.weekly/* >& /dev/null; then sudo rm -rf /etc/cron.weekly/*; fi
+
+if ! test -x /etc/rc.vinit 
+then
+    echo "Setting up /etc/rc.vinit..."
+    sudo cp bamboo/planetlab/rc.vinit /etc || \
+    { echo "Could not set up /etc/rc.vinit."; exit 1; }
+fi
+      
+sudo chown root: /etc/rc.vinit
+
+# Make sure crond is running.
+
+if ! ps -u root | grep -q crond
+then
+    echo "Starting crond..."
+    sudo setsid /usr/sbin/crond < /dev/null >& /dev/null
+fi
+
+# Setup the crontab.
+
+crontab -r
+cat bamboo/planetlab/crontab | crontab -
+
+# Get rid of old files.
+
+rm -f logrotate.cfg logrotate.status new-setup dylan.cfg run-it
+rm -f log-58[0-9][0-9].[0-9].gz ../hostname
+
+# All done.
+
+exit 0
+

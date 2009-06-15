@@ -1,0 +1,56 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.4)
+The top-level auxiliary file: thesis_all.aux
+The style file: plain-annote.bst
+Database file #1: annotated-roger.bib
+You're missing a field name---line 35 of file annotated-roger.bib
+ : 
+ : #      title={{Flash Crowds Alleviation via Dynamic Adaptive Network}},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Warning--empty year in bharambe
+Warning--empty journal in bullet_prime
+Warning--empty year in bullet_prime
+Warning--empty journal in webtorrent
+Warning--empty year in webtorrent
+You've used 28 entries,
+            2163 wiz_defined-function locations,
+            667 strings with 16875 characters,
+and the built_in function-call counts, 8828 in all, are:
+= -- 814
+> -- 489
+< -- 5
++ -- 192
+- -- 164
+* -- 617
+:= -- 1507
+add.period$ -- 80
+call.type$ -- 28
+change.case$ -- 164
+chr.to.int$ -- 0
+cite$ -- 33
+duplicate$ -- 325
+empty$ -- 642
+format.name$ -- 164
+if$ -- 1806
+int.to.chr$ -- 0
+int.to.str$ -- 28
+missing$ -- 24
+newline$ -- 161
+num.names$ -- 56
+pop$ -- 189
+preamble$ -- 1
+purify$ -- 137
+quote$ -- 0
+skip$ -- 252
+stack$ -- 0
+substring$ -- 349
+swap$ -- 65
+text.length$ -- 5
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 112
+warning$ -- 5
+while$ -- 73
+width$ -- 30
+write$ -- 311
+(There was 1 error message)

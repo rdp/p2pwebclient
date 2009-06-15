@@ -1,0 +1,456 @@
+<!-- $Id: users-guide.content,v 1.14 2006/02/19 15:51:18 srhea Exp $ -->
+
+<center><h2>Quick Start</h2></center>
+
+Here are three simple Python scripts that demonstrate how to use OpenDHT: <a
+href="put.py">put.py</a>, <a href="get.py">get.py</a>, and 
+<a href="rm.py">rm.py</a>.  
+
+<p> 
+Here is an example usage scenario:
+
+<pre>
+$ ./put.py colors red
+Success
+$ ./get.py colors
+red
+$ ./put.py --secret donttell colors blue
+Success
+$ ./get.py colors
+red
+blue
+$ ./rm.py colors blue donttell 
+Success
+$ ./get.py colors
+red
+</pre>
+
+<p>
+For details, please read on.
+
+<center><h2>How It Works</h2></center>
+
+<p>
+OpenDHT runs on a collection of 200 - 300 nodes on
+<a href="http://www.planet-lab.org/">PlanetLab</a>. Each of these PlanetLab
+nodes is a Linux host that runs the <a href="http://www.bamboo-dht.org/">Bamboo
+DHT implementation</a>. Each node in the OpenDHT deployment holds a portion of
+the DHT's total storage on its local disk, answers <em>put</em>, <em>get</em>,
+and <em>rm</em> requests for that portion of the DHT's total storage, and
+routes messages to other DHT member nodes.
+
+<p>
+Each node also serves as a <em>gateway</em> into the DHT for clients.
+A gateway accepts RPC operations from clients, forwards
+those messages into the DHT, and forwards the corresponding responses to
+those operations from the DHT to the appropriate client.  
+
+<p>
+You can find a list of all active OpenDHT servers 
+<a href="servers.txt">here</a>.  
+This list is dynamically updated to reflect the state of the OpenDHT
+deployment.  You will generally experience the shortest latency for completion
+of OpenDHT RPCs if you choose a gateway that is topologically near you on the
+Internet.  You can find a nearby OpenDHT gateway using 
+<a href="http://www.coralcdn.org/oasis/">OASIS</a> by looking up the DNS name
+opendht.nyuld.net, or by using Barath Raghavan's Python script <a
+href="find-gateway.py">find-gateway.py</a>.
+
+<p>
+There are two interfaces by which clients access OpenDHT: one using XML RPC
+over HTTP on port 5851 and one using Sun RPC over TCP on port 5852.  The
+interfaces are semantically identical, only the "on-the-wire" protocol is
+different between them.  Below we give an overview of the protocol, present
+the precise semantics, and then present the details particular to the Sun RPC
+and XML RPC interfaces.
+
+<p>
+Because this is a new service, things are still changing from time to time.
+For this reason, we strongly encourage users of OpenDHT to subscribe to the
+<a href="http://opendht.org/cgi-bin/mailman/listinfo/opendht-users">
+OpenDHT-Users</a> mailing list. Announcements concerning the state of
+the OpenDHT deployment, changes to the RPC interface,
+and other useful information are sent to this list.
+
+<h3>Protocol Overview</h3>
+
+<p>
+OpenDHT supports a narrow put-get-rm interface. The put RPC writes a
+key-value pair into the DHT, the get RPC retrieves one or more values
+previously put under a key, and the rm RPC removes values from the DHT. The
+current OpenDHT deployment limits a single value to 1 kilobyte in size.
+
+<p>
+As the total storage in the system is limited, OpenDHT cannot offer infinite persistence;
+a buggy or malicious client could easily consume all storage on a DHT
+node permanently if puts persisted forever. Instead, OpenDHT treats
+stored values as <em>soft state</em> by expiring them after a
+<em>time-to-live</em> (TTL) interval. The client who puts a key-value pair
+specifies the pair's TTL. The OpenDHT service guarantees not to expire the
+key-value pair before that TTL passes, barring catastrophic failure of the DHT
+service.
+
+<p>
+No notification is sent to clients when the TTL expires; clients must
+manage their storage to achieve the degree of persistence they desire.
+Should a client wish to cause its key-value pair to persist beyond
+its original TTL, the client may refresh the pair by issuing another
+put. The TTL in the latest put will take effect for that value.
+
+<p>
+In the current OpenDHT deployment, the longest TTL permitted is one
+week.
+
+<p>
+At times, an application may need to remove a value before its TTL expires.
+If the value was put into the DHT using a secret hash <em>y</em> such that
+<em>y</em>=SHA(<em>x</em>), then any client that knows the secret <em>x</em>
+can remove the value by issuing a remove request with the same key as the put,
+the SHA-1 hash of the value it wishes to remove, and the secret <em>x</em>.
+Because this request can be observed on the network (using
+<code>tcpdump</code>, for example), the secret can be learned by an adversary.
+For this reason, an application should use a different secret for each value
+put into the DHT.  To insert a value that cannot be removed, a null secret
+hash may be used.
+
+<h3>Precise Sematics</h3>
+
+A put in OpenDHT takes the following five arguments:
+
+<ul>
+<li><em>application</em>: string</li>
+<li><em>client_library</em>: string</li>
+<li><em>key</em>: byte array, maximum 20 bytes</li>
+<li><em>value</em>: byte array, maximum 1024 bytes</li>
+<li><em>ttl_sec</em>: four-byte integer, maximum value 604,800 seconds 
+(one week)</li>
+<li><em>secret_hash</em>: SHA-1 hash of a secret that can be used to remove
+the put later (optional)</li>
+</ul>
+It returns an integer equal to one of three values:
+<ul>
+<li><em>0</em>: success</li>
+<li><em>1</em>: over capacity</li>
+<li><em>2</em>: try again</li>
+</ul>
+
+The <em>application</em> and <em>client_library</em> fields are for logging
+purposes, like the "User-Agent" header in HTTP.  Set <em>application</em> to
+the name of your application, and <em>client_library</em> to the name of the
+library you're using to access OpenDHT (more about that below).  If you really
+don't want to give us that information, that's fine, but it will make our job
+harder.  Also, if you do tell us and we see that 90% of the clients accessing
+OpenDHT are using your application, you'll probably get a lot more technical
+support and other favors from us in the future, so it's in your interest to
+set it, too.
+
+<p>
+The <em>key</em> and <em>value</em> are the key and value you want to put into
+the DHT.  They can be arbitrary byte arrays.  The <em>ttl_sec</em> field
+specifies how long you want OpenDHT to store the value in seconds.
+
+<p>
+If non-null, the <em>secret_hash</em> field can later be used to remove the
+value from the DHT.
+
+<p>
+OpenDHT uniquely identifies values as key-value-secret_hash triples.
+If two users put the same key and value with different secret hashes, both
+values will be stored and returned by gets.
+If a client reputs a key-value-secret_hash triple previously put by into the
+DHT by any client (including itself), only one copy of the triple will be
+stored, and the expiration time will be extended to 
+
+<blockquote><pre>max(time_1 + TTL_1, time_2 + TTL_2)</pre></blockquote>
+
+<p>
+A put that returns 0 was successful.  A return value of 1 indicates that the
+client is using more than its fair share of storage.  A return value of 2
+indicates that a temporary condition prevented the DHT from accepting the put
+and that the client should try the put again.
+
+<p>
+A get in OpenDHT takes the following five arguments:
+<ul>
+<li><em>application</em>: string</li>
+<li><em>client_library</em>: string</li>
+<li><em>key</em>: byte array, maximum 20 bytes</li>
+<li><em>maxvals</em>: four byte signed integer, maximum value 2^31-1</li>
+<li><em>placemark</em>: byte array, maximum 100 bytes</li>
+</ul>
+It returns the following:
+<ul>
+<li><em>values</em>: an array of byte arrays</li>
+<li><em>placemark</em>: byte array, maximum 100 bytes</li>
+</ul>
+
+The <em>application</em>, <em>client_library</em>, and <em>key</em> fields
+are the same as in a put.
+
+<p>
+As noted above, OpenDHT allows puts to have the same key but different values
+and secret hashes.  It also allows the same key, value, and secret_hash to be
+put from different clients.  In all such cases, OpenDHT stores all unique
+key-value-secret_hash triples, and all unique triples are returned on a get,
+although not necessarily all at one time.
+
+<p>
+The <em>maxvals</em> field specifies how many values should be returned by a
+single get, and the <em>placemark</em> field is used as an iterator to
+retrieve additional values with subsequent gets.  In an initial get, a client
+should set <em>placemark</em> to be an empty byte array.  If the get returns
+an non-empty placemark, there are additional values available.  A subsequent
+get that uses the same key and the returned placemark will retrieve these
+values.
+
+<p>
+In other words, to get all the values available in the DHT under a particular
+key, do something like this:
+<blockquote>
+<pre>
+values = ();
+placemark = ();
+do {
+   (new_values, new_placemark) = get (app, lib, key, maxvals, placemark);
+   placemark = new_placemark;
+   values += new_values;
+}
+while (placemark != ());
+</pre>
+</blockquote>
+
+A rm in OpenDHT takes the following five arguments:
+
+<ul>
+<li><em>application</em>: string</li>
+<li><em>client_library</em>: string</li>
+<li><em>key</em>: byte array, maximum 20 bytes</li>
+<li><em>value_hash</em>: the SHA-1 hash of the value to be removed</li>
+<li><em>ttl_sec</em>: four-byte integer, maximum value 604,800 seconds 
+(one week)</li>
+<li><em>secret</em>: the secret whose SHA-1 hash was included in the put
+request for the value to be removed</li>
+</ul>
+
+Due to the nature of OpenDHT's protocols, remove operations must be stored
+persistently by the DHT.  For this reason, the TTL of a remove must be longer
+than the TTL remaining for the corresponding put.  Otherwise, the previous
+value might re-appear when the remove expires.  (For simplicity, just set
+the TTL of the remove to the same value as specified in the put.)  Also for
+this reason, removes return the same result codes as a put:
+<ul>
+<li><em>0</em>: success</li>
+<li><em>1</em>: over capacity</li>
+<li><em>2</em>: try again</li>
+</ul>
+
+<h3>XML RPC Syntax</h3>
+
+<p>
+XML RPC is a protocol supported by many popular scripting languages.  It uses
+HTTP as its transport, so it works from behind many firewalls.  OpenDHT
+accepts XML RPC commands on port 5851.  The path is ignored, so you can use
+"/RPC2" or just "/".
+
+<p>Because HTTP includes a "User-Agent" header, the <em>client_library</em>
+field in puts and gets is implicit when using XML RPC; you don't need to
+specify it.  
+
+<p>
+For historical reasons, there are two XML RPC procedures for put.  One is
+named "put"; its parameters, in order, are: the key (&lt;base64&gt;), the
+value (&lt;base64&gt;), the TTL in seconds (&lt;int&gt;), and the application
+name (&lt;string&gt;).  The return value is an &lt;int&gt;.  The second put
+proceedure is named "put_removable".  It takes the same arguments as put,
+except that after the key and value parameters come two others: hash_type and
+secret_hash.  hash_type should either be "SHA", in which case secret_hash
+(&lt;base64&gt;) should be the SHA-1 hash of the secret used for removes, or
+hash_type should be the empty string (""), in which case secret_hash should be
+an empty byte array.  "put_removable" returns the same result codes as "put".
+
+<p>
+Here's a sample put request:
+
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;methodCall&gt;
+    &lt;methodName&gt;put&lt;/methodName&gt;
+    &lt;params&gt;
+        &lt;param&gt;&lt;value&gt;&lt;base64&gt;c9Uau9icuBlvDvtokvlNaPzMLDU=&lt;/base64&gt;&lt;/value&gt;&lt;/param&gt;
+        &lt;param&gt;&lt;value&gt;&lt;base64&gt;8LhGCeXxLFXdhauo1dm+92gI87Vy5ZABErgZJ7pbtfZ+G9ootASb8OSu142xXXvy/Aw06amd5O87wrF8gTetZQ==&lt;/base64&gt;&lt;/value&gt;&lt;/param&gt;
+        &lt;param&gt;&lt;value&gt;&lt;int&gt;120&lt;/int&gt;&lt;/value&gt;&lt;/param&gt;
+        &lt;param&gt;&lt;value&gt;XmlRpcTest&lt;/value&gt;&lt;/param&gt;
+    &lt;/params&gt;
+&lt;/methodCall&gt;
+</pre>
+
+And here's the DHT's response:
+
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;methodResponse&gt;
+    &lt;params&gt;
+        &lt;param&gt;&lt;value&gt;&lt;int&gt;0&lt;/int&gt;&lt;/value&gt;&lt;/param&gt;
+    &lt;/params&gt;
+&lt;/methodResponse&gt;
+</pre>
+
+As with put, there are two get proceedures.  The first, "get", takes the
+following parameters, in order: the key (&lt;base64&gt;), the maximum number
+of values to return (&lt;int&gt;), a placemark from a previous get or an empty
+byte string if this is the first get on this key (&lt;base64&gt;), and the
+application name (&lt;string&gt;).  The return value is an &lt;array&gt;.  The
+first element of this array is another &lt;array&gt;, each element of which is
+one of the values (&lt;base64&gt;) for the given key.  The second element of
+the top array is the placemark, or an empty byte array if all the values have
+been returned.  The second get proceedure, "get_details", takes the same
+arguments as "get" but each element of the returned array is itself an
+&lt;array&gt; of the value itself  returns an &lt;array&gt; the value
+(&lt;base64&gt;), the TTL remaining (&lt;int&gt;), the hash type
+(&lt;string&gt;), and the secret hash (&lt;base64&gt;).
+
+<p>
+Here's a get request:
+
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;methodCall&gt;
+    &lt;methodName&gt;get&lt;methodName&gt;
+    &lt;params&gt;
+        &lt;param&gt;&lt;value&gt;&lt;base64&gt;c9Uau9icuBlvDvtokvlNaPzMLDU=&lt;/base64&gt;&lt;/value&gt;&lt;/param&gt;
+        &lt;param&gt;&lt;value&gt;&lt;int&gt;1&lt;/int&gt;&lt;/value&gt;&lt;/param&gt;
+        &lt;param&gt;&lt;value&gt;&lt;base64&gt;&lt;/base64&gt;&lt;/value&gt;&lt;/param&gt;
+        &lt;param&gt;&lt;value&gt;XmlRpcTest&lt;/value&gt;&lt;/param&gt;
+    &lt;/params&gt;
+&lt;/methodCall&gt;
+</pre>
+
+And here's the DHT's response:
+
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"&gt;
+&lt;methodResponse&gt;
+    &lt;params&gt;
+        &lt;param&gt;&lt;value&gt;&lt;array&gt;&lt;data&gt;
+            &lt;value&gt;&lt;array&gt;&lt;data&gt;
+                &lt;value&gt;&lt;base64&gt;8LhGCeXxLFXdhauo1dm+92gI87Vy5ZABErgZJ7pbtfZ+G9ootASb8OSu142xXXvy/Aw06amd5O87wrF8gTetZQ==&lt;/base64&gt;&lt;/value&gt;
+            &lt;/data&gt;&lt;/array&gt;&lt;/value&gt;
+            &lt;value&gt;&lt;base64&gt;AAPub+SbJ7AAAAB4c9Uau9icuBlvDvtokvlNaPzMLDW9mjT/gSAUXQFBomDTS2VurrSRkAF/AAAB&lt;/base64&gt;&lt;/value&gt;
+        &lt;/data&gt;&lt;/array&gt;&lt;/value&gt;&lt;/param&gt;
+    &lt;/params&gt;
+&lt;/methodResponse&gt;
+</pre>
+
+In the Quick Start section, above, we introduced three Python scripts for
+using the XML RPC interface: <a href="put.py">put.py</a>, 
+<a href="get.py">get.py</a>, and <a href="rm.py">rm.py</a>.  Here are their
+complete arguments, the meanings of which should be clear now:
+
+<p>
+<pre>
+$ ./put.py 
+usage: put.py [options] &lt;key&gt; &lt;value&gt;
+options:
+  -h, --help           show this help message and exit
+  -gGW, --gateway=GW   gateway URI, list at http://opendht.org/servers.txt
+  -tTTL, --ttl=TTL     how long (in seconds) to store the value
+  -sSEC, --secret=SEC  can be used to remove the value later
+
+$ ./get.py 
+usage: get.py [options] &lt;key&gt;
+options:
+  -h, --help            show this help message and exit
+  -gGW, --gateway=GW    gateway URI, list at http://opendht.org/servers.txt
+  -d, --details         print secret hash and TTL remaining for each value
+  -mCNT, --maxvals=CNT  how many values to return
+
+$ ./rm.py
+usage: rm.py [options] &lt;key&gt; &lt;value&gt; &lt;secret&gt;
+options:
+  -h, --help          show this help message and exit
+  -gGW, --gateway=GW  gateway URI, list at http://opendht.org/servers.txt
+  -tTTL, --ttl=TTL    must be longer than TTL remaining for value
+</pre>
+
+
+<h3>Sun RPC Syntax</h3>
+
+<p>
+The format of Sun RPC calls is specified in a language called XDR.  OpenDHT's
+Sun RPC interface is defined in <a href="gateway_prot.x">gateway_prot.x</a>.
+There are two versions of the interface in gateway_prot.x; version 3 is the
+current one, though version 2 is still supported for backwards compatibility.
+To use this interface, you compile the gateway_prot.x file using an XDR
+compiler (rpcgen on UNIX); this process generates a client stub that you can
+then access using standard function calls.
+
+Here are some sample programs that use the Sun RPC interface:
+
+<p>
+A <a href="gateway_test.c">simple example</a>, illustrating the use of the
+OpenDHT put and get RPCs in C.  To compile and run this program from scratch,
+do this on a Unix machine:
+
+<pre>
+$ rpcgen -h gateway_prot.x > gateway_prot.h
+$ rpcgen -l gateway_prot.x > gateway_prot_clnt.c
+$ rpcgen -c gateway_prot.x > gateway_prot_xdr.c
+$ gcc -c gateway_test.c
+$ gcc -c gateway_prot_clnt.c
+$ gcc -c gateway_prot_xdr.c
+$ gcc -o gateway_test gateway_test.o gateway_prot_clnt.o gateway_prot_xdr.o
+$ ./gateway_test 
+usage: ./gateway_test server_host server_port
+$ ./gateway_test planetlab8.millennium.berkeley.edu 5852
+Doing a null call.
+Null call successful.
+Doing a put
+Put successful
+...
+</pre>
+
+(I don't know how to do it on a Windows machine.)
+
+<p>
+We've also built a simple unicast <a href="ohchat-0.03.tar.gz">instant 
+messaging application</a>, written 
+in C++. Clients rendezvous by their usernames; mappings from
+username to IP/port are stored in OpenDHT. This code requires libarpc
+and libasync, libraries for asynchronous RPC and asynchronous I/O in
+C++, both of which are part of the <a
+href="http://www.fs.net/">SFS</a> distribution. These libraries
+make it easy to write non-blocking, event-driven OpenDHT client code in C++.
+
+<p>
+For users programming in Java, we have a client-side gateway stub that 
+presents a non-blocking put-get interface and automatically switches 
+between gateways when one fails.  You can get it in the <a 
+href="http://www.bamboo-dht.org/download.html">latest Bamboo 
+snapshot</a>; the stub is in bamboo.dht.GatewayClient, and a sample 
+usage is shown in bamboo.dht.PutGetTest.
+
+<h3>Perl</h3>
+
+<p>
+In addition to the Python and Java interfaces, there is also a Perl interface 
+to OpenDHT by Leon Brocard:
+
+<ul>
+   <li><a href="http://search.cpan.org/dist/Net-OpenDHT/">http://search.cpan.org/dist/Net-OpenDHT/</a></li>
+   <li><a href="http://use.perl.org/~acme/journal/24810">http://use.perl.org/~acme/journal/24810</a></li>
+   <li><a href="http://www.freebsdsoftware.org/net/p5-Net-OpenDHT.html">http://www.freebsdsoftware.org/net/p5-Net-OpenDHT.html</a></li>
+</ul>
+
+<h3>ReDiR</h3>
+
+<p>
+There is an old Java implementation of the ReDiR algorithm described in our
+IPTPS paper in the <a href="http://bamboo-dht.org/download.html">latest Bamboo
+CVS snapshot</a>.  A newer C++ implementation of the improved algorithm
+described in our SIGCOMM paper is available below along with an example of
+how to use it in conjunction with the STL thanks to Chenfeng Vincent Zhou:
+<ul>
+<li><a href="redir++-0.3.tar.gz">redir++-0.3.tar.gz</a></li>
+<li><a href="redirapp-0.0.1.tar.gz">redirapp-0.0.1.tar.gz</a></li>
+</ul>
+

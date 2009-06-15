@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+# $Id: check-running,v 1.7 2004/11/10 00:30:44 srhea Exp $
+#
+
+PORT=5850
+WEBPORT=$(($PORT+1))
+HOSTIP=$(hostname -i)
+HOSTIP=${HOSTIP% } # remove spaces
+if ps uxww | grep 'DustDevil' | grep -q config-5850
+then
+    if curl -m 300 http://$HOSTIP:$WEBPORT/ >& /dev/null
+    then 
+        exit 3
+    else
+        exit 6
+    fi
+else 
+    exit 2
+fi

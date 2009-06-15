@@ -1,0 +1,9 @@
+real todo optimizations:
++somehow just get the 'end' 16K chunks or what not, of blocks [bool to download function?] 'you HAVE to download that chunk, and quickly' 
+
+duplicated chunks with streaming req's would be the best (lodo + "keep alive the connection," "pre-streamed" style stuff)
+
+lodo +server limited conn's
+
+
+

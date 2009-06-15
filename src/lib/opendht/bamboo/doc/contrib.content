@@ -1,0 +1,31 @@
+<!-- $Id: contrib.content,v 1.9 2005/03/22 01:01:51 srhea Exp $ -->
+
+The Bamboo code itself was primarily written by <a
+href="http://www.srhea.net/">Sean Rhea</a>, but it is based
+heavily on the OceanStore, SEDA, and even libasync code that preceded it.  
+
+<p> As time goes on, more people are starting to work on the code.  David
+Oppenheimer implemented a Scribe-like reverse-path-forwarding multicast
+algorithm we call SoftScribe.  Steve Czerwinski wrote an implementation of the
+Vivaldi virtual coordinates algorithm.  Brad Karp added TTLs to data values
+stored in the bamboo.dmgr.DataManager.
+
+<p>
+The following additional people are all involved (in some way) with Bamboo:
+
+<ul>
+<li>The <a href="http://oceanstore.cs.berkeley.edu/info/people.html">members</a>
+    of the OceanStore project.
+<li>The <a href="http://pier.cs.berkeley.edu/people.html">members</a> of the 
+    PIER project.
+<li>The <a href="http://opendht.org/people.html">members</a> of the 
+    OpenDHT project.
+<br>
+<br>
+
+<li>Dennis Geels
+<li>Petros Maniatis
+<li>Sonesh Surana
+<li>Timothy Roscoe
+<li>Yatin Chawathe
+</ul>

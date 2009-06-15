@@ -1,0 +1,49 @@
+<!-- $Id: introduction.content,v 1.5 2005/03/22 01:01:51 srhea Exp $ -->
+
+A distributed hash table, or DHT, is a building block for peer-to-peer
+applications.  At the most basic level, it allows a group of distributed hosts
+to collectively manage a mapping from keys to data values, without any fixed
+hierarchy, and with very little human assistance.  This building block can
+then be used to ease the implementation of a diverse variety of peer-to-peer
+applications such as file sharing services, DNS replacements, web caches, etc.
+
+<p>
+DHTs were first introduced to the research community in 2001, with the
+near-simultaneous introduction of four different architectures: CAN, <a
+href="http://www.pdos.lcs.mit.edu/chord/">Chord</a>, <a
+href="http://research.microsoft.com/~antr/pastry/pubs.htm">Pastry</a>, and <a
+href="http://www.cs.berkeley.edu/~ravenben/tapestry/index.html">Tapestry</a>.
+Since that time, there have been an amazing number of new DHT architectures
+proposed, but very few publicly-released, robust implementations.
+
+<p>
+Bamboo is a either based on Pastry, a re-engineering of the Pastry protocols,
+or an entirely new DHT, depending on how you want to look at it.  The term
+<em>geometry</em> is used to refer to the pattern of neighbor links in a DHT,
+independent of the routing algorithms or neighbor management algorithms used.
+Bamboo uses the Pastry geometry.  It does not, however, use the same joining
+or neighbor management algorithms.  Compared to Pastry, the algorithms are
+more incremental, a difference that allows Bamboo to better withstand large
+membership changes in the DHT as well as continuous churn in membership,
+especially in bandwidth-limited environments.  For more information, see our
+USENIX paper in the <a href="pubs.html">Publications</a> section of this
+web site.
+
+<p>
+On this web site you can find the <a href="download.html">code</a> for
+Bamboo and <a href="docs.html">documentation</a> on how to use it.  Bamboo is
+written in Java, and it has proven quite easy to incorporate into several
+projects at UC Berkeley that use DHTs, including the <a
+href="http://oceanstore.cs.berkeley.edu">OceanStore</a> and <a
+href="http://pier.cs.berkeley.edu">PIER</a> projects.  If you have a project
+that needs a DHT, give Bamboo a try, and please feel free to <a
+href="contact.html">contact us</a> if you have any questions, comments, etc.
+
+<p>
+<font color="red">New:</font> If you're interested in using Bamboo, but don't
+want to run the DHT yourself, check out our new <a
+href="http://opendht.org/">OpenDHT</a> project.  We're running Bamboo on
+Planetlab 24/7 and allowing anyone to put/get key-value pairs into it/out of
+it using XML RPC or Sun RPC.   It's a lot easier than running the DHT
+yourself!
+

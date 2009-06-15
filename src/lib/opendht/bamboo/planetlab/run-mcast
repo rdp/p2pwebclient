@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# $Id: run-mcast,v 1.2 2004/05/22 20:09:59 srhea Exp $
+#
+
+PORT=5850
+HOSTIP=$(hostname -i)
+HOSTIP=${HOSTIP% } # remove spaces
+CFG=/tmp/mcast-config
+
+cd $HOME/mcast
+mkdir -p logs
+sed -e "s/LOG_FILE/\/home\/ucb_bamboo\/mcast\/logs\/log/" bamboo/planetlab/mcast-logger-config > /tmp/mcast-logger-config
+sed -e "s/HOSTIP/$HOSTIP/" bamboo/planetlab/mcast.cfg > $CFG
+JAVAHOME=/home/ucb_bamboo/j2sdk1.4.1_03 nohup bamboo/bin/run-java bamboo.lss.DustDevil -l /tmp/mcast-logger-config $CFG >& /dev/null & echo $! > /tmp/mcast-pid

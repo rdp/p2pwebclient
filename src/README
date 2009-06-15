@@ -1,0 +1,7 @@
+
+This is the infamous p2pwebclient.  To run its proxy run ruby long_running_proxy.rb
+To run experiments look at driver.rb
+Good luck!
+-=R
+MIT license (c) roger pack 2008
+No warranty of any type

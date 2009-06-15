@@ -1,0 +1,6 @@
+Assuming it 'is' getting cpu action, it might be waiting forever on slow outbound links 'blocking IO' to write
+so try it 'with just threads p2p' (no p2p action) -- is it now consistent?
+If so, then lower chunk size, sleep 0 on server
+
+
+This assumes that a blocking write will 'interrupt' a read or what not, whether in openDHT or in a p2p download.

@@ -1,0 +1,29 @@
+planetlab-1.cs.princeton.edu
+planetlab-7.cs.princeton.edu
+planetlab-5.cs.princeton.edu
+# very slow or -1
+lefthand.eecs.harvard.edu
+righthand.eecs.harvard.edu
+planetlab2.netlab.uky.edu
+planetlab1.netlab.uky.edu
+#freezes and crashes junk uck
+planet2.scs.cs.nyu.edu
+planet1.scs.cs.nyu.edu
+planetx.scs.cs.nyu.edu
+planetlab2.ucsd.edu
+planetlab3.ucsd.edu
+planetlab1.ucsd.edu
+planetlab-dsl-1.ucsd.edu
+planetlab2.arizona-gigapop.net
+planetlab1.arizona-gigapop.net 
+node1.lbnl.nodes.planet-lab.org
+node2.lbnl.nodes.planet-lab.org
+# next really slowI think always slow, freezes at 285 with a lot of movement at least with 120_p2p_6 [but not normally...?]
+planetlab2.cis.upenn.edu
+planetlab1.cis.upenn.edu
+#these two are the only ones that really get meslammed
+# were set elsewhere, though
+#planet1.pittsburgh.intel-research.net
+# good one
+planet2.pittsburgh.intel-research.net
+planet3.pittsburgh.intel-research.net

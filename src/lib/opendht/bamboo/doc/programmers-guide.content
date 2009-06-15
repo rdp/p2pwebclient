@@ -1,0 +1,285 @@
+<!-- $Id: programmers-guide.content,v 1.5 2004/01/09 00:29:40 srhea Exp $ -->
+
+
+This document describes the layout and style of the Bamboo Java source
+code, for the use of a programmer wishing to use it.  The current Bamboo
+code descends from the original Tapestry code, and some aspects of it
+reflect this fact.  While I have removed most of the quirkiness of
+the original, some of it remains, and while the code is easy to understand
+when one knows the history behind it, doing so without this knowledge can
+be frustrating.  It is the goal of this document to acquaint you with the
+necessary background to understand the current codebase.
+
+<p>
+<big><strong><font face="arial,helvetica,sanserif">
+Event-Driven Programming
+</font></strong></big>
+
+<p>
+Bamboo is written in an event-driven, single-threaded programming style.
+Many programmers may already be familiar with this style of programming
+through experience with graphical user interface (GUI) libraries such as 
+<a href="http://java.sun.com/docs/books/tutorial/uiswing/">Java Swing</a>
+or the <a href="http://www.gtk.org/">GIMP Toolkit (GTK+)</a>.  
+
+<p>
+When written properly, event-driven code can be much easier to understand
+and performs much better than threaded code.  Event-driven programs can
+deliver higher concurrency than many thread packages; also, since
+event-driven programs are often single-threaded, many of the difficulties 
+encountered with synchronization in threaded programs simply do not exist.
+However, written
+improperly, event-driven code can be <a
+href="http://www.cs.brown.edu/courses/cs167/chapters/Chap2.htm">difficult
+to understand</a>.  In this section I'll describe two different approaches
+to structuring event-driven programs, discuss their relative merits and
+limitations, and explain how the current Bamboo code is a sort of hybrid of
+the two.
+
+<p>
+<strong><font face="arial,helvetica,sanserif">
+SEDA
+</font></strong>
+
+<p>
+SEDA, which stands for the <a
+href="http://www.eecs.harvard.edu/~mdw/proj/seda/">Staged, Event-Driven
+Architecture</a>, is a system for structured, event-driven server
+construction developed by Matt Welsh.  In SEDA, the functional units of a
+program are divided into separate <em>stages</em>, which communicate
+through Java objects called <em>events</em>.  Specifically, an event is any
+Java object that descends from the <a
+href="http://www.eecs.harvard.edu/~mdw/proj/seda/javadoc/seda/sandStorm/api/QueueElementIF.html">QueueElementIF</a>
+interface, and a stage is any Java object that descends from the <a
+href="http://www.eecs.harvard.edu/~mdw/proj/seda/javadoc/seda/sandStorm/api/EventHandlerIF.html">EventHandlerIF</a>
+interface.  
+
+<p>
+To send an event from one stage to another, one enqueues the event onto the
+destination stage's sink, of type <a href="">SinkIF</a>, using the function
+<code>SinkIF.enqueue ()</code>; the easiest way to
+find a stages sink is to look it up using the <a href="">ConfigDataIF</a>
+object passed into <code>EventHandlerIF.init ()</code>.  For example,
+consider a stage <code>Foo</code> that sends events to a stage
+<code>Bar</code>.  The code might look like this:
+
+<blockquote>
+<pre>
+public class Foo implements EventHandlerIF {
+    SinkIF bar_sink = null;
+    public void init (ConfigDataIF config) {
+	bar_sink = config.getManager ().getStage ("Bar").getSink ();
+    }
+    ...
+}
+</pre>
+</blockquote>
+
+When a stage is sent events, SEDA calls that stage's
+<code>handleEvent</code> or <code>handleEvents</code> functions.  So for
+example, we might have:
+
+<blockquote>
+<pre>
+public class Bar implements EventHandlerIF {
+    SinkIF foo_sink = null;
+    ...
+    public void handleEvents (QueueElementIF [] items) {
+	for (int i = 0; i < items.length; ++i)
+	    handleEvent (items [i]);
+    }
+    public void handleEvent (QueueElementIF item) {
+	if (item instanceof RequestEvent) 
+	    foo_sink.enqueue (new ResponseEvent ());
+    }
+    ...
+}
+</pre>
+</blockquote>
+
+SEDA has a number of threading models, but in general a stage may have
+several of its functions called concurrently, unless it inherits from the
+<code>SingleThreadedEventHandlerIF</code> interface.  Sinks are implemented
+as queues, and SEDA maintains a thread pool in which each thread loops,
+removing all the items on some stages sink and calling its
+<code>handleEvents</code> function with them.  
+
+<p>
+SEDA provides an event-driven wrapper around <a
+href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/package-summary.html">java.nio</a>
+called <a
+href="http://www.eecs.harvard.edu/~mdw/proj/seda/javadoc/seda/sandStorm/lib/aSocket/package-summary.html">aSocket</a>,
+allowing for event-driven network access, and a similar wrapper, <a
+href="http://www.eecs.harvard.edu/~mdw/proj/seda/javadoc/seda/sandStorm/lib/aDisk/package-summary.html">aDisk</a>, allowing for event-driven disk access.
+
+<p>
+The nicest thing about SEDA is that the interfaces between stages are
+defined only by the events they pass.  Which stages are used in any given
+system is specified by a configuration file, so different implementations
+of a given stage can easily be swapped without recompilation.
+
+<p>
+One final note: the OceanStore system doesn't usually enqueue events
+directly onto queues as described above.  Instead, it uses a
+publish/subscribe interface defined in
+<code>ostore.dispatch.Classifier</code>.  To receive events, a stage
+<em>registers</em> a filter for them; to send an event to all registered
+stages, another stage <em>dispatches</em> it.  
+
+
+
+<p>
+<strong><font face="arial,helvetica,sanserif">
+SFS
+</font></strong>
+
+<p>
+The <a href="http://www.fs.net/">Self-Certifying File System (SFS)</a> is a
+distributed file system primarily developed by David Mazières.  SFS
+differs from SEDA in (by my count) two primary ways.  First, instead of
+stages and events, SFS is organized along functions and callbacks.  Second,
+SFS is single-threaded by design.  
+
+<p>
+There are two main types of events in SFS, timer events and file descriptor
+events.  Timer events are scheduled by the user to go off after a specified
+period of time, at which point a function provided by the user is called.
+File descriptor events are called when the status (readability or
+writability, generally) of a file descriptor change, at which point a
+function provided by the user is called.
+
+The SFS main loop and callbacks are part of a library called
+<code>libasync</code>, including what is quite possibly the most confusing
+source file ever, <a
+href="http://www.fs.net/cvs/sfs1/async/callback.h?rev=1.9.2.4&content-type=text/x-cvsweb-markup">callback.h</a>.
+Briefly, a callback is just a function pointer.  Since SFS is
+single-threaded, it is important that a function not block in performing
+I/O.  Instead, one registers interest in the relevant file descriptor by
+providing a callback to SFS; when the file descriptor is ready, SFS calls
+this callback, and the I/O can be performed without blocking.  For example,
+a simple server might look something like this:
+
+<blockquote>
+<pre>
+#include "async.h"
+void read_ready () {
+   printf ("Ready to read.\n");
+}
+
+void listen_for_read (int socket_fd) {
+    fdcb (socket_fd, selread, read_ready);
+}
+</pre>
+</blockquote>
+
+The function <code>fdcb</code> registers the callback
+<code>read_ready</code> to be called the next time the socket
+<code>socket_fd</code> is ready for reading.  The really cool thing about
+<code>libasync</code> is that it uses C++ templates to implement currying.
+The template function <code>wrap</code> takes a function pointer of N
+arguments along with M other values an returns a function pointer of N-M
+arguments.  Maybe some sample code will make this clear:
+
+<blockquote>
+<pre>
+#include "async.h"
+void read_ready (int socket_fd);
+
+void listen_for_read (int socket_fd) {
+    fdcb (socket_fd, selread, wrap (read_ready, socket_fd));
+}
+void read_ready (int socket_fd) {
+   printf ("Ready to read on fd %d.\n", socket_fd);
+}
+
+</pre>
+</blockquote>
+
+In this code snippet, <code>wrap</code> is taking the
+<code>read_ready</code> function pointer and the value
+<code>socket_fd</code> and producing a new function pointer that when
+called produces the same result as calling <code>read_ready</code> with the
+value <code>socket_fd</code>.
+
+<p>
+So what?  Well, note that although there are now two functions, we've
+passed all the relevant state from the first one into the second, so that
+when the second function is called, we know which file descriptor we're
+working with.  Also, the code <em>looks</em> like one big function.  In
+practice, the use of the wrap function can make event-driven code just as
+clear as threaded code for the purposes of hiding blocking I/O operations,
+without introducing all of the synchronization issues that come with
+threads.
+
+<p>
+For more information, check out the <a
+href="http://www.pdos.lcs.mit.edu/6.824/async/">libasync tutorial</a>.
+Actually, I suggest you read the tutorial anyway, as it's a great
+introduction to the world of event-driven programming.
+
+<p>
+<big><strong><font face="arial,helvetica,sanserif">
+The Bamboo Events Model
+</font></strong></big>
+
+<p>
+Bamboo was originally implemented under SEDA (and OceanStore, for that
+matter), and it still emulates Tapestry so that it can be used by
+OceanStore code, so much of the Bamboo code uses the SEDA programming
+style.  However, I've come to believe that the SFS/libasync style is
+cleaner and more efficient (at least on a uniprocessor), so Bamboo is
+currently a hybrid of the two.  Sadly, without templates we don't have the
+wrap function, making the syntax of callbacks a little more cumbersome.
+When templates are introduced with Java 1.5, however, we will have the full
+expressibility of the libasync code; check out the file
+bamboo/src/bamboo/util/Wrap.pl for a preview.
+
+<p>
+The class <a
+href="javadoc/bamboo/lss/DustDevil.html">bamboo.lss.DustDevil</a>
+implements most of the SEDA interface, parsing its configuration files,
+loading stages, and wiring them together with sinks, but using an
+underlying system that's more like libasync than SEDA.  The main loop is in 
+<a
+href="javadoc/bamboo/lss/ASyncCore.html">bamboo.lss.ASyncCore</a>; like
+libasync, it supports callbacks for timers and file descriptors.  On top of
+that base, sinks are implemented as functions that call through to the
+receiving stage's <code>handleEvents</code> function, and Bamboo uses 
+<a
+href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/package-summary.html">java.nio</a> 
+directly rather than the SEDA wrappers.  
+
+<p>
+What all this means is that the lower level Bamboo code, which is some of
+the newer code, is all written as functions and callbacks, while the older
+code is still stages and events.  Eventually, I plan to move everything to
+functions and callbacks, but it's not urgent.
+
+<p>
+<big><strong><font face="arial,helvetica,sanserif">
+Using multiple threads with Bamboo
+</font></strong></big>
+
+<p>
+
+In a perfect world, one thread (per processor maybe) is all you need.  In the
+real world, you're often forced to work with blocking library code, such as <a
+href="http://www.sleepycat.com">BerkeleyDB</a>.  To do so without killing
+Bamboo's performance, you'll want to wrap such code with a thread (or thread
+pool), separated from the rest of the system by thread-safe queues.  To send
+events to the thread pool, have the thread pool's threads <a
+href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Object.html#wait()">wait</a> on a <a
+href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/LinkedList.html">java.util.LinkedList</a>.
+Place request events on this list and then call <a
+href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Object.html#notify()">notify</a> to wake up a thread from the pool.  To pass response events back to the
+main thread, use the function <a
+href="javadoc/bamboo/lss/ASyncCore.html#register_timer(long,
+bamboo.lss.ASyncCore.TimerCB, java.lang.Object)">bamboo.lss.ASyncCore.register_timer</a>
+with a time value of 0.  This function is the only thread-safe one in all of
+Bamboo; it was made thread safe just for this purpose.  If you're familiar
+with the Java Swing library, this trick is similar to using the
+<a
+href="http://java.sun.com/j2se/1.4.2/docs/api/java/awt/EventQueue.html#invokeLater(java.lang.Runnable)">java.awt.EventQueue.invokeLater</a> function.  For a good example of
+how to do all of this, check out <a
+href="javadoc/bamboo/db/StorageManager.html">bamboo.db.StorageManager</a>.
+

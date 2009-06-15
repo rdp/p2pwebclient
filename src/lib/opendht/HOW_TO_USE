@@ -1,0 +1,82 @@
+
+The basic usage is [sorry it's a little convoluted, since it's basically entrenched in a larger project]
+
+Step one: you'll need eventmachine
+
+gem install eventmachine
+
+Then the opendht file itself is:
+http://code.google.com/p/p2pwebclient/source/browse/trunk/src/lib/opendht/opendht_em.rb
+
+Unfortunately it also uses a helper function within itself to allow for named parameters.
+
+
+So...if you want to install the helper function [which function is create_named_parameters_wrapper]
+do it thus:
+
+gem install ParseTree
+
+Then download the opendht file and its helpers--can be found at
+http://code.google.com/p/p2pwebclient/source/browse/trunk/src/lib/opendht/#opendht/separate_example # download each file, then run ruby test.rb
+
+
+its use is then
+
+   @opendht = OpenDHTEM.new(@logger, :key_multiply_redundancy => 1, :max_num_simultaneous_gateway_requests_per_query => 1, :gateway_pool_size => nil, :gateway_pool_creation_race_size => 0)
+
+Note that @logger can be nil
+
+Then:
+
+ @opendht.add key, value
+ @opendht.remove key, value
+ @opendht.get_array(key) {|status, values, pm, round, key_used| }
+
+Now later, when the response comes back, that block will be called.  If status is :success then you know good things just happened, and values will be an array of up to 10 values returned [it only returns 10 per request].  To get the next 10 call it again with the same key.
+
+Advanced usage:
+
+If you had set it up
+   @opendht = OpenDHTEM.new(@logger, :key_multiply_redundancy => 2, :max_num_simultaneous_gateway_requests_per_query => 2)
+
+Your requests would all get multiplied 2x [i.e. your original key would be used as well as key_1--and, in this example, one request sent off per key].  So the response block would get called twice.  And who knows in what order, or when.  One of them could come back far later.  Anyway if you pass it a "round name"
+ @opendht.get_array(key, round_name) {|status, values, pm, round, key_used| )
+
+Then it would pass back that round name as the round parameter to the block.  So that's what I use to keep track of what I'm getting back.
+
+
+Currently it is also setup to start with a gateway pool of "size one" [[['opendht.nyuld.net
+ 
+',5851]]
+
+If you'd like to have it use several gateways, instead of just one  then you'll want to pass it gateway_pool_size for how many gateways to round robin between, total.
+I.e. instead of using a gateway pool of [['opendht.nyuld.net
+ 
+', 5851]] it will end up using something like [['169.229.50.5:5850
+ 
+', 5851], ['169.229.50.13
+ 
+', 5851]]
+
+The way it discovers these gateways is it will read 'known servers' from a local file [ex: download opendht.org/servers.txt
+ 
+to the local directory--uses that] and will then randomly 'ping'  gateway_pool_creation_race_size of the servers listed in that file until it fills the gateway pool.  So basically it is slowly searching through the servers listed in that file until it finds enough live ones.  Note that while it is searching for live ones the pool size might be less.
+ex:  it might be
+[['169.229.50.5:5850
+ 
+', 5851]
+for a few seconds while it searches for more gateways, then it will become
+ [['169.229.50.5:5850
+ 
+', 5851], ['169.229.50.13
+ 
+', 5851]]
+
+
+
+The reason for all this connivery to try and get multiple servers is that one of the openDHT papers says that using multiple gateways is "faster" and also sometimes one key value is "very slow" for both gets and sets, so if you set it up to use multiple values, then it will basically have some redundancy for the key list, and so will [hopefully] avoid those small keys.
+
+
+Probably won't work straight off [since it takes some configuration] but I'd be happy to help get it working.
+You can also rip out the named_wrapper stuff if you'd like.  The code is public domain :)
+

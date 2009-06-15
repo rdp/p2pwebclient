@@ -1,0 +1,403 @@
+<!-- $Id: faq.content,v 1.18 2005/09/29 13:16:42 srhea Exp $ -->
+
+<p>
+<strong><font face="arial,helvetica,sanserif">
+Topics
+</font></strong>
+
+<p>
+<ul>
+<li><a href="#1">How well does the Bamboo router work?</a>
+<li><a href="#2">How well does the rest of Bamboo work?</a>
+    (<em>Updated on 2004/11/04</em>)
+<li><a href="#3">Is Bamboo secure?</a>
+<li><a href="#4">Why does the router keep changing its neighbors?</a>
+<li><a href="#5">How do I use the storage layer (put/get interface)?</a>
+    (<em>Updated on 2004/02/23</em>)
+<li><a href="#6">Can the router use multiple gateways?</a>
+    (<em>Updated on 2004/02/08</em>)
+<li><a href="#7">Does Bamboo use Vivaldi?</a>
+<li><a href="#8">How does the storage layer maintain replicas?</a>
+<li><a href="#9">Bamboo crashed; can you help me?</a>
+<li><a href="#10">Bamboo won't compile; can you help me?</a>
+</ul>
+<p>
+<strong><font face="arial,helvetica,sanserif">
+<a name="1">How well does the Bamboo router work?
+</font></strong>
+
+<p>
+In emulated networks under <a href="http://issg.cs.duke.edu/modelnet.html">ModelNet</a>, the Bamboo router
+has shown the ability to successfully perform lookups under incredibly high
+churn rates.  For median session times as short as 1.4 minutes, it returns
+consistent results 95% of the time, with a mean response time two seconds.  
+
+<p>
+For much lighter churn (median session times of three hours), the router
+returns consistent results 99.99% of the time, with a mean response time of
+220 milliseconds.  For comparison, the MIT Chord code from August 8, 2003 also
+returns consistent results 99.99% of the time but has a mean lookup time of
+780 milliseconds under the same test, and FreePastry 1.3 running over RMI
+returns consistent results 99.9% of the time and has a mean lookup time of 1.8
+seconds.  
+
+<p>
+For more information about these tests, see our technical report in
+the <a href="pubs.html">Publications</a> section of this web site.
+
+
+<p>
+As far as resource usage goes, the router is also very frugal.  In our tests,
+we have run as many as 100 instances of the router per physical machine on a
+cluster of 40 dual-processor, 1 GHz machines with 1 GB of memory each, all
+while seeing 1-minute loads of less than 2.  
+
+<p>
+We're also running all of Bamboo, including the router, on PlanetLab 24/7.
+See the next question for details.
+
+<p>
+<strong><font face="arial,helvetica,sanserif">
+<a name="2">How well does the rest of Bamboo work?
+</font></strong>
+
+<p>
+The main component other than the router included with Bamboo is the put/get
+layer, which provides a hash-table-like interface.  Clients can put key-value
+pairs into the DHT, and then later get them back out.  All key-value pairs
+have an associated time-to-live (TTL) in seconds, and are discarded after
+being stored for that amount of time.
+
+<p>
+We have been running both the Bamboo router and put/get layer on PlanetLab
+24/7 since April 2004, and measuring its performance continually since August
+2004.  To test the reliability of the layer, we put a new value into the DHT
+every second from a client node at Intel Research, Berkeley.  Values' sizes
+are randomly chosen to be one of 32, 64, 128, 256, 512, or 1024~bytes, and
+their TTLs are randomly chosen to be one of an hour, a day, or a week.  As of
+4 November 2004, we've gone eight weeks without losing a value, and we've gone
+three weeks without any get RPCs timing out (i.e., the values were still
+there, but temporarily unavailable).
+
+<p>
+<strong><font face="arial,helvetica,sanserif">
+<a name="3">Is Bamboo secure?
+</font></strong>
+
+<p>
+That depends on what you mean by secure.  If you mean, "by running Bamboo on
+my system, am I going to get hacked?", then the answer is probably no,
+although I won't guarantee it.  Bamboo is written in Java, so most of the
+standard buffer overflow security holes just aren't possible. 
+
+<p>
+On the other hand, a number of other attacks are possible.  For example,
+someone could certainly pick their DHT put() operations carefully so as to
+fill up the disk partition where Bamboo stores its blocks.  Future Bamboo
+versions will include resource management to protect against this sort of
+attack, but they certainly aren't in the code right now.
+
+<p>
+Another attack that is possible is to use Bamboo's function as a router to
+forward packets to someone you don't like, in a sort of denial-of-service
+style attack.  This attack would be a little tricky to arrange, but I'm sure
+it can be done.  Security in DHTs is an active area of research, and we plan
+to integrate new results into the Bamboo code as they're available, but the
+bottom line for now is that this code should be used for research, rather than
+production, environments.
+
+<p>
+<strong><font face="arial,helvetica,sanserif">
+<a name="4">Why does the router keep changing its neighbors?</a>
+</font></strong>
+
+<p>
+This question is probably the one I hear most often about Bamboo: "I have a
+network of Bamboo hosts with no churn.  Why do the individual routers keep
+changing their routing tables when no hosts are joining or leaving the
+network?"  In short, the answer is that they're trying to optimize their
+routing tables, and you can turn this feature off by setting
+"ignore_proximity" to true in the router's configuration settings.  There's
+more to the problem then that, though, so I'll take a few paragraphs to
+explain the situation.  I'll also present some less drastic solutions.
+
+<p>
+Bamboo implements what's called <em>proximity neighbor selection</em> (PNS),
+which means that for all possible choices of a node to fill a given spot in
+its routing table, a Bamboo node will try and use the one that is closest to
+it in network latency.  This technique is a great one in theory: it makes
+lookups faster, lowers network stress, and allows for the construction of
+efficient multicast trees on top of the Bamboo network (see the Bamboo,
+Pastry, and Tapestry papers for explanations), but in practice it presents
+several problems.
+
+<p>
+The first problem with PNS is how to find the latency between two network
+hosts.  In general, a single ping won't do the trick, since dynamic network
+conditions such as queuing, cross traffic, and packet drops can all influence
+the result.  Using more pings and averaging the result works better, but if
+many hosts all ping each other at the same time, the resulting load on the
+network can skew the measurements.
+Another problem is that many network hosts no longer respond to actual ICMP
+pings for fear of denial of service attacks, so Bamboo has to do its pings
+over UDP at user level, introducing another level of uncertainty into the
+measurement, both from operating system scheduling issues and from garbage
+collection.  Because of these difficulties, Bamboo sees neighbor latencies
+that vary over time, making it tricky to optimize its routing tables.
+
+<p>
+The goal with PNS is to make the router responsive enough to incorporate new
+nodes that genuinely are closer than existing neighbors, but not so sensitive
+that it abandons existing neighbors due to transient network conditions.  In
+practice, this balance has proven difficult to achieve.  For now, I have two
+solutions.  First, as mentioned above, you can simply turn PNS off by setting
+"ignore_proximity" to true in the router's configuration settings.  If you do
+so, Bamboo will never replace an existing neighbor until it experiences 15
+consecutive message timeouts to that neighbor.  (Currently, each successive
+timeout is twice as long as the previous one, to a maximum of five seconds per
+timeout, so 15 timeouts takes around 1-2 minutes.  Bamboo will route around an
+existing neighbor after only 5 consecutive timeouts, however, meaning that it
+generally adapts to suspected outages after only a second or two.)
+
+<p>
+As a less drastic way to reduce how often Bamboo changes its neighbors, you
+can change the value of "rt_scale" in the router's configuration settings.
+When Bamboo goes to replace an existing neighbor with a newly discovered one,
+it first multiplies the estimated latency to the existing neighbor by the
+value of "rt_scale"; if the new node still has a lower latency than this
+adjusted latency for the existing neighbor, then the replacement is performed;
+otherwise, no change is made.  On PlanetLab, I usually run Bamboo with
+"rt_scale" set to 0.9.  
+
+<p>
+<strong><font face="arial,helvetica,sanserif">
+<a name="5">How do I use the storage layer (put/get interface)?</a>
+</font></strong>
+
+<p>
+First of all, make sure you're working with the February 13 snapshot or later.
+All previous versions have pretty severe bugs.  Next, let me say that at Intel
+Research we've just started a new project, called OpenHash, to provide a
+public DHT <i>deployment</i>, hosted on PlanetLab and available for use by
+everyone.  As such, the storage layer is getting a lot of my attention lately,
+so you can expect it to be reasonably well supported.
+
+<p>
+If you run the <code>location-test-menu.pl</code> script (described in the <a
+href="users-guide.html">User's Guide</a>), it will now run a copy of the <a
+href="">bamboo.dht.Gateway</a> stage, which provides a Sun RPC gateway over
+TCP to the put/get functionality of the DHT.  I've written two simple tests,
+one in C and one in Java.  To run the C one, start up a node in the 
+<code>location-test-menu.pl</code>: 
+
+<blockquote><pre>
+$ cd ~/bamboo/test
+$ perl -w location-test-menu.pl
+
+Menu:
+    1.  Check node status
+    2.  Check object pointers
+    3.  Check for exceptions
+    4.  Start a node
+    5.  Stop a node
+    6.  Quit
+Your choice: [4]  
+
+Starting localhost:3630 with gateway localhost:3630.
+cfg=/tmp/experiment-1855-localhost-3630.cfg
+log=/tmp/experiment-1855-localhost-3630.log
+pid=1856
+</pre></blockquote>
+
+Then from another prompt, do this:
+
+<blockquote><pre>
+$ ~/bamboo/src/bamboo/dht/gateway_test localhost 3632
+Doing a null call.
+Null call successful.
+Doing a put
+Put successful
+Doing a get
+Get successful.
+Doing a put
+Put successful
+Doing a get
+Get returned value Hello, world..
+Get returned first value.
+Doing a get
+Get returned value Goodbye, world..
+Get successful.
+Doing a put
+Put successful
+Doing a get
+Get successful.
+</pre></blockquote>
+
+To run the Java test, start up a node as before, and then do this:
+<blockquote><pre>
+$ ~/bamboo/bin/run-java bamboo.dht.GatewayTest localhost 3632 1 1
+/home/srhea/bamboo/bin/run-java
+PID: 1942
+LD_LIBRARY_PATH=:/home/srhea/ns/ns-allinone-2.1b7a/otcl-1.0a6:/home/srhea/ns
+/ns-allinone-2.1b7a/lib:/home/srhea/bamboo/bin/../lib/linux:/usr/local/lib
+CLASSPATH=:/home/srhea/bamboo/bin/../src:/home/srhea/bamboo/bin/../lib/ostor
+e-seda-emu.jar:/home/srhea/bamboo/bin/../lib/db-4.0.14.jar:/home/srhea/bambo
+o/bin/../lib/diva-26Sep02.jar:/home/srhea/bamboo/bin/../lib/log4j-1.2.8.jar:
+/home/srhea/bamboo/bin/../lib/jrpcgen.jar:/home/srhea/bamboo/bin/../lib/oncr
+pc.jar
+/usr/local/j2sdk1.4.1_03/bin/java -verify -mx4M -ea:bamboo... bamboo.dht.Gat
+ewayTest localhost 3632 1 1
+2004-02-17 12:56:37,786 INFO  bamboo.dht.GatewayTest$ClientThread: Connectin
+g to host.
+2004-02-17 12:56:37,973 INFO  bamboo.dht.GatewayTest$ClientThread: Put succe
+ssful: size=687 key=35e9f1c7  ttl_sec=480 lat=21 ms
+2004-02-17 12:56:42,033 INFO  bamboo.dht.GatewayTest$ClientThread: Put succe
+ssful: size=916 key=09eec5f6  ttl_sec=180 lat=5 ms
+2004-02-17 12:56:48,263 INFO  bamboo.dht.GatewayTest$ClientThread: Get succe
+ssful: key=09eec5f6  lat=9 ms
+</pre></blockquote>
+
+<p>
+The syntax for the put/get interface can be found in the RPC interface
+definition in 
+<blockquote><code>
+bamboo/src/bamboo/dht/gateway.x
+</code></blockquote>
+
+<p>
+The semantics of the interface, at least for now, are as follows.  All puts
+are treated as append operations; two puts to the same key but with different
+values will result in both values being stored in the DHT.  All puts are
+stored for as many seconds as specified in the TTL, with starting time
+measured from the gateway node.  If two puts have the same value, the TTL will
+be extended to the longer of the two values, measured from the time the
+corresponding put was received at the gateway.
+
+<p>
+A get should initially have a zero-byte placemark, with the <code>all</code>
+field set to true.  Up to <code>maxvals</code> will be returned.  The get
+response will also contain a placemark.  If a get response contains at least
+one value, than this placemark can be used to retrieve subsequent values.
+Otherwise, all values have been returned.
+
+<p>
+This interface is evolving a bit, but we're not clear exactly how it will turn
+out yet.  Please email any suggested changes to the mailing list.  Once it
+settles down, I'll write up a more detailed user's guide and specification.
+
+<p>
+<strong><font face="arial,helvetica,sanserif">
+<a name="6">Can the router use multiple gateways?</a>
+</font></strong>
+
+<p>
+Yes.  Instead of a <code>gateway</code> parameter, you can specify a
+<code>gateway_count</code>, then specify <code>gateway_0</code>,
+<code>gateway_1</code>, etc.  There's only one
+problem: if a node has itself as the only gateway, it thinks it's the
+root of the network and joins immediately.  Otherwise, it throws itself
+out of the list and tries to join through the others.  So you have to
+start one special node first--the node with only itself as a gateway.  After
+that, you can start the rest in any order, so long as they each contain the
+original node as one of their gateways.  I'm open to trying to work around
+this, however, so let me know if it's a huge hassle for anyone.
+
+<p>
+<em>Update (2004/02/08):</em>
+<p>
+I have a new solution for this problem in the 2/4 CVS and later, but it
+takes a bit of background to explain.  Bamboo already has code to heal  
+the network from partitions that works as follows.  Each node keeps a
+set of the last 20 or so nodes that used to be its neighbors but have
+since become unreachable.  This list is called the down_nodes set.
+Every minute, it randomly selects one of these nodes and sends it a join
+message.  If the node is reachable again, and it's part of the same
+network or a smaller partition, then the leaf set returned in the join
+response will not be useful to the first node and nothing will change.
+On the other hand, if the node sending the join message is the one in
+the smaller partition, then the returned leaf set will be made up of
+nodes much closer to it (in the ID space) than its existing leaf set.
+As a result, it will use those new nodes instead, healing the partition.
+
+<p>
+The trick to fixing the multiple gateways problem is to reuse this
+mechanism.  If you set the config variable immediate_join to true, on
+startup the Router will add all of the gateways in the gateway list to
+its down_nodes set (except itself, in the case where it's a gateway,
+too) and then consider itself joined into a network of one node.  It
+also sends its first partition-healing join message immediately.
+Eventually, it will contact one of the gateways and join that network,
+and if all of the gateways come up, the partition-healing code
+guarantees that they'll all eventually be in the same network.  I've
+been using this mechanism on PlanetLab for a week or so now and it seems
+to work fine.
+
+<p>
+<strong><font face="arial,helvetica,sanserif">
+<a name="7">Does Bamboo use Vivaldi?</a>
+</font></strong>
+
+<p>No.  Bamboo comes with an implementation of Vivaldi, and our PlanetLab
+deployment is running that implementation, but for curiosity only.  Bamboo
+uses recursive routing, which has no need for network coordinates.  All
+neighbor selection in Bamboo is done using direct latency measurements, and
+all timeouts are calculated based on direct observations of past performance.
+Our <a href="pubs.html">USENIX paper</a> showed the negative impact that using
+network coordinates for timeout estimation can have on lookup performance
+under churn.
+
+<p>
+<strong><font face="arial,helvetica,sanserif">
+<a name="8">How does the storage layer maintain replicas?</a>
+</font></strong>
+
+<p>
+Basically, the same way that DHASH does, as described in 
+"Robust and Efficient Data Management for a Distributed
+Hash Table" by Josh Cates [Master's thesis, MIT, May 2003 (<a
+href="http://www.pdos.lcs.mit.edu/papers/chord:cates-meng.pdf">PDF</a>)].  We uses replicas instead of erasure codes, and we sort
+values by timestamp rather than key before building Merkle-tree summaries, but
+other than that they're virtually identical.  The (rather obscure) code is in
+the class <code>bamboo.dmgr.DataManager</code>.
+
+
+<p>
+<strong><font face="arial,helvetica,sanserif">
+<a name="9">Bamboo crashed; can you help me?</a>
+</font></strong>
+
+<p>Yes, I can, but I need
+
+<ul>
+<li> a stack trace, if available
+<li> the version of the code you are running
+<li> any relevant .cfg files
+</ul>
+
+For code versions, I prefer that you tell me the snapshot you're using.  If you've forgotten which one you downloaded, search through the files mentioned in the stack track for the string "$Id" and send me the contents of that line.  It might look like this:
+
+<blockquote><pre>
+$Id: faq.content,v 1.18 2005/09/29 13:16:42 srhea Exp $
+</pre></blockquote>
+
+<p>
+<strong><font face="arial,helvetica,sanserif">
+<a name="10">Bamboo won't compile; can you help me?</a>
+</font></strong>
+
+<p>Yes, I can, but I need
+
+<ul>
+<li> the version of the code you are running
+<li> the compiler output
+</ul>
+
+For code versions, I prefer that you tell me the snapshot you're using.  If
+you've forgotten which one you downloaded, search through the files mentioned
+in the compiler errors for the string "$Id" and send me the contents of that
+line.  It might look like this:
+
+<blockquote><pre>
+$Id: faq.content,v 1.18 2005/09/29 13:16:42 srhea Exp $
+</pre></blockquote>
+

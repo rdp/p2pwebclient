@@ -1,0 +1,2 @@
+planet1.scs.stanford.edu
+pl2.eecs.utk.edu

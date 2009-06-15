@@ -1,0 +1,633 @@
+\documentclass[twocolumn, twoside, a4paper]{article}
+
+\usepackage{listings}
+\usepackage{url}
+\usepackage{verbatim}
+
+\begin{document}
+
+\title{\textsc{Bamboo} - A Tutorial}
+\author{Marcel Dischinger\\
+  \emph{(marcel.dischinger@tm.uka.de)}}
+\date{April 2004}
+\maketitle
+
+\section*{Abstract}
+\label{sec:Abstract}
+%%===============================
+
+The goal of this tutorial is to show you how to build a simple \textsc{Bamboo}
+application that can send simple text messages from one node to
+another. In addition it will give you a rough insight to the bamboo
+communication and event system. We assume that the reader has some 
+knowledge of P2P systems (e.g.~\cite{oceanstore})
+before starting.
+It cannot be our task to explain how a P2P system like
+\textsc{Bamboo} works. Refer to the available documentation for
+\textsc{Bamboo}~\cite{bamboo}.
+and Pastry~\cite{pastry} to
+learn more about how the \textsc{Bamboo} router works and how the P2P system
+is organized. You also need to know how to write a programme in Java.
+
+\section{Introduction}
+\label{sec:Introduction}
+%% ==============================
+
+When I started working with \textsc{Bamboo} there was no tutorial.
+There are some examples of modules in the source tree but they
+are too complex and sometimes too inconsistent to learn from (beside a
+lack of comments and documentation for the simple structures used at each
+stage).
+
+Bamboo is written in an event-driven, single-threaded programming
+style. In first place it inherits its structure from SEDA, which
+stands for the \emph{Staged, Event-Driven Architecture}. As the name
+suggests, each part of a \textsc{Bamboo} application is a \emph{stage};
+communication is done by passing events to each stage, while the whole
+application remains single threaded and serialized.
+
+This tutorial is meant to be a short introduction to
+\textsc{Bamboo} without giving a deep insight of the underlying system. It might
+prepare you to start writing your own stages using \textsc{Bamboo} and
+to use the basic functions provided by the system to create your own
+stage. 
+
+This can only be a start. If you are going to write more complex
+stages, you will end up reading the source code provided, but by that
+time it will be easier because you know the basics. This Tutorial does
+not deal with the \textsc{Bamboo} DHT API. 
+
+\textsc{Bamboo} uses a lot of code from the Ocean\-Store project. You
+can get the source code and Java-Doc from the tapestry
+project~\cite{tapestry}, if you would like to take a look at it. You
+do not need it for running \textsc{Bamboo}.
+
+In this tutorial I also describe how to use the SEDA
+event model which is implemented in \textsc{Bamboo}. A more \emph{modern} way
+to do that would be to use the Async implementation (see ``Programmers
+Guide'' on~\cite{bamboo}). 
+
+
+\section{Structure of a stage}
+\label{sec:structure}
+%% ==============================
+
+This section will give you a rough overview of the elements of a
+stage and the usage of the config file. You will find more detailed
+explanation in section~\ref{sec:walkthrough} where we will walk through
+the code of the example appended and explain the how and
+why more deeply, through that example.
+
+
+%% ==============================
+\subsection{First overview}
+%% ==============================
+\label{sec:first}
+
+A new stage must implement the \texttt{seda.sandStorm.api.EventHandlerIF} interface in order to
+act as a \textsc{Bamboo} stage and be part of its event handling. There is
+also a class called \texttt{bamboo.util.StandardStage} you can inherit
+from. We will do this for our new stage, called \emph{SimpleStage}
+(see Appendix~\ref{sec:source} for the source code).
+
+The stage can be seen as having three parts; each is refered to a
+different point in time, during the lifetime of a \textsc{Bamboo} stage.
+
+\begin{itemize}
+\item \texttt{SimpleStage()} (the constructor)
+\item \texttt{init(ConfigDataIF config)}
+\item \texttt{handleEvent(QueueElementIF elem)}
+\end{itemize}
+
+The \emph{Constructor} should be used to initialize the data of the stage (as
+you would do it in any Java programme). In \textsc{Bamboo} you need to subscribe
+to events you want to hear from, so this is the place to fill the array
+structures provided by \emph{StandardStage} with the events you need
+and want.
+
+The registering of the events is done in the \texttt{init()} function. This
+function is called during startup, passing the configuration parameters
+to us. The registration is be done by \emph{StandardStage}, so it is a
+good idea to call \texttt{super.init()} here. We also want to fetch all
+configuration parameters here, and it is a good place to register
+payloads for our outgoing messages. 
+
+\texttt{handleEvent()} is called from \textsc{Bamboo} every time a event we
+registered to arrives and needs to be handled. This is the core of
+our stage.
+
+There is another function called \texttt{destroy()} in
+\texttt{seda.sandStorm.api.EventHanderIF}. It was meant to be a
+destructor but actually it is deprecated in \textsc{Bamboo} and is never
+called.
+
+
+\subsection{The configuration file}
+\label{sec:config}
+%% ==============================
+
+One thing that \textsc{Bamboo} inherits from Ocean\-store is the Sand\-Storm
+tool to parse the configuration file. The config file is XML-like and
+very easy to understand as you will see.
+
+
+\lstset{language=XML, tabsize=2, numbers=left, numberstyle=\tiny,
+  stepnumber=2, numbersep=0pt, aboveskip=20pt, belowskip=20pt,
+  xleftmargin=10pt}
+\begin{lstlisting}[caption={Our \textsc{Bamboo} config file: simple.cfg},
+  label=config]
+<sandstorm> 
+ <global>
+   <initargs>
+     node_id localhost:3200
+   </initargs>
+ </global>
+ <stages>
+   <Network>
+     class bamboo.network.Network
+     <initargs>
+     </initargs>
+   </Network>
+
+   <Router>
+     class bamboo.router.Router
+     <initargs>
+       gateway_count 1
+       gateway_0  localhost:3200
+     </initargs>
+   </Router>
+
+   <SimpleStage>
+     class bamboo.SimpleStage
+     <initargs>
+       debug_level 1
+       mode sender
+     </initargs>
+   </SimpleStage>
+ </stages>
+</sandstorm>
+\end{lstlisting}
+
+As the format of the config file is easy to understand I will just
+explain the components of it and their meanings.
+
+In line 2--6 you see the definition of global arguments. Every stage can
+access these arguments. You see here how to define the node\_id for
+this stage, which consist of \emph{hostname:portnumber}. 
+
+At Line 7 the stage configuration starts; we need the Network and the
+Router stages to send messages over the \textsc{Bamboo} P2P system. You have to
+define at least one gateway to join the P2P network. In this example we
+join ourself, assuming that we are the first node in the network. If
+you are running more than one node you should add the node of the
+network you want to join, here. Take a look at the \texttt{init()} function
+of \texttt{bamboo.router.Router} in order to get an overview of the
+available Router options and how to use them. 
+
+As you can easily see, the definition of a new stage starts with a Tag
+containing the name of the stage (the classname) followed by the option
+class where the stage loader is told which class to load.
+For our stage \emph{SimpleStage} we have two arguments called
+\texttt{mode}, which will later switch between sending messages or not,
+and \texttt{debug\_level} which is used by \emph{StandardStage} to
+switch on debugging messages.
+
+\section{Walk-through}
+\label{sec:walkthrough}
+%% ==============================
+
+In this section we will walk through the code of our
+\emph{SimpleStage} (see Appendix~\ref{sec:source}) and explain the
+important things in the example. This very simple stage will
+send (text-) messages to the node with the closest node-ID to zero. So
+fasten your seat-belt and let's go.
+
+\subsection{Class declaration and variables}
+\label{sec:head}
+%% ==============================
+
+Let's skip the first 16 lines, you should be familiar with that. As I
+mentioned before we extend from \texttt{bamboo.util.StandardStage} (it
+might be a good idea to risk a glimpse into its source code sometime
+later). \emph{StandardStage} implements
+\texttt{seda.sandStorm.api.EventHandlerIF} and provides us a logging
+interface and some functions you maybe find useful when writing your
+own stage. When we use such a function from \emph{StandardStage} I
+will point it out to you.
+
+In lines 20 to 21 we help ourself to an application ID. It is used
+like a TCP/UDP port number in \textsc{Bamboo}. When using the \textsc{Bamboo} routing
+messages you have to specify the application ID you want to send to
+(will almost every time be your own ID). To get a unique number for our
+application (that is what a stage is, a \textsc{Bamboo} application), we use a
+hash of our class name.
+
+
+\subsection{Our own Payload}
+\label{sec:payload}
+%% ==============================
+
+We are now talking about lines 28 to 46. As you can see, we define a
+class named \emph{Payload} that implements
+\texttt{ostore.util.QuickSerializable}. This is how to create a
+payload for your messages you want to send. The payload has to be
+serialized before sending and deserialization afterwards.
+
+In line 39,\\
+\lstset{language=Java, emph={serialize}, emphstyle=\textbf,
+  emph={[2]Payload}, emphstyle={[2]\emph}}
+\lstinline$  public void serialize(OutputBuffer b)$ \\
+we have to add each variable we want to be transmitted to the output
+buffer. The counterpart is the constructor,\\
+\lstinline$  public Payload(InputBuffer buffer)$ \\
+which deserializes the buffer back to the original variables. In our
+example there is just the message itself (a string) that we need to
+add to the buffer and save back from it.
+
+Take a look into \texttt{ostore.util.InputBuffer} and
+\texttt{ostore.util.OutputBuffer} to see which types and objects are
+supported.
+
+
+\subsection{A new Event type}
+\label{sec:newevent}
+%% ==============================
+
+In line 49, we create a new message or event type (I think both notions
+are OK). To create one, we need to implement the
+\texttt{seda.sandStorm.api.QueueElementIF} interface which is in fact
+empty, so we do not need to implement any functions. Normally you want
+to add some content to the event like a payload (see
+section~\ref{sec:payload}) and some other variables. In this case we
+use this event to alarm us after a certain time; and do not need
+any further functionality. There are plenty of examples in the \textsc{Bamboo}
+source tree showing how to create your own event type.
+
+
+\subsection{The constructor}
+\label{sec:constructor}
+%% ==============================
+
+The important thing in our constructor is the setting up of the
+\texttt{event\_types[]} array. In this array we save the classes of the
+events we want to listen to (these events will be forwarded to our
+\texttt{handleEvent()} function). \emph{StandardStage} defines two
+more arrays for this purpose called \texttt{inb\_msg\_types[]} and
+\texttt{outb\_msg\_types[]}. As we do not need to use them at this
+point we will just cold-shoulder them for the moment. But I will talk
+about them in Appendix~\ref{sec:networkmessage}.
+
+So you can see the three events we registered to here. The last one we
+already know: It is our own event \emph{Alarm} we create a few lines
+above. The other two events are provided by \textsc{Bamboo} itself,
+\texttt{seda.sandStorm.api.StagesInitializedSignal} is passed to us
+when all the stages of our node finished their \texttt{init()}, so it
+is a signal that we now can use the \textsc{Bamboo} system.\\
+\texttt{bamboo.api.BambooRouteDeliver} is the event we get when
+someone routed a message to our node through \textsc{Bamboo}.
+
+So remember: You need to add your events you want to receive into these
+arrays. We will see in section~\ref{sec:handleevent} what to to with these
+events and how the whole thing works.
+
+Another important thing is shown in line 61. In order to use them we
+need to register our payloads to \textsc{Bamboo} by passing the class as an
+argument:\\
+\lstset{emph={register_type},emphstyle=\textbf}
+\lstinline$  register_type(Payload.class);$
+
+
+\subsection{Initialization}
+\label{sec:init}
+%% ==============================
+
+When sandStorm starts all the stages it calls the \texttt{init()}
+function of each stage and passes the data from the configuration file
+to it.\\
+The first thing we are doing is calling\\
+\lstset{language=Java, emph={init,config_get_string,config_get_int,config_get_boolean}, emphstyle=\textbf}
+\lstinline$  super.init(config);$ \\
+which passes the configuration data to the \texttt{init()} function of
+\emph{StandardStage}. If you take a glimpse into \emph{StandardStage}
+you will see that it does two things:
+
+\begin{itemize}
+\item Setting the debug-level for the logger
+\item Subscribing the events
+\end{itemize}
+
+The latter one is especially important for us -- \emph{StandardStage}
+subscribes our events to \textsc{Bamboo}. I do not want to go more into detail:
+If you want or need to know more about that refer to the
+\emph{StandardStage} code and Appendix~\ref{sec:networkmessage}.
+
+Now it is time to get the config options we added to the config file
+in section~\ref{sec:config}. There are several functions to get the
+config data, in line 79 we use\\
+\lstinline$  config_get_string(config, "mode")$ \\
+to retrieve a string from the option \emph{mode}. There are more
+functions like that, e.g.\\
+\lstinline$  config_get_int(config, "<name>")$ or\\
+\lstinline$  config_get_boolean(config, "<name>")$,\\
+\emph{StandardStage} will tell you more about these functions.
+
+In the following lines we set the boolean \texttt{sender} to
+\emph{true} if the config makes us to a sender, or \emph{false}
+otherwise. 
+
+
+\subsection{Event handling}
+\label{sec:handleevent}
+%% ==============================
+
+\texttt{handleEvent(QueueElementIF elem)} is called every time an event
+shows up at our node. You will only get events you have subscribed to
+(see section~\ref{sec:constructor}) and -- if it is a \textsc{Bamboo} message
+like \texttt{bamboo.api.BambooRouteDeliver} -- those that match your
+application ID, so the purpose of this function is to handle the
+event depending on which eventtype we received.
+
+At this point a very important note: \textsc{Bamboo} is a singe-threaded
+event-driven application (see the ``Programmers guide''
+on~\cite{bamboo}). Because of this, you have to avoid 
+blocking code in your event handler --- even more, you should hurry up
+in your event handler because the whole (not only your stage, the
+whole node) will be blocked until you finished your handling.
+
+So let's go through this step by step:
+
+
+\subsubsection{While not initialized}
+\label{sec:handleevent:sec:preinit}
+%% ==============================
+
+
+So let's look at lines 90 to 111. As you will guess from the
+\texttt{if(initialized)} in line 90 the here occurring events will
+only appear during initialization.\\
+One moment, we have done all initialization in the \texttt{init()}
+function already. Well, that is right, but there are still some things
+to do before our stage can to its regular work.
+
+SandStorm will pass the
+\emph{StagesInitializedSignal} to us as soon as
+every stage has finished its \texttt{init()} function. So at this
+point we can really use \textsc{Bamboo} for sending messages. And we have to, in
+order to register our application ID (our ``port'') to \textsc{Bamboo} telling
+it that we want to receive events for that specific ID. This is been
+done by sending a \texttt{bamboo.api.BambooRouterAppRegReq}, passing
+as the first argument our application ID, and as the last one, a
+reference to our sink (that is our event queue).
+
+By calling \texttt{dispatch(message)} the message is passed to the
+so-called \emph{classifier}, which decides which stage should get this 
+message (remember that the \emph{StandardStage} subscribed to our events
+during \texttt{init()} from the classifier). We will use this function
+every time we want to send (dispatch) a message.
+
+If the application registration succeeds (which it should) a
+\texttt{bamboo.api.BambooRouterAppReqResp} message will be passed to
+our sink. Now we are fully registered to the system, and set
+\texttt{initialized} to \emph{true}. At line 109 you will see, that we put all
+occurring events during initialization into a LinkedList. Now after we
+are really up, we process all the events from this list.
+
+In line 106 you will notice a new command:\\
+\lstset{language=Java, emph={dispatch_later}}
+\lstinline$  dispatch_later(message, time);$\\
+It is almost the same dispatch() command as before but you can now
+specify a duration in milliseconds which tells the classifier how long
+to wait till delivering the message. We use this command to set a
+alarm timer to awake us after 10 seconds.
+
+
+\subsubsection{BambooRouteDeliver}
+\label{sec:handleevent:sec:deliver}
+%% ==============================
+
+When a message was sent to us routed by \textsc{Bamboo} (means using the
+\texttt{bamboo.api.BambooRouteInit} message which we will get to know
+in section~\ref{sec:handleevent:sec:alarm}), we will receive a
+\texttt{BambooRouteDeliver} message.\\
+In line 116 we cast the event to get access to its data. As you see we
+assume that there is our \emph{Payload} attached as a payload and
+print out the string saved in it. There are some more fields in this
+message: Please take a look into the source for more information.
+
+
+\subsubsection{Alarm}
+\label{sec:handleevent:sec:alarm}
+%% ==============================
+
+When we are woken by our own \emph{Alarm} message we send a new text
+message through \textsc{Bamboo} to the node with the lowest available node ID,
+and start another alarm timer. So the lines 132 and 135 should be
+familiar, but not line 126 and the following.
+
+In these line you see how to let \textsc{Bamboo} route a message for you. To
+tell \textsc{Bamboo} that, you have to use a \texttt{bamboo.api.BambooRouteInit}
+message. The arguments are:
+
+\begin{itemize}
+\item destination node ID
+\item application ID
+\item use upcalls?
+\item use iterative routing (or recursive)?
+\item the payload to be transmitted
+\end{itemize}
+
+As you should already know \textsc{Bamboo} uses 160 bit node IDs as addresses
+(like Pastry). To save such a long number in Java we have to
+use a \texttt{BigInteger} object. In this example we route the message
+to the nodeID 0 (zero).As you should know, when this node
+does not exists \textsc{Bamboo} routes the message to the node with the closest
+node ID.\\
+The thing with the application ID is known since
+section~\ref{sec:head}, so no more words about that.
+
+If you pass \emph{true} as the next argument, \textsc{Bamboo} will make upcalls
+to every interim node on the way of the message to its
+destination. These nodes will receive a
+\texttt{bamboo.api.BambooRouteUpcall} event (if they subscribed to
+this event and if they have the same application ID of course) and can
+change the message or react on it. And they need to continue the
+routing by dispatching a \texttt{bamboo.api.BambooRouteContinue}. I
+will not describe more of this mechanism: It is easy to understand and
+familiar in every P2P system I know. Take a glimpse into the two
+mentioned classes for more information.
+
+The switch for choosing between iterative and recursive routing is
+deprecated, so just say \emph{false} here.
+
+Last but not least, we add the payload we want to transmit. That's it,
+so easy to send a message over \textsc{Bamboo}.
+
+
+\section{Finally}
+\label{sec:final}
+%% ==============================
+
+Finally you want to run your stage. So compile \emph{SimpleStage} and
+save the simple.cfg file to the appropriate place. Change (if not
+already done) to the \textsc{Bamboo} directory and type:
+
+\lstset{language=Perl, basicstyle=\small, numbers=none, aboveskip=10pt, belowskip=10pt}
+\begin{lstlisting}
+./bin/run-java bamboo.lss.DustDevil\ 
+                            simple.cfg
+\end{lstlisting}
+
+This will start \emph{DustDevil} which uses \emph{SandStorm} to parse the
+configuration file ``simple.cfg'' and starting the stages included in
+the it. You should see the in the output how the messages are sent and
+received.\\
+You may start more nodes by adapting ``simple.cfg''.
+
+So that's it: If you understand the things we used in this tutorial
+you are ready to write your own one or start reading through the code
+of the other stages shipped with \textsc{Bamboo}. You will find these structure
+in almost every stage (beside the stages that uses the ASync event
+model).
+
+In Appendix~\ref{sec:networkmessage} you will find instructions how to
+send messages direct to a node without routing them through
+\textsc{Bamboo}. Appendix~\ref{sec:source} contains the full source code for
+the \emph{SimpleStage}.
+
+\begin{thebibliography}{99}
+\bibitem{bamboo} \url{http://www.bamboo-dht.org}
+\bibitem{pastry} \url{http://research.microsoft.com/~antr/Pastry/}
+\bibitem{tapestry} \url{http://www.cs.berkeley.edu/~ravenben/tapestry/}
+\bibitem{oceanstore}
+  \url{http://oceanstore.org/publications/papers/abstracts/iptps03-api.html}
+\end{thebibliography}
+
+\appendix
+\section*{Appendix}
+\label{sec:appendix}
+%% ==============================
+
+\section{Sending messages direct to a node}
+\label{sec:networkmessage}
+%% ==============================
+
+Sometimes you might not want to use \textsc{Bamboo} to route a message to a node,
+but instead send it ``direct'' to a specified address (e.g. an IP address),
+and not to its closest node (I set the word direct into quotation
+marks because the message will still be routed if the destination is
+not physical connected to our node). For this reason you want to use
+\texttt{ostore.network.NetworkMessage}.
+
+Let's have a quick look at \texttt{ostore.util.NodeId}. \emph{NetworkMessage}
+uses this class for addresses. \emph{StandardStage} creates one for your node,
+the variable name is \texttt{my\_node\_id}. Take a look into
+\texttt{ostore.util.NodeId}: To create a new NodeId object you need just
+the IP address and the port number. You will need to have such an object
+for the destination node you want to send your message to.
+
+
+\subsection{The Network stage}
+\label{sec:networkmessage:sec:networkstage}
+%% ==============================
+
+So let's go through it step by step:
+
+First, create a new \emph{NetworkMessage} object, e.g.:
+\lstset{language=Java, aboveskip=10pt, belowskip=10pt, numbers=none,
+  emph={NodeId,NetworkMessage}, emphstyle=\emph}
+\begin{lstlisting}  
+NodeId dest = 
+ new NodeId(3200, InetAddress.
+        getByName("localhost"));
+NetworkMessage nm = 
+ new NetworkMessage(dest, false);
+\end{lstlisting}
+If you add your sink
+(\emph{StandardStage} saves it to \texttt{my\_sink}) to
+\texttt{comp\_q}, the Network stage will send you a
+\texttt{ostore.network.NetworkMessageResult} which will tell you if
+transmission was successful or not. If you put something in
+\texttt{user\_data} this will also be passed to you together with the
+NetworkMessageResult event.
+
+Dispatch the event, and that's it -- you've sent the message
+directly. If you want to send any payload you will have to create
+a new event type extending from NetworkMessage and adding a variable for
+the payload (of type \texttt{ostore.util.QuickSerializable}).
+
+
+\subsection{Again: Event types}
+\label{sec:networkmessage:sec:eventtypes}
+%% ==============================
+
+So how does this work? For explanation we have to step back to
+section~\ref{sec:constructor} just for a moment where I mentioned that
+there are two more arrays for events called \texttt{outb\_event\_types[]}
+and \texttt{inb\_event\_types[]}.  
+
+When \emph{StandardStage} subscribes to these messages it also adds a filter to
+each event listed in these arrays. It checks that there is a boolean
+called \texttt{inbound} in each event and it tells the classifier that this stage
+only wants to receive these events if \texttt{inbound} is \emph{true} (for
+\texttt{inb\_event\_types[]}) or \emph{false} in the other case (for
+\texttt{outb\_event\_types[]}).\\
+This is one possible filter (like the one you have with \textsc{Bamboo} messages
+that are filtered by your application ID), take a look into
+\texttt{bamboo.util.StandardStage} for an example how to use filters.
+
+The thing with the Network stage is that it listens to \emph{NetworkMessages}
+with \texttt{inbound} set to \emph{false} and sends them to the destination
+represented by the NodeId object.
+
+
+\subsection{Receiving a NetworkMessage}
+\label{sec:networkmessage:sec:receiving}
+%% ==============================
+
+So we sent a \emph{NetworkMessage} but we have not done anything to receive
+them (remember we have to subscribe to each message we want to listen
+to).
+
+The Network stage sends the message to the Network stage of the
+destination node. This stage then sets \texttt{inbound} to \emph{true} and sets
+the new destination to its own node ID and dispatches it. Local stages
+that subscribe to this type of message will now receive it:
+\lstset{language=Java, aboveskip=10pt, belowskip=10pt, numbers=none}
+\begin{lstlisting}
+inb_event_types[] = 
+    new Class[]{NetworkMessage.class}
+\end{lstlisting}
+
+The original sender can be found in the variable named \texttt{sender}
+(not in \texttt{source}!).
+
+
+\subsection{NetworkMessageResult}
+\label{sec:networkmessageresult}
+%% ==============================
+
+I mentioned this before: If you provide your sink to the \emph{NetworkMessage} it
+will send you back an \texttt{ostore.network.NetworkMessageResult} event
+which will inform you about successful or unsucessful
+transmission. Therefore check the variable \texttt{success}, the
+\texttt{user\_data} is also passed back to you in this message so that you
+can identify the message that failed. Of course you need to subscribe
+to this event type, so add it to \texttt{event\_types[]}.
+
+
+\onecolumn
+\section{The sourcecode of SimpleStage}
+\label{sec:source}
+%% ==============================
+
+\lstset{language=Java, basicstyle=\small, showstringspaces=false,
+  numbers=left, numberstyle=\tiny, numberfirstline=true, stepnumber=5,
+  numbersep=5pt}
+
+\lstinputlisting{SimpleStage.java}
+
+
+
+
+\end{document}
+

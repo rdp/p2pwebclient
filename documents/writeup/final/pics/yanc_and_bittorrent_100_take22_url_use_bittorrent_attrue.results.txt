@@ -1,0 +1,40 @@
+e re run graphs when they're all done?WARNING no
+downloadtime!"download total times %'iles'"
+"131.11 139.3 148.32 163.5 2786.08"
+"death methods"
+"dR 0.0 dT 0.0 http_straight 397.0"
+going allServerServedPointsPartial()ACK empty and you want it to go to
+an array with zeroes between?ACK empty and you want it to go to an
+\array with zeroes between?ACK HARD TO CALCULATE PERCENTILES ON -> []
+"server upload [received] distinct seconds [instantaneous server
+upload per second] %'iles'"
+"0 0 0 0 0"
+going totalThroughPutPointsPartial()ACK empty and you want it to go to
+an array with zeroes between?total bytes received by peers  0.0
+ave\rage per run
+bytes UPloaded by server 0.0 average per run
+ACK HARD TO CALCULATE PERCENTILES ON -> []
+" instantaneous tenth of second throughput %'iles'"
+"0 0 0 0 0"
+going createClientTotalUpload()"upload bytes %'iles'"
+"0 0 0 0 0"
+going multipleDHTGetsACK! this had better be CSno puts means no p2p
+impossible!??ack! no gets means no p2p receive action at all
+recordedA\CK HARD TO CALCULATE PERCENTILES ON -> []
+"dht gets"
+"0 0 0 0 0"
+going multipleDHTPutsACK! this had better be CSno puts means no p2p
+impossible!??ack! no gets means no p2p receive action at all
+recordedA\CK HARD TO CALCULATE PERCENTILES ON -> []
+"dht puts"
+"0 0 0 0 0"
+going multipleDHTRemovesACK! this had better be CSno puts means no p2p
+impossible!??ack! no gets means no p2p receive action at all
+record\edACK HARD TO CALCULATE PERCENTILES ON -> []
+"dht removes"
+"0 0 0 0 0"
+going createPercentFromClients"percentiles of percent received from
+just peers (not origin)"
+"0.0 0.0 0.0 0.0 0.0"
+going createClientTotalUpload"client upload sum percentiles:"
+"0 0 0 0 0"

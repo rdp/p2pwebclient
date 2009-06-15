@@ -1,0 +1,6 @@
+#!/bin/bash
+HOSTIP=$(hostname -i)
+HOSTIP=${HOSTIP% } # remove spaces
+CFG=/tmp/check-mcast-$$.cfg
+sed -e "s/TO_PING/$HOSTIP:5862/" /home/ucb_bamboo/mcast/bamboo/planetlab/mcast-check.cfg | sed -e "s/NODE_ID/$HOST_IP:5863/" > $CFG
+JAVAHOME=/home/ucb_bamboo/j2sdk1.4.1_03 $HOME/mcast/bamboo/bin/run-java bamboo.lss.DustDevil $CFG
