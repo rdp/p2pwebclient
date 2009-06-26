@@ -1,14 +1,22 @@
 actually really todo (in order of priority):
 
+update the thesis/pics to be accurate, up to specs [remove that one fella for now dr]
+
+
+make a final total draft that looks more appropro
+
 write a proxy that actually works :P
 
 re-run the "one" that required it. dr
 
-make a final that looks more appropro
-
 there was a future_work doc in the proposal...useful?
 
 ---------------------------later todo (unordered):
+
+
+You might try running at lower loads.  Maybe at a really low load,
+then dR becomes a factor.
+
 an opendht why do you stink test
 
 do a test against apache with 4 max. (large file)
