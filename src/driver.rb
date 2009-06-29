@@ -836,7 +836,7 @@ end
     }
     
     # all done!
-    
+    puts 'ran:' + howVaried.inspect  + "\n\n\n\n"
     
     if $shouldDoVaryParameterGraphs
       # these will not run as well if set for a single setting...therefore

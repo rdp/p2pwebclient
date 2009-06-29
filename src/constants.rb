@@ -26,8 +26,6 @@ if RUBY_PLATFORM =~ /mingw|win32/
   $:.unshift  File.dirname(__FILE__) + "/ext/mingw"
 elsif RUBY_PLATFORM =~ /darwin/
   $:.unshift  File.dirname(__FILE__) + "/ext/mac_os_x"
-elsif Socket.get_host_ip == '127.0.1.1'
-  $: << File.dirname(__FILE__) + '/ext/linux'
 else
   $: <<  File.dirname(__FILE__) + "/ext/planetlab_ilab"
 end
