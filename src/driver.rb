@@ -1054,7 +1054,10 @@ sleep 0.1 while sum_answered < Driver.peer_count
   def Driver.rss_current
     if RUBY_PLATFORM =~ /darwin/
 	`ps u | grep #{Process.pid} | grep -v grep`.strip
+    elsif RUBY_PLATFORM =~ /mingw|mswin/
+        0
     else
+        # assume linux
 	(File.read "/proc/#{Process.pid}/statm").strip
     end
  end

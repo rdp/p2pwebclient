@@ -47,7 +47,9 @@ ltodo: note that if they expect an ending {} that that will no longer work.  The
 ltodo: a function 'wrap all existing methods' which just wraps every 'apparently non inherited' method.
 =end
 
-require 'parse_tree'
+if RUBY_VERSION < '1.9'
+  require 'parse_tree'
+end
 require 'ruby2ruby'
 require File.dirname(__FILE__) + '/enhanced_arg_parser.rb'
 
