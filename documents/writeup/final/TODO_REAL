@@ -1,5 +1,7 @@
 actually really todo (in order of priority):
 
+thesis pics prettier
+
 update the thesis/pics to be accurate, up to specs [remove that one fella for now dr]
 
 
@@ -42,4 +44,5 @@ do a test against apache with 4 max. (large file)
 %% ltodo fix large file transfer :) (backoff the origin, I'd wager)--
 %% LODO appendix with buckets and buckets of pics
 
-
+-- after thesis
+release a faster ruby [?]
