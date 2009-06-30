@@ -3,8 +3,6 @@
 stats = File.read 'number_stats.txt'
 xs = []
 stats.each_line{|line| line =~ /just numbers.*?_at(\d+\.\d+|\d+)/; xs << $1 if $1 }
-puts xs.inspect
-
 
 
 # gnuplot expects something like
@@ -21,7 +19,7 @@ puts xs.inspect
 
 
 readings = eval(File.read(ARGV[0]))
-# something like [[0.0, 0.0, 0.0, 118003.5, 1200130.5], [0.0, 0.0, 0.0, 319402.5, 1112664.0], [0.0, 0.0, 0.0, 105941.5, 924438.5], [0.0, 0.0, 10860.0, 161322.0, 708114.5], [0.0, 0.0, 10518.0, 159478.5, 679632.0], [0.0, 0.0, 0.0, 171059.5, 731339.0], [0.0, 0.0, 0.0, 5672.0, 786340.5], [0.0, 0.0, 0.0, 79341.0, 966801.0], [0.0, 0.0, 1448.0, 189178.5, 809426.0]]
+# starts like [[0.0, 0.0, 0.0, 118003.5, 1200130.5], [0.0, 0.0, 0.0, 319402.5, 1112664.0], [0.0, 0.0, 0.0, 105941.5, 924438.5], [0.0, 0.0, 10860.0, 161322.0, 708114.5], [0.0, 0.0, 10518.0, 159478.5, 679632.0], [0.0, 0.0, 0.0, 171059.5, 731339.0], [0.0, 0.0, 0.0, 5672.0, 786340.5], [0.0, 0.0, 0.0, 79341.0, 966801.0], [0.0, 0.0, 1448.0, 189178.5, 809426.0]]
 
 locations = {1 => 0, 25 => 1, 50 => 2, 75 => 3, 99 => 4}
 percentiles = []
@@ -49,14 +47,16 @@ Gnuplot.open do |gp|
 
     plot.data << Gnuplot::DataSet.new( [xs] + percentiles ) do |ds|
       ds.using = "1:3:2:6:5"
-      ds.with = "candlesticks lt 3 lw 2 title 'Quartiles' whiskerbars"
+# ugly blue      ds.with = "candlesticks lt 3 lw 2 title '1,25,50,75,99th percentiles' "
+      ds.with = "candlesticks title '1,25,50,75,99th percentiles' "
       #ds.notitle
     end
 
     # add median...kind of...
     plot.data << Gnuplot::DataSet.new( [xs] + percentiles ) do |ds|
       ds.using = "1:4:4:4:4"
-      ds.with = "candlesticks lt -1 lw 2"
+      ds.with = "candlesticks lt -1"
+#      ds.with = "candlesticks"
       ds.notitle
     end
 
