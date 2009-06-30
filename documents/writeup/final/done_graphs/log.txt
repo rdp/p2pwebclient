@@ -60,7 +60,7 @@ Parameter.varyParameterAndRsync('vary_parameter/vr_largefile_no_prefetc\h_1_url_
 "613.82 730.61 847.1 882.51 982.67"
 
 
-vary number of total blocks at a time: vary_blocks on ilab1 tmp -- backed up good
+vary number of total blocks at a time: vary_blocks -- backed up good
 
 Note well: BT doesn't have to relookup *everyone* per block [relookup
 same peers], and also BT has the seed limiting itself, so that it can
@@ -73,3 +73,5 @@ ever get them contact me at 435-right-here' and just keep passing
 messages back and forth that way [oh you have it now? I don't need it,
 however...]
 Use comma separated, I suppose :P
+
+xor for mor reliable insta trackable md5's? Or perhaps nxn sub md5's? or n^n md5's?
