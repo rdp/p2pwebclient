@@ -1,1 +1,1 @@
-bash -c './go.sh'
+"c:\Program Files\Git\bin\bash.exe" -c './go.sh'
