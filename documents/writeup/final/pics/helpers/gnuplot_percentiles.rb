@@ -1,8 +1,3 @@
-# expected something like [filename, x axis, y axis]
-# and parse some percentile graphs
-stats = File.read 'number_stats.txt'
-xs = []
-stats.each_line{|line| line =~ /just numbers.*?_at(\d+\.\d+|\d+)/; xs << $1 if $1 }
 
 
 # gnuplot expects something like
@@ -15,12 +10,18 @@ stats.each_line{|line| line =~ /just numbers.*?_at(\d+\.\d+|\d+)/; xs << $1 if $
 #c = [2,3,5]
 #d = [2.4, 3.5, 5.5]
 #e = [4,4,6]
-#f = [6,5.5, 6.5]
+#f = [6,5.5, 6.5] then pass in [x,b,c,d,e,f]
 
 
-readings = eval(File.read(ARGV[0]))
+
+def do_file filename, ylabel = nil, xlabel = nil
+# expected something like [filename, x axis, y axis]
+# and parse some percentile graphs
+stats = File.read 'number_stats.txt'
+xs = []
+stats.each_line{|line| line =~ /just numbers.*?_at(\d+\.\d+|\d+)/; xs << $1 if $1 }
+readings = eval(File.read(filename))
 # starts like [[0.0, 0.0, 0.0, 118003.5, 1200130.5], [0.0, 0.0, 0.0, 319402.5, 1112664.0], [0.0, 0.0, 0.0, 105941.5, 924438.5], [0.0, 0.0, 10860.0, 161322.0, 708114.5], [0.0, 0.0, 10518.0, 159478.5, 679632.0], [0.0, 0.0, 0.0, 171059.5, 731339.0], [0.0, 0.0, 0.0, 5672.0, 786340.5], [0.0, 0.0, 0.0, 79341.0, 966801.0], [0.0, 0.0, 1448.0, 189178.5, 809426.0]]
-
 locations = {1 => 0, 25 => 1, 50 => 2, 75 => 3, 99 => 4}
 percentiles = []
 
@@ -40,9 +41,9 @@ Gnuplot.open do |gp|
   Gnuplot::Plot.new( gp ) do |plot|
   
     plot.title  "Example"
-    plot.ylabel ARGV[1] if ARGV[1]
-    plot.xlabel ARGV[2] if ARGV[2]
-#    plot.xrange "[0:11]" # TODO
+    plot.ylabel ylabel if ylabel
+    plot.xlabel xlabel if xlabel
+#    plot.xrange "[0:11]"
 #    plot.yrange "[0:10]"
 
     plot.data << Gnuplot::DataSet.new( [xs] + percentiles ) do |ds|
@@ -62,4 +63,5 @@ Gnuplot.open do |gp|
 
   end
 end
-
+end
+do_file ARGV[0]

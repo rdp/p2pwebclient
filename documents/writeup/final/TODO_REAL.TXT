@@ -1,6 +1,8 @@
 actually really todo (in order of priority):
 
-thesis pics prettier
+thesis pics prettier those possible currently [auto trans]
+start going a few [one per ilab @ 2G]
+start re-running one
 
 update the thesis/pics to be accurate, up to specs [remove that one fella for now dr]
 
