@@ -3,7 +3,10 @@ doctest: parses a conjunto right
 >> all = "Doing stats on runs runs just numbers unnamed316651_at25_run1unnamed316651_at25_run2\ndownload times %'iles'\n61.51 161.8 352.64 560.03 992.02"
 >> parse(all)
 => {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}}
->> puts "\n\n\n\n\n", parse( File.read 'test/raw_example.txt').inspect
+>> parse( File.read 'test/single_run.txt')['download times'] == {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}
+=> true
+>> parse( File.read 'test/single_run.txt')['server upload distinct seconds [instantaneous server upload per second]'] == {25.0 => [37565.0, 126882.5, 181103.5, 243156.5, 458349.5]}
+=> true
 =end
 
 
@@ -31,7 +34,7 @@ def parse large_string
    if name and setting and numbers
       all[name] ||= {}
       all[name][setting] = numbers
-      name = numbers = setting = nil
+      numbers = nil
     end
  
  } 
