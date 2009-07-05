@@ -23,10 +23,12 @@ def plot xs, percentiles, xlabel, ylabel
          plot.xlabel xlabel if xlabel
          #    plot.xrange "[0:11]"
          #    plot.yrange "[0:10]"
+         # is there an xmin?
+         plot.terminal 'pdf'
+         plot.output 'demo1.pdf'
 
          plot.data << Gnuplot::DataSet.new( [xs] + percentiles ) do |ds|
             ds.using = "1:3:2:6:5"
-            # ugly blue      ds.with = "candlesticks lt 3 lw 2 title '1,25,50,75,99th percentiles' "
             ds.with = "candlesticks title '1,25,50,75,99th percentiles' "
             #ds.notitle
          end
@@ -35,7 +37,6 @@ def plot xs, percentiles, xlabel, ylabel
          plot.data << Gnuplot::DataSet.new( [xs] + percentiles ) do |ds|
             ds.using = "1:4:4:4:4"
             ds.with = "candlesticks lt -1"
-            #      ds.with = "candlesticks"
             ds.notitle
          end
 
