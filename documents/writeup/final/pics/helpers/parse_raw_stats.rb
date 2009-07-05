@@ -41,3 +41,18 @@ def parse large_string
    all
 
 end
+
+if $0 == __FILE__
+  require 'gnuplot_percentiles'
+  require 'rubygems'
+  require 'enumerable/extra'
+  puts 'syntax: raw file name'
+  raise unless ARGV[0]
+  output = parse File.read(ARGV[0]) # output is like 
+  #  {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}}
+  download = output['download times']
+  xs = download.sort.map :first
+  percentiles = download.sort.map :last
+  p download, 'was download', 'xs', xs, 'percentiles', percentiles
+  plot xs, percentiles, 'x', 'y'
+end

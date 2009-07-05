@@ -14,7 +14,7 @@ require 'optiflag'
 #e = [4,4,6]
 #f = [6,5.5, 6.5] then pass in [x,b,c,d,e,f]
 
-def plot xs, percentiles
+def plot xs, percentiles, xlabel, ylabel
    Gnuplot.open do |gp|
       Gnuplot::Plot.new( gp ) do |plot|
 
@@ -44,7 +44,7 @@ def plot xs, percentiles
 end
 
 
-def do_file filename, ylabel = nil, xlabel = nil
+def do_file filename, xlabel = nil, ylabel = nil
    # expected something like [filename, x axis, y axis]
    # and parse some percentile graphs
    stats = File.read 'number_stats.txt'
@@ -66,7 +66,7 @@ def do_file filename, ylabel = nil, xlabel = nil
    end
    puts "percentiles are", percentiles.inspect, xs.inspect
 
-   plot xs, percentiles
+   plot xs, percentiles, xlabel, ylabel
 
 
 
