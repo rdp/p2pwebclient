@@ -77,10 +77,8 @@ if $0 == __FILE__
    end
 
    do_file ARGV.flags.file if ARGV.flags.file
-   puts 'flags', ARGV.flags 
    if ARGV.flags.dir
-     files = Dir.glob ARGV.flags.dir + '/*'
-     puts 'files', files.inspect
+     for file in {"
    end
 
 end

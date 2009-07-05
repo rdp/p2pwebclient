@@ -46,11 +46,15 @@ following appears toast -- no pics even
 
 bt 30M versus me [on ilab2 tmp]: [broken me side--very much so, somewhat of a broken bt, too]
 copied good
-73928.377[driver] vary parameter graphs of VaryParameter.varyParameterAndRsync('vary_parameter/vr_yanc_and_bittorrent_100_take22_url_use_bittorrent_fromStart_falseby_AndMajorTimes_1_times_0.0666666666666667s__0s_30000000B_255000BPS_125000s_1.0s_2.0s_100000B', 'Using BitTorrent',[0, 1],[["yanc_and_bittorrent_100_take22_url_use_bittorrent_atfalse_run1_of_4_major_1_of_2",
-"yanc_and_bittorrent_100_take22_url_use_bittorrent_atfalse_run2_of_4_major_1_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_atfalse_run3_of_4_major_1_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_atfalse_run4_of_4_major_1_of_2"], ["yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run1_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run2_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run3_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run4_of_4_major_2_of_2"]])
+VaryParameter.varyParameterAndRsync('vary_parameter/vr_yanc_and_bittorrent_100_take22_url_use_bittorrent_fromStart_falseby_AndMajorTimes_1_times_0.0666666666666667s__0s_30000000B_255000BPS_125000s_1.0s_2.0s_100000B', 'Using BitTorrent',[0, 1],
+[
+ ["yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run1_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run2_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run3_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run4_of_4_major_2_of_2"],
+ ["yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run1_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run2_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run3_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run4_of_4_major_2_of_2"]])
 
 downloadtime!"download total times %'iles'"
 "131.11 139.3 148.32 163.5 2786.08"
+
+
 
 me side 30MB:
 
