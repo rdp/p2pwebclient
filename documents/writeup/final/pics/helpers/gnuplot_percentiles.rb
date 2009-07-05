@@ -1,4 +1,6 @@
-
+require 'rubygems'
+require 'gnuplot'
+require 'optiflag'
 
 # gnuplot expects something like
 # x    1st     25th    50th   75th    99th
@@ -12,33 +14,7 @@
 #e = [4,4,6]
 #f = [6,5.5, 6.5] then pass in [x,b,c,d,e,f]
 
-
-
-def do_file filename, ylabel = nil, xlabel = nil
-   # expected something like [filename, x axis, y axis]
-   # and parse some percentile graphs
-   stats = File.read 'number_stats.txt'
-   xs = []
-   stats.each_line{|line| line =~ /just numbers.*?_at(\d+\.\d+|\d+)/; xs << $1 if $1 }
-   readings = eval(File.read(filename))
-   # comes to us like [[0.0, 0.0, 0.0, 118003.5, 1200130.5], [0.0, 0.0, 0.0, 319402.5, 1112664.0], [0.0, 0.0, 0.0, 105941.5, 924438.5], [0.0, 0.0, 10860.0, 161322.0, 708114.5], [0.0, 0.0, 10518.0, 159478.5, 679632.0], [0.0, 0.0, 0.0, 171059.5, 731339.0], [0.0, 0.0, 0.0, 5672.0, 786340.5], [0.0, 0.0, 0.0, 79341.0, 966801.0], [0.0, 0.0, 1448.0, 189178.5, 809426.0]]
-
-   # parse it out to rgnuplot style arrays...
-   locations = {1 => 0, 25 => 1, 50 => 2, 75 => 3, 99 => 4}
-   percentiles = []
-
-   for percentile, location in locations.sort
-      new = []
-      for reading in readings
-         new << reading[location]
-      end
-      percentiles << new
-   end
-   puts "percentiles are", percentiles.inspect, xs.inspect
-
-   require 'rubygems'
-   require 'gnuplot'
-
+def plot xs, percentiles
    Gnuplot.open do |gp|
       Gnuplot::Plot.new( gp ) do |plot|
 
@@ -66,8 +42,37 @@ def do_file filename, ylabel = nil, xlabel = nil
       end
    end
 end
-require 'rubygems'
-require 'optiflag'
+
+
+def do_file filename, ylabel = nil, xlabel = nil
+   # expected something like [filename, x axis, y axis]
+   # and parse some percentile graphs
+   stats = File.read 'number_stats.txt'
+   xs = []
+   stats.each_line{|line| line =~ /just numbers.*?_at(\d+\.\d+|\d+)/; xs << $1 if $1 }
+   readings = eval(File.read(filename))
+   # comes to us like [[0.0, 0.0, 0.0, 118003.5, 1200130.5], [0.0, 0.0, 0.0, 319402.5, 1112664.0], [0.0, 0.0, 0.0, 105941.5, 924438.5], [0.0, 0.0, 10860.0, 161322.0, 708114.5], [0.0, 0.0, 10518.0, 159478.5, 679632.0], [0.0, 0.0, 0.0, 171059.5, 731339.0], [0.0, 0.0, 0.0, 5672.0, 786340.5], [0.0, 0.0, 0.0, 79341.0, 966801.0], [0.0, 0.0, 1448.0, 189178.5, 809426.0]]
+
+   # parse it out to rgnuplot style arrays...
+   locations = {1 => 0, 25 => 1, 50 => 2, 75 => 3, 99 => 4}
+   percentiles = []
+
+   for percentile, location in locations.sort
+      new = []
+      for reading in readings
+         new << reading[location]
+      end
+      percentiles << new
+   end
+   puts "percentiles are", percentiles.inspect, xs.inspect
+
+   plot xs, percentiles
+
+
+
+end
+
+
 if $0 == __FILE__
    module DBChecker extend OptiFlagSet
       optional_flag "file"
@@ -78,7 +83,6 @@ if $0 == __FILE__
 
    do_file ARGV.flags.file if ARGV.flags.file
    if ARGV.flags.dir
-     for file in {"
-   end
 
+   end
 end

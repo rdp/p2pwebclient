@@ -11,33 +11,33 @@ doctest: parses a conjunto right
 
 
 def parse large_string
- setting = nil
- name = nil
- numbers = nil
+   setting = nil
+   name = nil
+   numbers = nil
 
- number_regex = '(\d+\.\d+|\d+) '
- five_numbers = Regexp.new((number_regex * 5).strip)
- all = {}
+   number_regex = '(\d+\.\d+|\d+) '
+   five_numbers = Regexp.new((number_regex * 5).strip)
+   all = {}
 
- large_string.each_line {|line|
-   puts 'processing line', line
-   if line =~ /_at(\d+)_/
-     setting = $1.to_f
-   elsif line =~ /(^.*) %'iles'/ # percentiles
-     name = $1
-   elsif line =~ five_numbers
-     puts 'got good'
-     numbers = [$1.to_f, $2.to_f, $3.to_f, $4.to_f, $5.to_f]
-   end
+   large_string.each_line {|line|
+      puts 'processing line', line
+      if line =~ /_at(\d+)_/
+         setting = $1.to_f
+      elsif line =~ /(^.*) %'iles'/ # percentiles
+         name = $1
+      elsif line =~ five_numbers
+         puts 'got good'
+         numbers = [$1.to_f, $2.to_f, $3.to_f, $4.to_f, $5.to_f]
+      end
 
-   puts "\n\n\n", 'line', line, 'name', name, 'setting', setting, 'numbers', numbers
-   if name and setting and numbers
-      all[name] ||= {}
-      all[name][setting] = numbers
-      numbers = nil
-    end
- 
- } 
- all
+      puts "\n\n\n", 'line', line, 'name', name, 'setting', setting, 'numbers', numbers
+      if name and setting and numbers
+         all[name] ||= {}
+         all[name][setting] = numbers
+         numbers = nil
+      end
+
+   }
+   all
 
 end
