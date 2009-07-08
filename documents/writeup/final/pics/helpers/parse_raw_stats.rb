@@ -11,34 +11,34 @@ doctest: parses a conjunto right
 
 
 def parse large_string
-   setting = nil
-   name = nil
-   numbers = nil
+  setting = nil
+  name = nil
+  numbers = nil
 
-   number_regex = '(\d+\.\d+|\d+) '
-   five_numbers = Regexp.new((number_regex * 5).strip)
-   all = {}
+  number_regex = '(\d+\.\d+|\d+) '
+  five_numbers = Regexp.new((number_regex * 5).strip)
+  all = {}
 
-   large_string.each_line {|line|
-      puts 'processing line', line
-      if line =~ /_at(\d+)_/
-         setting = $1.to_f
-      elsif line =~ /(^.*) %'iles'/ # percentiles
-         name = $1
-      elsif line =~ five_numbers
-         puts 'got good'
-         numbers = [$1.to_f, $2.to_f, $3.to_f, $4.to_f, $5.to_f]
-      end
+  large_string.each_line {|line|
+    puts 'processing line', line
+    if line =~ /_at(\d+)_/
+      setting = $1.to_f
+    elsif line =~ /(^.*) %'iles'/ # percentiles
+      name = $1
+    elsif line =~ five_numbers
+      puts 'got good'
+      numbers = [$1.to_f, $2.to_f, $3.to_f, $4.to_f, $5.to_f]
+    end
 
-      if name and setting and numbers
-         puts "\n\n\n", 'line', line, 'name', name, 'setting', setting, 'numbers', numbers
-         all[name] ||= {}
-         all[name][setting] = numbers
-         numbers = nil
-      end
+    if name and setting and numbers
+      puts "\n\n\n", 'line', line, 'name', name, 'setting', setting, 'numbers', numbers
+      all[name] ||= {}
+      all[name][setting] = numbers
+      numbers = nil
+    end
 
-   }
-   all
+  }
+  all
 
 end
 
@@ -48,23 +48,27 @@ if $0 == __FILE__
   require 'enumerable/extra'
   puts 'syntax: raw file name'
   raise unless ARGV[0]
-  output = parse File.read(ARGV[0]) # output is currently like 
-  #  {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}}
-  download = output['download times']
+  all = parse File.read(ARGV[0]) # output is currently like
+  #  {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}...}
 
-  # we have to split it into lines
-  # like
-  # 1 10 20 30 40 50
-  # 2 10 20 30 40 50
-  # => [1, 2], [10, 10], [20, 20]..
-  xs = download.sort.map :first # the easy one
-  columns = []
-  download.sort.map(:last).each{ |row|
-    row.each_with_index{|setting, i|
-      columns[i] ||= []
-      columns[i] << setting
+
+  for name in ['download times', 'server upload distinct seconds [instantaneous server upload per second]'] do
+    download = all.delete name
+    puts 'remain', all.keys, "\n\n\n"
+
+    # we have to split it into lines
+    # like
+    # 1 10 20 30 40 50
+    # 2 10 20 30 40 50
+    # => [1, 2], [10, 10], [20, 20]..
+    xs = download.sort.map :first # the easy one
+    columns = []
+    download.sort.map(:last).each{ |row|
+      row.each_with_index{|setting, i|
+        columns[i] ||= []
+        columns[i] << setting
+      }
     }
-  }
-  require 'ruby-debug'
-  plot xs, columns, 'x', 'y'
+    plot xs, columns, name + '.pdf', 'x', 'y'
+  end
 end

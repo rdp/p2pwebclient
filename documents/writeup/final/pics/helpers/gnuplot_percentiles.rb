@@ -14,7 +14,7 @@ require 'optiflag'
 #e = [4,4,6]
 #f = [6,5.5, 6.5] then pass in [x,b,c,d,e,f]
 
-def plot xs, percentiles, xlabel, ylabel
+def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil
    xrange = xs.last - xs.first
    box_width = xrange*3/100
    Gnuplot.open do |gp|
@@ -27,11 +27,9 @@ def plot xs, percentiles, xlabel, ylabel
          #    plot.yrange "[0:10]" auto calculated
          # is there an xmin?
          plot.terminal 'pdf'
-         plot.output 'demo1.pdf'
-	 puts 'writing to demo1.pdf'
+         plot.output name
+	 puts 'writing to ' + name
 
-require 'ruby-debug'
-debugger
          plot.data << Gnuplot::DataSet.new( [xs] + percentiles ) do |ds|
             ds.using = "1:3:2:6:5"
             ds.with = "candlesticks title '1,25,50,75,99th percentiles' "
