@@ -50,3 +50,13 @@ do a test against apache with 4 max. (large file)
 
 -- after thesis
 release a faster ruby [?]
+
+
+
+
+
+Include one picture of 'naive' start to end scatter
+one picture of 'origin reversion'
+one picture of start to end scatter 5 threads -- faster
+
+Contributions of this thesis:  We have shown how to use a generic DHT to drive a scalable p2p web cache system. 
