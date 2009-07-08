@@ -51,7 +51,9 @@ if $0 == __FILE__
   #  {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}...}
 
 
-  for name in ['download times', 'server upload distinct seconds [instantaneous server upload per second]'] do
+  for name in ['download times', 
+    'server upload distinct seconds [instantaneous server upload per second]',
+    'upload bytes'] do
     download = all.delete name
 
     # we have to split it into lines
@@ -69,5 +71,5 @@ if $0 == __FILE__
     }
     plot xs, columns, name + '.pdf', 'x', 'y'
   end
-  puts 'remain', all.keys, "\n\n\n"
+  puts 'remain', all.keys.inspect, "\n\n\n"
 end
