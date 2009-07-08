@@ -26,12 +26,11 @@ def parse large_string
     elsif line =~ /(^.*) %'iles'/ # percentiles
       name = $1
     elsif line =~ five_numbers
-      puts 'got good'
       numbers = [$1.to_f, $2.to_f, $3.to_f, $4.to_f, $5.to_f]
     end
 
     if name and setting and numbers
-      puts "\n\n\n", 'line', line, 'name', name, 'setting', setting, 'numbers', numbers
+      puts "adding", 'line', line, 'name', name, 'setting', setting, 'numbers', numbers
       all[name] ||= {}
       all[name][setting] = numbers
       numbers = nil
@@ -54,7 +53,6 @@ if $0 == __FILE__
 
   for name in ['download times', 'server upload distinct seconds [instantaneous server upload per second]'] do
     download = all.delete name
-    puts 'remain', all.keys, "\n\n\n"
 
     # we have to split it into lines
     # like
@@ -71,4 +69,5 @@ if $0 == __FILE__
     }
     plot xs, columns, name + '.pdf', 'x', 'y'
   end
+  puts 'remain', all.keys, "\n\n\n"
 end
