@@ -53,7 +53,7 @@ if $0 == __FILE__
 
   for name in ['download times', 
     'server upload distinct seconds [instantaneous server upload per second]',
-    'upload bytes'] do
+    'upload bytes', ' instantaneous tenth of second throughput'] do
     download = all.delete name
 
     # we have to split it into lines
