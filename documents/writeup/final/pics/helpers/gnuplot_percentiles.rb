@@ -15,18 +15,23 @@ require 'optiflag'
 #f = [6,5.5, 6.5] then pass in [x,b,c,d,e,f]
 
 def plot xs, percentiles, xlabel, ylabel
+   xrange = xs.last - xs.first
+   box_width = xrange*3/100
    Gnuplot.open do |gp|
       Gnuplot::Plot.new( gp ) do |plot|
 
          plot.title  "Example"
          plot.ylabel ylabel if ylabel
          plot.xlabel xlabel if xlabel
-         #    plot.xrange "[0:11]"
-         #    plot.yrange "[0:10]"
+         plot.xrange "[0:#{ xs.last + 1}]"
+         #    plot.yrange "[0:10]" auto calculated
          # is there an xmin?
          plot.terminal 'pdf'
          plot.output 'demo1.pdf'
+	 puts 'writing to demo1.pdf'
 
+require 'ruby-debug'
+debugger
          plot.data << Gnuplot::DataSet.new( [xs] + percentiles ) do |ds|
             ds.using = "1:3:2:6:5"
             ds.with = "candlesticks title '1,25,50,75,99th percentiles' "
@@ -39,6 +44,8 @@ def plot xs, percentiles, xlabel, ylabel
             ds.with = "candlesticks lt -1"
             ds.notitle
          end
+	 plot.boxwidth box_width
+	 puts 'width:', box_width
 
       end
    end

@@ -30,8 +30,8 @@ def parse large_string
          numbers = [$1.to_f, $2.to_f, $3.to_f, $4.to_f, $5.to_f]
       end
 
-      puts "\n\n\n", 'line', line, 'name', name, 'setting', setting, 'numbers', numbers
       if name and setting and numbers
+         puts "\n\n\n", 'line', line, 'name', name, 'setting', setting, 'numbers', numbers
          all[name] ||= {}
          all[name][setting] = numbers
          numbers = nil
@@ -48,11 +48,23 @@ if $0 == __FILE__
   require 'enumerable/extra'
   puts 'syntax: raw file name'
   raise unless ARGV[0]
-  output = parse File.read(ARGV[0]) # output is like 
+  output = parse File.read(ARGV[0]) # output is currently like 
   #  {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}}
   download = output['download times']
-  xs = download.sort.map :first
-  percentiles = download.sort.map :last
-  p download, 'was download', 'xs', xs, 'percentiles', percentiles
-  plot xs, percentiles, 'x', 'y'
+
+  # we have to split it into lines
+  # like
+  # 1 10 20 30 40 50
+  # 2 10 20 30 40 50
+  # => [1, 2], [10, 10], [20, 20]..
+  xs = download.sort.map :first # the easy one
+  columns = []
+  download.sort.map(:last).each{ |row|
+    row.each_with_index{|setting, i|
+      columns[i] ||= []
+      columns[i] << setting
+    }
+  }
+  require 'ruby-debug'
+  plot xs, columns, 'x', 'y'
 end
