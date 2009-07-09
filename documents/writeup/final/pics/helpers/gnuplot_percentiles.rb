@@ -1,4 +1,5 @@
 require 'rubygems'
+ENV['RB_GNUPLOT'] = '\cygwin\bin\gnuplot'# tell it where it is
 require 'gnuplot'
 require 'optiflag'
 

@@ -44,16 +44,17 @@ end
 if $0 == __FILE__
   require 'gnuplot_percentiles'
   require 'rubygems'
-  require 'enumerable/extra'
+  require 'enumerable-extra'
   puts 'syntax: raw file name'
   raise unless ARGV[0]
   all = parse File.read(ARGV[0]) # output is currently like
   #  {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}...}
 
 
-  for name in ['download times', 
-    'server upload distinct seconds [instantaneous server upload per second]',
-    'upload bytes', ' instantaneous tenth of second throughput'] do
+  x = 'peers per second'
+
+  for name, y in {'download times' => 'seconds', 
+    'server upload distinct seconds [instantaneous server upload per second]' => 'Bytes/S', 'upload bytes' => 'Bytes/S', ' instantaneous tenth of second throughput' => 'Bytes/S'} do
     download = all.delete name
 
     # we have to split it into lines
@@ -69,7 +70,7 @@ if $0 == __FILE__
         columns[i] << setting
       }
     }
-    plot xs, columns, name + '.pdf', 'x', 'y'
+    plot xs, columns, name + '.pdf', x, y
   end
   puts 'remain', all.keys.inspect, "\n\n\n"
 end
