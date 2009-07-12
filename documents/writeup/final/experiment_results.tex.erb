@@ -19,16 +19,18 @@ Each peer lingers for 20s, file block size is set to 100KB, origin minimum allow
 
 Download time stays constant at around 10s, regardless of load, thus surpassing our initial speed goal of a 2x increase (Fig. \ref{figs:yanc_download_times}).
 
-<%= figure 'pics/vr_medium_p2p_load_tak4/client_download_PercentileLine.png',
+<%= figure 'pics/vr_medium_p2p_load_tak4/client_download_PercentileLine.pdf',
 :label => 'figs:yanc_download_times', :caption => 'P2P Download Times' %>
 
 Server load is also much improved (Fig. \ref{figs:yanc_server_load}), as more
 peers serve the file, though the server still serves the file to some peers.
-<%= figure 'pics/vr_medium_p2p_load_tak4/server_speed_PercentileLine.png',
+
+<%= figure 'pics/vr_medium_p2p_load_tak4/server_speed_PercentileLine.pdf',
 :label => 'figs:yanc_server_load', :caption => 'P2P Server Load'%>
+
 Also interesting is the increasing role that P2P
 transfer has with higher load.  Each peer downloads the file both from the origin and its peers, however, after about 10 peers/second almost 100\% of the file serving is being done via p2p (Fig.~\ref{figs:yanc_from_client_percentile}).
-<%= figure 'pics/vr_medium_p2p_load_tak4/percent_from_clients_PercentileLine.png', :label => 'figs:yanc_from_client_percentile', :caption => 'P2P percent received from peers' %>
+<%= figure 'pics/vr_medium_p2p_load_tak4/percent_from_clients_PercentileLine.pdf', :label => 'figs:yanc_from_client_percentile', :caption => 'P2P percent received from peers' %>
 
 %% TODO could put in some cool graphs of a single run of p2p vs. cs--at least the first few files that is quite interesting :)
 

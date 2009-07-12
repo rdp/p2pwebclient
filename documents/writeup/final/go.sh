@@ -11,3 +11,4 @@ chmod a+r *.pdf
 ruby ruby_to_tex.rb experiment_results.tex.erb  # in case it failed
 rsync *.pdf wilkboar@wilkboardonline.com:~/public_html/roger/p2p/writeup & >/dev/null
 explorer just_experiment_results.pdf
+echo 'coming up in explorer'

@@ -20,23 +20,24 @@ def parse large_string
   all = {}
 
   large_string.each_line {|line|
-    puts 'processing line', line
     if line =~ /_at(\d+)_/
       setting = $1.to_f
-    elsif line =~ /(^.*) %'iles'/ # percentiles
-      name = $1
+    elsif line =~ /iles/ # percentiles or %'iles'
+      name = line.strip
     elsif line =~ five_numbers
       numbers = [$1.to_f, $2.to_f, $3.to_f, $4.to_f, $5.to_f]
+    else
+      puts 'ignoring line', line 
     end
-
     if name and setting and numbers
-      puts "adding", 'line', line, 'name', name, 'setting', setting, 'numbers', numbers
+      puts "adding", 'line', line, 'name', name, 'setting', setting, 'numbers', numbers if $VERBOSE
       all[name] ||= {}
       all[name][setting] = numbers
       numbers = nil
     end
 
   }
+  puts 'returning', all.keys.inspect
   all
 
 end
@@ -52,12 +53,19 @@ if $0 == __FILE__
 
   x = 'Peers per Second' # this one depends on the directory you're in, I guess [TODO make command line?]
 
-  for name, y_and_this_output_filename in {'download times' => ['seconds', 'client_download_PercentileLine'], 
-    'server upload distinct seconds [instantaneous server upload per second]' => ['Bytes/S', 'server_speed_PercentileLine'], 'upload bytes' => ['Bytes/S', 'upload bytes'], ' instantaneous tenth of second throughput' => ['Bytes/S', 'itst']} do
+["percentiles of percent received from just peers (not origin)", "upload bytes %'iles'", "server upload distinct seconds [instantaneous server upload per second] %'iles'", "download times %'iles'", "instantaneous tenth of second throughput %'iles'"]
+
+
+  for name, y_and_this_output_filename in {"download times %'iles'" => ['seconds', 'client_download_PercentileLine'], 
+     "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Bytes/S', 'server_speed_PercentileLine'],  
+     "upload bytes %'iles'" => ['Bytes/S', 'upload bytes'], 
+     "instantaneous tenth of second throughput %'iles'" => ['Bytes/S', 'total throughput'],
+     "percentiles of percent received from just peers (not origin)" => ['% of File', 'percent_from_clients_PercentileLine']} do
+
     y, this_output_filename = y_and_this_output_filename
     data = all.delete name
 
-    puts 'got', name, y, this_output_filename
+    puts 'got', name, y, this_output_filename if $VERBOSE
 
     # we have to split it into lines
     # like
