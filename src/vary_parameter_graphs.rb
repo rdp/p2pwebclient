@@ -167,13 +167,13 @@ class VaryParameter
   end
 
   @@all_stats = [
-     ["allServerServedPointsPartial()", "server_upload_rate", "Server upload rate", "Server Bytes / S"],
+     ["allServerServedPointsPartial()", "server_speed", "Server upload rate", "Server Bytes / S"],
      ["allReceivedPointsPartialP2P()", "p2p_received_partial", "Client receive from p2p rate", "Bytes / S"],
      ["allServedPointsPartialP2P()", "p2p_served_partial", "Client send p2p rate", "Bytes / S"],
      ["createClientTotalUpload()", "client_upload_rate", "Client Upload Sum", "Bytes / Client"],
      ["totalThroughPutPointsPartial()", "total_upload_rate", "Total receive rate", "Bytes / S"],
      ["createClientDownloadTimes()", "client_download" ,"Download Time" , "(S)" ],
-     ["createClientTotalDownloadTimes()", "client_total_download" ,"Download Time (all files)" , "(S)" ],
+     ["createClientTotalDownloadTimes()", "client_download" ,"Download Time (all files)" , "(S)" ],
      ["multipleDHTGets", "dht_get", "DHT Get Times", "(S)" ],
      ["multipleDHTPuts", "dht_Put", "DHT Put Times", "(S)" ],
      ["multipleDHTRemoves", "dht_Remove", "DHT Remove Times", "(S)" ],

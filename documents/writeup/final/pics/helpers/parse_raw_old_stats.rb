@@ -22,7 +22,7 @@ def parse large_string
   large_string.each_line {|line|
     if line =~ /_at(\d+)_/
       setting = $1.to_f
-    elsif line =~ /iles/ # percentiles or %'iles'
+    elsif line =~ /iles/ || line =~ /^dht / # percentiles or %'iles' or 'dht xxxx'
       name = line.strip
     elsif line =~ five_numbers
       numbers = [$1.to_f, $2.to_f, $3.to_f, $4.to_f, $5.to_f]
@@ -64,6 +64,7 @@ if $0 == __FILE__
      "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Bytes/S', 'server_speed_Percentile_Line'],  
      "upload bytes %'iles'" => ['Bytes/S', 'upload bytes'], 
      "instantaneous tenth of second throughput %'iles'" => ['Bytes/S', 'total throughput'],
+     'dht removes' => ['S', 'dht_Remove_Percentile_Line'],
      "percentiles of percent received from just peers (not origin)" => ['% of File', 'percent_from_clients_PercentileLine']} do
 
     y, this_output_filename = y_and_this_output_filename
