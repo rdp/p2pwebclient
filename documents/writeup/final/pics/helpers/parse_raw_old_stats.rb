@@ -53,7 +53,7 @@ if $0 == __FILE__
   x = 'Peers per Second' # this one depends on the directory you're in, I guess [TODO make command line?]
 
   for name, y_and_this_output_filename in {'download times' => ['seconds', 'client_download_PercentileLine'], 
-    'server upload distinct seconds [instantaneous server upload per second]' => ['Bytes/S', 'isups'], 'upload bytes' => ['Bytes/S', 'upload bytes'], ' instantaneous tenth of second throughput' => ['Bytes/S', 'itst']} do
+    'server upload distinct seconds [instantaneous server upload per second]' => ['Bytes/S', 'server_speed_PercentileLine'], 'upload bytes' => ['Bytes/S', 'upload bytes'], ' instantaneous tenth of second throughput' => ['Bytes/S', 'itst']} do
     y, this_output_filename = y_and_this_output_filename
     data = all.delete name
 
