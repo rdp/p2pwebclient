@@ -1,14 +1,14 @@
 %% note: todo's go in todo, as well as optionally in here
 
 \section{Experiment Results}
-For our initial experiment we first run tests to see if the system worked effectively.  We download a small file (100KB) with an increasing influx of clients, to see how it scales.
+For our initial experiment we first run tests to see if the system worked effectively.  We download a small file (100KB) with an increasing influx of clients, to see how well it operates.
 To generate different loads we increase the number of peers entering the system within 100s (they enter randomly within that time frame using a poisson distribution for timing).  For example the first test is with 100 peers total, the next with 200 peers total, etc.  The server is located on a well provisioned planet-lab machine at BYU, uses apache 2 bandwidth limited (using mod\_bw) to 256KB/s total.  The peers downloading the file are randomly selected from available planetlab peers (a pool of up to 300 scattered world-wide).  Each experiment runs until all peers finish downloading the file.  Each experiment is repeated 3 times.  Because a few peers are very poorly connected and create a long tail for download speeds, the aggregate throughput statistics ignore the first and last 20% to get a more accurate measurement.  Peers linger, serving the file, for 20 seconds after they download it, unless otherwise noted.
 
 % todo double check 20% note there
 
 We first run tests using traditional client-server transfer, to establish a base line.  Client-server download speeds increase as expected--almost linearly with load, because outgoing bandwidth is divided among all incoming clients (Fig.~\ref{figs:client_server_download_times}).
 
-<%= figure 'pics/vr_unnamed316651_cs_stress_test/client_download_PercentileLine.png',
+<%= figure 'pics/vr_unnamed316651_cs_stress_test/client_download_PercentileLine.pdf',
 :label => 'figs:client_server_download_times', :caption => 'Traditional client server download times' %>
 
 <%= figure 'pics/vr_unnamed316651_cs_stress_test/server_speed_PercentileLine.png',

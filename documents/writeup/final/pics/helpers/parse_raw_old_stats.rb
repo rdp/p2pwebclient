@@ -42,35 +42,37 @@ def parse large_string
 end
 
 if $0 == __FILE__
-  require 'gnuplot_percentiles'
-  require 'rubygems'
-  require 'enumerable-extra'
+  require File.dirname(__FILE__) + '/gnuplot_percentiles'
+  require File.dirname(__FILE__) + '/enumerable-extra' # pulled in from a gem
   puts 'syntax: raw file name'
   raise unless ARGV[0]
   all = parse File.read(ARGV[0]) # output is currently like
   #  {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}...}
 
 
-  x = 'peers per second'
+  x = 'Peers per Second' # this one depends on the directory you're in, I guess [TODO make command line?]
 
-  for name, y in {'download times' => 'seconds', 
-    'server upload distinct seconds [instantaneous server upload per second]' => 'Bytes/S', 'upload bytes' => 'Bytes/S', ' instantaneous tenth of second throughput' => 'Bytes/S'} do
-    download = all.delete name
+  for name, y_and_this_output_filename in {'download times' => ['seconds', 'client_download_PercentileLine'], 
+    'server upload distinct seconds [instantaneous server upload per second]' => ['Bytes/S', 'isups'], 'upload bytes' => ['Bytes/S', 'upload bytes'], ' instantaneous tenth of second throughput' => ['Bytes/S', 'itst']} do
+    y, this_output_filename = y_and_this_output_filename
+    data = all.delete name
+
+    puts 'got', name, y, this_output_filename
 
     # we have to split it into lines
     # like
     # 1 10 20 30 40 50
     # 2 10 20 30 40 50
     # => [1, 2], [10, 10], [20, 20]..
-    xs = download.sort.map :first # the easy one
+    xs = data.sort.map :first # the easy one
     columns = []
-    download.sort.map(:last).each{ |row|
+    data.sort.map(:last).each{ |row|
       row.each_with_index{|setting, i|
         columns[i] ||= []
         columns[i] << setting
       }
     }
-    plot xs, columns, name + '.pdf', x, y
+    plot xs, columns, this_output_filename + '.pdf', x, y
   end
   puts 'remain', all.keys.inspect, "\n\n\n"
 end

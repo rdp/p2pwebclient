@@ -21,7 +21,7 @@ def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil
    Gnuplot.open do |gp|
       Gnuplot::Plot.new( gp ) do |plot|
 
-         plot.title  "Example"
+         #plot.title  "Example"
          plot.ylabel ylabel if ylabel
          plot.xlabel xlabel if xlabel
          plot.xrange "[0:#{ xs.last + 1}]"
@@ -33,7 +33,7 @@ def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil
 
          plot.data << Gnuplot::DataSet.new( [xs] + percentiles ) do |ds|
             ds.using = "1:3:2:6:5"
-            ds.with = "candlesticks title '1,25,50,75,99th percentiles' "
+            ds.with = "candlesticks title '1,25,50,75,99 percentiles' "
             #ds.notitle
          end
 
