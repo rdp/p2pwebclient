@@ -44,7 +44,6 @@ def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil
             ds.notitle
          end
 	 plot.boxwidth box_width
-	 puts 'width:', box_width
 
       end
    end

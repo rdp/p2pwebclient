@@ -56,14 +56,19 @@ if $0 == __FILE__
 ["percentiles of percent received from just peers (not origin)", "upload bytes %'iles'", "server upload distinct seconds [instantaneous server upload per second] %'iles'", "download times %'iles'", "instantaneous tenth of second throughput %'iles'"]
 
 
-  for name, y_and_this_output_filename in {"download times %'iles'" => ['seconds', 'client_download_PercentileLine'], 
-     "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Bytes/S', 'server_speed_PercentileLine'],  
+  for name, y_and_this_output_filename in {"download times %'iles'" => ['seconds', 'client_download_Percentile_Line'], 
+     "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Bytes/S', 'server_speed_Percentile_Line'],  
+
+     # server upload is duplicated for some reason in newer stuffs
+
+     "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Bytes/S', 'server_speed_Percentile_Line'],  
      "upload bytes %'iles'" => ['Bytes/S', 'upload bytes'], 
      "instantaneous tenth of second throughput %'iles'" => ['Bytes/S', 'total throughput'],
      "percentiles of percent received from just peers (not origin)" => ['% of File', 'percent_from_clients_PercentileLine']} do
 
     y, this_output_filename = y_and_this_output_filename
     data = all.delete name
+    next unless data
 
     puts 'got', name, y, this_output_filename if $VERBOSE
 
