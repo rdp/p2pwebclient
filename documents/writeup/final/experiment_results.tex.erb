@@ -1,12 +1,12 @@
 %% note: todo's go in todo, as well as optionally in here
 
 \section{Experiment Results}
-For our initial experiment we first run tests to see if the system worked effectively.  We download a small file (100KB) with an increasing influx of clients, to see how well it operates.
-To generate different loads we increase the number of peers entering the system within 100s (they enter randomly within that time frame using a poisson distribution for timing).  For example the first test is with 100 peers total, the next with 200 peers total, etc.  The server is located on a well provisioned planet-lab machine at BYU, uses apache 2 bandwidth limited (using mod\_bw) to 256KB/s total.  The peers downloading the file are randomly selected from available planetlab peers (a pool of up to 300 scattered world-wide).  Each experiment runs until all peers finish downloading the file.  Each experiment is repeated 3 times.  Because a few peers are very poorly connected and create a long tail for download speeds, the aggregate throughput statistics ignore the first and last 20% to get a more accurate measurement.  Peers linger, serving the file, for 20 seconds after they download it, unless otherwise noted.
+For our initial experiment we first run tests to see if the system works effectively.  We download a small file (100KB) with an increasing number of clients, to see how well it responds.
+To generate different tests we run experiments for 100s, each time increasing the total number of peers entering during those 100s.  Each enters randomly within that time frame using a poisson distribution for timing.  The origin server is located on a well provisioned machine at BYU, uses an apache 2 web server that it bandwidth limited (using mod\_bw) to 256KB/s.  Peers downloading the file are randomly selected from available planetlab peers (a pool of up to 300 scattered world-wide on the planet-lab system).  Experiments run until all peers finish downloading the file.  Each experiment is repeated 3 times and results are averaged.  Because a few peers are extremely poorly connected and create a long tail for statistics, measures of aggregate throughput ignore the last 20% of the test (since during that time the throughput is close to zero).  Because at the beginning of tests very few peers are downloading the file (it hasn't reached steady-state), the first 20% is also ignored. Peers linger, serving the file, for 20 seconds after a download.
 
 % todo double check 20% note there
 
-We first run tests using traditional client-server transfer, to establish a base line.  Client-server download speeds increase as expected--almost linearly with load, because outgoing bandwidth is divided among all incoming clients (Fig.~\ref{figs:client_server_download_times}).
+We first run tests using traditional client-server transfer, to establish a base line from which to compare ourselves.  Client-server download times increase as expected--almost linearly with load; outgoing bandwidth is divided among all incoming clients (Fig.~\ref{figs:client_server_download_times}).
 
 <%= figure 'pics/vr_unnamed316651_cs_stress_test/client_download_PercentileLine.pdf',
 :label => 'figs:client_server_download_times', :caption => 'Traditional client server download times' %>
@@ -14,22 +14,19 @@ We first run tests using traditional client-server transfer, to establish a base
 <%= figure 'pics/vr_unnamed316651_cs_stress_test/server_speed_PercentileLine.pdf',
 :label => 'figs:client_server_server_load', :caption => 'Client Server load on the origin server' %>
 
-We next test our system against the same loads.  
-Each peer lingers for 20s, file block size is set to 100KB, origin minimum allowable speed (R) set at 256KB/s, window to calculate R (W) at 2 seconds, and first-byte timeout (T) of 1s.  
+We next test our system against the same load.  For default parameters, we set the file's block sizes to 100KB, set origin minimum allowable speed (R) to 256KB/s, (W) to 2 seconds, and first-byte timeout (T) to 1s.  
 
-Download time stays constant at around 10s, regardless of load, thus surpassing our initial speed goal of a 2x increase (Fig. \ref{figs:yanc_download_times}).
+Download time of our system stays constant at around 10s, regardless of load, thus easily surpassing our initial speed goal of a 2x increase (Fig. \ref{figs:yanc_download_times}).
 
 <%= figure 'pics/vr_medium_p2p_load_tak4/client_download_PercentileLine.pdf',
 :label => 'figs:yanc_download_times', :caption => 'P2P Download Times' %>
 
-Server load is also much improved (Fig. \ref{figs:yanc_server_load}), as more
-peers serve the file, though the server still serves the file to some peers.
+Server load actually decreases under a higher load (Fig. \ref{figs:yanc_server_load}), as more peers serve the file, though the server still serves to some peers.
 
 <%= figure 'pics/vr_medium_p2p_load_tak4/server_speed_PercentileLine.pdf',
 :label => 'figs:yanc_server_load', :caption => 'P2P Server Load'%>
 
-Also interesting is the increasing role that P2P
-transfer has with higher load.  Each peer downloads the file both from the origin and its peers, however, after about 10 peers/second almost 100\% of the file serving is being done via p2p (Fig.~\ref{figs:yanc_from_client_percentile}).
+Also correlated to that is the increasing role that P2P transfer has with higher load.  Each peer downloads the file both from the origin and its peers, however, after about 10 peers/second almost 100\% of the file serving is being done via p2p (Fig.~\ref{figs:yanc_from_client_percentile}).
 <%= figure 'pics/vr_medium_p2p_load_tak4/percent_from_clients_PercentileLine.pdf', :label => 'figs:yanc_from_client_percentile', :caption => 'P2P percent received from peers' %>
 
 %% TODO could put in some cool graphs of a single run of p2p vs. cs--at least the first few files that is quite interesting :)
@@ -40,10 +37,8 @@ transfer has with higher load.  Each peer downloads the file both from the origi
 
 \section{Varying metrics}
 \subsection{Time to wait for first byte before transitioning to P2P}
-Theoretically, if a peer can download a file at "full speed" from the origin server, it does not help to also try to download the file from peers.
-Our system attempts to allow for this by specifying parameters for
-the conditions under which it will switch to a mixed (p2p + origin) style download.
-We wanted to understand the impact these settings have on download speeds, in order to explore the dynamics of the system.
+Theoretically, if a peer can download a file at "full speed" from the origin server, it does not help to also try to download the file from peers at the same time.  Our system attempts to allow for this by specifying parameters for the conditions under which it will switch to a mixed (p2p + origin) style download.
+We test for the impact these settings have on download speeds, in order to explore the dynamics of the system.
 We first test varying T, the time to wait for a first byte of a response before transitioning to P2P
 \footnote{By first byte we mean any byte received from the origin server--a header byte or a content byte--i.e. we exclude the TCP handshake packet for our experiment.}.  
 We expect that an extremely low value for this would cause transitioning too early and an
