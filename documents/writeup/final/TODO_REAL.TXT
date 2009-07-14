@@ -1,26 +1,26 @@
 actually really todo (in order of priority):
 
-thesis pics prettier those possible currently [auto trans]
-start going a few [one per ilab @ 2G]
-start re-running one
 
-update the thesis/pics to be accurate, up to specs [remove that one fella for now dr]
+points 5,6,7
+
+thesis pics better! :)
+
+start re-running stuffs
 
 
 make a final total draft that looks more appropro
-
-write a proxy that actually works :P
-
-re-run the "one" that required it. dr
 
 there was a future_work doc in the proposal...useful?
 
 double check 20% note
 
-add right legends [1,25,50,99 percentile] to graphs...
+ummm....dr was a "broken" test basically
+
+dw is the one we used with a "bad" server [too fast!]
 
 ---------------------------later todo (unordered):
 
+write a proxy that actually works :P
 
 You might try running at lower loads.  Maybe at a really low load,
 then dR becomes a factor.
