@@ -8,26 +8,26 @@ To generate load we run experiments for 100s, each time increasing the number of
 
 We first run tests using traditional client-server transfer, to establish a base line from which to compare ourselves.  Client-server download times increase as expected--almost linearly with load; outgoing bandwidth is divided among all incoming clients (Fig.~\ref{figs:client_server_download_times}).
 
-<%= figure 'pics/vr_unnamed316651_cs_stress_test/client_download_PercentileLine.pdf',
+<%= figure 'pics/vr_unnamed316651_cs_stress_test/client_download_Percentile_Line.pdf',
 :label => 'figs:client_server_download_times', :caption => 'Traditional client server download times' %>
 
-<%= figure 'pics/vr_unnamed316651_cs_stress_test/server_speed_PercentileLine.pdf',
+<%= figure 'pics/vr_unnamed316651_cs_stress_test/server_speed_Percentile_Line.pdf',
 :label => 'figs:client_server_server_load', :caption => 'Client Server load on the origin server' %>
 
 We next test our system with the same loads.  For parameters, we set file block sizes to 100KB, the origin minimum allowable speed (R) to 256KB/s, (W) to 2s, and the first-byte timeout (T) to 1s.
 
 The download times of peers stays constant at around 10s, regardless of load, surpassing our initial speed goal of a 2 fold increase (Fig. \ref{figs:yanc_download_times}).
 
-<%= figure 'pics/vr_medium_p2p_load_tak4/client_download_PercentileLine.pdf',
+<%= figure 'pics/vr_medium_p2p_load_tak4/client_download_Percentile_Line.pdf',
 :label => 'figs:yanc_download_times', :caption => 'P2P Download Times' %>
 
 Server load actually seems to decrease under a higher load (Fig. \ref{figs:yanc_server_load}), as more peers serve the file, though the server still serves\footnote{This may have been caused by a bug in mod\_bw, which effectively cut off speeds under high load.}.
 
-<%= figure 'pics/vr_medium_p2p_load_tak4/server_speed_PercentileLine.pdf',
+<%= figure 'pics/vr_medium_p2p_load_tak4/server_speed_Percentile_Line.pdf',
 :label => 'figs:yanc_server_load', :caption => 'P2P Server Load'%>
 
 Also related is the increasing role that P2P transfer has.  Under low load peers tend to download the file strictly from the origin, however, after about 10 peers/second almost 100\% of the transfer is being done via p2p (Fig.~\ref{figs:yanc_from_client_percentile}).
-<%= figure 'pics/vr_medium_p2p_load_tak4/percent_from_clients_PercentileLine.pdf', :label => 'figs:yanc_from_client_percentile', :caption => 'P2P percent received from peers' %>
+<%= figure 'pics/vr_medium_p2p_load_tak4/percent_from_clients_Percentile_Line.pdf', :label => 'figs:yanc_from_client_percentile', :caption => 'P2P percent received from peers' %>
 
 %% TODO could put in some cool graphs of a single run of p2p vs. cs--at least the first few files that is quite interesting :)
 
@@ -45,9 +45,9 @@ extremely high value would cause transitioning too late, both being
 sub optimal.  The results show just that (Fig. \ref{figs:dt_variance_download_times}).  Also interesting is that as T
 was increased, the peers download a higher percentage of the file from the origin (Fig. \ref{figs:dt_variance_percent_from_clients}).
 
-<%= figure 'pics/vr_do_dts_take6/client_download_PercentileLine.pdf', :label => 'figs:dt_variance_download_times', :caption => 'Download times by varying T, the time to wait for first byte' %>
+<%= figure 'pics/vr_do_dts_take6/client_download_Percentile_Line.pdf', :label => 'figs:dt_variance_download_times', :caption => 'Download times by varying T, the time to wait for first byte' %>
 
-<%= figure 'pics/vr_do_dts_take6/percent_from_clients_PercentileLine.pdf', :label => 'figs:dt_variance_percent_from_clients', :caption => 'Percent downloaded from client, varying T' %>
+<%= figure 'pics/vr_do_dts_take6/percent_from_clients_Percentile_Line.pdf', :label => 'figs:dt_variance_percent_from_clients', :caption => 'Percent downloaded from client, varying T' %>
 
 \subsection{Server minimum allowed speed}
 We next vary R, the server minimum allowed speed. This value is calculated by averaging the amount received over the previous W seconds.  If this rate falls below R, then we transition to a P2P transfer.  We first run this experiment by varying R from 32KB/s to 1MB/s, and leave T set to 1s, a reasonable value.  The results from this first run were almost always flat (Fig. \ref{figs:dr_download_time}).  It turns out that R is not making a difference at all--the T parameter of one second caused almost all clients to transition immediately, thus surprisingly showing that R is not as useful as we had expected.
@@ -57,7 +57,7 @@ We next vary R, the server minimum allowed speed. This value is calculated by av
 %\subsection{Server speed average}
 %
 %We next vary W, the seconds of recent history to track R.  Our hypothesis is that a too small W will be too sensitive and thus inaccurate.  Surprisingly, this didn't appear to be the case.  A smaller value for W is more effective, presumably because it alerted peers more quickly to potential server slowdown.  (Fig. \ref{figs:vr_dw_download_times}).
-%<%= figure 'pics/vr_dw_lots_opendht/client_download_Percentile_Line.pdf', :label => 'figs:vr_dw_download_times', :caption => 'Download times by varying W' %>
+<%#= figure 'pics/vr_dw_lots_opendht/client_download_Percentile_Line.pdf', :label => 'figs:vr_dw_download_times', :caption => 'Download times by varying W' %>
 
 \section{Effect for a full web page}
 We next run an experiment that is more indicative of real-world downloads.  The normal pattern for the web is to access some root web page (typically dynamic) which references several other small (typically static) objects, such as images, javascript, flash, etc.  This is the case for the BYU web site\footnote{Snapshot 2007}, which has a medium sized main page that links to over 10 small other objects.  We therefore run an experiment to see how well our protocol downloads one page followed by several other, smaller pages.  The expected result is that downloading multiple pages will be slower than downloading a single page since it will put more stress on the DHT, which proved correct (Fig. \ref{figs:multiple_files_p2p_download_times_all_files}).

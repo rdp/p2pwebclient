@@ -29,19 +29,19 @@ def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil
          # is there an xmin?
          plot.terminal 'pdf'
          plot.output name
-	 puts 'writing to ' + name
-
          plot.data << Gnuplot::DataSet.new( [xs] + percentiles ) do |ds|
             ds.using = "1:3:2:6:5"
-            ds.with = "candlesticks title '1,25,50,75,99 percentiles' "
+            ds.with = "candlesticks title '1,25,75,99 percentiles' "
             #ds.notitle
          end
 
-         # add the median...kind of...since all it is is a line
+         #add the median...kind of...since all it is is a line
          plot.data << Gnuplot::DataSet.new( [xs] + percentiles ) do |ds|
-            ds.using = "1:4:4:4:4"
-            ds.with = "candlesticks lt -1"
-            ds.notitle
+         #   ds.using = "1:4:4:4:4"
+         #   ds.with = "candlesticks lt -1"
+         #   ds.notitle
+	     ds.with = "lines title '50 percentile'"
+	     ds.using = "1:4" # just the median
          end
 	 plot.boxwidth box_width
 
@@ -74,10 +74,7 @@ def do_file filename, xlabel = nil, ylabel = nil
 
    plot xs, percentiles, xlabel, ylabel
 
-
-
 end
-
 
 if $0 == __FILE__
    module DBChecker extend OptiFlagSet
@@ -88,7 +85,8 @@ if $0 == __FILE__
    end
 
    do_file ARGV.flags.file if ARGV.flags.file
-   if ARGV.flags.dir
 
+   if ARGV.flags.dir
+     raise 'no implemented'
    end
 end
