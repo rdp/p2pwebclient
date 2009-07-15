@@ -65,7 +65,7 @@ if $0 == __FILE__
      "upload bytes %'iles'" => ['Bytes/S', 'upload bytes'], 
      "instantaneous tenth of second throughput %'iles'" => ['Bytes/S', 'total throughput'],
      'dht removes' => ['S', 'dht_Remove_Percentile_Line'],
-     "percentiles of percent received from just peers (not origin)" => ['% of File', 'percent_from_clients_PercentileLine']} do
+     "percentiles of percent received from just peers (not origin)" => ['% of File', 'percent_from_clients_Percentile_Line']} do
 
     y, this_output_filename = y_and_this_output_filename
     data = all.delete name
