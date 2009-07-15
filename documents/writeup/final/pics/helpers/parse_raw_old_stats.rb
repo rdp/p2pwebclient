@@ -86,6 +86,7 @@ if $0 == __FILE__
         columns[i] << setting
       }
     }
+    puts "plotting", xs.inspect, columns.inspect, "to", 
     plot xs, columns, this_output_filename + '.pdf', x, y
   end
   puts 'remain', all.keys.inspect, "\n\n\n"
