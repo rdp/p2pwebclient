@@ -44,7 +44,7 @@ end
 
 if $0 == __FILE__
   require File.dirname(__FILE__) + '/gnuplot_percentiles'
-  require File.dirname(__FILE__) + '/enumerable-extra' # pulled in from a gem
+  require File.dirname(__FILE__) + '/sane/sane'
   puts 'syntax: raw file name'
   raise unless ARGV[0]
   all = parse File.read(ARGV[0]) # output is currently like
@@ -86,7 +86,7 @@ if $0 == __FILE__
         columns[i] << setting
       }
     }
-    puts "plotting", xs.inspect, columns.inspect, "to", 
+    puts "plotting", xs.inspect, columns.inspect, "to", this_output_filename 
     plot xs, columns, this_output_filename + '.pdf', x, y
   end
   puts 'remain', all.keys.inspect, "\n\n\n"

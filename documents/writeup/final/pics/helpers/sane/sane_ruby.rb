@@ -1,8 +1,13 @@
+# doesn't work with implicit .rb yet...
+# require 'require_all'
 
+
+# requires files relative to the current file
+# a la require_rel 'lib/abc'	  
 # currently accepts either a glob [something with * in it]
-# or a filename
+# or a full filename, like require
 def require_rel glob # we don't allow for requiring directories currently :)
-  dir = File.dirname(caller[0]) + '/'
+  dir = File.dirname(caller[0]) + '/' # their __DIR__
   if glob.include? '*'
     files = Dir[dir + glob]
   else
@@ -17,6 +22,8 @@ def require_rel glob # we don't allow for requiring directories currently :)
   end
 end
 
+
+# prints output with a carriage return
 def println *args
  print *args
  puts
@@ -36,3 +43,5 @@ doctest: Also,  like a normal require, you can leave off the .rb suffix
 => 1
 
 =end
+
+require_rel 'enumerable-extra' # for 1.9 compat.
