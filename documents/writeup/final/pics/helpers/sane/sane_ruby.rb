@@ -44,4 +44,10 @@ doctest: Also,  like a normal require, you can leave off the .rb suffix
 
 =end
 
+class Object
+  def in? collection
+    collection.include? self
+  end
+end
+
 require_rel 'enumerable-extra' # for 1.9 compat.
