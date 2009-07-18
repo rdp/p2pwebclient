@@ -23,7 +23,9 @@ class P2PPlot
 
       if(xs2)
         assert(percentiles2)
-        assert(xrange == (xs2.last - xs2.first)) # sanity check
+        # sanity check of matching x axis disabled for now [sigh]
+        # assert(xrange == (xs2.last - xs2.first))
+        xrange = [xrange, xs2.last - xs2.first].max
       end
 
       Gnuplot.open do |gp|
