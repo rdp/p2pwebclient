@@ -24,7 +24,7 @@ def do_file filename, xlabel = nil, ylabel = nil
   end
   puts "percentiles are", percentiles.inspect, xs.inspect
 
-  plot xs, percentiles, xlabel, ylabel
+  P2PPlot.plot xs, percentiles, xlabel, ylabel
 
 end
 

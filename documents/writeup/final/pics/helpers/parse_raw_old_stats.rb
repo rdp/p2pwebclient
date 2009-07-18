@@ -29,7 +29,7 @@ def parse large_string
     elsif line =~ five_numbers
       numbers = [$1.to_f, $2.to_f, $3.to_f, $4.to_f, $5.to_f]
     else
-      puts 'ignoring line', line 
+      puts 'ignoring line', line
     end
     if name and setting and numbers
       puts "adding", 'line', line, 'name', name, 'setting', setting, 'numbers', numbers if $VERBOSE
@@ -48,44 +48,60 @@ if $0 == __FILE__
   require File.dirname(__FILE__) + '/gnuplot_percentiles'
   require 'rubygems'
   require 'sane'
-  puts 'syntax: raw file name'
-  raise unless ARGV[0]
-  all = parse File.read(ARGV[0]) # output is currently like
+  puts 'syntax: raw file name1 [raw file name2 if you want comparison...]'
+  raise unless ARGV[0] && !ARGV[0].in?(['--help', '-h'])
 
   x = 'Peers per Second' # this one depends on the directory you're in, I guess [TODO make command line?]
 
-  for name, y_and_this_output_filename in {"download times %'iles'" => ['seconds', 'client_download_Percentile_Line'], 
-     "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Bytes/S', 'server_speed_Percentile_Line'],  
 
-     # server upload is duplicated for some reason in newer stuffs
+  all = parse File.read(ARGV[0])
+  if ARGV[1]
+    all2 = parse(File.read(ARGV[1]))
+  else
+    all2 = {}
+  end
+  for name, y_and_this_output_filename in {"download times %'iles'" => ['seconds', 'client_download_Percentile_Line'],
+    "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Bytes/S', 'server_speed_Percentile_Line'],
 
-     "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Bytes/S', 'server_speed_Percentile_Line'],  
-     "upload bytes %'iles'" => ['Bytes/S', 'upload bytes'], 
-     "instantaneous tenth of second throughput %'iles'" => ['Bytes/S', 'total throughput'],
-     'dht removes' => ['S', 'dht_Remove_Percentile_Line'],
-     "percentiles of percent received from just peers (not origin)" => ['% of File', 'percent_from_clients_Percentile_Line']} do
+    # server upload is duplicated for some reason in newer stuffs
+
+    "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Bytes/S', 'server_speed_Percentile_Line'],
+    "upload bytes %'iles'" => ['Bytes/S', 'upload bytes'],
+    "instantaneous tenth of second throughput %'iles'" => ['Bytes/S', 'total throughput'],
+    'dht removes' => ['S', 'dht_Remove_Percentile_Line'],
+  "percentiles of percent received from just peers (not origin)" => ['% of File', 'percent_from_clients_Percentile_Line']} do
 
     y, this_output_filename = y_and_this_output_filename
-    data = all.delete name
-    next unless data
+
+    data1 = all.delete name
+    data2 = all2.delete(name)
+    next unless data1
 
     puts 'got', name, y, this_output_filename if $VERBOSE
 
-    # we have to split it into lines
+    # we have already to split it into lines
     # like
     # 1 10 20 30 40 50
     # 2 10 20 30 40 50
     # => [1, 2], [10, 10], [20, 20]..
-    xs = data.sort.map :first # the easy one
-    columns = []
-    data.sort.map(:last).each{ |row|
-      row.each_with_index{|setting, i|
-        columns[i] ||= []
-        columns[i] << setting
+    # so now map it to what gnuplot expects...
+    xss = []
+    columnss = []
+    for data in [data1, data2]
+      next unless data
+      xss << data.sort.map(:first) # the easy one
+      columns = []
+      data.sort.map(:last).each{ |row|
+        row.each_with_index{|setting, i|
+          columns[i] ||= []
+          columns[i] << setting
+        }
       }
-    }
-    puts "plotting", xs.inspect, columns.inspect, "to", this_output_filename 
-    plot xs, columns, this_output_filename + '.pdf', x, y
+      columnss << columns
+    end
+    puts "plotting", xss.inspect, columnss.inspect, "to", this_output_filename
+    P2PPlot.plot xss[0], columnss[0], this_output_filename + '.pdf', x, y, :xs2 => xss[1], :percentiles2 => columnss[1]
+
   end
   puts 'remain', all.keys.inspect, "\n\n\n"
 end

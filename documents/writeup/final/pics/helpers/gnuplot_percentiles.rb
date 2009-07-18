@@ -1,7 +1,9 @@
 require 'rubygems'
-ENV['RB_GNUPLOT'] = '\cygwin\bin\gnuplot'# tell it where it is
-require 'gnuplot'
+require 'sane' # #assert
+require 'gnuplot' # rogerdpack-gnuplot
+ENV['RB_GNUPLOT'] = '\cygwin\bin\gnuplot'# tell it where it is by default...
 require 'optiflag'
+require 'arguments' # rogerdpack-arguments
 
 # gnuplot expects something like
 # x    1st     25th    50th   75th    99th
@@ -14,27 +16,41 @@ require 'optiflag'
 #d = [2.4, 3.5, 5.5]
 #e = [4,4,6]
 #f = [6,5.5, 6.5] then pass in [x,b,c,d,e,f]
+class P2PPlot
+  class << self
+    def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil, xs2 = nil, percentiles2 = nil
+      xrange = xs.last - xs.first
 
-def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil
-  xrange = xs.last - xs.first
-  Gnuplot.open do |gp|
-    Gnuplot::Plot.new( gp ) do |plot|
+      if(xs2)
+        assert(percentiles2)
+        assert(xrange == (xs2.last - xs2.first)) # sanity check
+      end
 
-      #plot.title  "Example"
-      plot.ylabel ylabel if ylabel
-      plot.xlabel xlabel if xlabel
-      plot.xrange "[0:#{ xs.last + 1}]"
-      #    plot.yrange "[0:10]" auto calculated
-      # is there an xmin?
-      plot.terminal 'pdf'
-      plot.output name
+      Gnuplot.open do |gp|
+        Gnuplot::Plot.new( gp ) do |plot|
 
-      add_percentile_plot plot, [xs] + percentiles
+          #plot.title  "Example"
+          plot.ylabel ylabel if ylabel
+          plot.xlabel xlabel if xlabel
+          plot.xrange "[0:#{ xs.last + 1}]"
+          #    plot.yrange "[0:10]" auto calculated
+          # is there an xmin?
+          plot.terminal 'pdf'
+          plot.output name
 
-      box_width = xrange*3/100
-      plot.boxwidth box_width
+          add_percentile_plot plot, [xs] + percentiles
+          if(xs2)
+            add_percentile_plot plot, [xs2] + percentiles2
+          end
 
+          box_width = xrange*3/100
+          plot.boxwidth box_width
+
+        end
+      end
     end
+
+    named_args_for :plot
   end
 end
 
