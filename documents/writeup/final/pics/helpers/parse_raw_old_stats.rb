@@ -44,7 +44,8 @@ end
 
 if $0 == __FILE__
   require File.dirname(__FILE__) + '/gnuplot_percentiles'
-  require File.dirname(__FILE__) + '/sane/sane'
+  require 'rubygems'
+  require 'sane'
   puts 'syntax: raw file name'
   raise unless ARGV[0]
   all = parse File.read(ARGV[0]) # output is currently like
