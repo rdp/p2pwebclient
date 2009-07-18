@@ -9,7 +9,9 @@ doctest: parses a conjunto right
 => true
 =end
 
-
+# this one just parses out the file
+# into something like
+# {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}...}
 def parse large_string
   setting = nil
   name = nil
@@ -49,13 +51,8 @@ if $0 == __FILE__
   puts 'syntax: raw file name'
   raise unless ARGV[0]
   all = parse File.read(ARGV[0]) # output is currently like
-  #  {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}...}
-
 
   x = 'Peers per Second' # this one depends on the directory you're in, I guess [TODO make command line?]
-
-["percentiles of percent received from just peers (not origin)", "upload bytes %'iles'", "server upload distinct seconds [instantaneous server upload per second] %'iles'", "download times %'iles'", "instantaneous tenth of second throughput %'iles'"]
-
 
   for name, y_and_this_output_filename in {"download times %'iles'" => ['seconds', 'client_download_Percentile_Line'], 
      "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Bytes/S', 'server_speed_Percentile_Line'],  
