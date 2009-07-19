@@ -1,22 +1,21 @@
 #!/usr/bin/env ruby
 # ltodo profile whole thing :) 
 # todo: skip some of the graphs--who cares...except there are some stats in there that aren't shown in vary parameter graphs yet--single things. Leave them :)
-# ltodo: do some 'real' forking graphs--some overlay...could wrap the thing in a larger fork...perhaps...
-# todor: have the vary parameter graphs be partials, too, then we can use them as stats..
 # ltodo: still figure out more 'tight' close stats--does graphing graphing take forever? 
-require 'unique_require'
-require 'cs_and_p2p_client'
 require 'constants'
+require 'cs_and_p2p_client'
 require './server_slow_peer.rb' # ltodo better TTL maybe...5hr. total 
 require 'listener'
 require 'resolv-replace'
 require 'optparse'
 require 'facets' # just for driver :)
 # ltodo improvement don't just save file size header info on the DHT, save everything :)
+
 $shouldDoGraphsSingle = true # ltodo move down
 $shouldDoVaryParameterGraphs = true
 load 'constants.rb'
 require 'benchmark'
+require 'forky'require 'benchmark'
 require 'forky'
 
 if clientHasGraphLibraries # ltodo with driver it sends the 'old old' time when it finally fires 'em
