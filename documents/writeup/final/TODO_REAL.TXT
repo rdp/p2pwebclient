@@ -1,13 +1,10 @@
 actually really todo (in order of priority):
 
-rewrite conclusion
 rewrite whole thing
 add titles to that one graph
 send another email
 
 start re-running stuffs
-
-make a final total draft that looks more appropro
 
 there was a future_work doc in the proposal...useful?
 
@@ -19,9 +16,10 @@ dw is the one we used with a "bad" server [too fast!]
 
 "real" formatting
 
----------------------------later todo (unordered):
+profile single run
 
-write a proxy that actually works :P
+appendix
+---------------------------later todo (unordered): possibly never
 
 You might try running at lower loads.  Maybe at a really low load,
 then dR becomes a factor.
@@ -51,9 +49,7 @@ do a test against apache with 4 max. (large file)
 
 -- after thesis
 release a faster ruby [?]
-
 Include one picture of 'naive' start to end scatter
-one picture of 'origin reversion'
-one picture of start to end scatter 5 threads -- faster
 
+a picture showing how with openDHT, a few keys really lag
 

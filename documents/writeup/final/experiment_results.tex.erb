@@ -80,11 +80,3 @@ This test was of a flash flood downloading a large file, which is rare.  In norm
 
 \section{Number of peers} We next vary the number of peers that each peer downloads from.  We use the same 30MB file size.  A higher number of concurrent peers increases download speed (Fig. \ref{figs:large_file_number_of_concurrent_blocks}).  
 <%= figure 'pics/vr_vary_blocks_large_file/client_download_Percentile_Line.pdf', :caption => 'Download times varying number of concurrent peers', :label => 'figs:large_file_number_of_concurrent_blocks' %>
-
-\section{Current limitations}
-Several improvements could be made to help this protocol.  It could make smarter use of the DHT.  For instance, currently all peers list themselves under a single key per block.  This could cause the owner of that key to become overloaded if the crowd becomes too large.  Also it can cause staleness if peers go offline without removing themselves from the list first (currently they issue a remove command when their linger time is up).
-
-We also currently connect once to the origin from each peer--more aggressive back off techniques could lessen the load, as also re-using connections to the origin would decrease startup latency.
-
-We leave these for future work.
-%Multiple file grew exponentially--we need to figure out a way to avoid that!
