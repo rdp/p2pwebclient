@@ -1,0 +1,16 @@
+% currently not included in the Thesis.
+
+A few more aggressive optimizations would also be potential in a download system such as this.  For example TCP doesn't ramp-up as quickly as one would like it to for new connections.  Transferring over UDP with a custom-built protocol might be faster\footenote{For example, Google called recently for a new version of TCP http://www.pcworld.com/article/167360/whats\_behind\_googles\_speed\_push.html}
+
+Another very interesting idea would be also include some means of ``cataloging'' existing files on the Internet (i.e. automatic mirror creation lists of existing content).  For example if a download is offered by 10 sources, being able to instantly know and download from all 10 is like having 10 instant seeds.  There is a file type called a ``univeral download'' (or something of the sort) that lists mirrors for certain files, as well as BitTorrent itself has a couple of extension protocol for using HTTP mirrors as seeds, however, these are not automatically setup and would require server changes.  GetRight also does something similar by automatically binding files to mirrors.  The author attempted to convince GetRight of the usefulness of an automatic BitTorrent style download, but it has yet to appear, and may be for commercial use only.
+
+% BitTorrent is described as ``still not for the faint in heart'' here: http://download.cnet.com/uTorrent/3000-2196\_4-10528327.html
+
+Another not explored venue is security.  For example how do you know a file is the same as that found on the origin server?  Some ideas would be to *sample* the origin server for pieces, to make sure they match, to note that some FTP sites have md5 capabilities on their files (and some web servers do), to scrape websites to look for published .md5's, to create an XOR of the contents of blocks so that one could compare md5's as they come in, to use some type of P2P trust system, etc. etc.  For now our system assumes trustworthy clients.  There's also an HTTP header returned per file that might be useful.  One could also have designated servers act as ``sentinels'' downloading files only to verify their md5 sums (though this obviously breaks down with scale and very large files, it has potential).
+
+Another interesting merger would be to combine BitTorrent with this protocol, for downloads.  Or to just use the BitTorrent protocol, or what not.
+
+Another potential it also has is, since it requires use of a proxy, one could use it to implement a new dns layer, a la p2p://name.files or even http://name.p2p or what not.  One could also use this system to ``publish'' files which are published then no longer stored locally [i.e. rely solely on downloaders to continue publishing files].
+
+
+

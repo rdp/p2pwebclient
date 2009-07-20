@@ -1,6 +1,6 @@
 require 'rubygems_f'
 require 'sane'
-require_rel 'gnuplot_percentiles'
+req_rel 'gnuplot_percentiles'
 
 def do_file filename, xlabel = nil, ylabel = nil
   # expected something like [filename, x axis, y axis]

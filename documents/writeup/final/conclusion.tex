@@ -1,9 +1,14 @@
 
 \section{Conclusion}
-OpenDHT at times can be slow.  On the order of tens of seconds, sometimes timing out after 90 or 200 seconds.  This should be taken into account when building a system which uses it.  In general they are reliable, and quick enough for things like web download, but should be treated gently to not overload them.
+\subsection{Usefulness}
+A question is to whom this type of system would be most useful.  Flash crowds would be one place where it would help (if only with bandwidth), because the static parts of a web page would be shared among peers.  Another would be among downloaders of large file that are not otherwise shared via P2P.  It would not help a peer that is cpu bound.  Its largest niche might end up being sharing larger files [like operating system downloads] since it allows users the benefit of multiple source download without having to ``guess'' and choose the nearest download server.  It would also help if a server were extremely bandwidth limited.  Overall it appears to be a useful addition to the Internet ecosystem.
 
+Another useful lesson is that OpenDHT at times can be slow.  On the order of tens of seconds, sometimes timing out after 90 or 200 seconds.  This should be taken into account when building a system which uses it.  The other lesson is that it appears to overload easily, so some balance must be found\footnote{With our system, we accomodated for the slow key lookup times by looking up several keys, all of which were redundant to the first.  Unfortunately this tended to overload gateways and slow overall lookup times}.
 
-Other possible optimizations and existing problems exist that could be treated in future work.
+It could make smarter use of the DHT, as well.  For instance, currently all peers list themselves under a single key per block.  This could cause the owner of that key to become overloaded if the crowd becomes too large.  Also it can cause staleness if peers go offline without removing themselves from the list first (currently they issue a remove command when their linger time is up).
+%Multiple file grew exponentially--we need to figure out a way to avoid that!
+We currently connect once to the origin from each peer per block--more aggressive back off techniques could lessen the load, as also re-using connections to the origin would decrease startup latency.
+
 
 Currently our system saves the list of peers per block all in a single key.  This could cause the owner of that single key to become overloaded if the crowd becomes too large.  Also it can cause staleness of the list if dead peers go offline without removing themselves from the list
 first (currently they issue a remove command when their linger time is up).  A better algorithm for this could be designed and tested, for example one that queries keys based on time (like one for peers within the last 10s, one for peers within the last 100s, etc).
@@ -12,23 +17,23 @@ We also currently still connect to the origin from each peer, causing ourselves 
 
 Clients with a slow openDHT connection, in a system with a small linger time, very possibly can never connect to a live peer.  If a client has a slow openDHT 'put' speed, it also can exceed its linger time before it appears on the list of peers, and therefore serve nothing.  One option to attempt to overcome this might be a kind of subscribe system, in which peers without certain blocks list themselves, so that those who do get a certain block can find those peers and quickly connect to them and upload the block, before linger time expires. 
 
-We do not attempt to cover the case of very very many peers connecting to the origin host at exactly the same time.  Ours anticipates some difference in timing of peer downloads, which is reasonable. Limiting the load on the origin server, per block, or coordinating among peers of which bytes are requested, to avoid duplication, might be answers to this problem.
+We do not handle well the case of very very many peers connecting to the origin host at exactly the same time.  Ours anticipates some difference in timing of peer downloads, which is reasonable. Limiting the load on the origin server, per block, or coordinating among peers of which bytes are requested, to avoid duplication, might be answers to this problem.
 
 Peers upload blocks of a file at the same time they are downloading others.  It might be worth putting some type of cap on upload speed while downloading a file, to allow for TCP to continue the download at top speed.  It has been noted that peer upload download speed is limited by upload speed in some cases \cite{google_note}.
 
 We also do not examine how to maximize the effectiveness of such a system for very small hosts, such as dial-up modem users.  Maybe it wouldn't help them, but maybe it would.
 
-It should be noted that BitTorrent performs sub-block streaming, by requesting sub-blocks of a file from diferent peers, and performing such a request before the previous request has finished, thereby avoiding latency in requesting blocks.  HTTP/1.1 does not seem to allow us this privilege, so it would be interesting to design an HTTP extension that did.
+%It should be noted that BitTorrent performs sub-block streaming, by requesting sub-blocks of a file from diferent peers, and performing such a request before the previous request has finished, thereby avoiding latency in requesting blocks.  HTTP/1.1 does not seem to allow us this privilege, so it would be interesting to design an HTTP extension that did.
 
 Using HTTP allows us to make our peers useful as fall backs for future peers, and allows us to keep with standards thus making compatibility among future clients easier.  We are able to use it by requesting the original file name from peers, who cache it as such.  This disallows us from being able to share blocks among files which are the same, however.
 
-Using the oldest peers first in the DHT has some unpleasant consequences--it means that we tend to use peers that are older, and more likely to exceed their linger time, especially if y peer has a slow openDHT connection.  A better system would be nice.
+Establishing some system of listing redundant files on the internet itself would also be useful [ex: which hosts are hosting large file X].  GetRight 
+
+The DHT currently lists the oldest peers with a block first (even if they're actually no longer serving it).  This means we tend to use peers that are older, and more likely to exceed their linger time, especially if a peer has a slow openDHT connection.  We also tend to hammer the first few peers to do most of the sharing.  A better system would be nice.  
 
 We do not test this system with a true 'internet wide' test--i.e. many multiple files being requested simultaneously, and therefore it might not accomodate such.
 
 Using redundant blocks causes some wasted data to come in, so splitting up the blocks into subblocks, as BitTorrent does, might result in a small speed gain.
-
-There is a problem with using single lists per block in that it causes redundancy in the DHT.  Also when peer perform multiple simultaneous commands using openDHT, openDHT tends to suddenly have suboptimal performance for some reason.  Overcoming this would be nice.  One possibility would be to combine the different block lists into one might speed things.  You could also use bloom filters to make an efficient DHT listing of the blocks available.
 
 Note also that connecting several times to the origin (even if no peers were present), at times helps with download speeds, if only because of the shaping algorithms employed by some internet providers.
 
@@ -37,3 +42,7 @@ It would be interesting to create a solution similar to this one that integrated
 When building a better rendezvous system, it might be nice to examine that used in industry (BitTorrent, Azureus, Dijjer) to see how they accomplish the same.
 
 Similar to torrentFlux\cite{torrentFlux} it might be interesting to build something in php which could serve the appropriate files or download them.
+
+Future goals might include ensuring the validity of files and providing explicit incentives.
+
+We leave these for future work.
