@@ -1,7 +1,9 @@
 actually really todo (in order of priority):
 
-
-starred points 5,6,7 (combine graphs for one of them)
+rewrite conclusion
+rewrite whole thing
+add titles to that one graph
+send another email
 
 start re-running stuffs
 
@@ -14,6 +16,8 @@ double check 20% note
 ummm....dr was a "broken" test basically
 
 dw is the one we used with a "bad" server [too fast!]
+
+"real" formatting
 
 ---------------------------later todo (unordered):
 
@@ -48,12 +52,8 @@ do a test against apache with 4 max. (large file)
 -- after thesis
 release a faster ruby [?]
 
-
-
-
-
 Include one picture of 'naive' start to end scatter
 one picture of 'origin reversion'
 one picture of start to end scatter 5 threads -- faster
 
-Contributions of this thesis:  We have shown how to use a generic DHT to drive a scalable p2p web cache system. 
+
