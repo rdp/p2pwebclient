@@ -73,7 +73,5 @@ Our proposed solution emphasizes a client-only system that automatically switche
 \item It should be fast for small files.
 \end{enumerate}
 
-The basic system will be to connect interested peers with one another via a DHT that stores peers lists, and the peers themselves will become part of the DHT.  They will store only peer information on the DHT, not blocks themselves.
-
 %A fundamental design decision is also whether to download the contents of blocks from peers or from the DHT itself; peers could store the block contents, and have the DHT serve as a lookup of peers, or could store the block contents on the DHT itself.  The trade-off is that having the blocks on the DHT puts more stress on the DHT and relies on members of the DHT for contributing bandwidth, which is intrusive.  Imagine for instance caching portions of a file on your personal computer which you never downloaded for yourself, and which you are then sharing with others.  Members of the DHT would thus intrusively cache information for which they are not interested.  We therefore choose the case of having peers register themselves on a DHT as being willing to serve blocks they own, and have clients download directly from peers.  This seems more indicative of a realistic web experience.
 
