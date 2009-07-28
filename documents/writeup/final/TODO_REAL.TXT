@@ -1,10 +1,14 @@
 ====================actually really todo (in order of priority):
 
-rewrite whole thing
+rewrite whole thing...yeah :)
 add titles to that one graph
 
 named arguments, does it with with 1.9.2?
+
 start re-running stuffs
+  integrate with git now
+  new distro to everywhere
+  setup apache again...boo!
 
 ummm....dr was a "broken" test basically
 
@@ -14,11 +18,11 @@ dw is the one we used with a "bad" server [too fast!]
 
 profile single run
 
+double check 20% note
+
 appendix with tons
 appendix with one
 appendix with "real future"
-
-double check 20% note
 
 ---------------------------later todo (unordered): possibly never
 
@@ -47,12 +51,10 @@ do a test against apache with 4 max. (large file)
 %% TODO make sure I use all my results' pics (one from each dir)
 
 %% ltodo: why does my large test have 20s DHT's? What in the world?
-%% ltodo fix large file transfer :) (backoff the origin, I'd wager)--
-%% LODO appendix with buckets and buckets of pics
+
+% ltodo: a single test with 20 blocks that shows "hey one block is dirt slow!"
+
+%% vltodo fix large file transfer :) (backoff the origin, I'd wager--but how really?)--
 
 -- after thesis
-release a faster ruby [?]
-Include one picture of 'naive' start to end scatter
-
-a picture showing how with openDHT, a few keys really lag
-
+release a faster compiled version of ruby
