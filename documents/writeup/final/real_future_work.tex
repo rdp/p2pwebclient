@@ -1,6 +1,6 @@
 % currently not included in the Thesis.
 
-A few more aggressive optimizations would also be potential in a download system such as this.  For example TCP doesn't ramp-up as quickly as one would like it to for new connections.  Transferring over UDP with a custom-built protocol might be faster\footenote{For example, Google called recently for a new version of TCP http://www.pcworld.com/article/167360/whats\_behind\_googles\_speed\_push.html--see also Tony Arcieri thought}.  
+A few more aggressive optimizations would also be potential in a download system such as this.  For example TCP doesn't ramp-up as quickly as one would like it to for new connections.  Transferring over UDP with a custom-built protocol might be faster\footnote{For example, Google called recently for a new version of TCP http://www.pcworld.com/article/167360/whats\_behind\_googles\_speed\_push.html--see also Tony Arcieri thought}.  
 
 Another very interesting idea would be also include some means of ``connecting'' existing mirrors on the Internet (i.e. automatic mirror creation lists of existing content).  For example if a download is offered by 10 sources, being able to instantly know and download from all 10 is like having 10 instant seeds.  There is a file type called a ``univeral download'' (or something of the sort) that lists mirrors for certain files, as well as BitTorrent itself has a couple of extension protocol for using HTTP mirrors as seeds, however, these are not automatically setup and would require server changes.  GetRight also does something similar by automatically binding files to mirrors.  The author attempted to convince GetRight of the usefulness of an automatic BitTorrent style download, but it has yet to appear, and may be for commercial use only, so not researchable.
 
@@ -29,3 +29,8 @@ Local peer discovery (via UDP) would also be useful (recent BYU thesis, existent
 Another interesting facet would be exploring its usefulness in streaming.  Another would be to explore privacy and/or security and/or trust issues.
 
 Using HTTP (which we do currently) allows us to theoretically make our peers into back-up servers for (non aware) clients via redirection (ex: CoopNet did this).
+
+We do not accomodate for proximity at all, which has been shown to increase download speed in BitTorrent (in several papers).
+
+
+It would be interesting to accomodate for the fact that most web usage is done reading, not downloading web pages--one could leverage that down time to do most of the uploading then.
