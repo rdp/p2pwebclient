@@ -25,7 +25,9 @@ appendix with one
 appendix with "real future"
 
 ---------------------------later todo (unordered): possibly never
-
+%% TODO could put in some cool graphs of a single run of p2p vs. cs--at least the first few files that is quite interesting :)
+%% TODO we never got the stats for > 25 peers/s for yanc transfer
+%% TODO re run this p2p load test--how did we get such dang good DHT times?
 there was a future_work file (doc?) in the proposal...useful?
 
 You might try running at lower loads.  Maybe at a really low load,

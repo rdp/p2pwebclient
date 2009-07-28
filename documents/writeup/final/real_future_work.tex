@@ -32,5 +32,6 @@ Using HTTP (which we do currently) allows us to theoretically make our peers int
 
 We do not accomodate for proximity at all, which has been shown to increase download speed in BitTorrent (in several papers).
 
-
 It would be interesting to accomodate for the fact that most web usage is done reading, not downloading web pages--one could leverage that down time to do most of the uploading then.
+
+We currently look up the list of peers per block, even if our current peers are listed redundantly on all lists.  Some form of gossip to determine which known peers have which blocks might decrease network overhead and increase speed.  Note that webtorrent suggests you zip up all related files into a single larger file, as an option.

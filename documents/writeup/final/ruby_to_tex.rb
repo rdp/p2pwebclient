@@ -24,7 +24,8 @@ class RubyToTex
   # translate something.abc to something [tex]
   def translate string, file_name_long
   	File.open(file_name_long.split('.')[0..-2].join('.'), 'w') do |f|
-  		f.write((ERB.new string).result(binding))
+	        result = (ERB.new string).result(binding)
+  		f.write("% auto-generated !!!!\n" + result)
   	end
   end
 
