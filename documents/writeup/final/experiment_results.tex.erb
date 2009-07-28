@@ -14,7 +14,7 @@ We first test using traditional client-server transfer, to establish a base line
 <%= figure 'pics/vr_unnamed316651_cs_stress_test/server_speed_Percentile_Line.pdf',
 :label => 'figs:client_server_server_load', :caption => 'Client Server load on the origin server' %>
 
-We next test our system using the same test load.  For default parameters, we set file block size to 100KB, the origin minimum allowable speed (R) to 256KB/s, R's calculation window (W) to 2s, and the first-byte timeout (T) to 1s.  Peers linger, serving the file, for 20 seconds after a download\footnote{After downloads complete, the peers check their file against its known CRC value to make sure there were no transmission flaws}.  Download times stay constant at around 10s for our system, regardless of load, surpassing our initial speed goal of a 2 fold increase (Fig. \ref{figs:yanc_download_times}).
+We next test our system using the same test load.  For parameters, we set file block size to 100KB, the origin minimum allowable speed (R) to 256KB/s, R's calculation window (W) to 2s, and the first-byte timeout (T) to 1s.  Peers linger, serving the file, for 20 seconds after a download\footnote{After downloads complete, the peers check their file against its known CRC value to make sure there were no transmission flaws}.  Download times stay constant at around 10s for our system, regardless of load, surpassing our initial speed goal of a 2 fold increase (Fig. \ref{figs:yanc_download_times}).
 
 <%= figure 'pics/vr_medium_p2p_load_tak4/client_download_Percentile_Line.pdf',
 :label => 'figs:yanc_download_times', :caption => 'P2P Download Times' %>
@@ -38,8 +38,7 @@ Also related is the increasing role that P2P transfer has.  Under low load peers
 Theoretically, if a peer can download at "full speed" from the origin server, it does not help to download the same file from peers.  Our system attempts to allow for this by specifying parameters for the conditions under which it will switch to a p2p download (though it should be noted that it's a switch to a mixed download, since it still downloads from the origin server if possible).
 We test the impact of varying each parameter, in order to explore the dynamics of the system.  In each test we run 1000 peers at 15/s (approximately 5 times the origin server's bandwidth).  We first vary T, the time to wait for a first response byte before transitioning\footnote{By first byte we mean any byte received from the origin server--a header byte or a content byte--i.e. we exclude the TCP handshake packet as counting as a first byte received.}.  
 We expect that an extremely low value will cause transitioning too early and an
-extremely high value will cause transitioning too late, both being
-sub optimal.  The results show just that (Fig. \ref{figs:dt_variance_download_times}).  Also, as T grew very large, the peers download a higher percentage of the file from the origin, as expected (Fig. \ref{figs:dt_variance_percent_from_clients}).
+extremely high value will cause transitioning too late, both sub optimal.  The results show just that (Fig. \ref{figs:dt_variance_download_times}).  Also, as T grew very large, the peers download a higher percentage of the file from the origin, as expected (Fig. \ref{figs:dt_variance_percent_from_clients}).
 
 <%= figure 'pics/vr_do_dts_take6/client_download_Percentile_Line.pdf', :label => 'figs:dt_variance_download_times', :caption => 'Download times varying T, the time to wait for first byte' %>
 
@@ -50,8 +49,10 @@ We next vary R, the server minimum speed. This value is calculated by averaging 
 
 <%= figure 'pics/vr_dr_take_8/client_download_Percentile_Line.pdf', :label => 'figs:dr_download_time', :caption => "Download times by varying R, the receive speed threshold" %>
 
-%\subsection{Server speed average}
-%
+TODO re-do with better settings
+
+\subsection{Server speed average}
+TODO vary W section, once I re-run the results
 %We next vary W, the seconds of recent history to track R.  Our hypothesis is that a too small W will be too sensitive and thus inaccurate.  Surprisingly, this didn't appear to be the case.  A smaller value for W is more effective, presumably because it alerted peers more quickly to potential server slowdown.  (Fig. \ref{figs:vr_dw_download_times}).
 <%#= figure 'pics/vr_dw_lots_opendht/client_download_Percentile_Line.pdf', :label => 'figs:vr_dw_download_times', :caption => 'Download times by varying W' %>
 

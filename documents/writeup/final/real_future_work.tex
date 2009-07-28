@@ -24,8 +24,10 @@ Similar to torrentFlux\cite{torrentFlux} it might be interesting to build someth
 
 Are there other BitTorrent plugin optimizations that would be useful? What about NAT traversal (or instant NAT traversal)?  Which DHT's are fastest/most apt for this work?
 
-Could you establish some type of ``push'' mechanism, i.e. you note in the DHT ``if anyone ever gets block X, I want it'' -- then when a peer completes a download of block X, it can immediately contact and serve that block? (Or something that doesn't require polling).  Also quite useful would be to have some dedicated caches (perhaps they can list themselves somewhere?) that you access after downloading an uncommon file--they'll cache it for you.  Related to this is CoDeen (and/or CoBlitz) will allow a single peer to download a file and as it receives blocks it will stream them out in a tree-like fashion to peers that have contacted it and are waiting for the block.  Also related is an idea to try to use commercial sites for this http://www.ruby-forum.com/topic/189241.
+Could you establish some type of subscribe or ``push'' mechanism, i.e. you note in the DHT ``if anyone ever gets block X, I want it'' -- then when a peer completes a download of block X, it can immediately contact and serve that block? (Or something that doesn't require polling).  Also quite useful would be to have some dedicated caches (perhaps they can list themselves somewhere?) that you access after downloading an uncommon file--they'll cache it for you.  Related to this is CoDeen (and/or CoBlitz) will allow a single peer to download a file and as it receives blocks it will stream them out in a tree-like fashion to peers that have contacted it and are waiting for the block.  Also related is an idea to try to use commercial sites for this http://www.ruby-forum.com/topic/189241.
 
 Local peer discovery (via UDP) would also be useful (recent BYU thesis, existent protocols that do this for BitTorrent).
 
 Another interesting facet would be exploring its usefulness in streaming.  Another would be exploring its use as a ``backup'' to no longer existing files.  Another would be to explore privacy and/or security and/or trust issues.
+
+Using HTTP (which we do currently) allows us to theoretically make our peers into back-up servers for (non aware) clients via redirection (ex: CoopNet did this).
