@@ -1,14 +1,10 @@
-actually really todo (in order of priority):
+====================actually really todo (in order of priority):
 
 rewrite whole thing
 add titles to that one graph
-send another email
 
+named arguments, does it with with 1.9.2?
 start re-running stuffs
-
-there was a future_work doc in the proposal...useful?
-
-double check 20% note
 
 ummm....dr was a "broken" test basically
 
@@ -18,8 +14,15 @@ dw is the one we used with a "bad" server [too fast!]
 
 profile single run
 
-appendix
+appendix with tons
+appendix with one
+appendix with "real future"
+
+double check 20% note
+
 ---------------------------later todo (unordered): possibly never
+
+there was a future_work file (doc?) in the proposal...useful?
 
 You might try running at lower loads.  Maybe at a really low load,
 then dR becomes a factor.
