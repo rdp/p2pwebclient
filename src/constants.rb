@@ -13,37 +13,37 @@ $:.unshift  File.dirname(__FILE__) + "/lib/arg_parser"
 Dir.glob('lib/gems_here/*').each{|d| $: << "#{d}/lib" }
 require 'facets/times'
 
-require 'create_named_parameters_wrapper'
+require 'arguments' # gem
 require 'base64'
 $:.unshift  File.dirname(__FILE__) + "/lib/em/lib" # eventmachine without the RUBY_LIB.
 $:.unshift  "eventmachine/svn/trunk/lib" # eventmachine local copy
 require 'digest/sha1'
 require 'lib/andand.rb'
+
 $:.unshift File.dirname(__FILE__) + '/lib/graphing/personal-gruff-0.2.8/lib' # gruff, for later
 
 require 'lib/ruby_useful_here.rb'
-if RUBY_PLATFORM =~ /mingw|win32/
-  $:.unshift  File.dirname(__FILE__) + "/ext/mingw"
-elsif RUBY_PLATFORM =~ /darwin/
-  $:.unshift  File.dirname(__FILE__) + "/ext/mac_os_x"
-else
-  $: <<  File.dirname(__FILE__) + "/ext/planetlab_ilab"
+
+extension = ""
+if RUBY_VERSION >= '1.9'
+ extension = "/1.9"
 end
+
+if RUBY_PLATFORM =~ /mingw|win32/
+  $:.unshift  File.dirname(__FILE__) + "/ext/mingw" + extension
+else
+  $: <<  File.dirname(__FILE__) + "/ext/planetlab_ilab" + extension
+end
+
 require 'eventmachine'
 
 require 'lib/event_machine_addons.rb'
 EM::set_max_timers 10000
+
 # ltodo: wonder if there's a speedup if, while during download of a very fast file, you belay the opendht registration till the end :) like a flood when you're done, only
 require 'lib/opendht/local_drive_dht.rb'
-#require 'resolv-replace' # doesn't help EM! TODO!
-$LOCAL_PEERS_OK = true
 
-if Socket.gethostname == "melissa-pack"
-   $dhtClassToUse = LocalDriveDHT
-   $LOCAL_PEERS_OK = true # ltodo add this too :)
-
-end
-
+#require 'resolv-replace' # doesn't help EM! LTODO!
 
 # ltodo: mention asynchronous additions to HTTP would be nice [though you could fake it currently with a request that just didn't return...forever--that would be good enough--or one that returns every one minute or something...eh...never would work]
 # ltodo: but the asynchronous connections through the openDHT, that could help!

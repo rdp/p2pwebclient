@@ -41,3 +41,5 @@ It would be interesting to accomodate for the fact that most web usage is done r
 We currently look up the list of peers per block, even if our current peers are listed redundantly on all lists.  Some form of gossip to determine which known peers have which blocks might decrease network overhead and increase speed.  Note that webtorrent suggests you zip up all related files into a single larger file, as an option.
 
 It should be noted that BitTorrent performs ``pre-requests'' for blocks [i.e. requesting the next sub-block before the current is done being downloaded].   HTTP/1.1 may not allow us this privilege, and it would be interesting to see if it is effective, and/or possible with HTTP/1.1.
+
+Could test against Dijjer, Squirrel, Shark,  bittorrent/azuerus DHT's, etc. Meh.

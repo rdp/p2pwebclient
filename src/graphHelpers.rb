@@ -820,7 +820,7 @@ class GraphHelper
     # ltodoneed maxPoint to be passed in? check :)
     GraphHelper.doGruffExceptDataAssignment(g, title, true, false, labels, maxPoint, xAxisLabel, yAxisLabel, filenameOutput, x_min, y_min)
   end
-  create_named_parameters_wrapper :'self.createScatter'
+  named_args :'self.createScatter'
   
   
   def GraphHelper.createBar(hashBars, filenameOutput, title, lineTitle, xAxisLabel, yAxisLabel, xResolution = 1, hashLabels = {})

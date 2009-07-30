@@ -15,16 +15,15 @@ require __FILE__
 require 'constants'
 require 'new_graphs.rb'
 require 'pp'
-require './individual_graph.rb'
-require './graphHelpers.rb'
-require './vary_parameter_graphs'
+require 'individual_graph.rb'
+require 'graphHelpers.rb'
+require 'vary_parameter_graphs'
 
 $beenHere = true
 $doIndividuals = true 
+
 class String
- def contains? thisString
-  return self.index(thisString) != nil
- end
+ alias :contains? :include? # I like contains much better :)
 end
 
 class RunGrapher # should be called MultipleRunsSameSettingGrapher
@@ -249,7 +248,7 @@ class RunGrapher # should be called MultipleRunsSameSettingGrapher
 
   attr_reader :totalBytesReceivedFromPeersAcrossAllRuns, :totalBytesUploadedByServerAcrossAllRuns, :totalBytesServedFromPeersAcrossAllRuns
   
-  create_named_parameters_wrapper :createTotalThroughPutsReturnPartial
+  named_args :createTotalThroughPutsReturnPartial
   
   def graphTotalThroughPut(filenameRaw, filenameOutput) # ltodo use new line :)
     graphThis = LineWithPointsFile.readSingleToArray(filenameRaw)

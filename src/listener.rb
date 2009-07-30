@@ -196,7 +196,7 @@ class ListenerEM < EM::Connection
       first_runner = BlockManager.startCSWithP2PEM(first_url, dTToWaitAtBeginning, dRIfBelowThisCutItBps, dWindowSeconds, blockSize, spaceBetweenNew, linger, startTime, peer_name, totalSecondsToContinueGeneratingNewClients, runName, serverBpS, peer_tokens, @logger, opts)
       
   end  
-  create_named_parameters_wrapper :fireOneLocalEM
+  named_args :fireOneLocalEM
   
 end
 

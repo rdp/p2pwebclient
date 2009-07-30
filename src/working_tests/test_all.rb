@@ -1,7 +1,7 @@
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
-for file in Dir.glob('working_tests/*') do
+for file in Dir.glob('working_tests/*.rb') do
  require file
 end
 
@@ -59,7 +59,7 @@ Test::Unit::UI::Console::TestRunner.run TestUseful
 end
 
 if $0 == __FILE__ # strip that off if there
-    print "I would have run anyway!"
+    print "I run no matter what muhaha--never require this file!"
 end
 
 Tester.all

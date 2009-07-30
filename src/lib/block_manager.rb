@@ -19,38 +19,39 @@ require File.dirname(__FILE__) + '/safe_write.rb'
 class BlockManager
   @@default_dht_class = OpenDHTEM
   @@allowMultipleGrabsOfSameBlock = true # hard coded here only, at least for now (unused, actually)
-  @@error_retries_internal = 15  
+  @@error_retries_internal = 15
   @@close_mutex = Mutex.new
   @@p2p_no_bytes_timeout = 5.minutes # very weak timeout, useful to make sure things terminate...ever.
-  
+
   @@runningCurrently = {}
   @@runningCurrentlyStillDownloading = {}
   def BlockManager.clientsStillRunning # lingering, really, or downloading (I think) ltodo rename
     @@runningCurrently
   end
-  
+
   def BlockManager.clientsStillRunningAndDownloading
     @@runningCurrentlyStillDownloading
   end
-  
+
   @@prefab_peer_count_getting = 2 # don't know which value to use for this!
   # doctest: raises -- a prefab server that can't bind to its prefab port should raise
   # >> EventMachine.fireSelfUp
   # >> BlockManager.startPrefabServer
   # >> BlockManager.startPrefabServer
   # AssertionFailure: this shouldn't work!
-  
+
   def BlockManager.startPrefabServer(fullUrl = 'http://fake_default_url', port = $localAndForeignServerPort, size = 100.kb, speed_limit = 100.kbps, dhtClassToUse = @@default_dht_class, blockSize = 100.kb)
     assert fullUrl, 'need to pass a url'
     serverGuy = BlockManager.new(fullUrl, -1, -1, -1, blockSize, -1, -1, 700, "prefab server #{port} #{speed_limit}", -1, "trial", speed_limit || 'none', :peer_tokens => @@prefab_peer_count_getting, :server_port_num => port, :dhtClassToUse => dhtClassToUse, :register_with_global_list => false, :should_raise_on_server_port_error => true)
     serverGuy.p2pServer.speedLimitPerConnectionBytesPerSecond = speed_limit
     serverGuy.p2pServer.serveAnyRequest = true
     serverGuy.setFileSize(size, false)
-    serverGuy.readFromFileOrPropagateAndSave 
+    serverGuy.readFromFileOrPropagateAndSave
     return serverGuy
   end
-  create_named_parameters_wrapper :'self.startPrefabServer'
   
+  named_args_for :'self.startPrefabServer'
+
   # doctest: pass_log if I pass it a logger and a callback and wait, it should callback eventually.
   # >> Thread .new { EventMachine.fireSelfUp }
   # >> success = 0
@@ -58,31 +59,27 @@ class BlockManager
   # >> sleep 1
   # >> success
   # => 1
-  
+
   def BlockManager.startCSWithP2PEM fullUrl, dTToWaitAtBeginning, dRIfBelowThisCutItBps, dWindowSeconds, blockSize, spaceBetweenNew, linger, startTime, peer_name, totalSecondsToContinueGeneratingNewClients, runName, serverBpS, peer_tokens, generic_logger, dhtClassToUse = @@default_dht_class, completion_proc = nil, use_this_shared_logger = nil, do_not_shutdown_logger = false, termination_proc = nil
-      
     generic_logger.debug "starting download #{fullUrl}-- creating BM, etc. go!"
     singleFileBlockManager = BlockManager.new(fullUrl, dTToWaitAtBeginning, dRIfBelowThisCutItBps, dWindowSeconds, blockSize, spaceBetweenNew, linger, startTime, peer_name, totalSecondsToContinueGeneratingNewClients, runName, serverBpS, peer_tokens, nil, dhtClassToUse, :completion_proc => completion_proc, :use_this_shared_logger => use_this_shared_logger, :do_not_shutdown_logger => do_not_shutdown_logger, :termination_proc => termination_proc)
     generic_logger.debug "created guy -- telling him to doCS [start]"
     singleFileBlockManager.doCS
     singleFileBlockManager
   end
-  create_named_parameters_wrapper :'self.startCSWithP2PEM'
   
+  named_args_for :'self.startCSWithP2PEM'
+
   def initialize(fullUrl, dTToWaitAtBeginning, dRIfBelowThisCutItBps, dWindowSeconds, blockSize, spaceBetweenNew, linger, startTime, peer_name, totalSecondsToContinueGeneratingNewClients, runName, serverBpS, peer_tokens, server_port_num, dhtClassToUse, register_with_global_list = true, should_raise_on_server_port_error = nil, completion_proc = nil, use_this_shared_logger = nil, do_not_shutdown_logger = false, termination_proc = nil)
     assert peer_tokens > 0, 'poor params here peer_tokens'
     outputDirectory = Listener.getOutputDirectoryName(blockSize, spaceBetweenNew, totalSecondsToContinueGeneratingNewClients, dTToWaitAtBeginning, dRIfBelowThisCutItBps, dWindowSeconds, linger, runName, serverBpS)
     Dir.mkPath outputDirectory unless File.directory? outputDirectory
-    logFileName = outputDirectory +  "peer_number_#{peer_name}_start_#{startTime.to_f}.log.txt" 
+    logFileName = outputDirectory +  "peer_number_#{peer_name}_start_#{startTime.to_f}.log.txt"
     @completion_proc = completion_proc
     @termination_proc = termination_proc
     @log_prefix = "BM"
     @logger = use_this_shared_logger || Logger.new(logFileName, startTime, peer_name)
     assert(fullUrl, 'no full url!')
-
-	
-        
-
 
 
     @uid = (fullUrl + '_p:' << peer_name.to_s << '_r:' << Time.now.to_f.to_s).sanitize
@@ -123,7 +120,7 @@ class BlockManager
     end
 
     return if @am_bittorrent # no use doing more here
-    
+
     @opendht = dhtClassToUse.new(@logger, :key_multiply_redundancy => 2, :max_num_simultaneous_gateway_requests_per_query => 2, :gateway_pool_creation_race_size => 10, :gateway_pool_size => 5) # ltodo experiment with the different values for this (?) Nice 2-d graph ha ha
     # NB: if you set it to more requests than key redundancy, it currently repeats rounds immediately after the first successful returns...which might cause some redundancy and overload...
     @p2pServer = P2PServer.new(self, @logger, server_port_num)
@@ -131,25 +128,26 @@ class BlockManager
     assert self.p2pServerPort, "hmm no p2p server port specified! yet expected"
     raise 'unable to get the right p2p server port!' if should_raise_on_server_port_error and self.p2pServerPort != server_port_num
     @log_prefix = "BM (#{self.p2pServerPort})"
-    
+
     ping_time_every = 10
-    @pingTimer = EventMachine::PeriodicTimer.new(ping_time_every, proc { 
+    @pingTimer = EventMachine::PeriodicTimer.new(ping_time_every, proc {
       if File.exist? 'stop_now'
         debug "requiring ruby-debug"
         require 'ruby-debug'
         debugger
       end
-      debug "ping #{ping_time_every} server (outgoing) conns: #{@p2pServer.aliveServerObjects.length} :#{@p2pServer.port}"}
+    debug "ping #{ping_time_every} server (outgoing) conns: #{@p2pServer.aliveServerObjects.length} :#{@p2pServer.port}"}
     )
     debug "post initialize for a BM"
     @peers_in_use_for_various_blocks_counter = {}
   end
-  attr_reader :peers_in_use_for_various_blocks_counter, :logger
-  create_named_parameters_wrapper :initialize
   
+  attr_reader :peers_in_use_for_various_blocks_counter, :logger
+  named_args_for :initialize
+
   attr_reader :opendht, :url, :p2pServer, :urlFileName, :totalBytesWritten, :blockDefaultSize, :opendht_done_and_logger_closed, :allOutGoingConnections, :logger, :stage,  :already_finalized
   attr_accessor :p2pServerPort
-  
+
   def postCS status
     debug "post CS got status #{status}!"
     @stage = :post_cs
@@ -158,20 +156,20 @@ class BlockManager
       debug "guess CS just downloaded the whole thing"
       postFileSize
     else
- 
+
       if $PRETEND_CLIENT_SERVER_ONLY
- # ltodo move this away -- very far away -- from a global
+        # ltodo move this away -- very far away -- from a global
         @retries_remaining_if_running_in_cs_only_mode -= 1
-	error "meep meep uh oh -- we were about to head into p2p on a CS only run -- is the server turned on? restarting with #{@retries_remaining_if_running_in_cs_only_mode} retries remaining then we'll just give up"
+        error "meep meep uh oh -- we were about to head into p2p on a CS only run -- is the server turned on? restarting with #{@retries_remaining_if_running_in_cs_only_mode} retries remaining then we'll just give up"
         if @retries_remaining_if_running_in_cs_only_mode == 0
-		error "giving up"
-		doFinalize # meep meep	
+          error "giving up"
+          doFinalize # meep meep
         else
-		assert @retries_remaining_if_running_in_cs_only_mode > 0
-		debug "repeating CS in 1"
-		EM::Timer.new(1) { doCS }
-	end
-	return # done
+          assert @retries_remaining_if_running_in_cs_only_mode > 0
+          debug "repeating CS in 1"
+          EM::Timer.new(1) { doCS }
+        end
+        return # done
       end
       if !fileSizeSet?
         debug "CS didnt set the file for me! not nice!"
@@ -186,7 +184,7 @@ class BlockManager
       end
     end
   end
-  
+
   def check_if_file_size_already_set_in_dht_else_set_it status, values
     if status == :success
       has_right_value_already = false
@@ -217,20 +215,20 @@ class BlockManager
   #
 
   def repeat_add_until_done key, value, round_id = key + value.to_s + rand(1000000).to_s, description = '', this_many_repeats_left = 3, &block
-     raise "unexpected non block!" unless block_given?
+    raise "unexpected non block!" unless block_given?
 
-     @opendht.add(key, value, :round_id => round_id, :description => description, :retry_times => 0, :block_proc => proc{|status, values, round, key| 
-							   if status == :success or this_many_repeats_left == 0 or @already_finalized
-								block.call(status, values, round, key) if block
-							   else
-								debug "repeating because #{status} and #{this_many_repeats_left}x left and we're not finalized yet"
-								repeat_add_until_done key, value, round_id, description, this_many_repeats_left - 1, &block
-							   end
-							  } 
-							  
-		)
+    @opendht.add(key, value, :round_id => round_id, :description => description, :retry_times => 0, :block_proc => proc{|status, values, round, key|
+      if status == :success or this_many_repeats_left == 0 or @already_finalized
+        block.call(status, values, round, key) if block
+      else
+        debug "repeating because #{status} and #{this_many_repeats_left}x left and we're not finalized yet"
+        repeat_add_until_done key, value, round_id, description, this_many_repeats_left - 1, &block
+      end
+    }
+
+    )
   end
-  create_named_parameters_wrapper :repeat_add_until_done
+  named_args_for :repeat_add_until_done
 
   def set_file_size_opendht
     assert fileSizeSet?
@@ -239,15 +237,15 @@ class BlockManager
     debug "doing set file size opendht called--checking first, then setting"
     @opendht.get_array(BlockManager.url_as_header_key(@url), 'set file size check once first round', proc {|status, values, pm, round, key| check_if_file_size_already_set_in_dht_else_set_it(status, values)}, 'filesize check')
   end
-  
+
   def postFileSize
     if @already_into_post_file_size
       debug "called postFileSize twice! returning second time -- possible if the set file size in the DHT threads is late, and for duplicate opemDHT returns of the same value, and we use two methods to find the file size the second one will always call this"
       return
-    end  
+    end
     @stage = :post_file_size
     @already_into_post_file_size = true
-    
+
     assert fileSizeSet?
     if not done? # cs failed us
       unless @am_interrupted_state
@@ -260,7 +258,7 @@ class BlockManager
       doLinger
     end
   end
-  
+
   def doLinger # this has re-entry for if a peer fails in downloading p2p ever--NB
     return if @already_did_linger # right now as it adds back in tokens it starts linger 'right then', so this avoids us when we call it more than once ltodo stinky
     @already_did_linger = true
@@ -271,7 +269,7 @@ class BlockManager
     @linger_pinger = EM::PeriodicTimer.new(5, proc { debug "lingering with approx. #{@linger - (Time.now-start_time)}s left #{@url}"})
     EM::Timer.new(@linger, proc { debug 'linger up --doing finalize'; doFinalize } )
   end
- 
+
   def doFinalize
     debug "doing a finalize call"
     @@close_mutex.synchronize do
@@ -293,12 +291,12 @@ class BlockManager
       debug 'shutting down a connection?'
       connection.shutdown_once_without_writing
     end
-    
+
     if @allBlocks
       for block in @allBlocks do
         block.remove_from_dht # do this before verification to speed it up
       end
-      if $verifyData 
+      if $verifyData
         if !fileIsCorrect?
           error "FILE NOT CORRECT!! SEEDO! correctness is bad" # ltodo do not check this for large files!
         else
@@ -311,10 +309,10 @@ class BlockManager
     end
     close_opendht
   end
-  
+
   def hard_interrupt_download
     if @already_finalized
-       error 'whoa hard interrupt an already finalized?'
+      error 'whoa hard interrupt an already finalized?'
     end
     assert !done?
     @cs_starter_peer.shutdown_once_without_writing if @cs_starter_peer
@@ -323,7 +321,7 @@ class BlockManager
     end if @allBlocks
     @am_interrupted_state = true unless done?
   end
-  
+
   def restart_if_had_been_interrupted
     if @am_interrupted_state
       debug "1restarting from interrupted state #{@am_interrupted_state}"
@@ -340,15 +338,15 @@ class BlockManager
       debug 'not restarting for not having been interrupted'
     end
   end
-  
+
   def close_opendht
     if @already_got_to_close_opendht
       error "close opendht twice--returning early and letting the previous one continue on!!!"
       return
     else
-      @already_got_to_close_opendht = true 
+      @already_got_to_close_opendht = true
     end
-    
+
     if @opendht.done_and_clean?
       error "dht says it is already done -- I would anticipate this being impossible as all the rm's should be out"
       post_cleanup
@@ -357,29 +355,29 @@ class BlockManager
       @opendht.func_to_call_when_empty_which_means_we_are_in_shutdown_mode = proc { @informant.cancel; post_cleanup } # it will call that for us, later--this function again, that is
     end
   end
-  
+
   def post_cleanup
     @@runningCurrentlyStillDownloading.delete(@uid) if @@runningCurrentlyStillDownloading[@uid] # remove it for the case of downloaders that fail
 
-   unless @do_not_shutdown_logger
-    log "congratulations--post cleanup called--you're done deleting uid #{@uid} "
-    @logger.close
-	dbg if @termination_proc
-    assert !@termination_proc, 'unexpected'
-   else
-    @do_not_shutdown_logger
-   end
-   @opendht_done_and_logger_closed = true
-   @termination_proc.call if @termination_proc
-    
-   assert @@runningCurrently.delete(@uid) if @register_with_global_list # global listener list -- do after so there's no chance of them asking "are we done" mid-stream
+    unless @do_not_shutdown_logger
+      log "congratulations--post cleanup called--you're done deleting uid #{@uid} "
+      @logger.close
+      dbg if @termination_proc
+      assert !@termination_proc, 'unexpected'
+    else
+      @do_not_shutdown_logger
+    end
+    @opendht_done_and_logger_closed = true
+    @termination_proc.call if @termination_proc
+
+    assert @@runningCurrently.delete(@uid) if @register_with_global_list # global listener list -- do after so there's no chance of them asking "are we done" mid-stream
   end
-  
+
   def opendht_no_connections?
     return true if @opendht_done_and_logger_closed # avoid logging
     @opendht.done_and_clean?
   end
-  
+
   def totalBytesWritten
     sum = 0;
     for block in @allBlocks do; sum += block.currentSize; end
@@ -410,7 +408,7 @@ class BlockManager
       end
     end
   end
-  
+
   def report_done
     return if @already_reported_done
     @already_reported_done = true
@@ -420,21 +418,21 @@ class BlockManager
 
   # doctest: should give up on p2p after a little bit
   #  Thread.new { EM.start {} }
-  #  
+  #
   def doP2P
     sum_written = totalBytesWritten
     a = EM::Timer.new(@@p2p_no_bytes_timeout) {
-	  unless @already_finalized
-	    if totalBytesWritten == sum_written
-	      error "whoa! after 10 minutes P2P hadn't downloaded a byte? giving up! going to linger!"
-	      hard_interrupt_download
-	      doLinger
-	    else
-	      sum_written = totalBytesWritten # TOTEST
-	      debug "p2p has written -- #{totalBytesWritten} currently > old #{sum_written} -- rescheduling p2p death timer"
-	      a.restart
-	    end
-          end
+      unless @already_finalized
+        if totalBytesWritten == sum_written
+          error "whoa! after 10 minutes P2P hadn't downloaded a byte? giving up! going to linger!"
+          hard_interrupt_download
+          doLinger
+        else
+          sum_written = totalBytesWritten # TOTEST
+          debug "p2p has written -- #{totalBytesWritten} currently > old #{sum_written} -- rescheduling p2p death timer"
+          a.restart
+        end
+      end
     }
 
     @stage = :do_p2p
@@ -442,35 +440,35 @@ class BlockManager
     #ltodo: future log 'doing MASS global get of blocks'
     #@allBlocks.each{|block| block.attempt_to_get_low_key} # cache some values ltodo automated testing that this happens, and appropriately
   end
-  
+
   def reinsert_peer(ip, port, block_number)
     @allBlocks[block_number].reinsert_peer(ip, port)
   end
 
   def post_BT
-        debug "post bt"
-      	assert @@runningCurrentlyStillDownloading.delete(@uid) if @register_with_global_list
-	post_cleanup
-   end
-  
+    debug "post bt"
+    assert @@runningCurrentlyStillDownloading.delete(@uid) if @register_with_global_list
+    post_cleanup
+  end
+
   def doCS count_remaining = @@error_retries_internal # ltodo rename--really means "do all" or "go"
     if @am_bittorrent
-        #EM::next_tick { EM::next_tick {BitTorrent.do_one self }}
-        BitTorrent.do_one self 
-	return
+      #EM::next_tick { EM::next_tick {BitTorrent.do_one self }}
+      BitTorrent.do_one self
+      return
     end
 
     @stage = :do_cs
     @start_time ||= Time.now
     log "Start CS normal innocent get %s dT %f dR %f dW %f blockSize %d p2pskipCS: #{$p2pSkipCS}  PRETEND_CLIENT_SERVER_ONLY #{$PRETEND_CLIENT_SERVER_ONLY}" % [@url, @dTToWaitAtBeginning, @dRIfBelowThisCutItBps, @dWindowSeconds, @blockDefaultSize]
-    
-    if $p2pSkipCS 
+
+    if $p2pSkipCS
       error "NO NORMAL C/S breaking immediately no dT, no dR!"
       return
     else
       debug "using CS intro...(normal)"
     end
-    
+
     pageStringOnly, hostToGetFrom, ipPortToGetFrom = TCPSocketConnectionAware.splitUrl(@url)
     begin
       EM.connect( hostToGetFrom, ipPortToGetFrom.to_i, GenericGetFromSinglePeer ) { |conn| # ltodo surround all connect's, accept's (double check)
@@ -484,19 +482,19 @@ class BlockManager
         debug "since we haven't passed dT and just had a failure to the origin, restarting in #{wait_time}s with remaining tries #{count_remaining}"
         EM::Timer.new(wait_time, proc{ doCS count_remaining - 1})
       else
-        error "Giving up on CS for file because of runtime errors! ARR"	
+        error "Giving up on CS for file because of runtime errors! ARR"
         postCS :gave_up_on_origin
       end
     end
     return nil
   end # func
-  
-  include Logs 
+
+  include Logs
   @@local_ip_address = Socket.get_host_ip  # do it once, only, per instance (not per peer), so we're ok
   def localIP
     @@local_ip_address
   end
-  
+
   class HeadRetriever < EventMachine::Connection
     def init fullUrl, parent, logger, done_proc
       self.set_comm_inactivity_timeout 90 # try and avoid a weirdness where at least once, a head request went out and [EM didn't handle it?] never came back
@@ -520,14 +518,14 @@ class BlockManager
       totalFileSize ||= currentTransmissionSize # for those that pass it to us as Content-Length
       @logger.debug "tcp HEAD set length to #{totalFileSize} after #{Time.new - @startTime}s"
       if totalFileSize
-        @parent.setFileSize(totalFileSize) 
+        @parent.setFileSize(totalFileSize)
       else
         @logger.error "huh no head in #{received}"
       end
       close_connection
       done
     end
-    
+
     def done
       return if @done
       @done = true
@@ -539,12 +537,12 @@ class BlockManager
         @done_proc.call(:failure)
       end
     end
-    
+
     def unbind
       done
     end
   end
-  
+
   def startHeadRetriever this_many_attempts_left
     @head_attempts_left = this_many_attempts_left
     if this_many_attempts_left == 0
@@ -564,7 +562,7 @@ class BlockManager
       EM::Timer.new(5) { startHeadRetriever(this_many_attempts_left - 1) }
     end
   end
-  
+
   def headRetrieverDone status
     if status == :success
       debug "head was successful!"
@@ -584,7 +582,7 @@ class BlockManager
     startHeadRetriever @@error_retries_internal
     getFileSizeOpenDHTIntEM @@error_retries_internal
   end
-  
+
   def failedGetMethod method_name
     @total_getting_file_size -= 1
     error "ack failed get method #{method_name} -- remaining #{@total_getting_file_size}"
@@ -593,7 +591,7 @@ class BlockManager
       doFinalize
     end
   end
-  
+
   def fileSizeReturnedOpenDHT(status, sizes, round, times_left)
     assert round
     debug "got an opendht filesizereturned #{status}:#{sizes && sizes.length}"
@@ -630,12 +628,12 @@ class BlockManager
       # ltodo what if the original connection sets it half-way through--we shoudl use that!  ltodo just get the first block and set the file and spring the p2p then
     end
   end
-  
+
   def BlockManager.url_as_header_key(url)
     return url + '_headers_key'
   end
-  
-  def getFileSizeOpenDHTIntEM times_left 
+
+  def getFileSizeOpenDHTIntEM times_left
     if times_left == 0
       error "giving up on get file size opendht!"
       failedGetMethod 'dht'
@@ -643,11 +641,11 @@ class BlockManager
     end
     @current_odht_headers_round ||= 'get file size round' # ltodo do rm's only after sets return (?)
     @current_odht_headers_round += '+'
-    @opendht.get_array(BlockManager.url_as_header_key(@url), @current_odht_headers_round, proc {|status, values, pm, round, key_used| 
+    @opendht.get_array(BlockManager.url_as_header_key(@url), @current_odht_headers_round, proc {|status, values, pm, round, key_used|
       assert [:failure, :success].include?(status)
-      fileSizeReturnedOpenDHT(status, values, round, times_left)}, ' file size') # assume works. Sigh.
+    fileSizeReturnedOpenDHT(status, values, round, times_left)}, ' file size') # assume works. Sigh.
   end
-  
+
   def setFileSize(sizeIn, should_set_in_opendht = true)
     assert sizeIn
     assert sizeIn >= 0
@@ -666,7 +664,7 @@ class BlockManager
     @numBlocks.times do |blockNum|
       @allBlocks << Block.new(@blockDefaultSize, blockNum, @url, @uid, @logger, @urlHost, @urlPort, self)
     end
-    
+
     if sizeIn % @blockDefaultSize != 0
       # then the last ending block has less than a full size
       lastBlockSize = sizeIn % @blockDefaultSize
@@ -675,7 +673,7 @@ class BlockManager
     @allBlocksNotDone = @allBlocks.randomizedVersion
     set_file_size_opendht if should_set_in_opendht
   end
-  
+
   def total_peer_token_count_globally
     return 0 unless @allBlocks
     sum = 0
@@ -684,9 +682,9 @@ class BlockManager
     end
     sum
   end
-  
+
   # ltodo test of getting the one byte AFTER the file muhaha
-  
+
   def addDataToBlock(blockNumber, data, offset, shouldReportToDHT)
     assert @numBlocks > blockNumber
     blockToUse = @allBlocks[blockNumber]
@@ -703,7 +701,7 @@ class BlockManager
     end
     amountWritten
   end
-  
+
   def fileSizeSet?
     if @totalNumBytesInFile
       return true
@@ -711,12 +709,12 @@ class BlockManager
       return false
     end
   end
-  
+
   def wholeFileSize # ltodo rename of full file
     assert @totalNumBytesInFile
     return @totalNumBytesInFile
   end
-  
+
   def byteAlreadyReceived? byteNumStartZero # do we use this?
     # Say we have block size 5, we ask if 7 (8th byte) is written (byte 0-6 [7 of 'em total] has)
     # block = 1, offSet = 2
@@ -730,7 +728,7 @@ class BlockManager
       return false
     end
   end
-  
+
   def addDataOverall(incomingString, where, shouldReportToDHT = true)
     #at this point we  may not know how large the file is, so may need to create another block for it...
     stringToAdd = incomingString
@@ -745,11 +743,11 @@ class BlockManager
     end
     # not necessarily true if we overwrite things assertEqual totalWritten, incomingString.length
     totalWritten
-    
+
   end
-  
-  
-  
+
+
+
   def calculateBlockAndOffset(byteNumber)
     assert byteNumber >= 0
     blockNumber = (byteNumber/@blockDefaultSize).to_i # truncate
@@ -758,7 +756,7 @@ class BlockManager
     assert offset >= 0
     return blockNumber, offset
   end
-  
+
   def getBytesToReturnToPeerIncludingEndByte(startByte, endByte)
     assert startByte
     assert endByte
@@ -783,20 +781,20 @@ class BlockManager
       amountInBlock = @allBlocks[startBlock].blockSize # could be less for the ending block
       assert amountInBlock
       amountInBlockPossible = amountInBlock - startOffset
-      
+
       amountWantedFromBlock = [amountInBlockPossible, amountWanted - amountGot].min
       assert amountWantedFromBlock > 0
       toAdd = @allBlocks[startBlock].getBytes(startOffset, amountWantedFromBlock)
       allOut << toAdd # this could get bad for many blocks, large file, but as long as we only do it like 3 times, I guess we're ok --right now I think it only requestsa few 'next bytes to send' at a time, so we're ok.  a full 1G file, though...yikes :)
-      
+
       amountGot += amountWantedFromBlock
     end
-    
+
     return allOut
-    
+
   end
-  
-  
+
+
   def done?
     if  @already_finalized
       debug "done? called after finalize was already called! returning we are done, ok? --possible if the p2p server calls it during finalize, which it does"
@@ -819,20 +817,20 @@ class BlockManager
     print("status #{@status}")
     return success
   end
-  
+
   def to_s
     returnVal =  "Blocks:"
     for block in @allBlocks
       returnVal +=  block.to_ps
     end
   end
-  
+
   def next_finishing_byte_done_after this_byte # for now this is pretty tightly asserted as being just 'from where we are' on
     if !@allBlocks
       assertEqual this_byte, -1
       return -1
     end
-    
+
     unless this_byte == -1 # which would be like the starting case, so for sure we know we have 'written' that byte
       old_byte_block = @allBlocks[this_byte/@blockDefaultSize]
       byte_within_block = this_byte % @blockDefaultSize
@@ -845,14 +843,14 @@ class BlockManager
       end
     end
     assert done?
-    return wholeFileSize() - 1 
+    return wholeFileSize() - 1
   end
-  
+
   def getFirstUnwrittenByteInBlockAsNumberFromBeginningAndEndByteOfBlockInclusive(blockNumber)
     block = @allBlocks[blockNumber]
     return block.getStartingNonFinishedByteWithinBlock() + block.blockNumber*@blockDefaultSize, block.blockNumber*@blockDefaultSize + block.blockSize - 1 # not too big is right
   end
-  
+
   def add_global_peer peer
     debug 'not adding global peer'
     return # disabled :)
@@ -861,15 +859,15 @@ class BlockManager
       block.add_peer_if_useful peer
     end
   end
-  
+
   def p2pStateChangedAll
     for block in @allBlocks do
       block.p2pStateChanged
     end
   end
-  
-  
-  
+
+
+
 end # class
 
 require 'lib/utilities_block_manager.rb' # just for the testing we do internally :)
@@ -877,7 +875,7 @@ require 'lib/utilities_block_manager.rb' # just for the testing we do internally
 # ltodo ruby-prof at home against apache, with smaller blocksizes, etc.
 #==========================================================================================
 class Block
-  
+
   def initialize(blockSize, number, url, uid, logger, urlHost, urlPort, blockManagerParent)
     @blockManagerParent = blockManagerParent
     assert number && url && uid && logger && blockSize
@@ -909,49 +907,49 @@ class Block
     @peersInUse = {} # ltodo use this instead of peerCountInuse
     @next_round_number = 0
   end
-  include Logs 
+  include Logs
   attr_reader :blockNumber
   attr_accessor :alreadyReportedDoneToDHT # ltodo used?
   attr_accessor :blockSize
   attr_accessor :peerCountTokens # ltodo take out
-  
+
   def add_peer_if_useful(peer)
     @peerPossibilities << peer unless @peerPossibilities.include?(peer) or @peersTried.include?(peer) or ( peer[0] == @blockManagerParent.localIP and peer[1] == @blockManagerParent.p2pServer.port) # don't add ourselves
     @peerPossibilities = @peerPossibilities.randomizedVersion
   end
-  
+
   # used if you have a peer that returns a few useless bytes, we mark it for destruction as useless, then it starts returning good bytes, but then, since we marked it for destruction, it ends its block early--we want to reuse them!
-  def reinsert_peer(ip, port) 
+  def reinsert_peer(ip, port)
     assert @peersTried.delete([ip, port])
     @peerPossibilities.unshift [ip, port] # put it at the front
     p2pStateChanged
   end
-  
+
   def delete_all_tokens_and_shutdown_peers
     kill_origin_if_going
     @peerCountTokens = 0
     @peersInUse.each{|peer, true_val| peer.shutdown_once_without_writing }
-  end 
-  
+  end
+
   def addToken
     @peerCountTokens += 1
     debug "added token--tokens now at #{@peerCountTokens}"
     p2pStateChanged
   end
-  
+
   def to_s2
     ''#"block p2p state: tokens #{@peerCountTokens}  [#{@blockManagerParent.total_peer_token_count_globally} total tokens]done? #{'false for now'} peers in use #{@peersInUse.map{|peer| peer.to_s}.inspect} possibilities waiting #{@peerPossibilities.inspect}, used #{@peersTried.map{|p| p.to_s}.inspect}"
   end
   @@max_connections_to_a_peer = 1 # only want to download one block at a time, from a peer...i.e. only one connection to each peer we know about
-# regardless of how many blocks they have [to get each block faster]
+  # regardless of how many blocks they have [to get each block faster]
   def p2pStateChanged
     debug "p2pstate changed -- finalized is #{@already_finalized_block}"
     if @am_interrupted_state or @blockManagerParent.already_finalized
       # don't want to start any origins or any peers if this is the case!
       assert @peerCountTokens == 0, "we should have deleted them all if we shut down" if @am_interrupted_state
-      return 
+      return
     end
-    
+
     if done?
       # I assume this should happen when a block finishes???
       if @peerCountTokens > 0
@@ -961,18 +959,18 @@ class Block
       end
       return
     end
-    
-    if @peerCountTokens == 0 
+
+    if @peerCountTokens == 0
       debug "got some pre existing peers (I presume) from the early pre emptive query -- they were added, or another peer finished with a peer and wanted to release it to do more blocks now"
     end
-    
+
     if @peerCountTokens > @peersInUse.length
       numPeersWanted = @peerCountTokens - @peersInUse.length
       if @peerPossibilities.length < numPeersWanted
-        # we don't want to actually do this, though, to reserve a port for the origin should it want help 
+        # we don't want to actually do this, though, to reserve a port for the origin should it want help
         # attempt_to_get_more # will ALWAYS have to get more if this is the case
       end
-      
+
       non_used_possibilities = []
       for peer in @peerPossibilities.reverse do
         unless @blockManagerParent.peers_in_use_for_various_blocks_counter[peer] and @blockManagerParent.peers_in_use_for_various_blocks_counter[peer] >= @@max_connections_to_a_peer
@@ -981,7 +979,7 @@ class Block
           debug "ignoring a peer #{peer} for now -- they're too busy!"
         end
       end
-      
+
       if @peerPossibilities.length > 0
         [numPeersWanted, non_used_possibilities.length].min.times do # doesn't account for non firing peer
           possibility = non_used_possibilities.shift # shift is newer [?] -- random might be best, though ltodo
@@ -993,13 +991,13 @@ class Block
           begin
             EM::connect(possibility[0], possibility[1], GenericGetFromSinglePeer) { |conn|
               @peersInUse[conn] = true
-              conn.init @fullUrl, @blockManagerParent, nil, nil, nil, @logger, "p2p p2p", possibility[0], possibility[1], @blockNumber, @peerThreadNumber, proc {|retval| 
+              conn.init @fullUrl, @blockManagerParent, nil, nil, nil, @logger, "p2p p2p", possibility[0], possibility[1], @blockNumber, @peerThreadNumber, proc {|retval|
                 @peersInUse.delete(conn)
                 one_peer_finished(retval)
                 @blockManagerParent.peers_in_use_for_various_blocks_counter[possibility] -= 1
                 @blockManagerParent.p2pStateChangedAll # notify everyone :) ltodo just notify those that have registered as wanting it lol
               }
-              
+
             }
           rescue RuntimeError
             error 'EM connect FAILED connecting to peer'
@@ -1015,16 +1013,16 @@ class Block
       #debug 'at least one peer is going, so killing origin'
       #kill_origin_if_going # I think we don't want this since the origin might give us some good stuff in the meantime.  Let its uselessness kill it
     end
-    
+
     if @peersInUse.length < @peerCountTokens
       attempt_to_get_more # do this at the end to save on file descriptors (believe it or not)
-    end 
+    end
   end
-  
+
   def to_s
     return @blockNumber.to_s + "(#{currentSize}/#{@blockSize})"
   end
-  
+
   def kill_origin_if_going
     if @origin_conn
       debug 'shutting down origin for some reason'
@@ -1033,7 +1031,7 @@ class Block
       debug 'origin isnt going, so not killing it'
     end
   end
-  
+
   def start_origin_unless_already_running
     unless @origin_conn
       return if @am_getting_origin
@@ -1050,21 +1048,21 @@ class Block
       end
     end
   end
-  
+
   def attempt_to_add_from_dht(status, values, pm, round)
     debug "got #{status} #{values} round #{round}"
     if status == :success # assume they ain't lyin' -- should work unless it is lying when it says none and "success"
       if round == @current_round_in_flight
         debug "got back an openDHT 1st success for round #{round} -- adding them, setting it to 'go' again at some point"
         if pm.is_text?
-	   debug 'since it had a pm, setting it to go again immediately'
-           @current_round_in_flight = nil
+          debug 'since it had a pm, setting it to go again immediately'
+          @current_round_in_flight = nil
         else
-           debug 'since it had no pm, setting it free in...1s'
-           @current_round_in_flight = :will_soon_be_reset # save it away so the next few successes don't confuse themselves as being the first :)
-           EM::Timer.new(1) {@current_round_in_flight = nil;  debug 'setting it free for a new round -- you might see this late, as we dont accomodate for it in close--its the DHT re-get timer'; p2pStateChanged}
+          debug 'since it had no pm, setting it free in...1s'
+          @current_round_in_flight = :will_soon_be_reset # save it away so the next few successes don't confuse themselves as being the first :)
+          EM::Timer.new(1) {@current_round_in_flight = nil;  debug 'setting it free for a new round -- you might see this late, as we dont accomodate for it in close--its the DHT re-get timer'; p2pStateChanged}
         end
-  
+
         # now add to the peers available list
       else
         debug "got back an old opendht round -- just adding them"
@@ -1081,7 +1079,7 @@ class Block
         end
       end
       @peerPossibilities = @peerPossibilities.randomizedVersion
-      
+
       p2pStateChanged # yep -- dht came back, possibly added some more peers, and maybe should start again
     else
       debug "got back a failure for round #{round}"
@@ -1095,13 +1093,13 @@ class Block
       else
         debug "got an error from in flight round, waiting for others to come back"
       end
-    end 
+    end
   end
-  
+
   def attempt_to_get_low_key
     attempt_to_get_more 1, 1
   end
-  
+
   def attempt_to_get_more key_split_to_request_all_simultaneously = nil, repeat_all_keys_this_many_times = nil
     if !@current_round_in_flight
       @current_round_in_flight = @log_prefix + (' get round' << @next_round_number.to_s)
@@ -1112,7 +1110,7 @@ class Block
       debug "already have a dht request out, don't worry--its round is #{@current_round_in_flight}"
     end
   end
-  
+
   def origin_done status
     debug "origin's done: #{status}"
     process_peer_result status, :origin
@@ -1121,7 +1119,7 @@ class Block
     debug "restarting to origin [if necessary] in #{time_to_wait}s"
     EM::Timer.new(time_to_wait) { @origin_conn = nil; p2pStateChanged } # have it restart that origin peer, if necessary, but not immediately :)
   end
-  
+
   def process_peer_result status, cs_or_p2p
     if status == :success
       debug "#{cs_or_p2p} said success for that block get"
@@ -1131,13 +1129,13 @@ class Block
       debug "#{cs_or_p2p} said fail for that block get--could be too slow, or unbound too early"
     end
   end
-  
+
   def one_peer_finished status
     debug "peer done #{status}"
     process_peer_result status, :peer
     p2pStateChanged # restart the next peer (or itself) if necessary
   end
-  
+
   def finalize_block # ltodo rename something else more intuitive
     assert done?
     if @already_finalized_block
@@ -1145,11 +1143,11 @@ class Block
       return
     end
     @already_finalized_block = true
-    kill_origin_if_going 
+    kill_origin_if_going
     @blockManagerParent.addP2PTokens @peerCountTokens # give them away, if we have any--conveniently placed at the top in case some weirdness brings some extras here :)
     delete_all_tokens_and_shutdown_peers
   end
-  
+
   def delete_internal_file
     assert @filename
     assert File.exists?(@filename)
@@ -1160,18 +1158,18 @@ class Block
     end
     @filename = 'deleted_file'
   end
-  
+
   def getAllWritten
     return getBytes(0, currentSize)
   end
-  
-  def validData? 
+
+  def validData?
     if not done?
       @logger.error "ack called validdata on an undone block! will test its contents anyway" + to_s
     end
     return BlockManager.verifyChunk(getAllWritten, @blockNumber*@blockManagerParent.blockDefaultSize, @logger) # ltodo clean
   end
-  
+
   def setNewSize(thisManyBytes)
     # only called on the last block to keep it the right size
     assert thisManyBytes > 0
@@ -1179,24 +1177,24 @@ class Block
     @blockSize = thisManyBytes
     #    createBlockTrackers
   end
-  
-  # ltodo split it into sub blocks, etc. 
+
+  # ltodo split it into sub blocks, etc.
   def writeToFileObject(toThisFile)
     if not done?
       @logger.error "writing from paritally done block"
     end
     toThisFile.write(getAllWritten)
   end
-  
+
   def firstUnfilledByte
     return currentSize
   end
-  
-  def currentSize 
+
+  def currentSize
     assert @sumWithinBlock
     return @sumWithinBlock
   end
-  
+
   def done?
     if not @filename
       @logger.error "weird asking a block if its done--it hasn't started (had a created file or at least a set filename) even!"
@@ -1206,26 +1204,26 @@ class Block
     #print "my size is not complete: #{currentSize}/#{@blockSize} tokens--#{@peerCountTokens} " unless currentSize == @blockSize
     return currentSize == @blockSize
   end
-  
+
   def getStartingNonFinishedByteWithinBlock # within a block
     return currentSize
   end
-  
+
   def self_dht_key
     assert @fullUrl && @blockNumber
     "#{@fullUrl}_peers_for_block_num_#{@blockNumber}"
   end
-  
+
   def self_dht_value
     "#{@blockManagerParent.localIP}:#{@blockManagerParent.p2pServerPort}:v#{$version}"
   end
-  
+
   def set_block_done_in_dht
     @still_setting = true
 
     @blockManagerParent.repeat_add_until_done(self_dht_key, self_dht_value, :round_id => @log_prefix + ' set round', :description => @log_prefix) {|status, values, pm, round, key| done_setting }
   end
-  
+
   def done_setting
     @still_setting = nil
     if @want_to_remove_after_setting # ltodo do we wait for all keys to set?
@@ -1233,7 +1231,7 @@ class Block
       remove_from_dht
     end
   end
-  
+
   def remove_from_dht
     if $PRETEND_CLIENT_SERVER_ONLY
       debug "NOT doing open dht remove as we're CS only...kind of!"
@@ -1247,12 +1245,12 @@ class Block
       end
     end
   end
-  
+
   def calculateHash
     assert done?
     return "fakedeadbeef" # ltodo
   end
-  
+
   def addToMe(what, offsetBytesStart)
     @writeMutex.synchronize {
       newSize = nil
@@ -1265,8 +1263,8 @@ class Block
       if $verifyIO
         assert BlockManager.verifyChunk(what, @blockNumber*@blockManagerParent.blockDefaultSize + offsetBytesStart, @logger), "JUST RECEIVED CORRUPTED DATA!"
       end # tlodo writeup possible optimization is...is...get block 0 ja [no real help, though]
-      endOfThisAddition = offsetBytesStart + what.length  
-      if offsetBytesStart != currentSize 
+      endOfThisAddition = offsetBytesStart + what.length
+      if offsetBytesStart != currentSize
         output = "Potentially overwriting written bytes! block #{@blockNumber} my current download size is #{currentSize} and you want to write #{what.length}B @ #{offsetBytesStart} leaving it at #{endOfThisAddition}"
         if endOfThisAddition > currentSize
           @logger.debug output + "...allowing anyway--it gives us some useful stuff.."
@@ -1275,8 +1273,8 @@ class Block
         end
       end
       oldSize = newSize = amountAddedThisTime = nil
-      if endOfThisAddition > currentSize # then this addition is useful to us 
-        
+      if endOfThisAddition > currentSize # then this addition is useful to us
+
         if offsetBytesStart > currentSize
           error "ack!!! we want to write at #{offsetBytesStart} and currentEndStarting from here size is #{currentSize} attempting to continue gracefully..."
           return 0
@@ -1287,7 +1285,7 @@ class Block
           assert @filename
           count = 1
           File.append_to @filename, what
-        else 
+        else
           debug 'overwriting block file TODOR fix this'
           oldFile = File.new(@filename, "r")
           oldFileContents = oldFile.read
@@ -1304,7 +1302,7 @@ class Block
       else
         return 0
       end
-      
+
       if oldSize == offsetBytesStart
         if newSize != oldSize + what.length
           error "weird"
@@ -1317,7 +1315,7 @@ class Block
       return amountAddedThisTime
     }
   end
-  
+
   def getBytes(offset, howMany)
     assert offset + howMany <= @blockSize
     out = ""
@@ -1326,12 +1324,12 @@ class Block
     assertEqual out.length, howMany, "apparently the file didn't have enough bytes for us? a read of size #{howMany} at positio n#{offset} with size #{currentSize} #{File.lstat(@filename).pretty_inspect} " # ltodo when you are waiting for file size, try two at once :)
     return out
   end
-  
+
   def getByte(offset)
     assert offset < currentSize
     return getBytes(offset, 1)[0] # returns a char ltodo test
   end
-  
+
 end # class
 
 
@@ -1346,17 +1344,17 @@ class FixNumExclusive
       @actualNumber = @actualNumber + thisNumber
     }
   end
-  
+
   def func= toThis
     @writeMutex.synchronize { @actualNumber = toThis }
   end
-  
+
   # ltodo note with error when ack overwriting...
-  
+
   def to_s
-    return @actualNumber.to_s # ltodo more of a queue 'wait for outstanding to finish first... :)' 
+    return @actualNumber.to_s # ltodo more of a queue 'wait for outstanding to finish first... :)'
   end
-  
+
   def to_i
     return @actualNumber.to_i
   end
@@ -1366,4 +1364,3 @@ if $0 == __FILE__ or debugMe('block_manager')
   BlockManager.timeSelf
   BlockManager.testSelf
 end
-

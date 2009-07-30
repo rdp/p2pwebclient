@@ -47,7 +47,7 @@ class OpenDHTEM
     @gateway_grab_mutex = Mutex.new
     @func_to_call_when_empty_which_means_we_are_in_shutdown_mode = nil
   end
-  create_named_parameters_wrapper :initialize
+  named_args :initialize
   attr_reader :done_finding_live_gateways
 
   def log m
@@ -266,7 +266,7 @@ class OpenDHTEM
       conn.rm new_key, value
     }
   end
-  create_named_parameters_wrapper :remove
+  named_args :remove
   
   # ltodo create a function 'just give me all the existing, no complaints, in one array!' err rather show examples of this, when give to world -- should be just to create it with just one gateway, show how to pass a func.
   private
@@ -311,7 +311,7 @@ class OpenDHTEM
     }
   end
 
-  create_named_parameters_wrapper :add
+  named_args :add
   
   def multiply_keys key, key_multiply_redundancy = @key_multiply_redundancy
     assert key_multiply_redundancy >= 1
