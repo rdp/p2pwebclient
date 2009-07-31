@@ -21,7 +21,8 @@ class OpenDHTEM
     Opendht_servers_file ="lib/opendht/cached_all_gateways_file_name"
   end
 
-  def initialize logger, key_multiply_redundancy = 1, max_num_simultaneous_gateway_requests_per_query = key_multiply_redundancy, gateway_pool_size = 1, gateway_pool_creation_race_size = 0 # these typically come back very quicky, but still...we'll keep pool size and pool creation race size close in number to free up some descriptors for ourselves :)
+  # these typically come back very quicky, but still...we'll keep pool size and pool creation race size close in number to free up some descriptors for ourselves :)
+  def initialize logger, key_multiply_redundancy = 1, max_num_simultaneous_gateway_requests_per_query = key_multiply_redundancy, gateway_pool_size = 1, gateway_pool_creation_race_size = 0
     raise "max_num_simultaneous_gateway_requests_per_query #{max_num_simultaneous_gateway_requests_per_query} must be a multiple of key_multiply_redundancy #{key_multiply_redundancy}" if max_num_simultaneous_gateway_requests_per_query % key_multiply_redundancy != 0
     @logger = logger
     @log_prefix = "odhtem"

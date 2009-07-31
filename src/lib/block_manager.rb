@@ -1,11 +1,7 @@
 require 'constants'
 require 'thread' # Mutex
 Dir.mkPath "/tmp/blocks" # ltodo take off
-require 'cs_and_p2p_client'
-require 'lib/opendht/opendht_em.rb'
-require 'lib/opendht/opendht_em_fake.rb'
-require 'p2p_server'
-require 'bittorrent_peer'
+require_rel '../cs_and_p2p_client', 'opendht/opendht_em.rb', 'opendht/opendht_em_fake.rb', '../p2p_server', '../bittorrent_peer'
 
 # ltodo test: it starts and can't get opendht headers the first time around, at least
 # ltodo what if a set is still outbound when you want to RM! (test)

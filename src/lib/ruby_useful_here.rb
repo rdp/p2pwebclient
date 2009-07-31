@@ -81,17 +81,6 @@ end
 
 class GenerateBackTrace < StandardError
 end
-require 'thread'
-class Thread
-  def backtrace # this one is redundant to caller
-    raise 'must be currenti -- this is unstable with multi' unless self == Thread.current
-    begin
-      raise GenerateBackTrace
-    rescue GenerateBackTrace => detail
-      return detail.backtrace
-    end
-  end
-end
 
 def goGetFile(urlToGet, whereItGoes = nil)
   wgetCommand = "wget #{urlToGet}"

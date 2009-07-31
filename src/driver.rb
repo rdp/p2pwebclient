@@ -2,14 +2,13 @@
 # ltodo profile whole thing :)
 # todo: skip some of the graphs--who cares...except there are some stats in there that aren't shown in vary parameter graphs yet--single things. Leave them :)
 # ltodo: still figure out more 'tight' close stats--does graphing graphing take forever?
-require 'constants'
-require 'cs_and_p2p_client'
-require './server_slow_peer.rb' # ltodo better TTL maybe...5hr. total
+# ltodo better TTL maybe...5hr. total
 require 'listener'
 require 'resolv-replace'
 require 'optparse'
+require_rel 'constants', 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener'
 # require 'facets' # just for driver :)
-# ltodo improvement don't just save file size header info on the DHT, save everything :)
+# ltodo improvement don't just save file size header info on the DHT, save more :)
 
 $shouldDoGraphsSingle = true # ltodo move down
 $shouldDoVaryParameterGraphs = true

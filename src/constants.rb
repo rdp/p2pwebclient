@@ -1,43 +1,41 @@
- # welcome...                        
-$version = "$Rev: 1515 $"             
-require 'unique_require' 
+#
+# welcome...                        
+#
+$version = "$Rev: 1515 $"
+
 require 'pp'
-begin
-  require 'rubygems' # some comps don't have this... 
-rescue Exception
-end
 require 'socket'
-$:.unshift  File.dirname(__FILE__)
-$:.unshift  File.dirname(__FILE__) + "/lib" # eventmachine without the RUBY_LIB.
-$:.unshift  File.dirname(__FILE__) + "/lib/arg_parser"
-Dir.glob('lib/gems_here/*').each{|d| $: << "#{d}/lib" }
-require 'facets/times'
-
-require 'arguments' # gem
 require 'base64'
-$:.unshift  File.dirname(__FILE__) + "/lib/em/lib" # eventmachine without the RUBY_LIB.
-$:.unshift  "eventmachine/svn/trunk/lib" # eventmachine local copy
+
+Dir.glob(File.dirname(__FILE__) + '/lib/gems_here/*').each{|d| $:.unshift "#{d}/lib" }
+require 'sane'
+require_rel 'unique_require'
+
+$: << __DIR__ + "lib"
+require 'facets/times' 
+require 'arguments'
+require 'andand.rb'
+
 require 'digest/sha1'
-require 'lib/andand.rb'
 
-$:.unshift File.dirname(__FILE__) + '/lib/graphing/personal-gruff-0.2.8/lib' # gruff, for later
+$: << File.dirname(__FILE__) + '/lib/graphing/personal-gruff-0.2.8/lib' # gruff, for later
 
-require 'lib/ruby_useful_here.rb'
+require_rel 'lib/ruby_useful_here.rb'
 
+# EM
 extension = ""
 if RUBY_VERSION >= '1.9'
  extension = "/1.9"
 end
-
 if RUBY_PLATFORM =~ /mingw|win32/
   $:.unshift  File.dirname(__FILE__) + "/ext/mingw" + extension
 else
   $: <<  File.dirname(__FILE__) + "/ext/planetlab_ilab" + extension
 end
-
-require 'eventmachine'
-
+$: << __DIR__ + '/lib/em/lib'
+require_rel 'lib/em/lib/eventmachine'
 require 'lib/event_machine_addons.rb'
+
 EM::set_max_timers 10000
 
 # ltodo: wonder if there's a speedup if, while during download of a very fast file, you belay the opendht registration till the end :) like a flood when you're done, only

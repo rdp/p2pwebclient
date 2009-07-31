@@ -1,6 +1,5 @@
 require File.dirname(__FILE__) + '/constants'
-require File.dirname(__FILE__) + '/individual_graph'
-require File.dirname(__FILE__) + '/lib/andand'
+require_rel 'individual_graph'
 require 'tempfile'
 
 class LineWithPointsFile
