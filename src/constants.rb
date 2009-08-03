@@ -23,6 +23,7 @@ $: << File.dirname(__FILE__) + '/lib/graphing/personal-gruff-0.2.8/lib' # gruff,
 require_rel 'lib/ruby_useful_here.rb'
 
 # EM
+require_rel 'ext/em/' + (RUBY_VERSION + '.' + RUBY_PLATFORM)
 extension = ""
 if RUBY_VERSION >= '1.9'
  extension = "/1.9"
