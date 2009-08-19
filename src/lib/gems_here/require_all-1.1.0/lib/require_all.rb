@@ -105,7 +105,7 @@ module RequireAll
       # If this pass didn't resolve any NameErrors, we've hit an unresolvable
       # dependency, so raise one of the exceptions we encountered.
       if failed.size == files.size
-        raise first_name_error
+        raise (first_name_error || 'empty directory specified ' + arg)
       else
         files = failed
       end

@@ -210,7 +210,8 @@ class BlockManager
   end
   #
 
-  def repeat_add_until_done key, value, round_id = key + value.to_s + rand(1000000).to_s, description = '', this_many_repeats_left = 3, &block
+  def repeat_add_until_done key, value, round_id = nil, description = '', this_many_repeats_left = 3 &block
+    round_id ||= key + value.to_s + rand(1000000).to_s
     raise "unexpected non block!" unless block_given?
 
     @opendht.add(key, value, :round_id => round_id, :description => description, :retry_times => 0, :block_proc => proc{|status, values, round, key|

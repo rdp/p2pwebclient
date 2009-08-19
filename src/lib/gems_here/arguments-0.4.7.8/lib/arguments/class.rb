@@ -39,7 +39,8 @@ module NamedArgs
         end
       end
 
-      klass.module_eval <<-RUBY_EVAL, __FILE__, __LINE__
+      line_loc = __LINE__
+      new_code = <<-RUBY_EVAL
         def __new_#{ meth } *args, &block
           opts = args.last.kind_of?( Hash ) ? args.pop : {}
           #{ assigns.join("\n") }
@@ -49,6 +50,16 @@ module NamedArgs
         alias __original_#{ meth } #{ meth }
         alias #{ meth } __new_#{ meth }
       RUBY_EVAL
+
+      puts "wrapping #{ meth } with this code #{new_code}" if $VERBOSE
+
+      begin
+        klass.module_eval new_code, __FILE__ + '.approximately', line_loc + 1
+      rescue SyntaxError => e
+          puts "warning--unable to wrap method #{ meth } -- possibly a syntax exception or it's not all on one line in 1.9 -- #{new_code}"
+          throw e
+      end
+        
     end
   end
 

@@ -24,10 +24,10 @@ require_rel 'lib/ruby_useful_here.rb'
 
 # EM
 ruby_version = (RUBY_VERSION + '.' + RUBY_PLATFORM)
-require_rel 'ext/em/' + ruby_version # em libs
+$: << __DIR__ + 'ext/em/' + ruby_version # em libs
 ENV['INLINEDIR'] = 'ext/' + ruby_version # ext/xxx/.ruby_inline dirs
-$: << __DIR__ + '/lib/em/lib'
-require_rel 'lib/em/lib/eventmachine'
+
+require 'eventmachine'
 require 'lib/event_machine_addons.rb'
 
 EM::set_max_timers 10000
