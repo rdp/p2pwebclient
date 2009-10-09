@@ -8,10 +8,13 @@ require 'socket'
 require 'base64'
 
 Dir.glob(File.dirname(__FILE__) + '/lib/gems_here/*').each{|d| $:.unshift "#{d}/lib" }
+# we can load gems now.
+# phew!
 require 'sane'
-require_rel 'unique_require'
-
+$: << __DIR__
 $: << __DIR__ + "lib"
+require_rel 'unique_require' if RUBY_VERSION < '1.9'
+
 require 'facets/times' 
 require 'arguments'
 require 'andand.rb'
@@ -28,12 +31,12 @@ $: << __DIR__ + 'ext/em/' + ruby_version # em libs
 ENV['INLINEDIR'] = 'ext/' + ruby_version # ext/xxx/.ruby_inline dirs
 
 require 'eventmachine'
-require 'lib/event_machine_addons.rb'
+require_rel 'lib/event_machine_addons.rb'
 
 EM::set_max_timers 10000
 
 # ltodo: wonder if there's a speedup if, while during download of a very fast file, you belay the opendht registration till the end :) like a flood when you're done, only
-require 'lib/opendht/local_drive_dht.rb'
+require_rel 'lib/opendht/local_drive_dht.rb'
 
 #require 'resolv-replace' # doesn't help EM! LTODO!
 

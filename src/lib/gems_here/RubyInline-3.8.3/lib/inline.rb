@@ -65,7 +65,7 @@ class CompilationError < RuntimeError; end
 # the current namespace.
 
 module Inline
-  VERSION = '3.8.1'
+  VERSION = '3.8.3'
 
   WINDOZE  = /mswin|mingw/ =~ RUBY_PLATFORM
   RUBINIUS = defined? RUBY_ENGINE
@@ -125,10 +125,8 @@ module Inline
 
     unless defined? @@rootdir and env == @@rootdir and test ?d, @@rootdir then
       rootdir = env
-      unless test ?d, rootdir
-      	print "making #{rootdir}\n"
-        Dir.mkdir rootdir, 0700 unless test ?d, rootdir
-      end
+      Dir.mkdir rootdir, 0700 unless test ?d, rootdir
+      Dir.assert_secure rootdir
       @@rootdir = rootdir
     end
 
@@ -563,18 +561,7 @@ VALUE #{method}_equals(VALUE value) {
                           else
                             nil
                           end
-            filename =  File.expand_path(src_name)
-	    so_filename = File.expand_path(so_name)
-	  if RUBY_PLATFORM =~ /mingw/ # not sure if mswin32 has the same issue...
-	   for pathname in [so_filename, filename] do
-	       pathname.gsub!(' ', '\ ')
-	       pathname = filename[1..-2] # take out quotes
-	     end
-	  else
-	  	so_filename = so_filename.inspect
-         	filename = filename.inspect
-	  end
-	  
+
           cmd = [ Config::CONFIG['LDSHARED'],
                   flags,
                   Config::CONFIG['CCDLFLAGS'],
@@ -583,8 +570,8 @@ VALUE #{method}_equals(VALUE value) {
                   config_hdrdir,
                   '-I', Config::CONFIG['includedir'],
                   "-L#{Config::CONFIG['libdir']}",
-                  '-o', so_filename,
-                  filename,
+                  '-o', so_name.inspect,
+                  File.expand_path(src_name).inspect,
                   libs,
                   crap_for_windoze ].join(' ')
 
@@ -658,6 +645,14 @@ VALUE #{method}_equals(VALUE value) {
 
     def add_link_flags(*flags)
       @libs.push(*flags)
+    end
+
+    ##
+    # Create a static variable and initialize it to a value.
+
+    def add_static name, init, type = "VALUE"
+      prefix      "static #{type} #{name};"
+      add_to_init "#{name} = #{init};"
     end
 
     ##

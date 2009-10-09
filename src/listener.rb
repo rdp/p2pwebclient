@@ -37,13 +37,15 @@ class ListenerEM < EM::Connection
   def receive_data incomingText
     @logger.debug "got incoming text #{incomingText.inspect}"
     # tltodo when send req's, etc. do flush
-    if incomingText.strip == "version"
-      @logger.debug "got version, answering #{$version} [only]"
+    incomingText.strip!
+    if incomingText == "version"
+      @logger.debug "got version, answering #{$version} [only--no longer the ruby version too]"
       send_data("#{$version}\n")
       close_connection_after_writing
       return
     end
-    if incomingText.strip == "ruby_version"
+    
+    if incomingText == "ruby_version"
       answer = RUBY_DESCRIPTION + Config::CONFIG['CFLAGS']
       @logger.debug "got ruby_version, answering #{answer}"
       send_data answer
@@ -79,7 +81,7 @@ class ListenerEM < EM::Connection
       raise RaiseMeError.new("got restart or svnup_restart, so raising...")# ltodo do we close it?
     end
     
-    if incomingText.strip == "doneWithRun?"
+    if incomingText == "doneWithRun?"
       clientsOutstanding = BlockManager.clientsStillRunning
       if clientsOutstanding.empty?
         answer = "yes"
@@ -249,7 +251,6 @@ class Listener # ltodo when a peer dies it should cleanup better
   def stopBlocking # ltodo rename
     EM::stop_server @listenerServerSig # rest should clear up immediately, really, so we're ok
   end
-  
   
   def Listener.listen port = $allListenersPort
     listener = Listener.new port
