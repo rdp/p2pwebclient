@@ -1,5 +1,4 @@
-require "logger"
-require "timeout"
+require File.dirname(__FILE__) + "/../constants"
 require 'driver'
 require 'lib/block_manager'
 require 'test/unit'
@@ -51,9 +50,9 @@ class BMTester < Test::Unit::TestCase # some are in the old driver tests!!
   end
   
   def teardown
-    @logger.close
+    @logger.close if @logger
     @server.doFinalize if @server
-    sleep 0.1 while !@dht_subject.done_and_clean?
+    sleep 0.1 while !@dht_subject.done_and_clean? if @dht_subject
     #Driver.tearDownServer # these both might be anathema
     #Driver.tearDownListener
   end
