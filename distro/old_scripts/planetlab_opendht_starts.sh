@@ -1,0 +1,1 @@
+python vxargs-0.3.3.py -y --plain  --max-procs=100 --timeout=300 -a planetlab_hosts.txt -o output/superstall1 ssh byu_p2pweb@{} "cd p2pwebclient/src; . setup_env_planetlab_host.sh; cd lib/opendht/bamboo; svn up; killall java; nohup ./repeat.sh ./start_planetlab_second.sh >planetlab_opendht.out 2> planetlab_opendht.err < /dev/null &"
