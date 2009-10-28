@@ -1,6 +1,6 @@
 require 'erb'
 require '../../ruby_useful_here'
-name = "cfg/openhash_second_planetlab_local.cfg"
+name = "openhash_planetlab_local.cfg"
 node_number = 1
 port1 = 3630 + 1
 
@@ -10,7 +10,6 @@ gateways = $opendht_gateways
 am_gateway = false
 if gateways[Socket.get_host_ip] 
  # you are a gateway!
- name = 'openhash_gateway_utah_generated.cfg'
  port1 = gateways[Socket.get_host_ip]
  am_gateway = true
 end

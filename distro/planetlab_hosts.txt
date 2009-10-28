@@ -1,1 +1,5 @@
+planetlab4.flux.utah.edu
 planetlab5.flux.utah.edu
+planetlab6.flux.utah.edu
+planetlab7.flux.utah.edu
+
