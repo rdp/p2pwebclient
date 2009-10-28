@@ -10,5 +10,5 @@ $opendht_gateways = {
 
 normal_port = ['155.98.35.5', '155.98.35.6', '155.98.35.7']
 for name in normal_port
- $opendht_gateways[name] = 3630
+ $opendht_gateways[name] ||= 3640
 end
