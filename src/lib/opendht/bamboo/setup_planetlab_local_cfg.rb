@@ -3,7 +3,8 @@ require '../../ruby_useful_here'
 name = "cfg/openhash_second_planetlab_local.cfg"
 node_number = 1
 port1 = 3630 + 1
-require 'known_gateways'
+
+require 'known_gateways' # $opendht_gateways
 gateways = $opendht_gateways
 
 am_gateway = false
