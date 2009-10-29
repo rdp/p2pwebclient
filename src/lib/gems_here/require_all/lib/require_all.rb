@@ -33,11 +33,17 @@ module RequireAll
   #
   def require_all(*args)
     # Handle passing an array as an argument
-    args = args.flatten
+    args.flatten!
     
     if args.size > 1
-      # If we got a list, those be are files!
-      files = args
+      # Expand files below directories
+      files = args.map do |path|
+        if File.directory? path
+          Dir[File.join(path, '**', '*.rb')]
+        else
+          path
+        end
+      end.flatten
     else
       arg = args.first
       begin
@@ -65,8 +71,12 @@ module RequireAll
         raise LoadError, "no such file to load -- #{arg}" if files.empty?
       end
     end
+
+    # If there's nothing to load, you're doing it wrong!
+    raise LoadError, "no files to load" if files.empty?
     
     files.map! { |file| File.expand_path file }
+    files.sort!
             
     begin
       failed = []
@@ -105,7 +115,7 @@ module RequireAll
       # If this pass didn't resolve any NameErrors, we've hit an unresolvable
       # dependency, so raise one of the exceptions we encountered.
       if failed.size == files.size
-        raise (first_name_error || 'empty directory specified ' + arg)
+        raise first_name_error
       else
         files = failed
       end
@@ -117,8 +127,11 @@ module RequireAll
   # Works like require_all, but paths are relative to the caller rather than 
   # the current working directory
   def require_rel(*paths)
-    for path  in paths
-      source_directory = File.dirname caller[2].sub(/:\d+$/, '')
+    # Handle passing an array as an argument
+    paths.flatten!
+    
+    source_directory = File.dirname caller.first.sub(/:\d+$/, '')
+    paths.each do |path|
       require_all File.join(source_directory, path)
     end
   end

@@ -181,7 +181,7 @@ class Driver
   def Driver.throwUpListener
     begin
       @@listenerObject, @@listenerThread = Listener.listen
-    rescue RuntimeError
+    rescue 
       print "ACK listener already running! hope it works! returning nil!"
       return nil
     end
@@ -1072,7 +1072,7 @@ class Driver
     startAllPeersAndWaitForCompletion @@blockSize, @@fileSize, @@spaceBetweenNew, @@numClientsToSpawn, @@dT, @@dR, @@dW, @@linger, runName, @@serverBpS, @@allRunLogger, totalToPotentiallyIgnoreLastPeers, @@peerTokens
   end
   
-  named_args_for :'Driver.doSingleRunWithCurrentSettings'
+  named_args_for :'self.doSingleRunWithCurrentSettings'
 
   def Driver.graphAndStatSingleRun(runName, outputName = runName)
     @@allRunLogger.debug "graphing single #{runName} => #{outputName}"
