@@ -1,5 +1,5 @@
 module TestMod; 
- def go(a, b) 
+ def go(a, b)
    b
  end
 end 

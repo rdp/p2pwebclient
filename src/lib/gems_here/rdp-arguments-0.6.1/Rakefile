@@ -10,7 +10,7 @@ Hoe.plugin :newgem
 
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
-$hoe = Hoe.spec 'arguments' do
+$hoe = Hoe.spec 'rdp-arguments' do
   self.developer 'Macario Ortega', 'macarui@gmail.com'
   self.rubyforge_name = self.name # TODO this is default value
   self.extra_deps = [
@@ -18,7 +18,6 @@ $hoe = Hoe.spec 'arguments' do
     ['ParseTree',   '>= 3.0.3'],
     ['ruby2ruby',    '= 1.1.9']
   ]
-  self.homepage = 'http://github.com/maca/arguments'
 end
 
 require 'newgem/tasks'

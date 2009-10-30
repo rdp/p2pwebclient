@@ -43,8 +43,14 @@ describe Arguments do
     Klass.send( :named_arguments_for, :defaults_with_class)
     @instance.defaults_with_class(1, 3).should == 3
     @instance.defaults_with_class(:a => 3).should == 3
-    require '_dbg'
     @instance.defaults_with_class().should == 3
+  end
+
+  it "should allow for class arguments in class methods" do
+    Klass.send( :named_arguments_for, :'self.klass_defaults_with_class')
+    Klass.klass_defaults_with_class(1, 3).should == 3
+    Klass.klass_defaults_with_class(:a => 3).should == 3
+    Klass.klass_defaults_with_class().should == 3
   end
   
   it "should allow overriding with nil" do
@@ -70,6 +76,8 @@ describe Arguments do
   it "should work with class methods" do
     (class << Klass; self; end).send( :named_arguments_for, :k_method )
     Klass.k_method(:d => :d).should == [1, 2, 3, :d]
+    #(class << Klass; self; end).send( :named_arguments_for, :k_method )
+    #Klass.k_method(:d => :d).should == [1, 2, 3, :d]
   end
   
   it "should override defaults on standard passing" do
@@ -143,13 +151,12 @@ describe Arguments do
     }
   end
 
-  it "should work with modules" do
+  it "should work with modules (not working yet)" do
      require 'module.rb'
      TestMod.send(:named_arguments_for, :go)
      IncludesTestMod.new.go(1,2).should == 2
      IncludesTestMod.new.go(:a => 1, :b => 2).should == 2
   end
-  
 
   it "should benchmark with hack" do
     puts Benchmark.measure {

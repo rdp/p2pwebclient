@@ -2,9 +2,6 @@
 # ltodo in driver have an assertion that 'other threads are dead!'
 # ltodo when a peer dies early it must clean up DHT blocks, and also its own blocks. Or should. and sockets.
 # ltodo on err dump the file...
-require 'rubygems'
-#require 'sane'
-
 require 'constants'
 require 'cs_and_p2p_client.rb'
 require 'optparse'
@@ -200,7 +197,6 @@ class ListenerEM < EM::Connection
       opts = {:completion_proc => fire_rest} # always write 'ALL TOTALLY DONE'
       opts[:do_not_shutdown_logger] = true # ltodo not use I guess
       opts[:termination_proc] = close_logger_maybe_proc
-require '_dbg'
       first_runner = BlockManager.startCSWithP2PEM(first_url, dTToWaitAtBeginning, dRIfBelowThisCutItBps, dWindowSeconds, blockSize, spaceBetweenNew, linger, startTime, peer_name, totalSecondsToContinueGeneratingNewClients, runName, serverBpS, peer_tokens, @logger, opts)
       
   end  

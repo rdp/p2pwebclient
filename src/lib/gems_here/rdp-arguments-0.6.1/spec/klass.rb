@@ -23,6 +23,10 @@ class Klass
   def defaults_with_class b = 1, a = @@go
     a
   end
+
+  def self.klass_defaults_with_class b = 1, a = @@go
+    a
+  end
   
   def no_args
   end
