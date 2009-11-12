@@ -16,6 +16,12 @@ $: << __DIR__ + "lib"
 require_rel 'unique_require' if RUBY_VERSION < '1.9'
 
 #require 'facets/times' 
+class Fixnum
+ def minutes
+   self*60
+  end
+end
+require 'rubygems'
 require 'arguments'
 require 'andand.rb'
 

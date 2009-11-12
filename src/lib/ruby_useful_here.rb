@@ -2,7 +2,7 @@
 # note: probably not useful to ANYONE :)
 
 require 'pp'
-uequire 'thread'
+require 'thread'
 # to use  require "useful_ruby_utilities"
 # ltodo move in to real
 #require 'resolv-replace'
