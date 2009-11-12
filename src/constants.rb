@@ -1,4 +1,4 @@
-#
+
 # welcome...                        
 #
 $version = "$Rev: 1515 $"
@@ -15,7 +15,7 @@ $: << __DIR__
 $: << __DIR__ + "lib"
 require_rel 'unique_require' if RUBY_VERSION < '1.9'
 
-require 'facets/times' 
+#require 'facets/times' 
 require 'arguments'
 require 'andand.rb'
 

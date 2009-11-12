@@ -1,4 +1,4 @@
-require 'rubygems'
+# require 'rubygems'
 # unique require for ruby 1.8.x
 # see README
 
