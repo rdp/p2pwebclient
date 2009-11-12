@@ -1,7 +1,7 @@
-#
+
 # welcome...                        
 #
-$version = "$Rev: 1515 $"
+$version = "$Rev: 1517 $"
 
 require 'pp'
 require 'socket'
@@ -21,6 +21,7 @@ class Fixnum
    self*60
   end
 end
+require 'rubygems'
 require 'arguments'
 require 'andand.rb'
 

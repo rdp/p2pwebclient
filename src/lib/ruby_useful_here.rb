@@ -102,30 +102,16 @@ def goGetFile(urlToGet, whereItGoes = nil)
   
 end
 
-def isGoodExecutableFile?(thisFileName)
-  if File.executable_real? thisFileName
-    return true
-  end
-  begin
-    a = IO.popen(thisFileName, "w+")
-    returnVal = true
-    # if that cleared then the exec worked
-    a.close
-    rescue => details
-    returnVal = false
-  end
-  return returnVal # ltodo there's some bug with this
-end
-
+# def isGoodExecutableFile?(thisFileName) File.executable?
 
 class String
 
   def blank?
-   self.length == 0
+   empty?
   end
 
   def contains? thisString
-    return self.index(thisString) != nil
+    include? thisString
   end
   
   def escape
@@ -135,6 +121,7 @@ class String
   def sanitize
     self.gsub(/[`\.?*\/\\|<>!&;:"'~@#\$%\^\(\)]/, '_')
   end
+
   def sanitize!
     self.gsub!(/[`\.?*\/\\|<>!&;:"'~@#\$%\^\(\)]/, '_')
   end
@@ -153,6 +140,7 @@ class String
     return output, rest # ltodo better funcs
     
   end
+
 end
 
 
@@ -225,7 +213,6 @@ end
 
 class Dir
   class << self
-    
     def createIndexFile(dirName, globIn = '*.{png,gif,jpg}')
       File.open(dirName + "/ind.html", "w") do |indexFile|
         for file in Dir.glob(dirName + '/'  + globIn) do indexFile.write("<img src=#{file.split('/')[-1]}>") end
@@ -622,8 +609,8 @@ class Hash
     end
     return sum
   end
-end
 
+end
 
 class TCPsocket
   
@@ -675,6 +662,7 @@ class Float
     return ("%.0#{decimal}f" % self).to_f
   end
 end # class
+
 class Array
   def cullDeadThreadsInArray # use array = array.cullDeadThreadsInArray
     out = []

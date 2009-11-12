@@ -1,4 +1,4 @@
-gem 'ruby2ruby', '= 1.1.9'
+#gem 'ruby2ruby', '= 1.1.9'
 require 'ruby2ruby'
 
 $:.unshift(File.dirname(__FILE__)) unless $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
