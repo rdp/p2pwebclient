@@ -6,6 +6,7 @@ $version = "$Rev: 1517 $"
 require 'pp'
 require 'socket'
 require 'base64'
+require 'timeout'
 
 Dir.glob(File.dirname(__FILE__) + '/lib/gems_here/*').each{|d| $:.unshift "#{d}/lib" }
 # we can load gems now.
@@ -36,7 +37,7 @@ ruby_version = (RUBY_VERSION + '.' + RUBY_PLATFORM)
 $: << __DIR__ + 'ext/em/' + ruby_version # em libs
 ENV['INLINEDIR'] = 'ext/' + ruby_version # ext/xxx/.ruby_inline dirs
 
-require 'eventmachine'
+require_rel 'eventmachinee'
 require_rel 'lib/event_machine_addons.rb'
 
 EM::set_max_timers 10000

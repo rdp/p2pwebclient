@@ -3,9 +3,7 @@
 require 'constants'
 require 'pp'
 require 'lib/timeKeeper.rb'
-require 'timeout'
 require 'listener.rb'
-require 'eventmachine'
 # ltodo experiment with 'large' chunks from EM
 # ltodo could also examine why so much waste in incoming/outgoing using this here system of transport between itself
 # ltodo with HEAD we could totally use that to start the connection, not be a HEAD.

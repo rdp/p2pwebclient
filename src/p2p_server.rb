@@ -6,7 +6,7 @@
 # ltodo add 'connection:close' to these
 # ltodo cull threads more often in this one
 require 'constants'
-require 'eventmachine'
+
 # ltodo test that it re-picks a new port on port in use :)
 class Thread
   attr_accessor :outSocket
