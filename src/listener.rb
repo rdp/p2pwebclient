@@ -135,7 +135,7 @@ class ListenerEM < EM::Connection
   # doctest: shares_logger it should 
   # >> logger = Logger.new('test/fake_name' + rand(1000000).to_s)
   # >> logger1 = Logger.new('test/fake_name' + rand(1000000).to_s)
-  # >> BlockManager.startCSWithP2PEM 'http://wilkboardonline.com/roger/p2p/25K.file', 2,2,3,100_000,1,20,0, 'no44_name', 1, 'no44_name2', 3, 3, logger1, :use_this_shared_logger => logger
+  # >> BlockManager.startCSWithP2PEM 'http://wilkboardonline.com/roger/p2p/test_files/25K.file', 2,2,3,100_000,1,20,0, 'no44_name', 1, 'no44_name2', 3, 3, logger1, :use_this_shared_logger => logger
   # >> BlockManager.startCSWithP2PEM 'http://wilkboardonline.com/roger/p2p/25K.file', 2,2,3,100_000,1,20,0, 'no55_name', 1, 'no55_name2', 3, 3, logger1, :use_this_shared_logger => logger
   # >> logger.read_whole_file.include?('44')
   # => true
