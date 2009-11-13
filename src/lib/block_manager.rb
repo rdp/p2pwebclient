@@ -210,7 +210,7 @@ class BlockManager
   end
   #
 
-  def repeat_add_until_done key, value, round_id = nil, description = '', this_many_repeats_left = 3 &block
+  def repeat_add_until_done key, value, round_id = nil, description = '', this_many_repeats_left = 3, &block
     round_id ||= key + value.to_s + rand(1000000).to_s
     raise "unexpected non block!" unless block_given?
 

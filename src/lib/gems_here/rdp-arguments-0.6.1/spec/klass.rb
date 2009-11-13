@@ -27,6 +27,14 @@ class Klass
   def self.klass_defaults_with_class b = 1, a = @@go
     a
   end
+
+  def Klass.klass_defaults_with_class2 b = 1, a = @@go
+    a
+  end
+
+  def Klass.klass_method a = 1, b = 2, c = 3, d = @@go, e = nil
+    d
+  end
   
   def no_args
   end

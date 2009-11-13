@@ -1,12 +1,15 @@
 #!/usr/bin/env ruby
+
 # ltodo in driver have an assertion that 'other threads are dead!'
 # ltodo when a peer dies early it must clean up DHT blocks, and also its own blocks. Or should. and sockets.
 # ltodo on err dump the file...
 require 'constants'
 require 'cs_and_p2p_client.rb'
 require 'optparse'
+
 class RaiseMeError < StandardError # ltodo rename
 end
+
 # ltodo hup no longer used
 # ltodo kills should work kill, graceful_end similarly
 class Array # ltodo would this be useful to other 'cull' ing locations?
@@ -28,7 +31,6 @@ class Array # ltodo would this be useful to other 'cull' ing locations?
 end
 
 
-#require 'remembered_evals'
 class ListenerEM < EM::Connection
   @@createClientMutex = Mutex.new
   def post_block logger

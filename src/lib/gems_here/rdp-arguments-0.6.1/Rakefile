@@ -11,6 +11,7 @@ Hoe.plugin :newgem
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
 $hoe = Hoe.spec 'rdp-arguments' do
+  raise 'broken with 1.3.5 on doze'
   self.developer 'Macario Ortega', 'macarui@gmail.com'
   self.rubyforge_name = self.name # TODO this is default value
   self.extra_deps = [

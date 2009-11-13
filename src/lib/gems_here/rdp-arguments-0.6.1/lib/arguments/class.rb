@@ -12,7 +12,7 @@ module Arguments
       else
         klass = self
       end
-      names   = Arguments.names klass, meth
+      names = Arguments.names klass, meth, am_self
       next if names.empty? or names.inject(false) { |bol, pair| bol || /^\*/ === pair.first.to_s }
       assigns = []
       names.pop if /^&/ === names[-1][0].to_s
@@ -38,7 +38,6 @@ module Arguments
         end
       end
 
-
       it = <<-RUBY_EVAL, __FILE__, __LINE__
         #{ "class << self" if am_self } 
         def __#{ meth }_with_keyword_arguments *args, &block
@@ -54,6 +53,16 @@ module Arguments
         alias #{ meth } __#{ meth }_with_keyword_arguments
         #{ "end" if am_self }
       RUBY_EVAL
+      if $DEBUG
+        code, file, line = *it
+        file = "cached_methods/#{meth}"
+        line = 1
+        Dir.mkdir 'cached_methods' rescue nil
+        File.open(file, 'w') do |f|
+          f.write code
+        end
+        it = [code, file, 1]
+      end   
       original_klass.class_eval *it
     end
   end

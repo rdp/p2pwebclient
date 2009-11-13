@@ -1,4 +1,5 @@
 require "#{ dir = File.dirname __FILE__ }/../lib/arguments"
+#$DEBUG = 1
 require 'benchmark'
 
 # TODO: Refactor specs for clarity and better coverage
@@ -7,6 +8,7 @@ describe Arguments do
   before do
     Object.send(:remove_const, 'Klass') rescue nil
     load "#{ dir }/klass.rb"
+    load "#{ dir }/klass_big.rb"
     @instance = Klass.new
   end
 
@@ -48,9 +50,35 @@ describe Arguments do
 
   it "should allow for class arguments in class methods" do
     Klass.send( :named_arguments_for, :'self.klass_defaults_with_class')
-    Klass.klass_defaults_with_class(1, 3).should == 3
-    Klass.klass_defaults_with_class(:a => 3).should == 3
+    Klass.klass_defaults_with_class(1, 4).should == 4
+    Klass.klass_defaults_with_class(:a => 4).should == 4
     Klass.klass_defaults_with_class().should == 3
+  end
+
+  it "should allow for class arguments in class methods" do
+    Klass.send( :named_arguments_for, :'self.klass_method')
+    Klass.klass_method(1, 2).should == 3
+    Klass.klass_method(:a => 3).should == 3
+    Klass.klass_method(1,2,3,5).should == 5
+    Klass.klass_method(1,2,3,5, 6).should == 5
+  end
+
+  it "should parse larger methods" do
+     Klass.send( :named_arguments_for, :'self.startCSWithP2PEM')
+     Klass.startCSWithP2PEM 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n' # 3
+
+     Klass.startCSWithP2PEM 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', :dhtClassToUse => 44, :completion_proc => nil # 44 
+
+     Klass.startCSWithP2PEM 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', :dhtClassToUse => 44, :completion_proc => nil, :use_this_shared_logger => nil, :do_not_shutdown_logger => false, :termination_proc => nil # 44
+
+  end
+
+
+  it "should allow for class arguments in class methods defined with like Name.method" do
+    Klass.send( :named_arguments_for, :'self.klass_defaults_with_class2')
+    Klass.klass_defaults_with_class2(1, 3).should == 3
+    Klass.klass_defaults_with_class2(:a => 3).should == 3
+    Klass.klass_defaults_with_class2().should == 3
   end
   
   it "should allow overriding with nil" do
