@@ -1276,7 +1276,6 @@ class Driver
             ip, port = nextGuy[0], nextGuy[1]
             assert ip && port
             print "ip is ", ip.inspect, "\nn\n\n\n"
-            _dbg
             next if ip =~ /ilab/
             next if ip == '127.0.0.1'
             next if ip == 'localhost'

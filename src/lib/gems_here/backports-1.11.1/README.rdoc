@@ -1,0 +1,144 @@
+= Backports Library
+
+Would you like to use features of Ruby 1.8.7 without the need of having 1.8.7 installed? Simply
+
+  require 'backports/1.8.7'
+
+All 1.8.7 features are now available! Many of the features of 1.9 are also available with
+
+  require 'backports/1.9'
+
+Finally, some features of rails' active-support are also available with
+
+  require 'backports/rails'
+  
+If you want them all:
+
+  require 'backports'
+
+== What's inside
+
+All features of 1.8.7 are backported (well, almost all, see the exception list bellow).
+
+Conditions for inclusion of ruby 1.9 and activesupport features:
+1. Won't break older code
+2. Simple and self-contained
+
+For example, <tt>Module::instance_methods</tt> returns strings in 1.8 and symbols in 1.9; no change can be made without the risk of breaking existing code. Such incompatibilities between 1.8 and 1.9 methods are left unchanged.
+
+More complex features of active-support (even things like <tt>String::pluralize</tt>), won't be included. <tt>require 'activesupport'</tt> if you need them and are not in rails!
+
+== Installation & compatibility
+
++backports+ is mirrored on Rubyforge and can thus be installed with:
+
+  sudo gem install backports
+
+To use:
+
+  require 'rubygems'
+  require 'backports'   # or a subset like "backports/1.8.7"
+  # and off you go!
+
+Compatible with Ruby 1.8 & 1.9, jruby and rubinius.
+
+= Complete List of backports
+
+== Ruby 1.8.7
+
+Complete Ruby 1.8.7 backporting (core language). Refer to the official list of changes[http://svn.ruby-lang.org/repos/ruby/tags/v1_8_7/NEWS].
+
+Only exceptions:
+* String#gsub
+* GC.stress=
+* Array#choice (use Array#sample instead)
+* recursive data handling (Array, Hash, ...)
+
+Libraries have not been backported. See at the end for list of known library backports
+
+== Ruby 1.9
+
+Additionally, the following Ruby 1.9 have been backported:
+
+* Array
+  * +try_convert+
+
+* Enumerable
+  * +each_with_object+
+  * +chunk+
+
+* Enumerator
+  * +new+ (with block)
+
+* File
+  * +binread+
+  * +to_path+
+  * All class methods accepting filenames will accept files or anything with a #to_path method.
+
+* Hash
+  * +try_convert+
+  * <tt>default_proc=</tt>
+
+* Kernel
+  * +require_relative+
+
+* Object
+  * +define_singleton_method+
+  * +flat_map+, +collect_concat+
+  * +public_method+
+  * +public_send+
+  * <tt>respond_to_missing?</tt>
+
+* Proc
+  * +yield+
+
+* String
+  * +try_convert+
+  * <tt>ascii_only?</tt>
+  * +chr+
+  * +clear+
+  * +codepoints+, +each_codepoint+
+
++Enumerator+ can be accessed directly (instead of <tt>Enumerable::Enumerator</tt>)
+
+Moreover, a pretty good imitation of BasicObject is available,
+but since it is only an imitation, it must be required explicitly:
+
+  require 'backports/basic_object'
+
+== Rails
+
+Some generic methods from Rails methods have been copied:
+
+* Enumerable
+  * +sum+
+
+* Hash
+  * +symbolize_keys+, <tt>symbolize_keys!</tt>
+  * +reverse_merge+, <tt>reverse_merge!</tt>
+
+* Module
+  * +alias_method_chain+
+
+* Object
+  * +try+
+  * +returning+
+
+* String
+  * +camelize+, +underscore+
+  * +dasherize+, +demodulize+
+  * +constantize+
+
+== Libraries
+
+Libraries have not been backported. I am aware of following the backport gems:
+
+* Net::SMTP for Ruby 1.8.6: smtp_tls[http://seattlerb.rubyforge.org/smtp_tls/]
+
+* Let me know of others...
+
+= License
+
++backports+ is released under the terms of the MIT License, see the included LICENSE file.
+
+Author::                 Marc-André Lafortune
