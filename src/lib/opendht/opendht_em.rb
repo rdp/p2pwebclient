@@ -259,7 +259,7 @@ class OpenDHTEM
     
   end
   
-  def remove key, value, round_id = nil, description = '', done_proc = nil &block
+  def remove key, value, round_id = nil, description = '', done_proc = nil, &block
     block ||= done_proc || @default_return_proc
     round_id ||= key + value.to_s + rand(1000000).to_s
     description = "rm [#{key}  -= #{value}]" << description
@@ -303,7 +303,7 @@ class OpenDHTEM
     end
   end
   
-  def add(key, value, round_id = nil, description = '', block_proc = nil, retry_times = @retry_times_if_non_successful_answer &block)
+  def add(key, value, round_id = nil, description = '', block_proc = nil, retry_times = @retry_times_if_non_successful_answer, &block)
     round_id ||= key + value.to_s + rand(1000000).to_s # default value since it kain't be parsed
  # ltodo: allow retry_times for others, too
     block ||= block_proc || @default_return_proc

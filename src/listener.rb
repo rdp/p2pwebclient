@@ -3,7 +3,7 @@
 # ltodo in driver have an assertion that 'other threads are dead!'
 # ltodo when a peer dies early it must clean up DHT blocks, and also its own blocks. Or should. and sockets.
 # ltodo on err dump the file...
-require 'constants'
+require './constants'
 require 'cs_and_p2p_client.rb'
 require 'optparse'
 
@@ -74,7 +74,7 @@ class ListenerEM < EM::Connection
     
     if incomingText == "svnup" or incomingText == "svnup_restart"
       @logger.debug "doing svn up"
-      system("svn up")
+      system("git pull")
       send_data("old version is #{$version}, done updating, will restart")
     end
     

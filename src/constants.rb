@@ -8,7 +8,7 @@ require 'socket'
 require 'base64'
 require 'timeout'
 
-Dir.glob(File.dirname(__FILE__) + '/lib/gems_here/*').each{|d| $:.unshift "#{d}/lib" }
+Dir.glob(File.dirname(__FILE__) + '/lib/gems_here/*').sort.each{|d| $:.unshift "#{d}/lib" }
 # we can load gems now.
 # phew!
 require 'sane'
