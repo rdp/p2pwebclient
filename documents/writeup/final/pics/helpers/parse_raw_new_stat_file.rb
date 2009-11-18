@@ -2,6 +2,8 @@ require 'rubygems_f'
 require 'sane'
 req_rel 'gnuplot_percentiles'
 
+# perhaps this file is no longer used?
+
 def do_file filename, xlabel = nil, ylabel = nil
   # expected something like [filename, x axis, y axis]
   # and parse some percentile graphs

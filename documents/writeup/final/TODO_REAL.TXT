@@ -1,14 +1,52 @@
 ====================actually really todo (in order of priority):
 
-rewrite whole thing...yeah :)
-add titles to that one graph
+methodology for each experiment, metrics for each
 
-named arguments, does it with with 1.9.2?
 
-start re-running stuffs
-  integrate with git now
-  new distro to everywhere
-  setup apache again...boo!
+Fig. 6 "bug in the rate limiting stuff"  please reference Fig. 6 (5?)
+
+
+
+Fig. 7 "download times start at median X then grow to median Y" why are there a few outliers for Fig. 7?  explain the 60 and 120s timeouts for Fig. 7
+
+Fig. 8 the exact numbers "is starts at y, tapers off at x" "why aren't they taking advantage of the server now?" figure 8, too.
+
+Fig. 9 "it goes up to 1 at x" and why are there outliers?  also only one block.  "Got part of it from the origin, then p2p kicks in." and "it's only one block"
+
+
+
+Section VII describe methodology "approximatley 5x the origin's bandwidth" confusing, single block small file.
+
+then run it until they finish, throwing out the really long tail for a few.
+
+
+Fig. 10 "T doesn't matter much"
+
+
+"as long as T is bigger than this and R is bigger than this then doesn't matter"
+
+load (Peers per Second)
+
+DHT Removal time (seconds)
+
+"how did I get figure 14?"
+
+
+if 13, 14 go together, make 13 a, b
+
+state how long you repeat each experiment.
+
+table for section 9.
+
+
+CDF for "percent from peers" for the BitTorrent download.
+
+
+
+
+
+------------maybe don't have to? --------------------
+
 
 ummm....dr was a "broken" test basically
 

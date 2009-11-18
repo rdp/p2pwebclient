@@ -141,7 +141,6 @@ class RunGrapher # should be called MultipleRunsSameSettingGrapher
     
   end
   
-  
   def getDeathMethodsAveraged
     allMethods = {}
     allMethods['http_straight'] = 0
@@ -161,7 +160,6 @@ class RunGrapher # should be called MultipleRunsSameSettingGrapher
 
   def goAllP2PTraffic(rawFilename, filenameOutput)
        raw = filenameOutput + ".raw.txt"
-
   end
   
   def goTotalThroughPut(filenameOutput)
