@@ -1,3 +1,1 @@
 I think that backing off the origin is only useful for when there are not very many peers listed and more than a few are trying to get a block--i.e. at the beginning of a large hit, or just randomly every so often.  So I would say it tends to not matter as much.
-
-could eventually bill this as "safer" internet, since you could kinder know/share md5's on every file in existence...
