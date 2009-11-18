@@ -335,7 +335,7 @@ class RunGrapher # should be called MultipleRunsSameSettingGrapher
         
       end 
     end
-    if allPutsByTime.length == 0: print "ACK! this had better be CSno puts means no p2p impossible!??" end 
+    if allPutsByTime.length == 0; print "ACK! this had better be CSno puts means no p2p impossible!??" end 
     
     if allGetsByTime.length == 0
       print "ack! no gets means no p2p receive action at all recorded"
