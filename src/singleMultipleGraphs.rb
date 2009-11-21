@@ -6,9 +6,9 @@
 # graph of 'opendht get to size got', opendht scatter
 # upload quantity to download speed, upload max speed to upload quantity
 
-require 'unique_require'
+require './unique_require'
 require __FILE__
-require 'constants'
+require './constants'
 require 'new_graphs.rb'
 require 'pp'
 require 'individual_graph.rb'
