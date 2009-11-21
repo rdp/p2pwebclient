@@ -5,9 +5,11 @@
 
 # graph of 'opendht get to size got', opendht scatter
 # upload quantity to download speed, upload max speed to upload quantity
-
+#
+#
 require './unique_require'
-require __FILE__
+$LOADED_FEATURES << __FILE__ # fake that we've been here
+$LOADED_FEATURES << File.expand_path(__FILE__)
 require './constants'
 require 'new_graphs.rb'
 require 'pp'
@@ -15,7 +17,6 @@ require 'individual_graph.rb'
 require 'graphHelpers.rb'
 require 'vary_parameter_graphs'
 
-$beenHere = true
 $doIndividuals = true
 
 class String
@@ -41,7 +42,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     Dir.mkPath(@dirName)
     @templateName = @dirName + "/"
     @arrayContainingArraysOfClientsPerRun = []
-    @graphSmoothFactor = 20 # tenths around itself... this can be rather a slowdown, if I remember correctly, if set too high
+    @graphSmoothFactor = 15 # tenths around itself... this can be rather a slowdown, if I remember correctly, if set too high
     @allClientsInOne = [] # most want
     @spanDuplesPerRunArray = []
     startTimes = []
@@ -86,7 +87,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
           endTimesThisRun << client.end
         end
       end
-      startFrame = startTimesThisRun.percentile 20
+      startFrame = startTimesThisRun.percentile 10
       endFrame = endTimesThisRun.percentile 80
       @spanDuplesPerRunArray << [startFrame, endFrame]       # unused, I think ltodo get rid of if not using
 
@@ -100,11 +101,6 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
   end
 
   def self.testSelf
-    print "ignore errors"
-    subject = MultipleRunsSameSettingGrapher.new(['fakerun'])
-    print "dont ignore errors"
-    assertEqual combineSeveralArraysToHash([[[1.0, 1],[2.0, 2], [1.0, 0.5]], [[1.0, 0.1]]]), {1.0 => 1.6, 2.0 => 2}
-    assertEqual subject.combineSeveralArraysToTenthsSummedHash([[[1.0, 3]]]), {1.5=>3,  0.7=>3, 1.2=>3,  0.9=>3,     1.1=>3,      1.4=>3,     0.8=>3,       0.6=>3,        1.0=>3,      1.3=>3}
     print "RunGrapher testself done"
 
   end
@@ -199,8 +195,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
       pointsWithoutTheEdges += nonpointsWithoutTheEdges.onlyFromHereToHere(0,10000000)#spanDuple[0], spanDuple[1])
     }
     # they need to be combined now...i.e. 2.3 6K, 2.7 8K => 2: 15K
-    pointsWithoutTheEdges = combineSeveralArraysToTenthsSummedHash([pointsWithoutTheEdges])
-    pointsWithoutTheEdges = pointsWithoutTheEdges.toArrayWithIntermediateZeroesByResolution(0.1)
+    pointsWithoutTheEdges = [pointsWithoutTheEdges].combineSeveralArraysToBucketsWithZeroes # todo smooth factor here
     pointsWithoutTheEdges = pointsWithoutTheEdges.divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length)
 
     # now--we want to write out "all" the points, not just the from here to here ones.
@@ -221,8 +216,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     end
 
     if write_to_file
-      allReceivedEver = combineSeveralArraysToTenthsSummedHash(allReceivedArrays, @graphSmoothFactor)
-      newBuckets = allReceivedEver.toArrayWithIntermediateZeroesByResolution(0.1)
+      newBuckets = allReceivedArrays.combineSeveralArraysToBucketsWithZeroes(@graphSmoothFactor)
       newBuckets = newBuckets.divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length) # we should be 'too high' :)
       out = LineWithPointsFile.writeAndReadSingle(filenameOutputRaw, "total throughput receiveds", newBuckets)
     end
@@ -491,7 +485,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     if failed_count > 0
         puts " #{failed_count} clients failed--no download time--ignoring them!!"
     else
-        puts 'all clients succeeded'
+        puts "all clients succeeded #{@allClientsInOne.length}"
     end
 
     if allTimes.length == 0
@@ -551,23 +545,22 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
         nonpointsWithoutTheEdges += client.allReceivedHost
       end
       toAdd =  nonpointsWithoutTheEdges.onlyFromHereToHere(spanDuple[0], spanDuple[1])
-      partialServedPoints += nonpointsWithoutTheEdges.onlyFromHereToHere(spanDuple[0], spanDuple[1])
+      partialServedPoints << nonpointsWithoutTheEdges.onlyFromHereToHere(spanDuple[0], spanDuple[1])
     }
-    partialServedPoints  = combineSeveralArraysToTenthsSummedHash([partialServedPoints]).toArrayWithIntermediateZeroesByResolution(0.1).divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length)
+    partialServedPoints = partialServedPoints.combineSeveralArraysToBucketsWithZeroes().divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length)
 
     # ltodo combine with above loop!
     for client in @allClientsInOne
       allEntries << client.allReceivedHost
     end # ltodo fake server should NOT propagate the size :)
     collapsed = allEntries.collapseMultipleArrays
-    buckets = combineSeveralArraysToTenthsSummedHash([collapsed], @graphSmoothFactor)
+    newBuckets = [collapsed].combineSeveralArraysToBucketsWithZeroes(@graphSmoothFactor)
     # now add zeroes-- zeroes count this time :)  ltodo should zeroes count for others, perhaps, too?
-    newBuckets = buckets.toArrayWithIntermediateZeroesByResolution(0.1)
     newBuckets = newBuckets.divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length) # we should be 'too high' :) this will bring us down to size
     newBucketsCopy = LineWithPointsFile.writeAndReadSingle(rawFilename, "server received by peer points", newBuckets)
-    # fails in error    assertEqual newBucketsCopy, newBuckets
+    # fails in error ...    assertEqual newBucketsCopy, newBuckets
 
-    return partialServedPoints
+    return partialServedPoints.flatten 1 # want a flattened version...
   end # func
 
   # ltodo a scatter graph of when the various ones happened of dT vs. dR, versus straight
@@ -581,27 +574,34 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     end
   end
 
-  def combineSeveralArraysToTenthsSummedHash(combineThese, tenthsWide = 10)
-    combined = MultipleRunsSameSettingGrapher.combineSeveralArraysToHash(combineThese)
-    return combined.toTenthsSummedHash(tenthsWide)
+class ::Array
+
+  def combineSeveralArraysToBucketsWithZeroes(secondsMod = 1)
+    found_something = false
+    for subArray in self
+        assert subArray.is_a? Array
+        # unfortunately it might be [[]] totally empty, like for all p2p traffic on a CS run
+    end
+    combined = self.combineSeveralArraysToStraightHash # ltodo is this call really necessary?
+    return combined.truncate_and_combine_keys(secondsMod).toArrayWithIntermediateZeroesByResolution(secondsMod)
   end
 
-  def self.combineSeveralArraysToHash(theseArrays)
+  def combineSeveralArraysToStraightHash
     newBuckets = {}
-    for timePointArray in theseArrays
+    for timePointArray in self
       for time, bytes in timePointArray
         newBuckets.addToKey(time, bytes)
       end
     end
     return newBuckets
   end
+end
 
-  # ltodo give to gruff
-
+  # ltodo give back to gruff
   def createAllIndividuals
     for client in @allClientsInOne
       client.createIndividual @dirName
-      print "."
+      print ".c"
       STDOUT.flush
     end
   end
@@ -654,16 +654,49 @@ end # class
 
 class Hash
 
-  def toTenthsSummedHash(howManyTenthsTotal = 10)# this doesn't change the values but just 'spreads' them all out int he new one, with finer granularity (like having .1.1.1.1.1 instead of just .1 which is...still the same..mostly)
+  # convert a hash with arbitrary key, values
+  # like {3.19 => 1600}
+  # to be just integer keys
+  def truncate_and_combine_keys(seconds_mod)
+    new_truncated = {}
+    
+    for key, value in self
+        extra = key.to_i % seconds_mod
+        new_truncated.addToKey(key.to_i - extra, value)
+    end
+    # if we've been conglomming 5seconds worth into each reading
+    # that one reading should actually be 1/5th itself, as if it were one second...
+    new_truncated_and_divided = {}
+    new_truncated.each{|second, large_value|
+      new_truncated_and_divided[second] = large_value.to_f/seconds_mod
+    }
+    new_truncated_and_divided
+  end
+        
+  # this doesn't change the values but just 'spreads' them all out int he new one, with finer granularity 
+  # (like having .1.1.1.1.1 instead of just .1 which is...still the same..mostly)
+  # howManyTenthsTotal = 10 
+  # >> {1.0 => 300}.toTenthsSummedHash(10)
+  # => {0.60=>300.0, 0.7=>1000.0...}
+  #
+  # so this one is taking "raw" hashes
+  # and splitting them among 10ths
+  #
+  # todo replace with truncate_and_combine_keys
+  #
+  #
+  def toTenthsSummedHash(howManyTenthsTotal = 10)
+
+
     howManyTenthsTotal = howManyTenthsTotal.to_f
     newBuckets = {}
-    for time, bytes in self # [time, bytes] hashes
+    for original_time, bytes in self # [time, bytes] arrays
       # each time goes into...the...we'll say 10 10th afore of it.
       bytes /= (howManyTenthsTotal/10)
       1.upto(howManyTenthsTotal)  { |tenth|
-        keyTime = (time * 10).to_i # truncate to tenth
+        keyTime = (original_time * 10).to_i # truncate to tenth
         keyTime += tenth - howManyTenthsTotal/2 # make it 'balanced in the middle i.e. fill from 2.5 to 3.5 for 3.0
-        keyTime = keyTime / 10.0#howManyTenthsTotal.to_f
+        keyTime = keyTime / 10.0
         if keyTime >= 0 # ignore if before zero
           #  print "from #{time}s #{bytes}b adding #{keyTime}s, #{bytes}b\n"
           newBuckets.addToKey(keyTime, bytes)
@@ -703,7 +736,7 @@ if __FILE__.include?($0) or debugMe 'singleMultipleGraphs' # ltodo change these 
       exit
     end
 
-    $doIndividuals = true # individual runs must be
+    $doIndividuals = true # create the ASCII individual graphs...
     # instead of "3 runs same setting grapher" it's "one of those 3, by itself"
     a = MultipleRunsSameSettingGrapher.new(ARGV)
     a.doAll
@@ -711,8 +744,9 @@ if __FILE__.include?($0) or debugMe 'singleMultipleGraphs' # ltodo change these 
     #RunGrapher.doTestRun(3144)
     #RunGrapher.testMultiples
     #RunGrapher.doTestRun("grundled-200-lab-2")
-    a = MultipleRunsSameSettingGrapher.new(['test2-10-v2_0_0.5', 'test2-10-v2_1_0.5'])
-    a.doAll
+    #a = MultipleRunsSameSettingGrapher.new(['test2-10-v2_0_0.5', 'test2-10-v2_1_0.5'])
+    #a.doAll
+    MultipleRunsSameSettingGrapher.testSelf
   end
 end
 # vltodo run it with 'super fast local' fast server -- first few clients are faster (?) optimize it that way:)

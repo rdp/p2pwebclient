@@ -80,9 +80,9 @@ class VaryParameter
   def VaryParameter.getRetValuesFromRuns(command, grapherObject)
     print "going #{command}"
     begin
-      results = eval("grapherObject.#{command}")
+      results = grapherObject.send(command)
     rescue => detail
-      print "FAILED #{command} #{detail}\n"
+      print "FAILED #{command} #{detail} #{detail.backtrace}\n"
       return nil
     end
     return results
@@ -90,6 +90,7 @@ class VaryParameter
 
 
   def VaryParameter.getDuplesFromClientsAndPercentile(command, grapherObject)
+    puts command
     all = VaryParameter.getRetValuesFromRuns(command, grapherObject)
     trueNumbers = []
     for duple in all
@@ -116,11 +117,13 @@ class VaryParameter
 
 
   def VaryParameter.calculatePercentiles(thisArray, thesePercentiles)
+    thisArray = thisArray.sort
+
     if thisArray.length < 3
-      print "ACK HARD TO CALCULATE PERCENTILES ON -> #{thisArray.inspect}\n"
+      print "ACK HARD TO CALCULATE PERCENTILES ON -> #{thisArray.inspect} -- using all zeroes...\n"
       return [0]*thesePercentiles.length
     end
-    thisArray = thisArray.sort
+
     finishedArrays = []
     for percentile in thesePercentiles
       #      if percentile != 50
@@ -176,13 +179,13 @@ class VaryParameter
   end
 
   @@all_stats = [
-    ["allServerServedPointsPartial()", "server_speed", "Server upload rate", "Server Bytes / S"],
-    ["allReceivedPointsPartialP2P()", "p2p_received_partial", "Client receive from p2p rate", "Bytes / S"],
-    ["allServedPointsPartialP2P()", "p2p_served_partial", "Client send p2p rate", "Bytes / S"],
-    ["createClientTotalUpload()", "client_upload_rate", "Client Upload Sum", "Bytes / Client"],
-    ["totalThroughPutPointsPartial()", "total_upload_rate", "Total receive rate", "Bytes / S"],
-    ["createClientDownloadTimes()", "client_download" ,"Download Time" , "(S)" ],
-    ["createClientTotalDownloadTimes()", "client_download" ,"Download Time (all files)" , "(S)" ],
+    ["allServerServedPointsPartial", "server_speed", "Server upload rate", "Server Bytes / S"],
+    ["allReceivedPointsPartialP2P", "p2p_received_partial", "Client receive from p2p rate", "Bytes / S"],
+    ["allServedPointsPartialP2P", "p2p_served_partial", "Client send p2p rate", "Bytes / S"],
+    ["createClientTotalUpload", "client_upload_rate", "Client Upload Sum", "Bytes / Client"],
+    ["totalThroughPutPointsPartial", "total_upload_rate", "Total receive rate", "Bytes / S"],
+    ["createClientDownloadTimes", "client_download" ,"Download Time" , "(S)" ],
+    ["createClientTotalDownloadTimes", "client_download" ,"Download Time (all files)" , "(S)" ],
     ["multipleDHTGets", "dht_get", "DHT Get Times", "(S)" ],
     ["multipleDHTPuts", "dht_Put", "DHT Put Times", "(S)" ],
     ["multipleDHTRemoves", "dht_Remove", "DHT Remove Times", "(S)" ],
@@ -225,17 +228,17 @@ class VaryParameter
     statsGuy = run_object
     # note non use of index to lookup value...
     ppAndFile "-----------", "Doing stats on runs runs just numbers #{values.inspect}"
-    ppAndFile "download times %'iles'", VaryParameter.getDuplesFromClientsAndPercentile("createClientDownloadTimes()", statsGuy).join(" ")
-    ppAndFile "download total times %'iles'", VaryParameter.getDuplesFromClientsAndPercentile("createClientTotalDownloadTimes()", statsGuy).join(" ")
+    ppAndFile "download times %'iles'", VaryParameter.getDuplesFromClientsAndPercentile("createClientDownloadTimes", statsGuy).join(" ")
+    ppAndFile "download total times %'iles'", VaryParameter.getDuplesFromClientsAndPercentile("createClientTotalDownloadTimes", statsGuy).join(" ")
     ppAndFile "death methods", statsGuy.getDeathMethodsAveraged.sort.join(" ")
 
     ppAndFile "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'",
-    VaryParameter.getDuplesFromClientsAndPercentile("allServerServedPointsPartial()", statsGuy).join(" ")
+    VaryParameter.getDuplesFromClientsAndPercentile("allServerServedPointsPartial", statsGuy).join(" ")
 
     ppAndFile " instantaneous tenth of second throughput %'iles'",
-    VaryParameter.getDuplesFromClientsAndPercentile("totalThroughPutPointsPartial()", statsGuy).join(" ")
+    VaryParameter.getDuplesFromClientsAndPercentile("totalThroughPutPointsPartial", statsGuy).join(" ")
 
-    ppAndFile "upload bytes %'iles'", VaryParameter.getDuplesFromClientsAndPercentile("createClientTotalUpload()", statsGuy).join(" ")
+    ppAndFile "upload bytes %'iles'", VaryParameter.getDuplesFromClientsAndPercentile("createClientTotalUpload", statsGuy).join(" ")
     ppAndFile "dht gets", VaryParameter.getDuplesFromClientsAndPercentile("multipleDHTGets", statsGuy).join(" ")
     ppAndFile "dht puts", VaryParameter.getDuplesFromClientsAndPercentile("multipleDHTPuts", statsGuy).join(" ")
     ppAndFile "dht removes", VaryParameter.getDuplesFromClientsAndPercentile("multipleDHTRemoves", statsGuy).join(" ")

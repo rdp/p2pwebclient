@@ -12,7 +12,7 @@ class ClientLogContainerWithStats
     if $VERBOSE
       print "Parsing #{filename} \n"
     else
-      print '.'
+      print '.p'
     end
     @internalSingleGrapher = IndividualGraph.new(filename, self) if $doIndividuals
     #@saveThese = {'$' => 'opendht sum gets'}

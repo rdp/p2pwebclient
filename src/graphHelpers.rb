@@ -167,7 +167,7 @@ require './single_log_parser.rb'
 
 class Hash
 
-  def Hash.testSelf
+   def Hash.testSelf
     intHash = {1 =>2, 3 => 3}
     assertEqual intHash.toArrayWithIntermediateZeroesByResolution(1), [[1, 2], [2,0], [3,3]]
 
@@ -177,37 +177,31 @@ class Hash
 
   end
 
-  # only converts to an array--an exploded one with zeroes
-  def toArrayWithIntermediateZeroesByResolution(stepResolution) # ex. 0.1 break it into tenths -- weird, I know. ltodo not use
+  # converts this array to another array--an exploded one with zeroes if there are gaps between times
+  # where [0]'s are timestamps
+  #
+  def toArrayWithIntermediateZeroesByResolution(stepResolution)
     if self.empty?
       print "ACK empty and you want it to go to an array with zeroes between?"
       return []
     end
 
-    min = self.min[0]
-    max = self.max[0]
-    numberOfSteps = 1/stepResolution * (max - min)
+    assert stepResolution.is_a? Fixnum
 
-    # ramp up original, so we can deal with ints [ltodo prettier solution to doing this?
-    magnifiedSelf = {}
-    for key, value in self
-      magnifiedSelf[(key * (1/stepResolution)).to_i] = value
-    end
-    min = magnifiedSelf.min[0]
-    max = magnifiedSelf.max[0] # avoid rounding probs :)
-    output = [] # an Array
-    0.upto(numberOfSteps.ceil) { |n|
-      outputKey = min + n
-      if magnifiedSelf.has_key? outputKey
-        output << [outputKey * stepResolution, magnifiedSelf[outputKey]]
-        magnifiedSelf.delete(outputKey)
-      else
-        output << [outputKey * stepResolution, 0] # normalize it back to its 'actual' value
-      end
+    min = self.min[0] # lowest second
+    max = self.max[0] # highest second
+    numberOfSteps = (max - min)/stepResolution + 1
+    output = []
+
+    numberOfSteps.times {|n|
+      where_at = min + (n*stepResolution)
+      if self[where_at]
+          output << [where_at, self.delete(where_at)]
+       else
+          output << [where_at, 0]
+       end
     }
-
-    assert magnifiedSelf.length == 0
-    return output
+    output
   end
 
 end # ltodo move hash etc. specific stuff to here :)
@@ -260,24 +254,6 @@ class Array
       newSelf << [value, index]
     end
     return newSelf
-
-  end
-
-  def combineSeveralArraysToTenthsHash(theseArrays)
-    newBuckets = {}
-    for timePointArray in theseArrays
-      for time, bytes in timePointArray # [time, bytes] tuples
-        # each time goes into...the...we'll say 10 10th afore of it.
-        0.upto(10)  { |tenth|
-          keyTime = (time * 10).to_i # truncate
-          keyTime += tenth
-          keyTime = keyTime / 10.0
-          newBuckets.addToKey(keyTime, bytes)
-
-        }
-      end
-    end
-    return newBuckets
 
   end
 
