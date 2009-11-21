@@ -33,7 +33,7 @@ class ClientLogContainerWithStats
     @openDHTsInProcess = nil
     # need lastLine, still....@subject = nil
     fileize_yourself
-    print "done -- took #{Time.now - @start_time}s\n"
+    print "done -- took #{Time.now - @start_time}s\n" if $VERBOSE
   end
 =begin
 doctest: fileize_yourself should write out temp files and allow them to be read back 
@@ -232,7 +232,7 @@ doctest: fileize_yourself should write out temp files and allow them to be read 
       if $VERBOSE
         print "ERROR no TOTAL END for #{@filename} -- maybe re run graphs when they're all done?"
       else
-        print '\/'
+        print 'a?'
       end
       return nil
     end

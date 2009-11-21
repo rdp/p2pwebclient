@@ -745,7 +745,7 @@ class Driver
     "_#{@@linger}s_#{@@fileSize}B_#{@@serverBpS}BPS_#{@@dR}s_#{@@dT}s_#{@@dW}s_#{@@blockSize}B"
 
     @@allRunLogger.log "Starting overall multi-run, multi-parameter driver run varying #{varyParameterOutputName} #{howManyStepsOfTheMajorVariable} steps"
-    massive_grapher =  VaryParameter.new(varyParameterOutputName, unitsX) if @@actuallyPerformMultipleRuns and $shouldDoVaryParameterGraphs
+    massive_grapher =  VaryParameter.new(MultipleRunsSameSettingGrapher.pictureDirectory + '/vary_parameter/' + varyParameterOutputName, unitsX) if @@actuallyPerformMultipleRuns and $shouldDoVaryParameterGraphs
     Driver.measure_time("full total complete all run") do
       1.upto(howManyStepsOfTheMajorVariable) { |major_variable_step|
 
@@ -1079,7 +1079,7 @@ class Driver
     a = MultipleRunsSameSettingGrapher.new([runName], outputName)
     [1].forky {
       # deemed wasteful a.doAll();
-      measure_time("single stats for #{runName}") {VaryParameter.doStatsSingleRun([runName], [a], a.dirName) }
+      measure_time("single stats for #{runName}") {VaryParameter.doStatsSingleRun(runName, [a], a.dirName) }
     }
     a
   end

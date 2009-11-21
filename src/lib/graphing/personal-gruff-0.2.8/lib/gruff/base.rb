@@ -694,7 +694,7 @@ protected
         
         marker_label = index * @increment + @minimum_value.to_f
         marker_label = marker_label.with_commas
-        print "using maerker label #{marker_label}\n"
+        print "using maerker label #{marker_label}\n" if $VERBOSE
         @largest_marker_line_text = [@largest_marker_line_text, marker_label].max
       end
       
@@ -720,7 +720,7 @@ protected
 
         marker_label = index * @increment + @minimum_value.to_f
         marker_label = marker_label.with_commas
-        print "using maerker label #{marker_label}\n"
+        print "using maerker label2 #{marker_label}\n" if $VERBOSE
         @largest_marker_line_text = [marker_label, @largest_marker_line_text].max
 
         unless @hide_line_numbers

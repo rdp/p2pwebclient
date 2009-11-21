@@ -91,6 +91,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
       @spanDuplesPerRunArray << [startFrame, endFrame]       # unused, I think ltodo get rid of if not using
 
     end
+
     if endTimes.length < startTimes.length
       print "ERROR SOME FINISHED NOT!!!\n\n\n"
     end
@@ -427,9 +428,15 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
           print "ERROR ERROR no download time #{use_total_for_all_files} total failed: #{total_failed += 1}!" if $VERBOSE
         end
       rescue => detail
+        # unexpected
         print "ERROR client non end" + detail.to_s
       end
     end
+
+    if total_failed > 0
+        puts "had failures total #{use_total_for_all_files}: #{total_failed}"
+    end
+
     parsedOut = LineWithPointsFile.writeAndReadSingleToHashInt(rawFilename, "client start and end times", downloadTimes) # yields sums
     # fails yet shouldn't (works -- ltodo)  assertEqual parsedOut, downloadTimes.toSummedByIntegerHash.sort # works if agove is array
 
@@ -461,7 +468,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
   def createClientDownloadTimes(rawFilename = nil, use_total_all_files = false)
     rawFilename ||= @templateName   + "downloadTimes#{use_total_all_files}" + ".raw.txt"
     allTimes = {}
-    failed_one = 0
+    failed_count = 0
     for client in @allClientsInOne
       begin
         value = if use_total_all_files then client.totalDownloadTimeAllFilesDownloaded else client.totalDownloadTime end
@@ -469,19 +476,21 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
           allTimes.addToKey(value.truncateToDecimal(2), 1)
         else
           print "WARNING no downloadtimes!"  if $VERBOSE
-          failed_one += 1
+          failed_count += 1
         end
       rescue => detail
-        print "ack client no download time!!!ERROR" + detail.to_s # ltodo not allow, or count these and report them...
+        print "ack client no download time!!!ERROR " + detail.to_s # ltodo not allow, or count these and report them...
       end
     end
 
-    if failed_one
-        puts " #{failed_one} clients failed--no download time--ignoring them!!"
+    if failed_count > 0
+        puts " #{failed_count} clients failed--no download time--ignoring them!!"
+    else
+        puts 'all clients succeeded'
     end
 
     if allTimes.length == 0
-      print "NONE APPEARED TO HAVE FINISHED\n"
+      print "NONE APPEARED TO HAVE FINISHED use_total #{use_total_all_files}\n"
     end
 
     parsedOut = LineWithPointsFile.writeAndReadSingleToHash(rawFilename, "download points", allTimes.sort)
@@ -613,8 +622,8 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     end
     goServer(@templateName + "server_total")
     goTotalThroughPut(@templateName + "total_throughput") # ltodo optimize (?)
-    VaryParameter.doStatsSingleRun([@outputNameRequested], [self], @dirName) # our output directory tlodo only calculate them once
-    VaryParameter.doStatsSingleRun([@outputNameRequested], [self]) # normal "stats all go here" directory
+    VaryParameter.doStatsSingleRun(@outputNameRequested, [self], @dirName) # our output directory tlodo only calculate them once
+    VaryParameter.doStatsSingleRun(@outputNameRequested, [self]) # normal "stats all go here" directory
     Dir.createIndexFile(@dirName)
   end
 
