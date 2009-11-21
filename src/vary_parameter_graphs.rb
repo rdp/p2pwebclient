@@ -38,7 +38,7 @@ class VaryParameter
     howVaried.each_with_index { |howVariedSetting, index|
       [1].forky {
         if runGrapherObjectsIfAlreadyCreated # could fork here -- create and an add_run_object--wurx for me
-	  raise 'bad class' unless runGrapherObjectsIfAlreadyCreated[index].class == RunGrapher
+	  raise 'bad class' unless runGrapherObjectsIfAlreadyCreated[index].class == MultipleRunsSameSettingGrapher
           addThis = runGrapherObjectsIfAlreadyCreated[index]
         else
           runNames = runNamesForEachHowVaried[index]

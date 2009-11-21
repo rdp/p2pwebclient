@@ -424,7 +424,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
         if value
           downloadTimes << [client.start, value]
         else
-          print "ERROR ERROR no download time #{use_total_for_all_files} total failed: #{total_failed += 1}!"
+          print "ERROR ERROR no download time #{use_total_for_all_files} total failed: #{total_failed += 1}!" if $VERBOSE
         end
       rescue => detail
         print "ERROR client non end" + detail.to_s
@@ -467,7 +467,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
         if value
           allTimes.addToKey(value.truncateToDecimal(2), 1)
         else
-          print "WARNING no downloadtime!"
+          print "WARNING no downloadtimes!" 
         end
       rescue => detail
         print "ack client no download time!!!ERROR" + detail.to_s # ltodo not allow, or count these and report them...
@@ -676,8 +676,8 @@ end
 # ltodo put in a run and 'hard code' the right answers, for a test :)
 if __FILE__.include?($0) or debugMe 'singleMultipleGraphs' # ltodo change these all to .rb
   if ARGV.length > 0
-    if(ARGV.include?('--help'))
-      puts 'run as runname1 runname2 # all part of the same run'
+    if(ARGV.include?('--help') || ARGV.include?('-h'))
+      puts 'run as runname1 runname2 # all part of the same run--like run12_at1 run12_at1_2, or just the full name run12_at1 -- we conglom, anyway'
       exit
     end
 

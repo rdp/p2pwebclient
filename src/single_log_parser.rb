@@ -70,7 +70,7 @@ class SingleLogParser
   def initialize(filename)
     new_file_name = filename + 'cleaned.txt'
     command = "grep -v DEBUG #{filename} > #{new_file_name}"
-    puts 'running', command
+    puts 'running', command if $VERBOSE
     system(command)
     @file = File.new(new_file_name, "r")
     @lastLine = "fake starter liner"

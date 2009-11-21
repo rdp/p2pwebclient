@@ -9,7 +9,11 @@ class ClientLogContainerWithStats
     @filename = filename
     @end = nil
     @start_time = Time.now
-    print "Parsing #{filename} \n"
+    if $VERBOSE
+      print "Parsing #{filename} \n"
+    else
+      print '.'
+    end
     @internalSingleGrapher = IndividualGraph.new(filename, self) if $doIndividuals
     #@saveThese = {'$' => 'opendht sum gets'}
     #@parsedElementsOfType = {'$' => []}
@@ -225,7 +229,11 @@ doctest: fileize_yourself should write out temp files and allow them to be read 
     end
 
     if ! @total_end
-      print "ERROR no TOTAL END for #{@filename} -- maybe re run graphs when they're all done?"
+      if $VERBOSE
+        print "ERROR no TOTAL END for #{@filename} -- maybe re run graphs when they're all done?"
+      else
+        print '\/'
+      end
       return nil
     end
 
@@ -234,7 +242,11 @@ doctest: fileize_yourself should write out temp files and allow them to be read 
 
   def totalDownloadTime
     if @end.nil?
-      print "ACK! #{@filename} failed downloading, I think!? That is odd it never actually finished!\n"
+      if $VERBOSE
+        print "ACK! #{@filename} failed downloading, I think!? That is odd it never actually finished!\n" 
+      else
+        print 'F'
+      end
     end
 
     if ! @start
@@ -243,7 +255,11 @@ doctest: fileize_yourself should write out temp files and allow them to be read 
     end
 
     if ! @end
-      print "ERROR NO END for #{@filename} -- maybe re run graphs when they're all done?"
+      if $VERBOSE
+        print "ERROR NO END for #{@filename} -- maybe re run graphs when they're all done?"
+      else
+        print '!'
+      end
       return nil
     end
 
