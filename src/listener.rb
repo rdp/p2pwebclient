@@ -1,11 +1,15 @@
+#!/usr/bin/env ruby
+
 # ltodo in driver have an assertion that 'other threads are dead!'
 # ltodo when a peer dies early it must clean up DHT blocks, and also its own blocks. Or should. and sockets.
 # ltodo on err dump the file...
-require 'constants'
+require './constants'
 require 'cs_and_p2p_client.rb'
 require 'optparse'
+
 class RaiseMeError < StandardError # ltodo rename
 end
+
 # ltodo hup no longer used
 # ltodo kills should work kill, graceful_end similarly
 class Array # ltodo would this be useful to other 'cull' ing locations?
@@ -70,7 +74,7 @@ class ListenerEM < EM::Connection
     
     if incomingText == "svnup" or incomingText == "svnup_restart"
       @logger.debug "doing svn up"
-      system("svn up")
+      system("git pull")
       send_data("old version is #{$version}, done updating, will restart")
     end
     
@@ -133,7 +137,7 @@ class ListenerEM < EM::Connection
   # doctest: shares_logger it should 
   # >> logger = Logger.new('test/fake_name' + rand(1000000).to_s)
   # >> logger1 = Logger.new('test/fake_name' + rand(1000000).to_s)
-  # >> BlockManager.startCSWithP2PEM 'http://wilkboardonline.com/roger/p2p/25K.file', 2,2,3,100_000,1,20,0, 'no44_name', 1, 'no44_name2', 3, 3, logger1, :use_this_shared_logger => logger
+  # >> BlockManager.startCSWithP2PEM 'http://wilkboardonline.com/roger/p2p/test_files/25K.file', 2,2,3,100_000,1,20,0, 'no44_name', 1, 'no44_name2', 3, 3, logger1, :use_this_shared_logger => logger
   # >> BlockManager.startCSWithP2PEM 'http://wilkboardonline.com/roger/p2p/25K.file', 2,2,3,100_000,1,20,0, 'no55_name', 1, 'no55_name2', 3, 3, logger1, :use_this_shared_logger => logger
   # >> logger.read_whole_file.include?('44')
   # => true

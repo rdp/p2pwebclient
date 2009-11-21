@@ -141,7 +141,6 @@ class RunGrapher # should be called MultipleRunsSameSettingGrapher
     
   end
   
-  
   def getDeathMethodsAveraged
     allMethods = {}
     allMethods['http_straight'] = 0
@@ -161,7 +160,6 @@ class RunGrapher # should be called MultipleRunsSameSettingGrapher
 
   def goAllP2PTraffic(rawFilename, filenameOutput)
        raw = filenameOutput + ".raw.txt"
-
   end
   
   def goTotalThroughPut(filenameOutput)
@@ -337,7 +335,7 @@ class RunGrapher # should be called MultipleRunsSameSettingGrapher
         
       end 
     end
-    if allPutsByTime.length == 0: print "ACK! this had better be CSno puts means no p2p impossible!??" end 
+    if allPutsByTime.length == 0; print "ACK! this had better be CSno puts means no p2p impossible!??" end 
     
     if allGetsByTime.length == 0
       print "ack! no gets means no p2p receive action at all recorded"

@@ -1,13 +1,14 @@
-#
+
 # welcome...                        
 #
-$version = "$Rev: 1515 $"
+$version = "$Rev: 1517 $"
 
 require 'pp'
 require 'socket'
 require 'base64'
+require 'timeout'
 
-Dir.glob(File.dirname(__FILE__) + '/lib/gems_here/*').each{|d| $:.unshift "#{d}/lib" }
+Dir.glob(File.dirname(__FILE__) + '/lib/gems_here/*').sort.each{|d| $:.unshift "#{d}/lib" }
 # we can load gems now.
 # phew!
 require 'sane'
@@ -15,7 +16,13 @@ $: << __DIR__
 $: << __DIR__ + "lib"
 require_rel 'unique_require' if RUBY_VERSION < '1.9'
 
-require 'facets/times' 
+#require 'facets/times' 
+class Fixnum
+ def minutes
+   self*60
+  end
+end
+require 'rubygems'
 require 'arguments'
 require 'andand.rb'
 
@@ -30,7 +37,7 @@ ruby_version = (RUBY_VERSION + '.' + RUBY_PLATFORM)
 $: << __DIR__ + 'ext/em/' + ruby_version # em libs
 ENV['INLINEDIR'] = 'ext/' + ruby_version # ext/xxx/.ruby_inline dirs
 
-require 'eventmachine'
+require_rel 'eventmachinee'
 require_rel 'lib/event_machine_addons.rb'
 
 EM::set_max_timers 10000

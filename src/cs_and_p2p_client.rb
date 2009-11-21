@@ -7,9 +7,7 @@ require 'socket' # blockSize
 require 'constants'
 require 'pp'
 require 'lib/timeKeeper.rb'
-require 'timeout'
 require 'listener.rb'
-require 'eventmachine'
 require 'generic_client.rb'
 
 class CSP2PGetter

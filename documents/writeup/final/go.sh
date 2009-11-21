@@ -10,5 +10,6 @@ pdflatex just_experiment_results.tex
 chmod a+r *.pdf
 ruby ruby_to_tex.rb experiment_results.tex.erb  # in case it failed
 scp *.pdf wilkboar@wilkboardonline.com:~/public_html/roger/p2p/writeup & >/dev/null
-explorer just_experiment_results.pdf
+cp just_experiment_results.pdf just_experiment_results_view_copy.pdf
+explorer just_experiment_results_view_copy.pdf
 echo 'coming up in explorer'

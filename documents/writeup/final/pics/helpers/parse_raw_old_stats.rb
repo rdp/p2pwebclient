@@ -60,16 +60,16 @@ if $0 == __FILE__
   else
     all2 = {}
   end
-  for name, y_and_this_output_filename in {"download times %'iles'" => ['seconds', 'client_download_Percentile_Line'],
-    "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Bytes/S', 'server_speed_Percentile_Line'],
-
-    # server upload is duplicated for some reason in newer stuffs
-
-    "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Bytes/S', 'server_speed_Percentile_Line'],
-    "upload bytes %'iles'" => ['Bytes/S', 'upload bytes'],
-    "instantaneous tenth of second throughput %'iles'" => ['Bytes/S', 'total throughput'],
-    'dht removes' => ['S', 'dht_Remove_Percentile_Line'],
-  "percentiles of percent received from just peers (not origin)" => ['% of File', 'percent_from_clients_Percentile_Line']} do
+  
+  for name, y_and_this_output_filename in {
+    "download times %'iles'" => ['Peer Download Times (seconds)', 'client_download_Percentile_Line'],
+    "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/S)', 'server_speed_Percentile_Line'],
+    # server upload is changed for some reason in newer stuffs
+    "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/S)', 'server_speed_Percentile_Line'],
+    "upload bytes %'iles'" => ['Peer Bytes Uploaded (Bytes)', 'upload bytes'],
+    "instantaneous tenth of second throughput %'iles'" => ['Total ThroughPut (Bytes/S)', 'total throughput'],
+    'dht removes' => ['DHT Remove Times (S)', 'dht_Remove_Percentile_Line'],
+    "percentiles of percent received from just peers (not origin)" => ['Percent of File received from Peers', 'percent_from_clients_Percentile_Line']} do
 
     y, this_output_filename = y_and_this_output_filename
 

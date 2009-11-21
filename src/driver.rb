@@ -181,7 +181,7 @@ class Driver
   def Driver.throwUpListener
     begin
       @@listenerObject, @@listenerThread = Listener.listen
-    rescue RuntimeError
+    rescue
       print "ACK listener already running! hope it works! returning nil!"
       return nil
     end
@@ -458,7 +458,7 @@ class Driver
         style = :multiple
       end
 
-      opts.on('--do_single', 'do a single test with the defaults and the parameters you pass in') do
+      opts.on('--do_single_run', 'do a single test with the defaults and the parameters you pass in') do
         style = :single
       end
 
@@ -548,9 +548,9 @@ class Driver
       throwUpServer
     end
 
-    if @@useLocalHostAsListener
-      throwUpListener
-    end
+    #if @@useLocalHostAsListener
+    #throwUpListener
+    #end
 
     # now do multiple or single
     if style == :multiple
@@ -1071,8 +1071,8 @@ class Driver
   def Driver.doSingleRunWithCurrentSettings(runName, totalToPotentiallyIgnoreLastPeers) # ltodo stinky
     startAllPeersAndWaitForCompletion @@blockSize, @@fileSize, @@spaceBetweenNew, @@numClientsToSpawn, @@dT, @@dR, @@dW, @@linger, runName, @@serverBpS, @@allRunLogger, totalToPotentiallyIgnoreLastPeers, @@peerTokens
   end
-  
-  named_args_for :'Driver.doSingleRunWithCurrentSettings'
+
+  named_args_for :'self.doSingleRunWithCurrentSettings'
 
   def Driver.graphAndStatSingleRun(runName, outputName = runName)
     @@allRunLogger.debug "graphing single #{runName} => #{outputName}"
@@ -1266,25 +1266,27 @@ class Driver
 
     threads.times do
       allThreads << Thread.new {
+        # a thread pool!
         while thesePairsArray.length > 0
-          ip = ip2 = port = nil
+          nextGuy = nil
           grabMutex.synchronize {
             nextGuy = thesePairsArray.pop
-            if nextGuy
-              ip, port = nextGuy[0], nextGuy[1]
-              assert ip && port
-              print "ip is ", ip.inspect, "\nn\n\n\n"
-              next if ip =~ /ilab/
-              next if ip == '127.0.0.1'
-              next if ip == 'localhost'
-              next if ip == '192.168.21.102' # ilab2 LTODO this shouldn't be necessary
-              ip2 = Socket.get_ip(ip)
-              logger.error 'blank host ip?' if ip2.blank?
-              next if ip2 == Socket.get_host_ip
-            else # probably empty
-              next
-            end
           }
+          if nextGuy
+            ip, port = nextGuy[0], nextGuy[1]
+            assert ip && port
+            print "ip is ", ip.inspect, "\nn\n\n\n"
+            next if ip =~ /ilab/
+            next if ip == '127.0.0.1'
+            next if ip == 'localhost'
+            next if ip == '192.168.21.102' # ilab2 LTODO this shouldn't be necessary
+            ip2 = Socket.get_ip(ip)
+            logger.error 'blank host ip?' if ip2.blank?
+            next if ip2 == Socket.get_host_ip
+          else # probably empty
+            next
+          end
+
           logger.debug "collecting from #{ip}";
           begin
             retry_count = 5
@@ -1302,6 +1304,7 @@ class Driver
         end
       }
     end
+    logger.debug "joining on rsyncing threads"
     allThreads.joinOnAllThreadsInArrayDeletingWhenDead
   end
 
