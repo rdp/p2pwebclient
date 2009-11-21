@@ -809,7 +809,7 @@ class Driver
             # now do these multiple (single major loop) graphs
             combined_runs = nil # heh
             Driver.measure_time('multiple graph creation -- I think should be about instant') {
-              combined_runs = RunGrapher.new(runNamesForThisSetting, "vary_parameter_singles/st_" + runName + whatToAddToFilenameSanitized + "_at_" + settingForThisMajorStep + "_severalTogether", all_runs_this_setting)
+              combined_runs = MultipleRunsSameSettingGrapher.new(runNamesForThisSetting, "vary_parameter_singles/st_" + runName + whatToAddToFilenameSanitized + "_at_" + settingForThisMajorStep + "_severalTogether", all_runs_this_setting)
             }
             [1].forky { # could truly fork here--if RAM would allow it [check]
               Driver.measure_time('sub multiple graph like a row worth, their graphs') {
@@ -1076,7 +1076,7 @@ class Driver
 
   def Driver.graphAndStatSingleRun(runName, outputName = runName)
     @@allRunLogger.debug "graphing single #{runName} => #{outputName}"
-    a = RunGrapher.new([runName], outputName)
+    a = MultipleRunsSameSettingGrapher.new([runName], outputName)
     [1].forky {
       # deemed wasteful a.doAll();
       measure_time("single stats for #{runName}") {VaryParameter.doStatsSingleRun([runName], [a], a.dirName) }

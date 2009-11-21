@@ -54,7 +54,7 @@ end
 
 for run in runs
     raise if run.length == 0
-    files = RunGrapher.get_log_files_list run
+    files = MultipleRunsSameSettingGrapher.get_log_files_list run
     output_rundir = staging_dir_single_for_this_run
     for file in files
         dirname = File.dirname(file).gsub('../', '').gsub('logs/', '') # remove annoying beginning path junk

@@ -10,7 +10,7 @@ class VaryParameter
   @@Percentiles = [1,25,50,75,99]  
 
   def initialize graphOutputDistinctName, unitsX
-        @outputDir = RunGrapher.pictureDirectory + "/vary_parameter/#{graphOutputDistinctName}/" # ltodo fix mkpath  doesn't work if opening / [ignores it]
+        @outputDir = MultipleRunsSameSettingGrapher.pictureDirectory + "/vary_parameter/#{graphOutputDistinctName}/" # ltodo fix mkpath  doesn't work if opening / [ignores it]
         @unitsX = unitsX
       	@variedValues = ArrayOnDisk.new
       	@totalBytesReceivedFromPeersAcrossAllRuns = ObjectOnDisk.new 0
@@ -43,7 +43,7 @@ class VaryParameter
         else
           runNames = runNamesForEachHowVaried[index]
           print "creating new runs (parsing) -- slow\n\n\n #{runNames}--"
-          addThis = RunGrapher.new(runNames) # load it up :)
+          addThis = MultipleRunsSameSettingGrapher.new(runNames) # load it up :)
           [1].forky { addThis.doAll } # whynot?
         end
         add_run_object_and_its_setting(addThis, howVaried[index], runNamesForEachHowVaried[index])
@@ -260,8 +260,7 @@ class VaryParameter
   end
 
   
-  def VaryParameter.doStatsSingleRun(runName, existingGraphs = nil, outputDirectoryForStats = nil)
-    outputDirectoryForStats ||= RunGrapher.pictureDirectory
+  def VaryParameter.doStatsSingleRun(runName, existingGraphs = nil, outputDirectoryForStats = MultipleRunsSameSettingGrapher.pictureDirectory)
     print "doing #{runName} as all one combined stats, I think => #{outputDirectoryForStats}"
     assert runName.class == Array
     assert existingGraphs.class == Array if existingGraphs

@@ -46,18 +46,16 @@ class Tester
     #  $dhtClassToUse = HangingDHT # ltodo maybe the 'wait 60 seconds then returns' dht :)
     Listener.testSelf
     if clientHasGraphLibraries
-
       # graphing
       Hash.testSelf # ltodo check -- is this just graph related? test it there
       TextLines.testSelf
       SingleLogParser.testSelf
       IndividualGraph.testSelf
-      RunGrapher.testSelf
+      MultipleRunsSameSettingGrapher.testSelf
       PercentileGraph.testSelf
       LineWithPointsFile.testSelf
       ClientLogContainerWithStats.testSelf
       PointLine.testSelf
-      RunGrapher.testSelf
       SingleLogParser.testSelf
       GraphHelper.testSelf
       VaryParameter.testSelf

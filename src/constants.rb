@@ -66,7 +66,7 @@ require_rel 'lib/opendht/local_drive_dht.rb'
 # ltodo save as one large file
 # ltodo switch blocks => greedy get, see if it helps (get ranges, try and get everything)
 # ltodo see if one connection/peer (or x) better
-# ltodo 
+# ltodo md5 (extensions) if they exist or something [not bad]
 # ltodo url_has_all (yeah) and/or url_1
 # ltodo overall--better opendht use
 # ltodo request unended

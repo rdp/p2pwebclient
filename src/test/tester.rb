@@ -78,12 +78,11 @@ usefulTestSelf
     TextLines.testSelf   
     SingleLogParser.testSelf
     IndividualGraph.testSelf
-    RunGrapher.testSelf
+    MultipleRunsSameSettingGrapher.testSelf
     PercentileGraph.testSelf
     LineWithPointsFile.testSelf
     ClientLogContainerWithStats.testSelf
     PointLine.testSelf
-    RunGrapher.testSelf
     SingleLogParser.testSelf
     GraphHelper.testSelf
     VaryParameter.testSelf    
