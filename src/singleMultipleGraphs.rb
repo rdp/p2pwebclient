@@ -461,21 +461,29 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
   def createClientDownloadTimes(rawFilename = nil, use_total_all_files = false)
     rawFilename ||= @templateName   + "downloadTimes#{use_total_all_files}" + ".raw.txt"
     allTimes = {}
+    failed_one = 0
     for client in @allClientsInOne
       begin
         value = if use_total_all_files then client.totalDownloadTimeAllFilesDownloaded else client.totalDownloadTime end
         if value
           allTimes.addToKey(value.truncateToDecimal(2), 1)
         else
-          print "WARNING no downloadtimes!" 
+          print "WARNING no downloadtimes!"  if $VERBOSE
+          failed_one += 1
         end
       rescue => detail
         print "ack client no download time!!!ERROR" + detail.to_s # ltodo not allow, or count these and report them...
       end
     end
+
+    if failed_one
+        puts " #{failed_one} clients failed--no download time--ignoring them!!"
+    end
+
     if allTimes.length == 0
       print "NONE APPEARED TO HAVE FINISHED\n"
     end
+
     parsedOut = LineWithPointsFile.writeAndReadSingleToHash(rawFilename, "download points", allTimes.sort)
     # ltodo could work :) ->    assertEqual allTimes, parsedOut
     return parsedOut
