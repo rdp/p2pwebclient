@@ -185,7 +185,11 @@ doctest: fileize_yourself should write out temp files and allow them to be read 
       if blockNumber == :nonBlock
         if symbol == "!" #START
           if @start
-            print "whoa duplicated START!!! -- ok if you had a CS restart\n" # not sure if you should reset the start time or not--I'd guess not
+            if $VERBOSE
+              print "whoa duplicated START!!! -- ok if you had a CS restart\n" # not sure if you should reset the start time or not--I'd guess not
+            else
+              print "CSR!"
+            end
           else
             @start = secondFloat
           end

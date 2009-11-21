@@ -2,7 +2,7 @@
 # ltodo weird naming with the stats---doesn't seem to do them for multiple, at least where we'd like it too...
 #
 require 'constants'
-require File.dirname(__FILE__) + '/singleMultipleGraphs'
+require 'MultipleRunsSameSettingGrapher.rb'
 require 'lib/array_on_disk'
 require 'forky'
 
@@ -45,14 +45,15 @@ class VaryParameter
     @allRuns = []
     howVaried.each_with_index { |howVariedSetting, index|
       [1].forky {
-        if runGrapherObjectsIfAlreadyCreated # could fork here -- create and an add_run_object--wurx for me
+        # create and an add_run_object--wurx for me
+        if runGrapherObjectsIfAlreadyCreated 
           raise 'bad class' unless runGrapherObjectsIfAlreadyCreated[index].class == MultipleRunsSameSettingGrapher
           addThis = runGrapherObjectsIfAlreadyCreated[index]
         else
           runNames = runNamesForEachHowVaried[index]
           print "creating new runs (parsing) -- slow\n\n\n #{runNames}--"
           addThis = MultipleRunsSameSettingGrapher.new(runNames) # load it up :)
-          [1].forky { addThis.doAll } # whynot?
+          [1].forky { addThis.doAll } # why not?
         end
         add_run_object_and_its_setting(addThis, howVaried[index], runNamesForEachHowVaried[index])
       }

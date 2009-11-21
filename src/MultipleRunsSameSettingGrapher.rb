@@ -135,8 +135,13 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     allMethods['http_straight'] = 0
     allMethods['dR'] = 0
     allMethods['dT'] = 0
+    allMethods['died'] = 0
     for client in @allClientsInOne
-      allMethods.addToKey(client.endMethod, 1)
+     if client.end
+       allMethods[client.endMethod] += 1
+     else
+       allMethods['died'] += 1
+     end
     end
     allMethods = allMethods.divideValuesBy(@runs.length)
     # ltodo use these '% age' graphs :)
@@ -694,7 +699,7 @@ end
 if __FILE__.include?($0) or debugMe 'singleMultipleGraphs' # ltodo change these all to .rb
   if ARGV.length > 0
     if(ARGV.include?('--help') || ARGV.include?('-h'))
-      puts 'run as runname1 runname2 # all part of the same run--like run12_at1 run12_at1_2, or just the full name run12_at1 -- we conglom, anyway'
+      puts 'run as runname1 runname2 # all part of the same run--like run12_at1 run12_at1_2, or just the full name run12_at1 but you\'ll get conglom numbers, like a run of 250 will be 500 now and server total speed will be doubled'
       exit
     end
 
