@@ -32,18 +32,12 @@ class ClientLogContainerWithStats
     end
     @openDHTsInProcess = nil
     # need lastLine, still....@subject = nil
-    fileize_yourself
+    # disabled as it seems slow...hmm...could test...fileize_yourself
     print "done -- took #{Time.now - @start_time}s\n" if $VERBOSE
   end
-=begin
-doctest: fileize_yourself should write out temp files and allow them to be read back 
->> a = ClientLogContainerWithStats.allocate
->> a.instance_variable_set :@allReceivedP2P, ['abc', 'def']
->> a.fileize_yourself
->> a.allReceivedP2P
-=> ["abc", "def"]
-=end
-  @@temp_prefix = rand(1000).to_s + 'yup'
+
+  @@temp_prefix = rand(1000).to_s + 'fileized'
+
   def fileize_yourself
     for item in [:@openDHTs, :@allReceivedP2P, :@allReceivedHost, :@allServedP2P] do
       variable_instance = self.instance_variable_get(item)
@@ -58,10 +52,14 @@ doctest: fileize_yourself should write out temp files and allow them to be read 
   def read_from_marshalled_data name
     # read in the data from a temp file, unmarshal it...
     file = self.instance_variable_get(name)
-    file.open # reopen it
-    contents_as_ruby = Marshal.load file.read
-    file.close
-    contents_as_ruby
+    if file.is_a?(Tempfile)
+      file.open # reopen it
+      contents_as_ruby = Marshal.load file.read
+      file.close
+      contents_as_ruby
+    else
+       file # this isn't really a file--it's the real thing
+    end
   end
 
   def allReceivedP2P
