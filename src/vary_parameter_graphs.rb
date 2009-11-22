@@ -12,7 +12,7 @@ class VaryParameter
   def initialize graphOutputUniquePath, unitsX
     @outputDir = graphOutputUniquePath
     @unitsX = unitsX
-    @variedValues = ArrayOnDisk.new
+    @variedValues = ArrayOnDisk.new # you need this if you want to use fork much...
     @totalBytesReceivedFromPeersAcrossAllRuns = ObjectOnDisk.new 0
     @totalBytesUploadedByServerAcrossAllRuns = ObjectOnDisk.new 0
     @totalBytesServedFromPeersAcrossAllRuns = ObjectOnDisk.new 0
