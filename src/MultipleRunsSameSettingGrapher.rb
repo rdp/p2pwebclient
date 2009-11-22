@@ -152,9 +152,16 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     raw = filenameOutput + ".raw.txt"
   end
 
+
+
+  # this one is not restricted
+  # but server BPS is
+  # and they are graphed in vary parameters, just the percentiles
+  # so I would say they are all off, except for server BPS
+  # ... I think [?]
   def goTotalThroughPut(filenameOutput)
     raw = filenameOutput + ".raw.txt"
-    createTotalThroughPutsReturnPartial(raw, :write_to_file => true, :include_host_bytes => true, :include_peer_received_bytes => true)
+    createTotalThroughPutsReturnPartial(raw, :write_to_file => true, :include_host_bytes => true, :include_peer_received_bytes => true) # not actually partial
     graphTotalThroughPut(raw, filenameOutput)
   end
 
@@ -166,11 +173,27 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     createTotalThroughPutsReturnPartial(:include_peer_received_bytes => true).flipIndexValueOfContainedDuples
   end
 
+  # these are percentiles into vary parameters [poorly]
+  # but not single graphed, currently
   def allServedPointsPartialP2P
     createTotalThroughPutsReturnPartial(:include_peer_send_bytes => true).flipIndexValueOfContainedDuples
   end
 
-  def createTotalThroughPutsReturnPartial(filenameOutputRaw = nil, include_peer_received_bytes = false, include_host_bytes = false, include_peer_send_bytes = false, write_to_file = false) # ltodo combine with other functions that do the same thing :) maybe memoize
+  # this is total throughput/p2p served
+  # and should probably be combined with server BPS
+  # but isn't for some bizarre reason
+  # ideally
+  # this one would...save it all, so it can recreate single graphs
+  # but pass back only the FromHereToHere
+  # since that is what vary parameters wants
+  # which is the only consumer of data from this one
+  # so the grapher instance, above, should be reading from the "ful" "raw" "non fromHeretoHere" and graphing that
+  # which it is
+  # it must not be saving typically...because..uh...um...it's only run during the huge runs
+  # and just hasn't been setup for it yet [nor the others, really]...
+  
+  def createTotalThroughPutsReturnPartial(filenameOutputRaw = nil, include_peer_received_bytes = false, 
+        include_host_bytes = false, include_peer_send_bytes = false, write_to_file = false) # ltodo combine with other functions that do the same thing :) maybe memoize
     raise unless include_peer_received_bytes || include_host_bytes || include_peer_send_bytes
     filenameOutputRaw ||= @templateName + "total_throughput" + ".#{include_host_bytes}.raw.txt"
     allReceivedArrays = []
@@ -192,10 +215,18 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
           allReceivedArrays << client.allReceivedHost
         end
       end
-      pointsWithoutTheEdges += nonpointsWithoutTheEdges.onlyFromHereToHere(0,10000000)#spanDuple[0], spanDuple[1])
+      #
+      # except they *do* have the edges currently...
+      # 
+      pointsWithoutTheEdges += nonpointsWithoutTheEdges.onlyFromHereToHere(0,10000000)#spanDuple[0], spanDuple[1])      
+      
     }
-    # they need to be combined now...i.e. 2.3 6K, 2.7 8K => 2: 15K
-    pointsWithoutTheEdges = [pointsWithoutTheEdges].combineSeveralArraysToBucketsWithZeroes # todo smooth factor here
+    
+    
+    # I think my goal here was save off/graph all points
+    # but if vary parameter requested the data, i would pass it back only the fromHereToHere data
+    
+    pointsWithoutTheEdges = [pointsWithoutTheEdges].combineSeveralArraysToBucketsWithZeroes @graphSmoothFactor
     pointsWithoutTheEdges = pointsWithoutTheEdges.divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length)
 
     # now--we want to write out "all" the points, not just the from here to here ones.
@@ -231,6 +262,42 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     @totalBytesServedFromPeersAcrossAllRuns = totalBytesServedFromPeersAcrossAllRuns if include_peer_send_bytes
     return pointsWithoutTheEdges
   end
+  
+  
+  # here I pass back partial data but save "all" data
+  def createServerBytesPerSecondReturnPartial(rawFilename = @templateName + "server_total" + ".raw.txt")
+    partialServedPoints = []
+    @arrayContainingArraysOfClientsPerRun.each_with_index { |run, index|
+      spanDuple = @spanDuplesPerRunArray[index]
+      nonpointsWithoutTheEdges = []
+      for client in run
+        nonpointsWithoutTheEdges += client.allReceivedHost
+      end
+      toAdd =  nonpointsWithoutTheEdges.onlyFromHereToHere(spanDuple[0], spanDuple[1])
+      partialServedPoints << nonpointsWithoutTheEdges.onlyFromHereToHere(spanDuple[0], spanDuple[1])
+    }
+    partialServedPoints = partialServedPoints.combineSeveralArraysToBucketsWithZeroes().divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length)
+
+   # now make [recreate] the full thing, without restriction
+   # to pass back
+   # which is also insanity
+
+    allEntries = []
+    # ltodo combine with above loop!
+    for client in @allClientsInOne
+      allEntries << client.allReceivedHost
+    end # ltodo fake server should NOT propagate the size :)
+    collapsed = allEntries.collapseMultipleArrays
+    newBuckets = [collapsed].combineSeveralArraysToBucketsWithZeroes(@graphSmoothFactor)
+    # now add zeroes-- zeroes count this time :)  ltodo should zeroes count for others, perhaps, too?
+    newBuckets = newBuckets.divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length) # we should be 'too high' :) this will bring us down to size
+    newBucketsCopy = LineWithPointsFile.writeAndReadSingle(rawFilename, "server received by peer points", newBuckets)
+    # fails in error ...    assertEqual newBucketsCopy, newBuckets
+    partialServedPoints# guess we don't want to flatten here?  
+  end
+  
+  
+  
 
   attr_reader :totalBytesReceivedFromPeersAcrossAllRuns, :totalBytesUploadedByServerAcrossAllRuns, :totalBytesServedFromPeersAcrossAllRuns
 
@@ -532,40 +599,9 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
   end
 
   def allServerServedPointsPartial
-    a = createServerBytesPerSecondReturnPartial().flipIndexValueOfContainedDuples
-    #_dbg
-    3
-    2
-    1
-    return a
+    createServerBytesPerSecondReturnPartial().flipIndexValueOfContainedDuples    
   end
 
-  def createServerBytesPerSecondReturnPartial(rawFilename = @templateName + "server_total" + ".raw.txt")
-    allEntries = []
-    partialServedPoints = []
-    @arrayContainingArraysOfClientsPerRun.each_with_index { |run, index|
-      spanDuple = @spanDuplesPerRunArray[index]
-      nonpointsWithoutTheEdges = []
-      for client in run
-        nonpointsWithoutTheEdges += client.allReceivedHost
-      end
-      toAdd =  nonpointsWithoutTheEdges.onlyFromHereToHere(spanDuple[0], spanDuple[1])
-      partialServedPoints << nonpointsWithoutTheEdges.onlyFromHereToHere(spanDuple[0], spanDuple[1])
-    }
-    partialServedPoints = partialServedPoints.combineSeveralArraysToBucketsWithZeroes().divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length)
-
-    # ltodo combine with above loop!
-    for client in @allClientsInOne
-      allEntries << client.allReceivedHost
-    end # ltodo fake server should NOT propagate the size :)
-    collapsed = allEntries.collapseMultipleArrays
-    newBuckets = [collapsed].combineSeveralArraysToBucketsWithZeroes(@graphSmoothFactor)
-    # now add zeroes-- zeroes count this time :)  ltodo should zeroes count for others, perhaps, too?
-    newBuckets = newBuckets.divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length) # we should be 'too high' :) this will bring us down to size
-    newBucketsCopy = LineWithPointsFile.writeAndReadSingle(rawFilename, "server received by peer points", newBuckets)
-    # fails in error ...    assertEqual newBucketsCopy, newBuckets
-    partialServedPoints# guess we don't want to flatten here?
-  end # func
 
   # ltodo a scatter graph of when the various ones happened of dT vs. dR, versus straight
   def graphServer(rawFilename, filenameOutput)
