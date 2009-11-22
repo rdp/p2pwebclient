@@ -12,7 +12,11 @@ class ObjectOnDisk
       read
       @current_self
     end
-    
+
+    def inspect
+      method_missing :inspect
+    end
+
     def method_missing meth, *args
       read
       if block_given?
@@ -76,6 +80,8 @@ end
 # >> b << [1, 1]
 # >> b[0]
 # => [1, 1]
+# >> a.inspect
+# => "[3, 4]"
 #
 # doctest: works with integers
 # >> a = ObjectOnDisk.new 3
