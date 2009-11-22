@@ -93,9 +93,15 @@ class VaryParameter
     puts command
     all = VaryParameter.getRetValuesFromRuns(command, grapherObject)
     trueNumbers = []
+
+    if all == nil # the use of flatten is doing this to us...
+        print "ack -- returned us nil #{command}"
+        return []
+    end
+
     for duple in all
       if duple[0] == nil
-        print "ack!" # ltodo prettier
+        print "ack! -- returned us nothing #{command}" # ltodo prettier
         return []
       end
       trueNumbers << duple[0]

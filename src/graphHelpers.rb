@@ -248,13 +248,17 @@ class Array
     return endBuckets
   end
 
+  # expect self == [[1, 2], [3, 4]]
+  # not [[[1,2], [3, 4]], [[5, 6], [7, 8]]]
+  # note [1,2,3]
   def flipIndexValueOfContainedDuples
+    assert self[0].is_a?(Array)
+    assert !self[0][0].is_a?(Array) # we expect a flattened array here...
     newSelf = []
     for index, value in self
       newSelf << [value, index]
     end
     return newSelf
-
   end
 
   def divideEachValueBy(this)

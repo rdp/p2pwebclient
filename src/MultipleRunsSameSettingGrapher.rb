@@ -532,7 +532,12 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
   end
 
   def allServerServedPointsPartial
-    createServerBytesPerSecondReturnPartial().flipIndexValueOfContainedDuples
+    a = createServerBytesPerSecondReturnPartial().flipIndexValueOfContainedDuples
+    #_dbg
+    3
+    2
+    1
+    return a
   end
 
   def createServerBytesPerSecondReturnPartial(rawFilename = @templateName + "server_total" + ".raw.txt")
@@ -559,8 +564,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     newBuckets = newBuckets.divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length) # we should be 'too high' :) this will bring us down to size
     newBucketsCopy = LineWithPointsFile.writeAndReadSingle(rawFilename, "server received by peer points", newBuckets)
     # fails in error ...    assertEqual newBucketsCopy, newBuckets
-
-    return partialServedPoints.flatten 1 # want a flattened version...
+    partialServedPoints# guess we don't want to flatten here?
   end # func
 
   # ltodo a scatter graph of when the various ones happened of dT vs. dR, versus straight
