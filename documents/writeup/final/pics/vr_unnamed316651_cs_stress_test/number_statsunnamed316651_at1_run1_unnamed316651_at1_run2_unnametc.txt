@@ -173,31 +173,3 @@ percentiles of percent received from just peers (not origin)
 client upload sum percentiles:
 0 0 0 0 0
  :totalBytesReceivedFromPeersAcrossAllRuns 0, :totalBytesUploadedByServerAcrossAllRuns 359500669.0 :totalBytesServedFromPeersAcrossAllRuns 0
------------
-Doing stats on runs runs just numbers ["unnamed316651_at25_run1", "unnamed316651_at25_run2"]
-download times %'iles'
-62.63 162.28 352.64 560.19 992.02
-download total times %'iles'
-0 0 0 0 0
-death methods
-dR 0.0 dT 0.0 died 832.5 http_straight 1687.5
-server upload [received] distinct seconds [instantaneous server upload per second] %'iles'
-40962.5 126059.5 179771.5 244721.0 452288.5
- instantaneous tenth of second throughput %'iles'
-0.0 104097.0 160632.0 231972.0 452288.5
-upload bytes %'iles'
-0 0 0 0 0
-dht gets
-0.0469999999999988 0.382999999999996 0.736000000000018 3.26900000000001 120.123
-dht puts
-0.198 0.408999999999992 0.636000000000024 1.236 56.418
-dht removes
-0 0 0 0 0
-percentiles of percent received from just peers (not origin)
-0.0 0.0 0.0 0.0 0.0
-client upload sum percentiles:
-0 0 0 0 0
- :totalBytesReceivedFromPeersAcrossAllRuns 0, :totalBytesUploadedByServerAcrossAllRuns 354712068.0 :totalBytesServedFromPeersAcrossAllRuns 0
-@totalBytesReceivedFromPeersAcrossAllRuns: 0
-    @totalBytesUploadedByServerAcrossAllRuns = 1440518990.0
-    @totalBytesServedFromPeersAcrossAllRuns = 0
