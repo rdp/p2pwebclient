@@ -75,7 +75,7 @@ class ListenerEM < EM::Connection
     if incomingText == "svnup" or incomingText == "svnup_restart"
       @logger.debug "doing svn up"
       system("git pull")
-      send_data("old version is #{$version}, done updating, will restart")
+      send_data("old version is #{$version}, done updating, will restart if you sent svnup_restart...")
     end
     
     if incomingText == "restart" or incomingText == "svnup_restart"
