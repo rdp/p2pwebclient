@@ -46,14 +46,15 @@ Load on the origin appears to decrease with higher load, but in reality most of 
   \end{center}
 \end{figure*}
 
-Also related is the increasing amount of P2P transfer under higher load.  Under low load peers tend to download the file directly from the origin, however, after about 10 peers/s almost 100\% of the transfer is being done via p2p (Fig.~\ref{figs:yanc_from_client_percentile}).  A 1 on the graph means that 100% of the file transfer was from peers, instead of from the origin.  One reason that it goes up to 100\% so quickly is that we have only one block per file.  The reason it isn't always at 100\% for lower values is that peers typically connected and started downloading from the origin, then after 2s they would deem it to be serving less than R (128KB/s) and switch to P2P for the rest. 
+Also related is the increasing amount of P2P transfer under higher load.  Under low load peers tend to download the file directly from the origin, however, after about 10 peers/s almost 100\% of the transfer is being done via p2p (Fig.~\ref{figs:yanc_from_client_percentile}).  A 1 on the graph means that 100% of the file transfer was from peers, instead of from the origin.  One reason that it goes up to 100\% so quickly is that we have only one block per file.  The reason it isn't always at 100\% for lower values is that peers typically connected and started downloading from the origin, then after 2s they would deem it to be serving less than R (128KB/s) and switch to P2P for the rest. The lowest one percentile almost always downloads the entire file from the origin (typically the first few peers to enter the system), and the 99th percentile almost always downloads all the file via p2p, typically the last peers to enter the system.
 
 <%= figure 'pics/vr_medium_p2p_load_tak4/percent_from_clients_Percentile_Line.pdf', :label => 'figs:yanc_from_client_percentile', :caption => 'CDF of percent received from peers instead of from the origin. A 1 means 100\% of transfer is being done via P2P.' %>
 
 \section{Impact of various parameters}
 
-Theoretically, if a peer can download at "full speed" from the origin server, it does not help to download the same file from peers.  Our system attempts to allow for this by specifying parameters for the conditions under which it will switch to a p2p download.  It should be noted that it switches to a mixed download, since it still downloads from the origin server as a backup.
-We test the impact of varying each parameter, in order to explore the dynamics of the system, and search for optimal values.  In each test we run 1000 peers at 15/s (approximately 5 times the origin server's bandwidth for 66s).  
+Theoretically, if a peer can download at a fast enough speed from the origin server, it does not help to try to download the same file from peers.  Our system attempts to allow for this by s pecifying parameters for the conditions under which it will switch to a p2p download \footnote{It should be noted that it switches to a mixed download, since it still downloads from the origin server as a backup, until peers are found for the blocks needed.}.
+
+We next test the impact of varying each parameter, in order to explore the dynamics of the system, and search for optimal values.  In each test we run 1000 peers, with 15 entering the system per second.
 
 \subsection{Time to wait for first byte before transitioning to P2P}
 
