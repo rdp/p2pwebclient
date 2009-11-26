@@ -129,7 +129,7 @@ class SingleLogParser
     blockNumber  = :nonBlock
 
     # note--we don't have to worry about DEBUG lines since we filter them out using grep
-    answerArray = line.scan(/^(\d+\.\d+)/)
+    answerArray = line.scan(/^(\d+\.\d+)/) rescue [] # can fail on weird lines... encoding exception in 1.9
     if answerArray.length != 0
       timeIn = answerArray[0][0].to_f
     else
