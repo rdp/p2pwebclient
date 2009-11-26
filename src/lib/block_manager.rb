@@ -104,7 +104,7 @@ class BlockManager
     @total_peer_tokens_to_use_simultaneously = peer_tokens
     @linger = linger
     @am_bittorrent = fullUrl =~ Regexp.new('http://bittorrent')
-    debug "single file doing reversion as am_bittorrent: #{@am_bittorrent}, #{$useOriginRevertOptimization} with dR #{dRIfBelowThisCutItBps}, dW #{dWindowSeconds} #{[fullUrl, dTToWaitAtBeginning, dRIfBelowThisCutItBps, dWindowSeconds, blockSize, linger, logFileName, startTime, peer_name].join(", ")} $getAllAtBeginning #{$getAllAtBeginning} with number on the origin of #{$useOriginBackOffOrNumberConcurrent}"
+    debug "single file doing reversion as am_bittorrent: #{@am_bittorrent}, peer_tokens #{peer_tokens} #{$useOriginRevertOptimization} with dR #{dRIfBelowThisCutItBps}, dW #{dWindowSeconds} #{[fullUrl, dTToWaitAtBeginning, dRIfBelowThisCutItBps, dWindowSeconds, blockSize, linger, logFileName, startTime, peer_name].join(", ")} $getAllAtBeginning #{$getAllAtBeginning} with number on the origin of #{$useOriginBackOffOrNumberConcurrent} I think 100000 is special cased..."
     debug Time.now.inspect
     debug RUBY_VERSION
     unless on_windows? # diagnostics on system status
