@@ -550,7 +550,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     end
 
     if failed_count > 0
-        puts " #{failed_count} clients failed--no download time--ignoring them!!"
+        puts " #{failed_count} clients failed--no download time--ignoring them! use total: #{use_total_all_files}"
     else
         puts "all clients succeeded #{@allClientsInOne.length}"
     end

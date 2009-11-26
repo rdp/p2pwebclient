@@ -2,7 +2,7 @@
 # ltodo weird naming with the stats---doesn't seem to do them for multiple, at least where we'd like it too...
 #
 require 'constants'
-require 'MultipleRunsSameSettingGrapher.rb'
+require 'multiple_runs_same_setting_grapher.rb'
 require 'lib/array_on_disk'
 require 'forky'
 
