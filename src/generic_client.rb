@@ -236,6 +236,10 @@ class GenericGetFromSinglePeer < EventMachine::Connection
     if @p2pOrCS == 'p2p p2p' and @last_receipt_was_useful and @marked_as_wasteful_once # then we weren't really wasteful and have poorly judged a peer for this block!
       error 'adding back in a peer as useful, as he started poor then caught up! change to debug on sight'
       @parent.reinsert_peer @peersHostname, @peersPort, @blockNumber # ugh
+      # so apparently currently if a client gives us nothing useful
+      # and the connection closes
+      # we discount their usefulness *forever*
+      # do we take them out of 
     end
     log "bad peer!! -- connection never even completed" if !@connection_completed
     shutdown_once_without_writing
