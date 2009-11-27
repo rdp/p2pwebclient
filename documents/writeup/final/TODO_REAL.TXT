@@ -1,28 +1,5 @@
 ====================actually really todo (in order of priority):
 
-methodology for each experiment, metrics for each
-
-
-explain "vary T some odd outliers in there" (after done with processing run)
-
-
-
-Fig. 8 the exact numbers "is starts at y, tapers off at x" "why aren't they taking advantage of the server now?" figure 8, too.
-
-Fig. 9 (now 6)  "it goes up to 1 at x" and why are there outliers?  also only one block.  "Got part of it from the origin, then p2p kicks in." and "it's only one block"
-
-
-
-Section VII describe methodology "approximatley 5x the origin's bandwidth" confusing, single block small file.
-
-then run it until they finish, throwing out the really long tail for a few.
-
-
-Fig. 10 "T doesn't matter much"
-
-
-"as long as T is bigger than this and R is bigger than this then doesn't matter"
-
 load (Peers per Second)
 
 DHT Removal time (seconds)
@@ -30,20 +7,30 @@ DHT Removal time (seconds)
 "how did I get figure 14?"
 
 
-if 13, 14 go together, make 13 a, b
-
 state how long you repeat each experiment.
 
 table for section 9.
 
-
 CDF for "percent from peers" for the BitTorrent download.
 
+redo the dR one--it had a *way* too low dT! [and was "broken" because of other reasons, as well, I believe]
+
+right axes everywhere?
+
+wrong legend
 
 
 
+todo: vary block size again--uh...we should be getting better medians than 30s for 100KB blocks.
 
 ------------maybe don't have to? --------------------
+
+if 13, 14 go together, make 13 a, b -- everywhere
+
+
+
+
+%LTODO unfairness: vr_multiples_tak_1 client upload sum. wow.
 
 
 ummm....dr was a "broken" test basically

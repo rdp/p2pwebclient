@@ -54,7 +54,7 @@ Also related is the increasing amount of P2P transfer under higher load.  Under 
 
 Theoretically, if a peer can download at a fast enough speed from the origin server, it does not help to try to download the same file from peers.  Our system allows for this by specifying parameters for the conditions under which it will switch to p2p download \footnote{It should be noted that it switches to a mixed download, since it still downloads from the origin server if no peers are available.}.
 
-We next test the impact of varying each parameter, in order to explore the dynamics of the system, and search for optimal values.  In each test we run 1000 peers, with 15 entering the system per second, and wait for all peers to finish downloading the file, then calculate download speeds, etc.
+We next test the impact of varying each parameter, in order to explore the dynamics of the system, and search for optimal values.  In each test we run 1000 peers, with 15 entering the system per second, and wait for all peers to finish downloading the file, then compare download times.
 
 \subsection{Varying time to wait for first byte}
 
@@ -65,45 +65,57 @@ We expect that an extremely low value will cause transitioning too early and an 
 
 <%= figure 'pics/vr_do_dts_take6/death_reasons.pdf', :label => 'figs:dt_variance_death_reasons', :caption => 'Reasons peers switched to P2P download, varying T' %>
 
-\subsection{Server minimum allowed speed R}
+%\subsection{Server minimum allowed speed R}
 
-We next vary $R$, the server minimum serving speed. This value is calculated by averaging the amount received over the previous W seconds.  We run this experiment by varying R from 32KB/s to 1MB/s, and leave T set to 1s, a reasonable value.  The results from this first run were almost flat (Fig. \ref{figs:dr_download_time}).  It turns out that R is not making a difference at all--the T parameter of one second causes almost all clients to transition immediately, thus surprisingly causing R to not be as useful as expected.
+%We next vary $R$, the speed of receipt at which we transition to P2P download.  This value is calculated by averaging the amount received over the previous W seconds.  We run this experiment by varying R from 32KB/s to 1MB/s, and leave T set to 1s, a reasonable value.  The expected result was that a value of R too high would cause transition too early, and that a value too low would cause a transition too late. 
 
-<%= figure 'pics/vr_dr_take_8/client_download_Percentile_Line.pdf', :label => 'figs:dr_download_time', :caption => "Download times by varying R, the receive speed threshold" %>
+%TODO rerun the dR test, turns out it was a corrupt run.
 
-TODO re-do with better settings
+%\subsection{Server speed average W}
 
-\subsection{Server speed average W}
-
-TODO vary W section--I did this but the results were corrupted as I had mis-set the server for some reason
+%LTODO vary W section--I did this but the results were corrupted as I had mis-set the server for some reason
 
 %We next vary W, the seconds of recent history to track R.  Our hypothesis is that a too small W will be too sensitive and thus inaccurate.  Surprisingly, this didn't appear to be the case.  A smaller value for W is more effective, presumably because it alerted peers more quickly to potential server slowdown.  (Fig. \ref{figs:vr_dw_download_times}).
 <%#= figure 'pics/vr_dw_lots_opendht/client_download_Percentile_Line.pdf', :label => 'figs:vr_dw_download_times', :caption => 'Download times by varying W' %>
 
 \section{Effect for a full web page}
-We next run an experiment more indicative of real-world situations.  The normal pattern for a webpage is to first access some root (typically dynamic) page which references several other (typically static) objects, such as images, javascript, flash, etc.  This is the case for the BYU web site\footnote{Snapshot 2007}, which has a medium sized main page that links to over 10 small other objects.  We therefore run an experiment to see how well our protocol downloads a small page followed by several other, smaller pages.  The expected result is that downloading multiple pages will be slower than downloading a single page since it will put more stress on the DHT, which proved correct (Fig. \ref{figs:multiple_files_p2p_download_times_all_files}).
-Download time (the download time for all files to complete downloading) appears to grow exponentially, and at about 15 peers/second reach 20s total.  Also interesting is that DHT latency also grew with a similar curve (Fig. \ref{figs:multiple_files_p2p_dht_remove}).  We thus infer that slower DHT times cause the system to slow down, and that OpenDHT scales somewhat poorly under higher load.
+We next run an experiment more indicative of real-world situations.  The normal pattern for a webpage is to first access some root page which references several other objects, such as images, javascript, flash, etc.  This is the case for the BYU web site, which has a medium sized main page that links to over 10 small other objects\footnote{Snapshot 2007}.  We therefore run an experiment to see how well our protocol downloads a small page followed by several other, smaller objects.  Each peer first downloads a 100K file.  When that file completes each peer then downloads 10 10K files simultaneously (all from the origin server), and the total time to download all 11 files is calcualted.  We set the parameters to be those mentioned in the base test, above, and run 1000 peers, varying the peer entry times from 1/s to 25/s.
 
-<%= figure 'pics/vr_multiples_take_1/client_download_Percentile_Line.pdf', :caption => 'P2P Multiple Files end download times', :label => 'figs:multiple_files_p2p_download_times_all_files' %>
+The expected result is that downloading multiple pages instead of just one will be slower than downloading one since it will put more stress on the DHT, which proved correct (Fig. \ref{figs:multiple_files_p2p_download_times_all_files}).  Total download time starts at 1.3s, and appears to grow exponentially, reaching 146s at 25 peers/s.  Also correlated is that DHT put and set times also seem to grow, starting at a median of 0.41s per set and growing to a median of 12s/put (Fig. \ref{figs:multiple_files_p2p_dht_put}).  The 60s outliers represent those that were just under 60s.  If request took longer than 60s we   We thus infer that OpenDHT scales somewhat poorly under higher load.
 
-<%= figure 'pics/vr_multiples_take_1/dht_Remove_Percentile_Line.pdf', :caption => 'P2P multiple files DHT keyed value removal times', :label => 'figs:multiple_files_p2p_dht_remove' %>
+% todo is that what really happen though?
 
-We next run the same multiple file test using a traditional client-server download.  Download times grew at a much steeper rate (Fig. \ref{figs:multiple_files_cs_download_times}).  Server speed appears to actually slow with higher load (Fig. \ref{figs:multiple_files_cs_server_rate}).  Ours scaled much better than client-server.
+%TODO subfigure these...
+
+<%= figure 'pics/vr_multiples_take_1/client_download_Percentile_Line.pdf', :caption => 'Multiple Files total download times', :label => 'figs:multiple_files_p2p_download_times_all_files' %>
+
+<%= figure 'pics/vr_multiples_take_1/dht_Put_Percentile_Line.pdf', :caption => 'Multiple files DHT set times', :label => 'figs:multiple_files_p2p_dht_put' %>
+
+We next run the same test using traditional client-server download.  Download times grew at a much steeper curve (Fig. \ref{figs:multiple_files_cs_download_times}).  Ours scaled much better, despite being slower than expected.
 
 <%= figure 'pics/multiples_p2p_versus_cs_pics/client_download_Percentile_Line.pdf', :caption => 'Comparison of P2P versus client server download times for multiple files', :label => 'figs:multiple_files_cs_download_times' %>
-<%= figure 'pics/vr_unnamed937328_multiple_files_cs/server_speed_Percentile_Line.pdf', :caption => 'Client-server multiple files server speed', :label => 'figs:multiple_files_cs_server_rate' %>
 
-\subsection{Varying Block Size}
-We next measure the effect block size has on downloads.  
+%\subsection{Varying Block Size}
+%We next measure the effect block size has on downloads.  We downloaded  a 100K file with different block sizes.  32K blocks resulted in the quickest downloads (Fig.~\ref{figs:block_size_download_times}), though not by much.
+
 %32KB blocks were shown to be effective in \cite{TODO}.  
-32K blocks resulted in the quickest downloads (Fig.  \ref{figs:block_size_download_times}), though not by much.
 
-<%= figure 'pics/vr_unnamed240998_blockSize/client_download_Percentile_Line.pdf', :caption => 'Vary block size', :label => 'figs:block_size_download_times' %>
+<%= figure 'pics/vr_unnamed240998_blockSize/client_download_Percentile_Line.pdf', :caption => 'Download times varying block size', :label => 'figs:block_size_download_times' %>
 
 \section{Downloading Large Files}
-We next download large files.  We download a single 30MB file from 100 simultaneous peers with our protocol and with BitTorrent.  Block size is set to 256K for both systems (the BitTorrent default).  100 peers enter the system within 100s, and both protocols are rate limited to 256KB/s.  The expected result is that the two fare similarly.  BitTorrent download times were 148s for the 50th percentile, and 2786s for the 99th percentile.  Our protocol had a median download time of 847s, with a 99th percentile of 982s, so our currently is not as fast as BitTorrent.  One cause of this difference is that BitTorrent's seeds (servers) limit the number of outgoing connections they will serve to, enabling blocks to propagate more quickly to connected peers and thus from them out through the system\footnote{BitTorrent seeds limit their outgoing connections to 10 or less, whereas our apache was tooled to serve up to 256 clients at the same time}.  BitTorrent seeds also prefer peers who have the highest download speeds, which speeds propagation of blocks.
+We next download larger files.  We download a single 30MB file from 100 simultaneous peers with our protocol (settings as described above) and then download the same file with BitTorrent and compare download times.  Block size is set to 256K for both systems (the BitTorrent default).  Peers enter the system at about 1/s, and both protocols' origin servers are rate limited at 256KB/s.  The expected result is that the two fare similarly.  BitTorrent download times were 148s for the 50th percentile, and 2786s for the 99th percentile (Fig.~\ref{figs:yanc_vs_bt}).  Our protocol had a median download time of 847s, with a 99th percentile of 982s, so not as fast as BitTorrent.  One cause of this difference is that BitTorrent's seeds (servers) limit the number of outgoing connections they will allow (apache--our server--does not).  Doing so enables blocks to propagate more quickly to well connected peers and then out through the system\footnote{BitTorrent seeds limit their outgoing connections to 10, whereas our apache was tooled to serve up to 256 clients at the same time}.  BitTorrent seeds also prefer peers who have the highest download speeds, which speeds propagation of blocks.  These differences allow it to respond to a flash crowd such as this, better.
 
-Also, this test was basically of a flash flood downloading a large file, which is rare.  In normal conditions a few "seeder" peers enter the system before floods occur, in which case our protocol would be expected to work better.  We leave that examination for future work.
+\begin{tabular}{ l c r }
+  \hline
+  Percentiles & Ours & BitTorrent \\
+  1 & 613 & 131 \\
+  25 & 730 & 139 \\
+  50 & 847 & 148 \\
+  75 & 882 & 163 \\
+  99 & 982 & 2786 \\
+  \label{figs:yanc_vs_bt}
+\end{tabular}
 
-\section{Number of peers} We next vary the number of peers that each peer downloads from.  We use the same 30MB file size.  A higher number of concurrent peers increases download speed (Fig. \ref{figs:large_file_number_of_concurrent_blocks}).  
+\section{Number of peers} We next vary the maximum number of peers that each peer downloads from.  We use the same 30MB file size, and vary the number of simultaneous peers used from 1 to 50.  Median download times peaked at 1604s when only one peer connection was allowed, then, as expected, leveled out at 16 peers with a median download time of 931s. A higher number of concurrent peers increased download speed (Fig. \ref{figs:large_file_number_of_concurrent_blocks}).
+
 <%= figure 'pics/vr_vary_blocks_large_file/client_download_Percentile_Line.pdf', :caption => 'Download times varying number of concurrent peers', :label => 'figs:large_file_number_of_concurrent_blocks' %>

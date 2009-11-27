@@ -1,5 +1,8 @@
 i downloadtime!"download total times %'iles'"
 
+
+BAD
+
 "758.67 791.49 811.2 843.31 1546.07"
 going totalThroughPutPointsPartial()total bytes received by peers
 2846667175.75 average per run

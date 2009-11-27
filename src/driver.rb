@@ -12,10 +12,10 @@ require_rel 'constants', 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener'
 
 $shouldDoGraphsSingle = true # ltodo move down
 $shouldDoVaryParameterGraphs = true
+
 load 'constants.rb'
 require 'benchmark'
 require 'forky'
-require 'benchmark'
 
 if clientHasGraphLibraries # ltodo with driver it sends the 'old old' time when it finally fires 'em
   require 'singleMultipleGraphs.rb'
@@ -674,7 +674,7 @@ class Driver
 
     if runStyle == 'blockSize'
       whatToAddTo = '@@blockSize'
-      settingsToTryArray = [16.kb, 32.kb, 64.kb, 128.kb]
+      settingsToTryArray = [16.kb, 32.kb, 64.kb, 100.kb]
       unitsX = 'Block size'
     end
 

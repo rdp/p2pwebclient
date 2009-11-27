@@ -115,7 +115,9 @@ def self.translate_conglom_hashes_to_lined_hashes data1
       "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/S)', 'server_speed_Percentile_Line'],
       "upload bytes %'iles'" => ['Peer Bytes Uploaded (Bytes)', 'upload bytes'],
       "instantaneous tenth of second throughput %'iles'" => ['Total ThroughPut (Bytes/S)', 'total throughput'],
-      'dht removes' => ['DHT Remove Times (S)', 'dht_Remove_Percentile_Line'],
+      'dht removes' => ['DHT Removal Time (S)', 'dht_Remove_Percentile_Line'],
+      'dht puts' => ['DHT Set Time (S)', 'dht_Put_Percentile_Line'],
+      'dht gets' => ['DHT Set Time (S)', 'dht_get_Percentile_Line'],
       'death methods' => ['Number of peers', 'death_reasons'],
     "percentiles of percent received from just peers (not origin)" => ['Percent of File received from Peers', 'percent_from_clients_Percentile_Line']} do
 
@@ -173,7 +175,7 @@ if $0 == __FILE__
   # so lazy
   if ARGV[1]
     if File.exist? ARGV[1]
-      ParseRaw.go ARGV[0], 'Peers Per Second', ARGV[1] # dual file mode
+      ParseRaw.go ARGV[0], 'load (peers per second)', ARGV[1] # dual file mode
     else
      ParseRaw.go ARGV[0], ARGV[1] || 'Peers Per Second' # specify y axis mode
     end 
