@@ -102,7 +102,7 @@ def self.translate_conglom_hashes_to_lined_hashes data1
     require 'sane'
 
     all = Parser.parse File.read(file1)
-    if ARGV[1]
+    if file2
       all2 = Parser.parse(File.read(file2))
     else
       all2 = {}
@@ -167,7 +167,17 @@ def self.translate_conglom_hashes_to_lined_hashes data1
 end
 
 if $0 == __FILE__
-  puts 'syntax: raw file name1 [raw file name2 if you want comparison...]'
+  puts 'syntax: raw file name1 [raw file name2 if you want comparison...] "dT (s)"'
   raise unless ARGV[0] && !ARGV[0].in?(['--help', '-h'])
-  ParseRaw.go ARGV[0], 'Peers per second', ARGV[1]
+
+  # so lazy
+  if ARGV[1]
+    if File.exist? ARGV[1]
+      ParseRaw.go ARGV[0], 'Peers Per Second', ARGV[1] # dual file mode
+    else
+     ParseRaw.go ARGV[0], ARGV[1] || 'Peers Per Second' # specify y axis mode
+    end 
+  else
+    ParseRaw.go ARGV[0], 'Peers Per Second'
+  end
 end
