@@ -61,7 +61,8 @@ class P2PPlot
       all_xs.min
     end
 
-    # hash_values is like ['abc' => [[1,1], [1,2]...]]
+
+    # expect hash_values is like ['abc' => [[1,1], [1,2]...]]
     def plotNormal xlabel, ylabel, hash_values, name
       
       Gnuplot.open do |gp|
@@ -70,7 +71,7 @@ class P2PPlot
           plot.xlabel xlabel
           #plot.xrange "[0:#{ get_smallest_x(hash_values) + 1}]"
           plot.terminal 'pdf'
-          raise unless name.include? 'pdf'
+          raise unless name.include? 'pdf' # gotta have that
           plot.output name
           hash_values.each{|name, data|
             xs = data.map{|x, y| x}

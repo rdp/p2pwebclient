@@ -15,6 +15,7 @@ doctest: parses a conjunto right
 # into something like
 # {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}...}
 require 'sane'
+require File.dirname(__FILE__) + '/gnuplot_percentiles' # this is not gnuplot itself!
 
 
 class Parser
@@ -28,7 +29,6 @@ class Parser
     all = {}
 
     float_or_int = /\d+\.?\d*/
-
 
     large_string.each_line { |line|
 
@@ -61,21 +61,21 @@ class Parser
       end
     }
 
-    puts 'returning', all.keys.inspect
+    puts 'returning successfully parsed', all.keys.inspect
     all
-
   end
 end
 
 
-require File.dirname(__FILE__) + '/gnuplot_percentiles' # this is not gnuplot itself!
 
 
 class ParseRaw
 
-
-  # see unit test for it
-  def self.translate_conglom_hashes_to_lined_hashes data1
+        # we've got
+        #{1.0=>{"dR"=>0.0, "dT" =>
+        # and we want something like
+        #P2PPlot.plotNormal 'x label', 'y label', {'abc' => [[1,1], [2,2], [3,3]]}, 'name.pdf'
+def self.translate_conglom_hashes_to_lined_hashes data1
     xs = data1.keys
     first_member = data1[xs[0]]
 
@@ -96,12 +96,10 @@ class ParseRaw
     all_data
   end
 
-  def self.go file1, file2 = nil
+  def self.go file1, x = 'Peers per Second', file2 = nil
 
     require 'rubygems' if RUBY_VERSION < '1.9'
     require 'sane'
-
-    x = 'Peers per Second' # this one depends on the directory you're in, I guess [TODO make command line?]
 
     all = Parser.parse File.read(file1)
     if ARGV[1]
@@ -132,17 +130,7 @@ class ParseRaw
       # special case the single liners...
       if name == 'death methods'
 
-        # we've got
-        #{1.0=>{"dR"=>0.0, "dT" =>
-        # and we want something like
-        #P2PPlot.plotNormal 'x label', 'y label', {'abc' => [[1,1], [2,2], [3,3]]}, 'name.pdf'
         data = ParseRaw.translate_conglom_hashes_to_lined_hashes data1
-
-
-
-
-  #      _dbg
-
         P2PPlot.plotNormal x, y, data, this_output_filename + '.pdf'
 
       else
@@ -167,13 +155,12 @@ class ParseRaw
           }
           columnss << columns
         end
-        puts "plotting", xss.inspect, columnss.inspect, "to", this_output_filename
+        puts "plotting", xss.inspect, columnss.inspect, "to", this_output_filename if $VERBOSE
         P2PPlot.plot xss[0], columnss[0], this_output_filename + '.pdf', x, y, :xs2 => xss[1], :percentiles2 => columnss[1]
       end
 
     end
     puts 'remain', all.keys.inspect, "\n\n\n"
-
 
   end
 
@@ -181,7 +168,6 @@ end
 
 if $0 == __FILE__
   puts 'syntax: raw file name1 [raw file name2 if you want comparison...]'
-  raise unless file1 ARGV[0] && !ARGV[0].in?(['--help', '-h'])
-
-  ParserRaw.go ARGV[0], ARGV[1]
+  raise unless ARGV[0] && !ARGV[0].in?(['--help', '-h'])
+  ParseRaw.go ARGV[0], 'Peers per second', ARGV[1]
 end
