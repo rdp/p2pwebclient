@@ -30,7 +30,7 @@ class P2PPlot
       Gnuplot.open do |gp|
         Gnuplot::Plot.new( gp ) do |plot|
 
-          #plot.title  "Example"
+          #plot.title  "Example" # we don't need no shtinkin titles
           plot.ylabel ylabel if ylabel
           plot.xlabel xlabel if xlabel
           plot.xrange "[0:#{ xs.last + 1}]"
@@ -44,6 +44,7 @@ class P2PPlot
             add_percentile_plot plot, [xs2] + percentiles2
           end
 
+          # box_width is only for percentiles
           box_width = xrange*3/100
           plot.boxwidth box_width
 
@@ -51,23 +52,59 @@ class P2PPlot
       end
     end
 
-    named_args_for :plot
+
+    def get_smallest_x hash_values
+      all_xs = []
+      hash_values.each{ |line_name, settings|
+        settings.each{|x, y|  all_xs << x }
+      }
+      all_xs.min
+    end
+
+    # hash_values is like ['abc' => [[1,1], [1,2]...]]
+    def plotNormal xlabel, ylabel, hash_values, name
+      
+      Gnuplot.open do |gp|
+        Gnuplot::Plot.new( gp ) do |plot|
+          plot.ylabel ylabel
+          plot.xlabel xlabel
+          #plot.xrange "[0:#{ get_smallest_x(hash_values) + 1}]"
+          plot.terminal 'pdf'
+          raise unless name.include? 'pdf'
+          plot.output name
+          hash_values.each{|name, data|
+            xs = data.map{|x, y| x}
+            ys = data.map{|x, y| y}
+            plot.data << Gnuplot::DataSet.new( [xs, ys]) do |ds|; 
+              ds.title = name
+              ds.with = 'lines'
+            end          
+          }
+        end
+      end
+
+    end
+
+    named_args
+
+    def add_percentile_plot plot, all_data
+
+      plot.data << Gnuplot::DataSet.new( all_data ) do |ds|
+        ds.using = "1:3:2:6:5"
+        ds.with = "candlesticks title '1,25,75,99 percentiles' "
+      end
+
+      #add the median...all it is is a line
+      plot.data << Gnuplot::DataSet.new( all_data) do |ds|
+        #  ds.using = "1:4:4:4:4"
+        #  ds.with = "candlesticks lt -1"
+        #  ds.notitle
+        ds.with = "lines title '50 percentile'"
+        ds.using = "1:4" # just x,median
+      end
+    end
+
+
   end
+
 end
-
-def add_percentile_plot plot, all_data
-  plot.data << Gnuplot::DataSet.new( all_data ) do |ds|
-    ds.using = "1:3:2:6:5"
-    ds.with = "candlesticks title '1,25,75,99 percentiles' "
-  end
-
-  #add the median...all it is is a line
-  plot.data << Gnuplot::DataSet.new( all_data) do |ds|
-    #  ds.using = "1:4:4:4:4"
-    #  ds.with = "candlesticks lt -1"
-    #  ds.notitle
-    ds.with = "lines title '50 percentile'"
-    ds.using = "1:4" # just x,median
-  end
-end
-

@@ -3,15 +3,13 @@
 methodology for each experiment, metrics for each
 
 
-Fig. 6 "bug in the rate limiting stuff"  please reference Fig. 6 (5?)
+explain "vary T some odd outliers in there" (after done with processing run)
 
 
-
-Fig. 7 "download times start at median X then grow to median Y" why are there a few outliers for Fig. 7?  explain the 60 and 120s timeouts for Fig. 7
 
 Fig. 8 the exact numbers "is starts at y, tapers off at x" "why aren't they taking advantage of the server now?" figure 8, too.
 
-Fig. 9 "it goes up to 1 at x" and why are there outliers?  also only one block.  "Got part of it from the origin, then p2p kicks in." and "it's only one block"
+Fig. 9 (now 6)  "it goes up to 1 at x" and why are there outliers?  also only one block.  "Got part of it from the origin, then p2p kicks in." and "it's only one block"
 
 
 

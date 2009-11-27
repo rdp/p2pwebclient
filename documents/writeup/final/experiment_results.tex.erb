@@ -52,13 +52,13 @@ Also related is the increasing amount of P2P transfer under higher load.  Under 
 
 \section{Impact of various parameters}
 
-Theoretically, if a peer can download at a fast enough speed from the origin server, it does not help to try to download the same file from peers.  Our system attempts to allow for this by s pecifying parameters for the conditions under which it will switch to a p2p download \footnote{It should be noted that it switches to a mixed download, since it still downloads from the origin server as a backup, until peers are found for the blocks needed.}.
+Theoretically, if a peer can download at a fast enough speed from the origin server, it does not help to try to download the same file from peers.  Our system allows for this by specifying parameters for the conditions under which it will switch to p2p download \footnote{It should be noted that it switches to a mixed download, since it still downloads from the origin server if no peers are available.}.
 
-We next test the impact of varying each parameter, in order to explore the dynamics of the system, and search for optimal values.  In each test we run 1000 peers, with 15 entering the system per second.
+We next test the impact of varying each parameter, in order to explore the dynamics of the system, and search for optimal values.  In each test we run 1000 peers, with 15 entering the system per second, and wait for all peers to finish downloading the file, then calculate download speeds, etc.
 
-\subsection{Time to wait for first byte before transitioning to P2P}
+\subsection{Varying time to wait for first byte}
 
-We first vary $T$, the time to wait for a first response byte before transitioning\footnote{By first byte we mean any byte received from the origin server--a header byte or a content byte--i.e. we exclude the TCP handshake packet as counting as a first byte received.}.  
+We first vary $T$, the time to wait for a first response byte before transitioning to a P2P download\footnote{By first byte we mean any byte received from the origin server--a header byte or a content byte--i.e. we exclude the TCP handshake packet as a first byte.}.  
 We expect that an extremely low value will cause transitioning too early and an extremely high value will cause transitioning too late.  The results confirm this (Fig. \ref{figs:dt_variance_download_times}).  Also, as T grew very large, the peers download a higher percentage of the file from the origin, as expected (Fig. \ref{figs:dt_variance_percent_from_clients}).
 
 <%= figure 'pics/vr_do_dts_take6/client_download_Percentile_Line.pdf', :label => 'figs:dt_variance_download_times', :caption => 'Download times varying T, the time to wait for first byte' %>
