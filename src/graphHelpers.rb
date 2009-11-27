@@ -347,6 +347,7 @@ class GraphHelper
 
   # ltodo make this a line without connect dots or what not :)
   def GraphHelper.createScatter(scatterArray, filenameOutput, title, lineTitle, xAxisLabel, yAxisLabel, xResolution = 1, hashLabels = {}, x_min = nil, y_min = nil)
+    return if $skip_gruff
     # ltodo make sure there aren't two on same line! :) yeps what then?
     # create some new lines -- one per scatter
     if scatterArray.length <= 1
