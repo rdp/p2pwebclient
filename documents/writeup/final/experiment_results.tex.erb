@@ -59,11 +59,11 @@ We next test the impact of varying each parameter, in order to explore the dynam
 \subsection{Varying time to wait for first byte}
 
 We first vary $T$, the time to wait for a first response byte before transitioning to a P2P download\footnote{By first byte we mean any byte received from the origin server--a header byte or a content byte--i.e. we exclude the TCP handshake packet as a first byte.}.  
-We expect that an extremely low value will cause transitioning too early and an extremely high value will cause transitioning too late.  The results confirm this (Fig. \ref{figs:dt_variance_download_times}).  Also, as T grew very large, the peers download a higher percentage of the file from the origin, as expected (Fig. \ref{figs:dt_variance_percent_from_clients}).
+We expect that an extremely low value will cause transitioning too early and an extremely high value will cause transitioning too late.  The results confirm this (Fig. \ref{figs:dt_variance_download_times}).  It should be noted that as T increased, the role of R increased, as the initial byte timeout wasnot as useful for determining origin speed (Fig.~\ref{figs:dt_variance_death_reasons}).
 
 <%= figure 'pics/vr_do_dts_take6/client_download_Percentile_Line.pdf', :label => 'figs:dt_variance_download_times', :caption => 'Download times varying T, the time to wait for first byte' %>
 
-<%= figure 'pics/vr_do_dts_take6/percent_from_clients_Percentile_Line.pdf', :label => 'figs:dt_variance_percent_from_clients', :caption => 'Percent downloaded from client, varying T' %>
+<%= figure 'pics/vr_do_dts_take6/death_reasons.pdf', :label => 'figs:dt_variance_death_reasons', :caption => 'Reasons peers switched to P2P download, varying T' %>
 
 \subsection{Server minimum allowed speed R}
 
