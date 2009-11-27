@@ -164,13 +164,12 @@ class ClientLogContainerWithStats
           if !@openDHTsInProcess.has_key?(extra2) then
             print "BADK! #{extra2} not found in #{@openDHTsInProcess.inspect}\n"
           else
-            openDHTThatJustFinished = @openDHTsInProcess[extra2]
+            openDHTThatJustFinished = @openDHTsInProcess.delete(extra2)
             openDHTThatJustFinished.endy = secondFloat
             @openDHTs << openDHTThatJustFinished
-            @openDHTsInProcess.delete(extra2)
           end
         else
-          # ltodo            print "non dht extra -- like a byte metric" + token.to_s
+          # ltodo      print "non dht extra -- like a byte metric" + token.to_s
         end
       end
 

@@ -1,5 +1,11 @@
 #!/usr/bin/ruby
 
+begin
+  require 'rmagick'
+rescue LoadError
+ puts "WARNINGS: skipping graphs--no rmagick!"
+ $skip_gruff = true
+end
 #
 # ltodo average speed/active client/instantaneous second graph :) [pretty similar to total throughput]
 
@@ -11,11 +17,15 @@ require './unique_require'
 $LOADED_FEATURES << __FILE__ # fake that we've been here
 $LOADED_FEATURES << File.expand_path(__FILE__)
 require './constants'
-require 'new_graphs.rb'
+require 'new_graphs.rb' unless $skip_gruff
 require 'pp'
 require 'individual_graph.rb'
 require 'graphHelpers.rb'
 require 'vary_parameter_graphs'
+
+if RUBY_PLATFORM =~ /mingw/
+  require 'forky_replacement_fake.rb'
+end
 
 $doIndividuals = true
 

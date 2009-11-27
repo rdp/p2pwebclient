@@ -1,5 +1,8 @@
 require 'constants'
-require 'gruff'
+
+unless $skip_gruff
+ require 'gruff'
+end
 #require File.dirname(__FILE__) + '/base'
 require 'pp'
 require 'lib/ruby_useful_here.rb'
