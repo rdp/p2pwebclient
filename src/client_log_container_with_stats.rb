@@ -32,7 +32,8 @@ class ClientLogContainerWithStats
     end
     @openDHTsInProcess = nil
     # need lastLine, still....@subject = nil
-    # disabled as it seems slow...hmm...could test...fileize_yourself
+    # disabled as it seems slow...hmm...could test with the 30MB file...
+    fileize_yourself
     print "done -- took #{Time.now - @start_time}s\n" if $VERBOSE
   end
 
