@@ -19,66 +19,6 @@ dht removes
 percentiles of percent received from just peers (not origin)
 0.0 0.905162784160262 0.931100084216394 0.964229193131127 1.0
 -----------
-Doing stats on runs runs just numbers do_dts_take6_at0.1_run1_of_2_major_2_of_12do_dts_take6_at0.1_run2_of_2_major_2_of_12
-download times %'iles'
-0.39 1.57 2.88 6.03 43.67
-death methods
-dR 109.0 dT 794.5 http_straight 0.0
-server upload distinct seconds [instantaneous server upload per second] %'iles'
-25543.5 111058.5 125748.0 137785.0 173844.0
- instantaneous tenth of second throughput %'iles'
-309090.0 1221916.0 1410546.5 1610006.5 2050439.0
-upload bytes %'iles'
-0 0 0 0 6185739
-dht gets
-0.061000000000007 0.350000000000009 0.677 3.489 120.48
-dht puts
-0.212000000000003 0.606999999999999 1.643 5.609 73.293
-dht removes
-0.203000000000003 0.634 1.54799999999999 5.69 65.712
-percentiles of percent received from just peers (not origin)
-0.363041757031223 0.892035259316194 0.928985387913835 0.956744700130443 1.0
------------
-Doing stats on runs runs just numbers do_dts_take6_at0.25_run1_of_2_major_3_of_12do_dts_take6_at0.25_run2_of_2_major_3_of_12
-download times %'iles'
-0.6 2.0 3.65 8.01 66.63
-death methods
-dR 52.0 dT 854.0 http_straight 1.5
-server upload distinct seconds [instantaneous server upload per second] %'iles'
-1368.0 11148.5 18904.0 27496.5 60101.5
- instantaneous tenth of second throughput %'iles'
-284341.5 1217903.0 1492619.0 1693048.0 2225445.5
-upload bytes %'iles'
-0 0 0 0 6591104
-dht gets
-0.0890000000000004 0.492 1.249 6.384 120.239
-dht puts
-0.149999999999999 0.545000000000002 1.038 4.508 92.387
-dht removes
-0.13600000000001 0.562000000000012 1.16399999999999 3.752 119.179
-percentiles of percent received from just peers (not origin)
-0.328029675955731 0.977479596716811 1.0 1.0 1.0
------------
-Doing stats on runs runs just numbers do_dts_take6_at0.5_run1_of_2_major_4_of_12do_dts_take6_at0.5_run2_of_2_major_4_of_12
-download times %'iles'
-0.87 2.08 3.4 7.79 150.82
-death methods
-dR 100.0 dT 804.5 http_straight 3.0
-server upload distinct seconds [instantaneous server upload per second] %'iles'
-0.0 3859.0 6437.5 12057.0 138962.5
- instantaneous tenth of second throughput %'iles'
-355313.0 1298054.0 1556982.0 1757958.5 2377950.5
-upload bytes %'iles'
-0 0 0 0 6841341
-dht gets
-0.0649999999999977 0.43 0.849999999999994 3.223 120.423
-dht puts
-0.158000000000001 0.484 0.785 1.653 53.082
-dht removes
-0.122 0.503 0.879000000000005 2.233 58.539
-percentiles of percent received from just peers (not origin)
-0.26316523541015 1.0 1.0 1.0 1.0
------------
 Doing stats on runs runs just numbers do_dts_take6_at0.75_run1_of_2_major_5_of_12do_dts_take6_at0.75_run2_of_2_major_5_of_12
 download times %'iles'
 1.08 2.52 4.52 9.8 89.05
@@ -98,26 +38,6 @@ dht removes
 0.0640000000000214 0.532000000000011 1.00500000000001 6.71600000000001 69.107
 percentiles of percent received from just peers (not origin)
 0.0 1.0 1.0 1.0 1.0
------------
-Doing stats on runs runs just numbers do_dts_take6_at1_run1_of_2_major_6_of_12do_dts_take6_at1_run2_of_2_major_6_of_12
-download times %'iles'
-1.37 2.9 4.7 9.27 132.71
-death methods
-dR 61.5 dT 846.5 http_straight 5.5
-server upload distinct seconds [instantaneous server upload per second] %'iles'
-0.0 2776.0 7076.0 14999.5 54568.5
- instantaneous tenth of second throughput %'iles'
-204039.5 1230425.0 1556372.5 1829150.0 2531103.0
-upload bytes %'iles'
-0 0 0 0 8116496
-dht gets
-0.0879999999999939 0.589000000000002 1.826 7.575 120.782
-dht puts
-0.156999999999996 0.543000000000001 1.075 4.362 68.379
-dht removes
-0.106999999999999 0.545999999999992 1.10000000000001 4.00799999999998 66.56
-percentiles of percent received from just peers (not origin)
-0.0822791290830052 1.0 1.0 1.0 1.0
 -----------
 Doing stats on runs runs just numbers do_dts_take6_at1.5_run1_of_2_major_7_of_12do_dts_take6_at1.5_run2_of_2_major_7_of_12
 download times %'iles'

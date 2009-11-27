@@ -38,6 +38,7 @@ class P2PPlot
           # is there an xmin?
           plot.terminal 'pdf'
           plot.output name
+          #plot.logscale 'y'
 
           add_percentile_plot plot, [xs] + percentiles
           if(xs2)

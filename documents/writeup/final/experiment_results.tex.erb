@@ -59,7 +59,7 @@ We next test the impact of varying each parameter, in order to explore the dynam
 \subsection{Varying time to wait for first byte}
 
 We first vary $T$, the time to wait for a first response byte before transitioning to a P2P download\footnote{By first byte we mean any byte received from the origin server--a header byte or a content byte--i.e. we exclude the TCP handshake packet as a first byte.}.  
-We expect that an extremely low value will cause transitioning too early and an extremely high value will cause transitioning too late.  The results confirm this (Fig. \ref{figs:dt_variance_download_times}).  It should be noted that as T increased, the role of R increased, as the initial byte timeout wasnot as useful for determining origin speed (Fig.~\ref{figs:dt_variance_death_reasons}).
+We expect that an extremely low value will cause transitioning too early and an extremely high value will cause transitioning too late.  The results were that with a T setting of 0, median download time was 12s, it then dropped to 4.5s when set to 0.75s, then gradually rose to 10s at 2, and flattened out.  The reason it flattened out is that as T grew, its relative importantce decreased as R caused the transition more often than T did (Fig. \ref{figs:dt_variance_download_times}).  The outliers for download time were usually peers who were poorly connected to OpenDHT, so they sometimes received answer to their queries after the linger time for the peers listed had expired.
 
 <%= figure 'pics/vr_do_dts_take6/client_download_Percentile_Line.pdf', :label => 'figs:dt_variance_download_times', :caption => 'Download times varying T, the time to wait for first byte' %>
 
