@@ -37,7 +37,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
   def initialize(runs, outputName = runs.join('_'), already_created_runs_that_want_to_be_combined = nil)
     assert runs.class == Array && runs[0].class == String
     @runs = runs
-    @dirName = MultipleRunsSameSettingGrapher.pictureDirectory + "/single_run_pics/#{outputName}"[0..35]
+    @dirName = MultipleRunsSameSettingGrapher.pictureDirectory + "/single_run_pics/#{outputName[0..100]}"
     @outputNameRequested = outputName
     Dir.mkPath(@dirName)
     @templateName = @dirName + "/"
