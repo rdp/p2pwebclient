@@ -1,10 +1,11 @@
 #!/usr/bin/ruby
-
 begin
   require 'rmagick'
 rescue LoadError
  puts "WARNINGS: skipping graphs--no rmagick!"
  $skip_gruff = true
+ require 'rubygems'
+ require 'backtracer'
 end
 #
 # ltodo average speed/active client/instantaneous second graph :) [pretty similar to total throughput]
@@ -23,7 +24,8 @@ require 'individual_graph.rb'
 require 'graphHelpers.rb'
 require 'vary_parameter_graphs'
 
-if RUBY_PLATFORM =~ /mingw/
+require 'rbconfig'
+if RbConfig::CONFIG['host_os'] =~ /mswin|mingw/ # jruby friendly
   require 'forky_replacement_fake.rb'
 end
 
