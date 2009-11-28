@@ -40,6 +40,7 @@ class ClientLogContainerWithStats
   @@temp_prefix = rand(1000).to_s + 'fileized'
 
   def fileize_yourself
+    puts 'not fileizing' or return if RUBY_PLATFORM =~ /mingw/ # hacking hacking
     for item in [:@openDHTs, :@allReceivedP2P, :@allReceivedHost, :@allServedP2P] do
       variable_instance = self.instance_variable_get(item)
       a = Tempfile.new @@temp_prefix + rand(1000000).to_s
