@@ -1,17 +1,16 @@
 #!/usr/bin/ruby
-begin
-  require 'rmagick'
-rescue LoadError
- puts "WARNINGS: skipping graphs--no rmagick!"
- $skip_gruff = true
- require 'rubygems'
- require 'backtracer'
-end
-#
+require 'rubygems'
+require 'RMagick'
+#$skip_gruff = true
+$skip_opendht_processing = true
+
+
+
 # ltodo average speed/active client/instantaneous second graph :) [pretty similar to total throughput]
 
 # graph of 'opendht get to size got', opendht scatter
 # upload quantity to download speed, upload max speed to upload quantity
+#
 #
 #
 require './unique_require'

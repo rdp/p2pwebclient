@@ -148,7 +148,7 @@ class ClientLogContainerWithStats
         @endMethod = 'dT'
       end
 
-      if extra
+      if extra && !$skip_opendht_processing
         # dht most likely...
         if symbol.in? ['R', 'G', 'S'] # a START openDHT
           inObject = OpenDHTDoSomething.new
