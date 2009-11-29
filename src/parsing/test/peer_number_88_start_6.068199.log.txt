@@ -1,0 +1,20 @@
+6.068[88]starting up logger (version $Rev: 1515 $) to ../logs/128.10.19.53/yanc_30mb_3_url_use_bittorrent_atfalse_run1_of_4_major_1_of_1_dClient0.0666666666666667_dTotal6.66666666666667_dw2.0_blockSize256000_linger0_dr125000_dt1.0_serverBpS255000/peer_number_88_start_6.068199.log.txt
+6.069[88]DEBUG:BM:single file doing reversion as am_bittorrent: , true with dR 125000, dW 2.0 http://128.187.223.211:7778/30000K.file8342529, 1.0, 125000, 2.0, 256000, 0, ../logs/128.10.19.53/yanc_30mb_3_url_use_bittorrent_atfalse_run1_of_4_major_1_of_1_dClient0.0666666666666667_dTotal6.66666666666667_dw2.0_blockSize256000_linger0_dr125000_dt1.0_serverBpS255000/peer_number_88_start_6.068199.log.txt, 6.068199, 88 $getAllAtBeginning false with number on the origin of 1000000
+6.081[88]DEBUG:BM:Fri Apr 10 16:14:38 +0000 2009
+6.081[88]DEBUG:BM:1.8.7
+6.196[88]DEBUG:BM: 16:14:38 up 29 days, 16 min,  0 users,  load average: 2.76, 2.03, 1.70Fri Apr 10 16:14:38 UTC 2009Filesystem            Size  Used Avail Use% Mounted on : /dev/hdv1             4.8G  845M  3.9G  18% / : none                  4.8G  845M  3.9G  18% /tmp
+6.218[88]DEBUG:p2p server :33141:set block manager port to 33141
+6.218[88]DEBUG:BM (33141):post initialize for a BM
+6.218[88]BM (33141):Start CS normal innocent get http://128.187.223.211:7778/30000K.file8342529 dT 1.000000 dR 125000.000000 dW 2.000000 blockSize 256000 p2pskipCS: false  PRETEND_CLIENT_SERVER_ONLY false
+6.218[88]DEBUG:BM (33141):using CS intro...(normal)
+6.218[88]BM (33141):cs straight download  [128.187.223.211:7778 => my:??]: :start
+6.218[88]DEBUG:BM (33141):cs straight download  [128.187.223.211:7778 => my:??]: :using start byte of 0 for CS
+6.247[88]DEBUG:odhtemadding fast gw ["204.8.155.227", 3632] -- size now 6
+6.255[88]DEBUG:odhtembad opendht server:["75.130.96.13", 3632]
+6.259[88]DEBUG:odhtemadding fast gw ["129.237.161.194", 3632] -- size now 2
+6.262[88]DEBUG:odhtemadding fast gw ["129.93.229.139", 3632] -- size now 3
+6.277[88]DEBUG:odhtemadding fast gw ["129.24.211.25", 3632] -- size now 4
+6.278[88]BM (33141):cs straight download  [128.187.223.211:7778 => my:47453]: :cs straight connected to peer
+6.278[88]DEBUG:BM (33141):cs straight download  [128.187.223.211:7778 => my:47453]: :sent (JIT) request (0 -> )
+6.337[88]DEBUG:odhtemadding fast gw ["131.188.44.100", 3632] -- size now 5
+6.339[88]BM (33141):cs straight download  [128.187.223.211:7778 => my:47453]: :just received 1368B (raw)
