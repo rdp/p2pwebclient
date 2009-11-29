@@ -1,4 +1,8 @@
 
+
+
+
+
 def go filename
   # assume ARGV[0] is a log
   start_time = nil
