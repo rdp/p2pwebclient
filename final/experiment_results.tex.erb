@@ -37,7 +37,7 @@ Load on the origin appears to decrease with higher load, but in reality most of 
       \label{figs:yanc_server_load}
     }
     
-    \subfigure[CDF of percent received from peers] {
+    \subfigure[CDF of percent of file received from peers] {
       \includegraphics[width=70mm,]{pics/vr_medium_p2p_load_tak4/percent_from_clients_Percentile_Line.pdf}
       \label{figs:yanc_from_client_percentile}
     }
@@ -46,9 +46,7 @@ Load on the origin appears to decrease with higher load, but in reality most of 
   \end{center}
 \end{figure*}
 
-Also related is the increasing amount of P2P transfer under higher load.  Under low load peers tend to download the file directly from the origin, however, after about 10 peers/s almost 100\% of the transfer is being done via p2p (Fig.~\ref{figs:yanc_from_client_percentile}).  A 1 on the graph means that 100% of the file transfer was from peers, instead of from the origin.  One reason that it goes up to 100\% so quickly is that we have only one block per file.  The reason it isn't always at 100\% for lower values is that peers typically connected and started downloading from the origin, then after 2s they would deem it to be serving less than R (128KB/s) and switch to P2P for the rest. The lowest one percentile almost always downloads the entire file from the origin (typically the first few peers to enter the system), and the 99th percentile almost always downloads all the file via p2p, typically the last peers to enter the system.
-
-<%= figure 'pics/vr_medium_p2p_load_tak4/percent_from_clients_Percentile_Line.pdf', :label => 'figs:yanc_from_client_percentile', :caption => 'CDF of percent received from peers instead of from the origin. A 1 means 100\% of transfer is being done via P2P.' %>
+Also related is the increasing amount of P2P transfer that occurs under higher loads.  Under low load peers tend to download the file directly from the origin, however, after about 10 peers/s almost 100\% of the transfer is from peers (Fig.~\ref{figs:yanc_from_client_percentile}).  A 1 on the graph means that 100\% of the file transfer was from peers, instead of from the origin.  One reason that it goes up to 100\% so quickly is that we have only one block per file.  The reason it isn't always at 100\% for lower values is that peers typically connected and started downloading from the origin, then after 2s they would deem it to be serving less than R (128KB/s) and switch to P2P for the rest. The lowest one percentile almost always downloads the entire file from the origin (typically the first few peers to enter the system), and the 99th percentile almost always downloads all the file via p2p, typically the last peers to enter the system.
 
 \section{Impact of various parameters}
 
@@ -59,7 +57,7 @@ We next test the impact of varying each parameter, in order to explore the dynam
 \subsection{Varying time to wait for first byte}
 
 We first vary $T$, the time to wait for a first response byte before transitioning to a P2P download\footnote{By first byte we mean any byte received from the origin server--a header byte or a content byte--i.e. we exclude the TCP handshake packet as a first byte.}.  
-We expect that an extremely low value will cause transitioning too early and an extremely high value will cause transitioning too late.  The results were that with a T setting of 0, median download time was 12s, it then dropped to 4.5s when set to 0.75s, then gradually rose to 10s at 2, and flattened out.  The reason it flattened out is that as T grew, its relative importantce decreased as R caused the transition more often than T did (Fig. \ref{figs:dt_variance_download_times}).  The outliers for download time were usually peers who were poorly connected to OpenDHT, so they sometimes received answer to their queries after the linger time for the peers listed had expired.
+We expect that an extremely low value will cause transitioning too early and an extremely high value will cause transitioning too late.  The results were that with a T setting of 0, median download time was 12s, it then dropped to 4.5s when set to 0.75s, then gradually rose to 10s at 2, and flattened out for higher values of T (Fig. \ref{figs:dt_variance_download_times}).  The reason it flattened out is that as T grew, its relative importantce decreased as R caused the transition more often than T did (Fig. \ref{figs:dt_variance_death_reasons}).  The outliers for download time were usually peers who were poorly connected to OpenDHT, so they sometimes received answer to their queries after the linger time for the peers listed had expired.
 
 <%= figure 'pics/vr_do_dts_take6/client_download_Percentile_Line.pdf', :label => 'figs:dt_variance_download_times', :caption => 'Download times varying T, the time to wait for first byte' %>
 
@@ -87,7 +85,7 @@ The expected result is that downloading multiple pages instead of just one will 
 
 %TODO subfigure these...
 
-<%= figure 'pics/vr_multiples_take_1/client_download_Percentile_Line.pdf', :caption => 'Multiple Files total download times', :label => 'figs:multiple_files_p2p_download_times_all_files' %>
+<%= figure 'pics/vr_multiples_take_1/client_download_Percentile_Line.pdf', :caption => 'Download times for all files', :label => 'figs:multiple_files_p2p_download_times_all_files' %>
 
 <%= figure 'pics/vr_multiples_take_1/dht_Put_Percentile_Line.pdf', :caption => 'Multiple files DHT set times', :label => 'figs:multiple_files_p2p_dht_put' %>
 
@@ -100,7 +98,7 @@ We next run the same test using traditional client-server download.  Download ti
 
 %32KB blocks were shown to be effective in \cite{TODO}.  
 
-<%= figure 'pics/vr_unnamed240998_blockSize/client_download_Percentile_Line.pdf', :caption => 'Download times varying block size', :label => 'figs:block_size_download_times' %>
+<%#= figure 'pics/vr_unnamed240998_blockSize/client_download_Percentile_Line.pdf', :caption => 'Download times varying block size', :label => 'figs:block_size_download_times' %>
 
 \section{Downloading Large Files}
 We next download larger files.  We download a single 30MB file from 100 simultaneous peers with our protocol (settings as described above) and then download the same file with BitTorrent and compare download times.  Block size is set to 256K for both systems (the BitTorrent default).  Peers enter the system at about 1/s, and both protocols' origin servers are rate limited at 256KB/s.  The expected result is that the two fare similarly, though it turned out that ours did more poorly.  BitTorrent median download time was 148s, and 2786s for the 99th percentile (Table ~\ref{figs:yanc_vs_bt}).  Our protocol had a median download time of 847s, with a 99th percentile of 982s, so not as fast.  One cause of this difference is that BitTorrent's seeds (servers) limit the number of outgoing connections they will allow (apache--our server--does not).  Doing so enables blocks to propagate more quickly to well connected peers and then out through the system\footnote{BitTorrent seeds limit their outgoing connections to 10, whereas our apache was tooled to serve up to 256 clients at the same time}.  BitTorrent seeds also prefer peers who have the highest download speeds, which speeds propagation of blocks.  These differences allow it to respond to a flash crowd such as this, better.

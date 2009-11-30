@@ -2,8 +2,6 @@
 
 CDF for "percent from peers" for the BitTorrent download. [working on it]
 
-wrong legend in one graph [plus wrong X axis]
-
 redo the dR one--it had a *way* too low dT! [and was "broken" because of other reasons, as well, I believe]
 redo: vary block size again--uh...we should be getting better medians than 30s for 100KB blocks.
 
