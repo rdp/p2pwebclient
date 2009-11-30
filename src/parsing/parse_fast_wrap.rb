@@ -21,8 +21,8 @@ begin
 for run in runs do
   all = Dir["**/#{name}*_at#{run}_run*/*"]
   puts 'got length for this run...', all.length
-  all.each{|f| 
-    puts f
+  all.each_with_index{|f, i| 
+    puts f, i
     all_clients << ParseFast.new(f).go
   }
 end
