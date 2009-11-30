@@ -26,6 +26,7 @@ class ParseFast
     starty = nil
     endy = nil
     stats = {}
+    stats[:filename] = @filename
 
     bytes.each{|regex, name|
      stats[name] = 0

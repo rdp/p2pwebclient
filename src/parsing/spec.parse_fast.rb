@@ -1,11 +1,11 @@
 require 'spec/autorun'
-require 'parse_fast'
 require 'sane'
+require_rel 'parse_fast'
 
 describe ParseFast do
 
   def go extra = nil
-    subject = ParseFast.new 'test/peer_number_88_start_6.068199.log.txt'
+    subject = ParseFast.new File.dirname(__FILE__) + '/test/peer_number_88_start_6.068199.log.txt'
     out = subject.go extra
   end
 
@@ -17,6 +17,7 @@ describe ParseFast do
   it "should return download times within its output hash" do
     out = go
     out.should include(:download_time) # ltodo: should calculate it right :)
+    out[:filename].should include('test/peer_number_88_start_6.068199.log.txt')
   end
 
   it "should tell you various stats" do

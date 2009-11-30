@@ -1,4 +1,6 @@
-require 'go.rb'
+require 'sane'
+require_rel 'parse_fast.rb'
+
 class Array
   def ave
     sum = 0
@@ -7,16 +9,23 @@ class Array
   end
 end
 
-name = 'unnamed316651'
-global = {}
-for run in [6, 15, 20, 25] do
-  all = Dir["**/#{name}_at#{run}_run*/*"]
-  puts 'got all', all.length
-  # I'm looking for average...
-  output = []
-  all.each{|f| puts f; output << go(f)}
-  output.compact!
-  puts output.ave
-  global[run] = output.ave
+#name = 'unnamed316651'
+#runs = [6, 15, 20, 25]
+#
+name = 'yanc_30mb_3'
+runs = ['false']
+
+all_clients = []
+
+begin
+for run in runs do
+  all = Dir["**/#{name}*_at#{run}_run*/*"]
+  puts 'got length for this run...', all.length
+  all.each{|f| 
+    puts f
+    all_clients << ParseFast.new(f).go
+  }
 end
-puts global
+ensure
+puts all_clients, all_clients.inspect
+end
