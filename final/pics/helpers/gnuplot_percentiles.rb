@@ -17,7 +17,7 @@ require 'arguments' # rogerdpack-arguments
 #f = [6,5.5, 6.5] then pass in [x,b,c,d,e,f]
 class P2PPlot
   class << self
-    def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil, xs2 = nil, percentiles2 = nil
+    def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil, xs2 = nil, percentiles2 = nil, legend1_addition = nil, legend2_addition = nil
       xrange = xs.last - xs.first
 
       if(xs2)
@@ -40,9 +40,9 @@ class P2PPlot
           plot.output name
           #plot.logscale 'y'
 
-          add_percentile_plot plot, [xs] + percentiles
+          add_percentile_plot plot, [xs] + percentiles, legend1_addition
           if(xs2)
-            add_percentile_plot plot, [xs2] + percentiles2
+            add_percentile_plot plot, [xs2] + percentiles2, legend2_addition
           end
 
           # box_width is only for percentiles
@@ -63,6 +63,25 @@ class P2PPlot
     end
 
 
+    def add_percentile_plot plot, all_data, addition_for_legend = nil
+
+      plot.data << Gnuplot::DataSet.new( all_data ) do |ds|
+        ds.using = "1:3:2:6:5"
+        ds.with = "candlesticks title '1,25,75,99 percentiles #{addition_for_legend}' "
+      end
+
+      #add the median...all it is is a line
+      plot.data << Gnuplot::DataSet.new( all_data) do |ds|
+        #  ds.using = "1:4:4:4:4"
+        #  ds.with = "candlesticks lt -1"
+        #  ds.notitle
+        ds.with = "lines title '50 percentile #{addition_for_legend}'"
+        ds.using = "1:4" # just x,median
+      end
+    end
+
+
+   # this is for plotting a single line style plot
     # expect hash_values is like ['abc' => [[1,1], [1,2]...]]
     def plotNormal xlabel, ylabel, hash_values, name
       
@@ -87,24 +106,8 @@ class P2PPlot
 
     end
 
+
     named_args
-
-    def add_percentile_plot plot, all_data
-
-      plot.data << Gnuplot::DataSet.new( all_data ) do |ds|
-        ds.using = "1:3:2:6:5"
-        ds.with = "candlesticks title '1,25,75,99 percentiles' "
-      end
-
-      #add the median...all it is is a line
-      plot.data << Gnuplot::DataSet.new( all_data) do |ds|
-        #  ds.using = "1:4:4:4:4"
-        #  ds.with = "candlesticks lt -1"
-        #  ds.notitle
-        ds.with = "lines title '50 percentile'"
-        ds.using = "1:4" # just x,median
-      end
-    end
 
 
   end

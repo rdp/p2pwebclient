@@ -45,12 +45,11 @@ class Parser
       elsif line =~ /death methods/
         name = 'death methods'
       elsif (scans = line.scan /(\S+) (\d+\.\d+)/).length > 0 # like dt 1234
-        #_dbg
         hash = {}
         scans.each{|death_type, value| hash[death_type] = value.to_f }
         numbers = hash
       else
-        puts 'ignoring line', line
+        puts 'ignoring line', line if $VERBOSE
       end
 
       if name and setting and numbers # setting changes rarely
@@ -71,11 +70,11 @@ end
 
 class ParseRaw
 
-        # we've got
-        #{1.0=>{"dR"=>0.0, "dT" =>
-        # and we want something like
-        #P2PPlot.plotNormal 'x label', 'y label', {'abc' => [[1,1], [2,2], [3,3]]}, 'name.pdf'
-def self.translate_conglom_hashes_to_lined_hashes data1
+  # we've got
+  #{1.0=>{"dR"=>0.0, "dT" =>
+  # and we want something like
+  #P2PPlot.plotNormal 'x label', 'y label', {'abc' => [[1,1], [2,2], [3,3]]}, 'name.pdf'
+  def self.translate_conglom_hashes_to_lined_hashes data1
     xs = data1.keys
     first_member = data1[xs[0]]
 
@@ -96,7 +95,7 @@ def self.translate_conglom_hashes_to_lined_hashes data1
     all_data
   end
 
-  def self.go file1, x = 'Load (Peers per Second)', file2 = nil
+  def self.go file1, x = 'Load (Peers per Second)', file2 = nil, legend1 = nil, legend2 = nil
 
     require 'rubygems' if RUBY_VERSION < '1.9'
     require 'sane'
@@ -119,7 +118,7 @@ def self.translate_conglom_hashes_to_lined_hashes data1
       'dht puts' => ['DHT Set Time (S)', 'dht_Put_Percentile_Line'],
       'dht gets' => ['DHT Set Time (S)', 'dht_get_Percentile_Line'],
       'death methods' => ['Number of peers', 'death_reasons'],
-    "percentiles of percent received from just peers (not origin)" => ['Percent of File received from Peers', 'percent_from_clients_Percentile_Line']} do
+      "percentiles of percent received from just peers (not origin)" => ['Percent of File received from Peers', 'percent_from_clients_Percentile_Line']} do
 
       y, this_output_filename = y_and_this_output_filename
 
@@ -131,10 +130,8 @@ def self.translate_conglom_hashes_to_lined_hashes data1
 
       # special case the single liners...
       if name == 'death methods'
-
         data = ParseRaw.translate_conglom_hashes_to_lined_hashes data1
         P2PPlot.plotNormal x, y, data, this_output_filename + '.pdf'
-
       else
 
         # we have already to split it into lines
@@ -157,8 +154,9 @@ def self.translate_conglom_hashes_to_lined_hashes data1
           }
           columnss << columns
         end
-        puts "plotting", xss.inspect, columnss.inspect, "to", this_output_filename if $VERBOSE
-        P2PPlot.plot xss[0], columnss[0], this_output_filename + '.pdf', x, y, :xs2 => xss[1], :percentiles2 => columnss[1]
+        puts "percentile plotting", xss.inspect, columnss.inspect, "to", this_output_filename if $VERBOSE
+        P2PPlot.plot xss[0], columnss[0], this_output_filename + '.pdf', x, y, :xs2 => xss[1], :percentiles2 => columnss[1], :legend1_addition => legend1, :legend2_addition => legend2
+        
       end
 
     end
@@ -175,10 +173,12 @@ if $0 == __FILE__
   # so lazy
   if ARGV[1]
     if File.exist? ARGV[1]
-      ParseRaw.go ARGV[0], 'load (Peers per Second)', ARGV[1] # dual file mode
+      puts 'doing dual file...'
+      assert ARGV.length > 3
+      ParseRaw.go ARGV[0], 'Load (Peers per Second)', ARGV[1], ARGV[2], ARGV[3] # dual file mode, with legend names
     else
-     ParseRaw.go ARGV[0], ARGV[1] || 'Peers Per Second' # "specify y axis" mode
-    end 
+      ParseRaw.go ARGV[0], ARGV[1] || 'Peers Per Second' # "specify y axis" mode
+    end
   else
     ParseRaw.go ARGV[0]
   end
