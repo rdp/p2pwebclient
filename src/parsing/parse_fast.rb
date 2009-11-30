@@ -17,10 +17,11 @@ class ParseFast
     end_regex = /(#{float}).*DONE WITH WHOLE FILE/
 
     cs_straight = /#{float}.*cs straight.*just received (\d+)B/
-    p2p_p2p = /abcdf/
-    cs_p2p = /abcdef/
 
-    bytes = [[cs_straight, :cs_straight], [p2p_p2p, :p2p_bytes], [cs_p2p, :cs_p2p]]
+    p2p_p2p =/p2p p2p.*just received (\d+)B/ 
+    cs_p2p = /p2p cs.*just received (\d+)B/
+
+    bytes = [[cs_straight, :cs_straight], [p2p_p2p, :p2p_p2p], [cs_p2p, :cs_p2p]]
 
     starty = nil
     endy = nil
@@ -43,7 +44,6 @@ class ParseFast
           else
             for regex, name in bytes
               if line =~ regex
-                puts 'victory!'
                 stats[name] += $1.to_i
                 break # somewhat helpful...
               end
