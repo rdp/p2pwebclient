@@ -11,22 +11,26 @@ class ParseFast
   # let's return a hash, like
   # {:download_time => [float or nil], :peer_bytes => x, :origin_bytes => y}
   #
-  def go
-    @start_regex = /(#{float}).*starting up logger/
-    @end_regex = /(#{float}).*DONE WITH WHOLE FILE/
+  def go use_this_test_string = nil
+    float = /\d+\.\d+/
+    start_regex = /(#{float}).*starting up logger/
+    end_regex = /(#{float}).*DONE WITH WHOLE FILE/
 
-    @cs_straight = /#{float}.*cs straight.*just received (\d+)B/
+    cs_straight = /#{float}.*cs straight.*just received (\d+)B/
+    p2p_p2p = /abcdf/
+    cs_p2p = /abcdef/
 
-    @bytes = [[cs_straight, :cs_straight]]
+    bytes = [[cs_straight, :cs_straight], [p2p_p2p, :p2p_bytes], [cs_p2p, :cs_p2p]]
 
-    @starty = nil
-    @endy = nil
-    @stats = {}
-    @stats[:cs_straight] = 0
-    @stats[:cs_p2p] = 0
+    starty = nil
+    endy = nil
+    stats = {}
 
+    bytes.each{|regex, name|
+     stats[name] = 0
+    }
 
-    File.read(@filename).lines {|line|
+    (use_this_test_string || File.read(@filename)).lines {|line|
 
       if !starty && line =~ start_regex
         puts line, 'start line' if $VERBOSE
@@ -37,13 +41,12 @@ class ParseFast
             puts line if $VERBOSE
             endy = $1.to_f
           else
-                _dbg
             for regex, name in bytes
-               if line =~ regex
-                   puts 'victory!'
-                   @stats[name] += $1
-                   break # somewhat helpful...
-               end
+              if line =~ regex
+                puts 'victory!'
+                stats[name] += $1.to_i
+                break # somewhat helpful...
+              end
             end
           end
         rescue => e # encoding error...
@@ -52,25 +55,20 @@ class ParseFast
       end
     }
 
-    @stats[:download_time] = if endy && starty
+    stats[:download_time] = if endy && starty
       puts endy - starty
       endy - starty
     else
       nil
     end
 
-    @stats[:all_cs_bytes] = @stats[:cs_straight] + @stats[:cs_p2p]
+    stats[:all_cs_bytes] = stats[:cs_straight] + stats[:cs_p2p]
 
-    @stats
-  end
-
-  def parse_line line
-
-
+    stats
   end
 
 end
 
 if __FILE__ == $0
-  puts ParseFast.new(ARGV[0]).go
+puts ParseFast.new(ARGV[0]).go
 end
