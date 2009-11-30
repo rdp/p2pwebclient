@@ -11,7 +11,7 @@ chmod a+r *.pdf
 
 ruby ruby_to_tex.rb experiment_results.tex.erb  # in case it failed
 
-scp just_experiment_results.pdf wilkboar@wilkboardonline.com:~/public_html/roger/p2p/writeup
+#scp just_experiment_results.pdf wilkboar@wilkboardonline.com:~/public_html/roger/p2p/writeup
 cp just_experiment_results.pdf just_experiment_results_view_copy.pdf
 explorer just_experiment_results_view_copy.pdf
 echo 'coming up in explorer'

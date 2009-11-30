@@ -96,7 +96,7 @@ def self.translate_conglom_hashes_to_lined_hashes data1
     all_data
   end
 
-  def self.go file1, x = 'Peers per Second', file2 = nil
+  def self.go file1, x = 'Load (Peers per Second)', file2 = nil
 
     require 'rubygems' if RUBY_VERSION < '1.9'
     require 'sane'
@@ -175,11 +175,11 @@ if $0 == __FILE__
   # so lazy
   if ARGV[1]
     if File.exist? ARGV[1]
-      ParseRaw.go ARGV[0], 'load (peers per second)', ARGV[1] # dual file mode
+      ParseRaw.go ARGV[0], 'load (Peers per Second)', ARGV[1] # dual file mode
     else
-     ParseRaw.go ARGV[0], ARGV[1] || 'Peers Per Second' # specify y axis mode
+     ParseRaw.go ARGV[0], ARGV[1] || 'Peers Per Second' # "specify y axis" mode
     end 
   else
-    ParseRaw.go ARGV[0], 'Peers Per Second'
+    ParseRaw.go ARGV[0]
   end
 end
