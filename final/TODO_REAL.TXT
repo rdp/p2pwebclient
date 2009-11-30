@@ -9,6 +9,8 @@ LaTeX Warning: There were multiply-defined labels.
 
 ------------maybe don't have to? --------------------
 
+redo block size: it seems odd to increase to 30s for what originally 
+
 if 13, 14 go together, make 13 a, b -- everywhere
 
 %LTODO note unfairness: vr_multiples_tak_1 client upload sum. wow.
@@ -17,7 +19,7 @@ ummm....dr was a "broken" test basically
 
 dw is the one we used with a "bad" server [too fast!]
 
-appendix with tons
+appendix with tons [?]
 appendix with one, single run [?]
 appendix with "real future"
 
