@@ -792,7 +792,7 @@ def startThreadsThenJoin array, join = true
   assert block_given?
   allThreads = []
   for element in array
-    allThreads << Thread.new(element) { yield(element) }
+    allThreads << Thread.new(element) {|element| yield(element) }
   end
   allThreads.joinOnAllThreadsInArrayDeletingWhenDead if join
   allThreads

@@ -1161,6 +1161,7 @@ class Driver
     @logger.debug "Driver done firing threads, now will monitor listeners+collect!"
     start_collect_time = Time.now
     allPeersLeft = @peersUsed.dup
+    puts @peersUsed.inspect
     begin
       remove_mutex = Mutex.new
       start_time = Time.now
@@ -1169,11 +1170,11 @@ class Driver
         retries_left = 30
         while not doneWithPeer # let it get queried a few times till it answers yes...
           begin
+            @logger.debug "asking #{ip}:#{port} if done (after #{Time.now - start_time}s)"
             sockOut = TCPSocket.new(ip, port)
             sockOut.write("doneWithRun?")
             sockOut.flush
             answer = nil
-            @logger.debug "asking #{ip}:#{port}if done after #{Time.now - start_time}s "
             Timeout::timeout(60) {
               answer = sockOut.recv(10000) # ltodo guard it this might fail in error if they are slammed! do it twice
             }
@@ -1216,7 +1217,7 @@ class Driver
       # now we have allThreads
       maximumTimeForLastFew = 20.minutes # they cannot need more than this!
       while allPeersLeft.length > totalToPotentiallyIgnoreLastPeers
-        print "#{allPeersLeft.length} left > #{totalToPotentiallyIgnoreLastPeers} desired "
+        print "#{allPeersLeft.length} left > #{totalToPotentiallyIgnoreLastPeers} desired, ex #{allPeersLeft.to_a[0]} "
         sleep 1
       end
       @logger.debug "#{allPeersLeft.length} left! --starting #{maximumTimeForLastFew}s countdown\n\n\n"
