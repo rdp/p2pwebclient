@@ -449,7 +449,7 @@ class Driver
         style = :multiple
       end
 
-      opts.on('--do_single_run', 'do a single test with the defaults and the parameters you pass in') do
+      opts.on('--do_single_run', 'do a single test (1x1) with the defaults and the parameters you pass in') do
         style = :single
       end
 
@@ -524,7 +524,6 @@ class Driver
     end
 
 
-
     @@numClientsToSpawn = num_clients if num_clients
     @@linger = linger if linger
     @@blockSize = blockSize if blockSize
@@ -547,11 +546,13 @@ class Driver
     # now do multiple or single
     if style == :multiple
       Driver.doMultiple runName, multiples_variant
-      exit
     else
       assert style == :single
       Driver.doSingle runName
     end
+
+    exit # don't display the help screen--why necessary tho?
+
     # ltodo cleaner error message when vary_parameter called with bad run name
 
   end   # ltodo include analogger
