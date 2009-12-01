@@ -6,7 +6,7 @@
 require 'listener'
 require 'resolv-replace'
 require 'optparse'
-require_rel 'constants', 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener'
+require_rel 'constants', 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here'
 # require 'facets' # just for driver :)
 # ltodo improvement don't just save file size header info on the DHT, save more :)
 
@@ -263,7 +263,7 @@ class Driver
       opts.on('--superStarts', 'hard kill and restart active plab listeners') do
         updateProc = Proc.new { |peer, port|
           print "failed to version ", peer, port, " -- superStarting \n\n\n"
-          system("ssh byu_p2pweb@#{peer} \"p2pwebclient/hard_kill_and_restart_listener.sh\"")
+          system("ssh byu_p2p@#{peer} \"p2pwebclient/hard_kill_and_restart_listener.sh\"")
           print "super restarted [hard restarted]", peer, port, "\n"
         }
         Driver.sendAllListeners("version", updateProc)
@@ -386,7 +386,7 @@ class Driver
       end
 
       opts.on('-a', '--num_clients=NUMBER', "number of clients to spawn per test -- a few tests ignore this, like BitTorrent default #{@@numClientsToSpawn}") do |num|
-        num_clients = num.to_i
+        num_clients = num.to_i # was nil
         raise 'poor client count number ' + num.to_s if num_clients < 1
       end
 
@@ -437,6 +437,11 @@ class Driver
 
       opts.on('--use_arbitrary_listener=LISTENER_HOST_NAME', 'use the given listener--nothing else') do |listener|
         @@useArbitraryListener = listener
+        puts 'using arbitrary listener' + listener
+        if num_clients.nil?
+            puts 'also running only one client'
+           num_clients = 1
+        end
       end
 
       opts.on('-p', '--do_multiples_with_variant=NAME', 'multiples variant ex: ' +  @@multiples_variant_possibilities.inspect + ' note that currently for multiples test you specify multiple, it does it twice with some absolutely hard coded values for what it is changing it from and to') do |name|
@@ -507,6 +512,7 @@ class Driver
       command_to_run_against_all_listeners = command_to_run_against_all_listeners[0..-2] # strip the ending s's
       count = 0
       # we actually want to only use the 'live' peers for this since...they're the only ones listening to take the call!
+      puts 'running ' + command_to_run_against_all_listeners
       Driver.sendAllListeners(command_to_run_against_all_listeners) { |peer, port, answer|
         print "answer from #{peer} #{port} #{count += 1}\n\t=> #{answer}"
       }
@@ -688,7 +694,7 @@ class Driver
       @@blockSize = 256.kb
 
       codeToExecuteBeforeEachRun = proc {
-        system('ssh byu_p2pweb@planetlab1.flux.utah.edu "~/kill_planetlab1.byu.edu_python.sh"') # start over the tracker, etc--because otherwise the seed bugs and doesn't give us anything!
+        system('ssh byu_p2p@planetlab1.flux.utah.edu "~/kill_planetlab1.byu.edu_python.sh"') # start over the tracker, etc--because otherwise the seed bugs and doesn't give us anything!
       }
     end
 
@@ -699,7 +705,7 @@ class Driver
       whatToAddTo = '@@peerTokens'
       #	settingsToTryArray = [false] # YANC only
       codeToExecuteBeforeEachRun = proc {
-        system('ssh byu_p2pweb@planetlab1.flux.utah.edu "ssh byu_p2pweb@planetlab1.byu.edu \" /home/byu_p2pweb/installed_apache_2/bin/apachectl -k restart\""')
+        system('ssh byu_p2p@planetlab1.flux.utah.edu "ssh byu_p2p@planetlab1.byu.edu \" /home/byu_p2p/installed_apache_2/bin/apachectl -k restart\""')
       }
     end
 
@@ -1163,7 +1169,7 @@ class Driver
         while not doneWithPeer # let it get queried a few times till it answers yes...
           begin
             sockOut = TCPSocket.new(ip, port)
-            sockOut.writeReliable("doneWithRun?")
+            sockOut.write("doneWithRun?")
             sockOut.flush
             answer = nil
             @logger.debug "asking #{ip}:#{port}if done after #{Time.now - start_time}s "
@@ -1212,7 +1218,7 @@ class Driver
         print "#{allPeersLeft.length} left > #{totalToPotentiallyIgnoreLastPeers} desired "
         sleep 1
       end
-      @logger.debug "#{totalToPotentiallyIgnoreLastPeers} left! --starting #{maximumTimeForLastFew}s countdown\n\n\n"
+      @logger.debug "#{allPeersLeft.length} left! --starting #{maximumTimeForLastFew}s countdown\n\n\n"
       countDownStart = Time.new
       while (Time.new - countDownStart) < maximumTimeForLastFew and allPeersLeft.length > 0
         print "#{maximumTimeForLastFew - (Time.new - countDownStart)} l(#{allPeersLeft.inspect}) "; STDOUT.flush;
@@ -1277,7 +1283,8 @@ class Driver
           begin
             retry_count = 5
             Dir.mkPath "../logs/#{ip}" unless File.directory? "../logs/#{ip}"
-            command = "rsync --timeout=60 -rv byu_p2pweb@#{ip}:/home/byu_p2pweb/p2pwebclient/logs/#{ip2}/#{pathWithEndingSlash.escape}* ../logs/#{ip}/#{pathWithEndingSlash.escape}"# ltodo pl1_1_run_dClient_0.25_dTotal_1.25_dw_5.0_blockSize_100000_linger_3_dr_187500.0_dt_1_serverBpS_250000
+            command = "rsync --timeout=60 -rv byu_p2p@#{ip}:/home/byu_p2p/p2pwebclient/logs/#{ip2}/#{pathWithEndingSlash.escape}* ../logs/#{ip}/#{pathWithEndingSlash.escape}"# ltodo pl1_1_run_dClient_0.25_dTotal_1.25_dw_5.0_blockSize_100000_linger_3_dr_187500.0_dt_1_serverBpS_250000
+            puts command
             success = false
             while !success and retry_count > 0
               success = system(command)
@@ -1384,8 +1391,7 @@ class Driver
     directoryName = Listener.getOutputDirectoryName blockSize, spaceBetweenNew, totalSecondsToContinueGeneratingNewClients, dT, dR, dW, linger, runName, serverBpS # tlodo take out totalSeconds...
 
     if !File.directory?(directoryName)
-      print  "directory for logs #{directoryName} exists, possible double run! ack!" # ltodo tell ruby assert(not File.directory?(x))
-      print "\n" * 100
+      print  "directory for logs #{directoryName} exists, possible double run! ack!"
     end
     Dir.mkPath(directoryName)
 

@@ -252,6 +252,7 @@ class Array
   # not [[[1,2], [3, 4]], [[5, 6], [7, 8]]]
   # note [1,2,3]
   def flipIndexValueOfContainedDuples
+    return if self.empty?
     assert self[0].is_a?(Array)
     assert !self[0][0].is_a?(Array) # we expect a flattened array here...
     newSelf = []
