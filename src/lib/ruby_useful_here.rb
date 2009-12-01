@@ -612,28 +612,6 @@ class Hash
 
 end
 
-class TCPsocket
-  
-  def writeReliable(stuffIn)
-    amountWrote = write(stuffIn)
-    assert(amountWrote == stuffIn.length, "ack a socket right (roger) failed! fix!")
-    flush # I have no idea if this does anything
-    # rest seems unnecessary
-    #  totalToSend = stuffIn.length
-    #  totalSent = 0
-    #  while totalSent < totalToSend do
-    #      if totalSent > 0
-    #          print "writeReliable looped!!!!i once you see this once then mark it as useful, comment out"
-    #      end
-    #      received = write(stuffIn)
-    #      stuffIn = stuffIn[received..10000000] # ltodo find a better way :)
-    #      totalSent += received
-    #  end# ltodo test -- appears unnecessary!
-    #  flush
-    return amountWrote
-  end
-end
-
 # code for exception handling
 #    begin
 #      go(bm)
@@ -983,10 +961,10 @@ module Timeout
             timeThread = Thread.new(Thread.current) { |waitingThread|
               
               sleep sec # tick away
-              Thread.critical = true
+              Thread.critical = true if Thread.respond_to? :critical=
               waitingThread.raise excep, "execution expired after #{sec} secs}" if waitingThread.alive? and stillHereMutex.locked?  # we're still in the loop--extra exception thrown at us all at once could kick us out
               
-              Thread.critical = false # ltodo change it to not require a new mutex every time (save a number)
+              Thread.critical = false if Thread.respond_to? :critical= # ltodo change it to not require a new mutex every time (save a number)
             }
             answer = yield # run the timed guy
             return answer # ??? ask/point out

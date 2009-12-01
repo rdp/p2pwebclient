@@ -232,7 +232,7 @@ class Listener # ltodo when a peer dies it should cleanup better
     unless EventMachine::reactor_running?
       debug "running SINGLE THREAD!"
       EM::run {
-        EM::PeriodicTimer.new(300, proc { debug 'listener ping'}) # this is actually never cancelled (yet)
+        EM::PeriodicTimer.new(300, proc { debug 'listener 300s ping'}) # this is actually never cancelled (yet)
         listenForeverLoopingOnErrorNonBlocking
       }
       debug "listener EM done--EM.run ended"

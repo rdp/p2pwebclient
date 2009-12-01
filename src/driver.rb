@@ -6,7 +6,7 @@
 require 'listener'
 require 'resolv-replace'
 require 'optparse'
-require_rel 'constants', 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener'
+require_rel 'constants', 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here'
 # require 'facets' # just for driver :)
 # ltodo improvement don't just save file size header info on the DHT, save more :)
 
@@ -238,10 +238,12 @@ class Driver
 
     # handle --sanity-check in a hacky way
     if ARGV.include? '--sanity-check'
-      ARGV << ['--do=versions', '--check_for_opendhts', '--check_live_server']
+      ARGV << ['--do=versions', '--update_opendht_local_list', '--check_live_server']
       ARGV.flatten!
     end
+
     command_to_run_against_all_listeners = nil
+
     OptionParser.new do |opts|
       opts.banner = " p2pwebclient drier version #{$version} Usage: #{__FILE__}  options"
 
@@ -261,58 +263,40 @@ class Driver
       opts.on('--superStarts', 'hard kill and restart active plab listeners') do
         updateProc = Proc.new { |peer, port|
           print "failed to version ", peer, port, " -- superStarting \n\n\n"
-          system("ssh byu_p2pweb@#{peer} \"p2pwebclient/hard_kill_and_restart_listener.sh\"")
+          system("ssh byu_p2p@#{peer} \"p2pwebclient/hard_kill_and_restart_listener.sh\"")
           print "super restarted [hard restarted]", peer, port, "\n"
         }
         Driver.sendAllListeners("version", updateProc)
         exit 0
       end
 
-      opts.on('--updateCache', 'update the cached list of live listeners on planetlab proxies') do
+      opts.on('--updateCache', 'update the cached list of live listeners on planetlab') do
         # I'm...not sure if this is working right for sure...
         @@useLocalHostAsListener = false
         Driver.initializeVarsAndListeners CacheNameRaw
         File.delete CacheName if File.exists? CacheName # start afresh
-        total_successful = 0
-        conn_complete_block = proc { |conn|
-          total_successful += 1
-          writeTo = File.open(CacheName, "a")
-          info = conn.get_tcp_connection_info_hash
-          peer2 = info[:peer_host]
-          port2 = info[:peer_port]
-          print "adding to cache #{peer2+port2.to_s} #{total_successful}\n" # we'll assume that an open port means they're running a listener [bad assumption]
-          writeTo.write("#{peer2}\n")
-          writeTo.close
-          conn.close_connection
-        }
-        receive_data_block = nil
-        sum_answered = 0
-        Driver.each_peer_host {|peer, port|
-          begin
-            EM::connect( peer, port, SingleConnectionCompleted) {|conn|
-              conn.connection_completed_block = conn_complete_block if conn_complete_block
-              unbind_block = proc {|conn| info = conn.get_tcp_connection_info_hash; print "unbind #{peer} " }
-              conn.unbind_block = proc{|conn2| sum_answered += 1; unbind_block.call(conn2) if unbind_block}
-              conn.receive_data_block = receive_data_block if receive_data_block
-            }
-          rescue RuntimeError
-            sum_answered += 1
+        writeTo = File.open(CacheName, "a")
+        count = 0
+        Driver.sendAllListeners("version") { |peer, port, answer|
+          print "answer from #{peer} #{port} #{count += 1}\n\t=> #{answer}"
+          if answer.include? "Rev:"
+              writeTo.puts peer
+          else
+              puts 'ignored!'
           end
         }
-        sleep 0.1 while sum_answered < Driver.peer_count
-
-        print "warning NONE FOUND [is internet turned on?]\n" if total_successful == 0
+        writeTo.close
         exit 0
       end
+
 
       opts.on('--sanity-check', 'make sure all is ready for tests -- runs some other tests from driver') {
         puts 'check your screen'
       }
 
+      opendht_filename = 'alive_opendht_planetlab.txt.local'
 
-      opendht_filename = 'alive_opendht_planetlab.txt'
-
-      opts.on('--check_for_opendhts', "refresh the local file #{opendht_filename} with active [private] opendht participants") do
+      opts.on('--update_opendht_local_list', "refresh the local file #{opendht_filename} with active [private] opendht participants") do
         require 'lib/opendht/bamboo/known_gateways'
         hosts = $opendht_gateways
         success = 0
@@ -327,7 +311,7 @@ class Driver
             print "BAD OPENDHT MAIN SERVER #{host} #{port}...SNIFF...DOWN! #{e}\n\n"
           end
         end
-        puts "\ngot #{success} out of #{hosts.length} main opendht hosts -- hit enter to continue"
+        puts "\ngot #{success} out of #{hosts.length} main opendht hosts"
 
         latest_and_greatest = File.new opendht_filename, 'w'
         Driver.initializeVarsAndListeners CacheNameRaw
@@ -340,7 +324,7 @@ class Driver
           begin
             EM::connect( peer, opendht_port, SingleConnectionCompleted) {|conn|
               conn.connection_completed_block = proc {|conn|
-                print "s";
+                print "S";
                 number_success += 1
                 ip = conn.get_tcp_connection_info_hash[:peer_host]
                 latest_and_greatest.write("#{count_successful_so_far += 1}:\t#{ip}:#{opendht_port}\n");
@@ -362,10 +346,10 @@ class Driver
         rescue Interrupt
           print "rescued 1\n"
         end
-        puts "\ngot #{success} out of #{hosts.length} main opendht hosts -- hit enter to continue"
+        puts "\ngot #{success} out of #{hosts.length} main opendht hosts"
         puts "got successful opendht count: #{number_success}"
         latest_and_greatest.close
-        puts "remember to copy it into the opendht directory if you want to use the new list"
+        puts "remember to copy #{opendht_filename} into lib/opendht/cached_all_gateways_file_name if you want to distribute the new list"
       end
 
       opts.on('--check_live_server', 'run wget to download a small file from the origin server we set it up as -- doesnt work in ilab :)') do
@@ -402,7 +386,7 @@ class Driver
       end
 
       opts.on('-a', '--num_clients=NUMBER', "number of clients to spawn per test -- a few tests ignore this, like BitTorrent default #{@@numClientsToSpawn}") do |num|
-        num_clients = num.to_i
+        num_clients = num.to_i # was nil
         raise 'poor client count number ' + num.to_s if num_clients < 1
       end
 
@@ -453,6 +437,11 @@ class Driver
 
       opts.on('--use_arbitrary_listener=LISTENER_HOST_NAME', 'use the given listener--nothing else') do |listener|
         @@useArbitraryListener = listener
+        puts 'using arbitrary listener' + listener
+        if num_clients.nil?
+            puts 'also running only one client'
+           num_clients = 1
+        end
       end
 
       opts.on('-p', '--do_multiples_with_variant=NAME', 'multiples variant ex: ' +  @@multiples_variant_possibilities.inspect + ' note that currently for multiples test you specify multiple, it does it twice with some absolutely hard coded values for what it is changing it from and to') do |name|
@@ -460,7 +449,7 @@ class Driver
         style = :multiple
       end
 
-      opts.on('--do_single_run', 'do a single test with the defaults and the parameters you pass in') do
+      opts.on('--do_single_run', 'do a single test (1x1) with the defaults and the parameters you pass in') do
         style = :single
       end
 
@@ -523,16 +512,16 @@ class Driver
       command_to_run_against_all_listeners = command_to_run_against_all_listeners[0..-2] # strip the ending s's
       count = 0
       # we actually want to only use the 'live' peers for this since...they're the only ones listening to take the call!
+      puts 'running ' + command_to_run_against_all_listeners
       Driver.sendAllListeners(command_to_run_against_all_listeners) { |peer, port, answer|
         print "answer from #{peer} #{port} #{count += 1}\n\t=> #{answer}"
       }
-      puts 'exiting'
 
+      puts 'exiting'
       exit(0)
     else
       puts 'no command'
     end
-
 
 
     @@numClientsToSpawn = num_clients if num_clients
@@ -557,11 +546,13 @@ class Driver
     # now do multiple or single
     if style == :multiple
       Driver.doMultiple runName, multiples_variant
-      exit
     else
       assert style == :single
       Driver.doSingle runName
     end
+
+    exit # don't display the help screen--why necessary tho?
+
     # ltodo cleaner error message when vary_parameter called with bad run name
 
   end   # ltodo include analogger
@@ -704,7 +695,7 @@ class Driver
       @@blockSize = 256.kb
 
       codeToExecuteBeforeEachRun = proc {
-        system('ssh byu_p2pweb@planetlab1.flux.utah.edu "~/kill_planetlab1.byu.edu_python.sh"') # start over the tracker, etc--because otherwise the seed bugs and doesn't give us anything!
+        system('ssh byu_p2p@planetlab1.flux.utah.edu "~/kill_planetlab1.byu.edu_python.sh"') # start over the tracker, etc--because otherwise the seed bugs and doesn't give us anything!
       }
     end
 
@@ -715,7 +706,7 @@ class Driver
       whatToAddTo = '@@peerTokens'
       #	settingsToTryArray = [false] # YANC only
       codeToExecuteBeforeEachRun = proc {
-        system('ssh byu_p2pweb@planetlab1.flux.utah.edu "ssh byu_p2pweb@planetlab1.byu.edu \" /home/byu_p2pweb/installed_apache_2/bin/apachectl -k restart\""')
+        system('ssh byu_p2p@planetlab1.flux.utah.edu "ssh byu_p2p@planetlab1.byu.edu \" /home/byu_p2p/installed_apache_2/bin/apachectl -k restart\""')
       }
     end
 
@@ -1179,7 +1170,7 @@ class Driver
         while not doneWithPeer # let it get queried a few times till it answers yes...
           begin
             sockOut = TCPSocket.new(ip, port)
-            sockOut.writeReliable("doneWithRun?")
+            sockOut.write("doneWithRun?")
             sockOut.flush
             answer = nil
             @logger.debug "asking #{ip}:#{port}if done after #{Time.now - start_time}s "
@@ -1228,7 +1219,7 @@ class Driver
         print "#{allPeersLeft.length} left > #{totalToPotentiallyIgnoreLastPeers} desired "
         sleep 1
       end
-      @logger.debug "#{totalToPotentiallyIgnoreLastPeers} left! --starting #{maximumTimeForLastFew}s countdown\n\n\n"
+      @logger.debug "#{allPeersLeft.length} left! --starting #{maximumTimeForLastFew}s countdown\n\n\n"
       countDownStart = Time.new
       while (Time.new - countDownStart) < maximumTimeForLastFew and allPeersLeft.length > 0
         print "#{maximumTimeForLastFew - (Time.new - countDownStart)} l(#{allPeersLeft.inspect}) "; STDOUT.flush;
@@ -1293,7 +1284,8 @@ class Driver
           begin
             retry_count = 5
             Dir.mkPath "../logs/#{ip}" unless File.directory? "../logs/#{ip}"
-            command = "rsync --timeout=60 -rv byu_p2pweb@#{ip}:/home/byu_p2pweb/p2pwebclient/logs/#{ip2}/#{pathWithEndingSlash.escape}* ../logs/#{ip}/#{pathWithEndingSlash.escape}"# ltodo pl1_1_run_dClient_0.25_dTotal_1.25_dw_5.0_blockSize_100000_linger_3_dr_187500.0_dt_1_serverBpS_250000
+            command = "rsync --timeout=60 -rv byu_p2p@#{ip}:/home/byu_p2p/p2pwebclient/logs/#{ip2}/#{pathWithEndingSlash.escape}* ../logs/#{ip}/#{pathWithEndingSlash.escape}"# ltodo pl1_1_run_dClient_0.25_dTotal_1.25_dw_5.0_blockSize_100000_linger_3_dr_187500.0_dt_1_serverBpS_250000
+            puts command
             success = false
             while !success and retry_count > 0
               success = system(command)
@@ -1400,8 +1392,7 @@ class Driver
     directoryName = Listener.getOutputDirectoryName blockSize, spaceBetweenNew, totalSecondsToContinueGeneratingNewClients, dT, dR, dW, linger, runName, serverBpS # tlodo take out totalSeconds...
 
     if !File.directory?(directoryName)
-      print  "directory for logs #{directoryName} exists, possible double run! ack!" # ltodo tell ruby assert(not File.directory?(x))
-      print "\n" * 100
+      print  "directory for logs #{directoryName} exists, possible double run! ack!"
     end
     Dir.mkPath(directoryName)
 
