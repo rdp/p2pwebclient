@@ -238,10 +238,12 @@ class Driver
 
     # handle --sanity-check in a hacky way
     if ARGV.include? '--sanity-check'
-      ARGV << ['--do=versions', '--check_for_opendhts', '--check_live_server']
+      ARGV << ['--do=versions', '--update_opendht_local_list', '--check_live_server']
       ARGV.flatten!
     end
+
     command_to_run_against_all_listeners = nil
+
     OptionParser.new do |opts|
       opts.banner = " p2pwebclient drier version #{$version} Usage: #{__FILE__}  options"
 
@@ -268,51 +270,33 @@ class Driver
         exit 0
       end
 
-      opts.on('--updateCache', 'update the cached list of live listeners on planetlab proxies') do
+      opts.on('--updateCache', 'update the cached list of live listeners on planetlab') do
         # I'm...not sure if this is working right for sure...
         @@useLocalHostAsListener = false
         Driver.initializeVarsAndListeners CacheNameRaw
         File.delete CacheName if File.exists? CacheName # start afresh
-        total_successful = 0
-        conn_complete_block = proc { |conn|
-          total_successful += 1
-          writeTo = File.open(CacheName, "a")
-          info = conn.get_tcp_connection_info_hash
-          peer2 = info[:peer_host]
-          port2 = info[:peer_port]
-          print "adding to cache #{peer2+port2.to_s} #{total_successful}\n" # we'll assume that an open port means they're running a listener [bad assumption]
-          writeTo.write("#{peer2}\n")
-          writeTo.close
-          conn.close_connection
-        }
-        receive_data_block = nil
-        sum_answered = 0
-        Driver.each_peer_host {|peer, port|
-          begin
-            EM::connect( peer, port, SingleConnectionCompleted) {|conn|
-              conn.connection_completed_block = conn_complete_block if conn_complete_block
-              unbind_block = proc {|conn| info = conn.get_tcp_connection_info_hash; print "unbind #{peer} " }
-              conn.unbind_block = proc{|conn2| sum_answered += 1; unbind_block.call(conn2) if unbind_block}
-              conn.receive_data_block = receive_data_block if receive_data_block
-            }
-          rescue RuntimeError
-            sum_answered += 1
+        writeTo = File.open(CacheName, "a")
+        count = 0
+        Driver.sendAllListeners("version") { |peer, port, answer|
+          print "answer from #{peer} #{port} #{count += 1}\n\t=> #{answer}"
+          if answer.include? "Rev:"
+              writeTo.puts peer
+          else
+              puts 'ignored!'
           end
         }
-        sleep 0.1 while sum_answered < Driver.peer_count
-
-        print "warning NONE FOUND [is internet turned on?]\n" if total_successful == 0
+        writeTo.close
         exit 0
       end
+
 
       opts.on('--sanity-check', 'make sure all is ready for tests -- runs some other tests from driver') {
         puts 'check your screen'
       }
 
+      opendht_filename = 'alive_opendht_planetlab.txt.local'
 
-      opendht_filename = 'alive_opendht_planetlab.txt'
-
-      opts.on('--check_for_opendhts', "refresh the local file #{opendht_filename} with active [private] opendht participants") do
+      opts.on('--update_opendht_local_list', "refresh the local file #{opendht_filename} with active [private] opendht participants") do
         require 'lib/opendht/bamboo/known_gateways'
         hosts = $opendht_gateways
         success = 0
@@ -327,7 +311,7 @@ class Driver
             print "BAD OPENDHT MAIN SERVER #{host} #{port}...SNIFF...DOWN! #{e}\n\n"
           end
         end
-        puts "\ngot #{success} out of #{hosts.length} main opendht hosts -- hit enter to continue"
+        puts "\ngot #{success} out of #{hosts.length} main opendht hosts"
 
         latest_and_greatest = File.new opendht_filename, 'w'
         Driver.initializeVarsAndListeners CacheNameRaw
@@ -340,7 +324,7 @@ class Driver
           begin
             EM::connect( peer, opendht_port, SingleConnectionCompleted) {|conn|
               conn.connection_completed_block = proc {|conn|
-                print "s";
+                print "S";
                 number_success += 1
                 ip = conn.get_tcp_connection_info_hash[:peer_host]
                 latest_and_greatest.write("#{count_successful_so_far += 1}:\t#{ip}:#{opendht_port}\n");
@@ -362,10 +346,10 @@ class Driver
         rescue Interrupt
           print "rescued 1\n"
         end
-        puts "\ngot #{success} out of #{hosts.length} main opendht hosts -- hit enter to continue"
+        puts "\ngot #{success} out of #{hosts.length} main opendht hosts"
         puts "got successful opendht count: #{number_success}"
         latest_and_greatest.close
-        puts "remember to copy it into the opendht directory if you want to use the new list"
+        puts "remember to copy #{opendht_filename} into lib/opendht/cached_all_gateways_file_name if you want to distribute the new list"
       end
 
       opts.on('--check_live_server', 'run wget to download a small file from the origin server we set it up as -- doesnt work in ilab :)') do
@@ -526,8 +510,8 @@ class Driver
       Driver.sendAllListeners(command_to_run_against_all_listeners) { |peer, port, answer|
         print "answer from #{peer} #{port} #{count += 1}\n\t=> #{answer}"
       }
-      puts 'exiting'
 
+      puts 'exiting'
       exit(0)
     else
       puts 'no command'
