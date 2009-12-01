@@ -18,3 +18,4 @@
 6.278[88]DEBUG:BM (33141):cs straight download  [128.187.223.211:7778 => my:47453]: :sent (JIT) request (0 -> )
 6.337[88]DEBUG:odhtemadding fast gw ["131.188.44.100", 3632] -- size now 5
 6.339[88]BM (33141):cs straight download  [128.187.223.211:7778 => my:47453]: :just received 1368B (raw)
+827.919[88]BM (33141):p2p cs origin download Block 77 [128.187.223.211:7778 => my:37137]: :(early) DONE WITH WHOLE FILE p2p cs origin

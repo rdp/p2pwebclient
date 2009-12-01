@@ -16,8 +16,22 @@ describe ParseFast do
 
   it "should return download times within its output hash" do
     out = go
-    out.should include(:download_time) # ltodo: should calculate it right :)
+    out[:download_time].should ==  821.851
+  end
+
+  it "should include filename in the output" do
+    out = go
     out[:filename].should include('test/peer_number_88_start_6.068199.log.txt')
+  end
+
+  it "should calculate begin time" do
+    out = go
+    out[:start_time].should == 6.068
+  end
+
+  it "should remember end time" do
+    out = go
+    out[:stop_time].should == 827.919
   end
 
   it "should tell you various stats" do

@@ -37,11 +37,13 @@ class ParseFast
       if !starty && line =~ start_regex
         puts line, 'start line' if $VERBOSE
         starty = $1.to_f
+        stats[:start_time] = starty
       else
         begin # pesky encoding errors
           if !endy && line =~ end_regex
             puts line if $VERBOSE
             endy = $1.to_f
+            stats[:stop_time] = endy
           else
             for regex, name in bytes
               if line =~ regex
