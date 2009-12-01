@@ -33,49 +33,30 @@ http://l:3002/tmp/thesis/ilab2/vary_parameter/vary_parameter/vr_multiples_take_1
 32001.464[driver] vary parameter graphs of VaryParameter.varyParameterAndRsync('vary_parameter/vr_multiples_take_1_peersPerSecond_fromStart_1by_AndMajorTimes_7_times_1.0s__10s_100000B_255000BPS_125000s_1.0s_2.0s_100000B', 'Peers per Second',[1.0, 2.0, 3.0, 6.0, 10.0, 15.0, 20.0, 25.0],[["multiples_take_1_peersPerSecond_at1_run1_of_4_major_1_of_8", "multiples_take_1_peersPerSecond_at1_run2_of_4_major_1_of_8", "multiples_take_1_peersPerSecond_at1_run3_of_4_major_1_of_8", "multiples_take_1_peersPerSecond_at1_run4_of_4_major_1_of_8"], ["multiples_take_1_peersPerSecond_at2_run1_of_4_major_2_of_8", "multiples_take_1_peersPerSecond_at2_run2_of_4_major_2_of_8", "multiples_take_1_peersPerSecond_at2_run3_of_4_major_2_of_8", "multiples_take_1_peersPerSecond_at2_run4_of_4_major_2_of_8"], ["multiples_take_1_peersPerSecond_at3_run1_of_4_major_3_of_8", "multiples_take_1_peersPerSecond_at3_run2_of_4_major_3_of_8", "multiples_take_1_peersPerSecond_at3_run3_of_4_major_3_of_8", "multiples_take_1_peersPerSecond_at3_run4_of_4_major_3_of_8"], ["multiples_take_1_peersPerSecond_at6_run1_of_4_major_4_of_8", "multiples_take_1_peersPerSecond_at6_run2_of_4_major_4_of_8", "multiples_take_1_peersPerSecond_at6_run3_of_4_major_4_of_8", "multiples_take_1_peersPerSecond_at6_run4_of_4_major_4_of_8"], ["multiples_take_1_peersPerSecond_at10_run1_of_4_major_5_of_8", "multiples_take_1_peersPerSecond_at10_run2_of_4_major_5_of_8", "multiples_take_1_peersPerSecond_at10_run3_of_4_major_5_of_8", "multiples_take_1_peersPerSecond_at10_run4_of_4_major_5_of_8"], ["multiples_take_1_peersPerSecond_at15_run1_of_4_major_6_of_8", "multiples_take_1_peersPerSecond_at15_run2_of_4_major_6_of_8", "multiples_take_1_peersPerSecond_at15_run3_of_4_major_6_of_8", "multiples_take_1_peersPerSecond_at15_run4_of_4_major_6_of_8"], ["multiples_take_1_peersPerSecond_at20_run1_of_4_major_7_of_8", "multiples_take_1_peersPerSecond_at20_run2_of_4_major_7_of_8", "multiples_take_1_peersPerSecond_at20_run3_of_4_major_7_of_8", "multiples_take_1_peersPerSecond_at20_run4_of_4_major_7_of_8"], ["multiples_take_1_peersPerSecond_at25_run1_of_4_major_8_of_8", "multiples_take_1_peersPerSecond_at25_run2_of_4_major_8_of_8", "multiples_take_1_peersPerSecond_at25_run3_of_4_major_8_of_8", "multiples_take_1_peersPerSecond_at25_run4_of_4_major_8_of_8"]])  ilab2 before we got it copied for one of them currently it's there and in a tarball as of 10/16 10:15
 
 multiple file cs:
-# I think this one is toast, except pics we already have for the writeup, which we do have some
+
+# I think this one is toast, except pics we already have for the writeup, which we do have some, and stats probably
 http://l:3001/tmp/thesis/ilab1/vary_parameter/vary_parameter/vr_unnamed937328_peersPerSecond_fromStart_1by_AndMajorTimes_7_times_1.0s__0s_100000B_255000BPS_125000s_1.0s_2.0s_100000B/ind.html
 VaryParameter.varyParameterAndRsync('vary_parameter/vr_unnamed937328_peersPerSecond_fromStart_1by_AndMajorTimes_7_times_1.0s__0s_100000B_255000BPS_125000s_1.0s_2.0s_100000B', 'Peers per Second',[1.0, 2.0, 3.0, 6.0, 10.0, 15.0, 20.0],[["unnamed937328_peersPerSecond_at1_run1_of_4_major_1_of_8", "unnamed937328_peersPerSecond_at1_run2_of_4_major_1_of_8", "unnamed937328_peersPerSecond_at1_run3_of_4_major_1_of_8", "unnamed937328_peersPerSecond_at1_run4_of_4_major_1_of_8"], ["unnamed937328_peersPerSecond_at2_run1_of_4_major_2_of_8", "unnamed937328_peersPerSecond_at2_run2_of_4_major_2_of_8", "unnamed937328_peersPerSecond_at2_run3_of_4_major_2_of_8", "unnamed937328_peersPerSecond_at2_run4_of_4_major_2_of_8"], ["unnamed937328_peersPerSecond_at3_run1_of_4_major_3_of_8", "unnamed937328_peersPerSecond_at3_run2_of_4_major_3_of_8", "unnamed937328_peersPerSecond_at3_run3_of_4_major_3_of_8", "unnamed937328_peersPerSecond_at3_run4_of_4_major_3_of_8"], ["unnamed937328_peersPerSecond_at6_run1_of_4_major_4_of_8", "unnamed937328_peersPerSecond_at6_run2_of_4_major_4_of_8", "unnamed937328_peersPerSecond_at6_run3_of_4_major_4_of_8", "unnamed937328_peersPerSecond_at6_run4_of_4_major_4_of_8"], ["unnamed937328_peersPerSecond_at10_run1_of_4_major_5_of_8", "unnamed937328_peersPerSecond_at10_run2_of_4_major_5_of_8", "unnamed937328_peersPerSecond_at10_run3_of_4_major_5_of_8", "unnamed937328_peersPerSecond_at10_run4_of_4_major_5_of_8"], ["unnamed937328_peersPerSecond_at15_run1_of_4_major_6_of_8", "unnamed937328_peersPerSecond_at15_run2_of_4_major_6_of_8", "unnamed937328_peersPerSecond_at15_run3_of_4_major_6_of_8", "unnamed937328_peersPerSecond_at15_run4_of_4_major_6_of_8"], ["unnamed937328_peersPerSecond_at20_run1_of_4_major_7_of_8", "unnamed937328_peersPerSecond_at20_run2_of_4_major_7_of_8"]]) 
 
 block size: unnamed240998 -- data only in the writeup pics/stats, was on ilab1 [16000.0, 32000.0, 64000.0, 128000.0]
 
-following appears toast -- no pics even
- ilab1: 37029.586[driver] vary parameter graphs of VaryParameter.varyParameterAndRsync('vary_parameter/vr_server_speed_1_serverSpeed_fromStart_32000by_AndMajorTimes_6_times_0.0666666666666667s__10s_100000B_255000BPS_125000s_1.0s_2.0s_100000B', 'Server Speed (B/s)',[32000.0, 64000.0, 128000.0, 256000.0, 512000.0, 1000000.0, 2000000.0],[["server_speed_1_serverSpeed_at32000_run1_of_4_major_1_of_7", "server_speed_1_serverSpeed_at32000_run2_of_4_major_1_of_7", "server_speed_1_serverSpeed_at32000_run3_of_4_major_1_of_7", "server_speed_1_serverSpeed_at32000_run4_of_4_major_1_of_7"], ["server_speed_1_serverSpeed_at64000_run1_of_4_major_2_of_7", "server_speed_1_serverSpeed_at64000_run2_of_4_major_2_of_7", "server_speed_1_serverSpeed_at64000_run3_of_4_major_2_of_7", "server_speed_1_serverSpeed_at64000_run4_of_4_major_2_of_7"], ["server_speed_1_serverSpeed_at128000_run1_of_4_major_3_of_7", "server_speed_1_serverSpeed_at128000_run2_of_4_major_3_of_7", "server_speed_1_serverSpeed_at128000_run3_of_4_major_3_of_7", "server_speed_1_serverSpeed_at128000_run4_of_4_major_3_of_7"], ["server_speed_1_serverSpeed_at256000_run1_of_4_major_4_of_7", "server_speed_1_serverSpeed_at256000_run2_of_4_major_4_of_7", "server_speed_1_serverSpeed_at256000_run3_of_4_major_4_of_7", "server_speed_1_serverSpeed_at256000_run4_of_4_major_4_of_7"], ["server_speed_1_serverSpeed_at512000_run1_of_4_major_5_of_7", "server_speed_1_serverSpeed_at512000_run2_of_4_major_5_of_7", "server_speed_1_serverSpeed_at512000_run3_of_4_major_5_of_7", "server_speed_1_serverSpeed_at512000_run4_of_4_major_5_of_7"], ["server_speed_1_serverSpeed_at1000000_run1_of_4_major_6_of_7", "server_speed_1_serverSpeed_at1000000_run2_of_4_major_6_of_7", "server_speed_1_serverSpeed_at1000000_run3_of_4_major_6_of_7", "server_speed_1_serverSpeed_at1000000_run4_of_4_major_6_of_7"], ["server_speed_1_serverSpeed_at2000000_run1_of_4_major_7_of_7", "server_speed_1_serverSpeed_at2000000_run2_of_4_major_7_of_7", "server_speed_1_serverSpeed_at2000000_run3_of_4_major_7_of_7", "server_speed_1_serverSpeed_at2000000_run4_of_4_major_7_of_7"]]) 
- 
-# note: do I need another server speed one?
+# note: SERVER SPEED IS ABSENT.
 
-bt 30M versus me [on ilab2 tmp]: [broken me side--very much so, somewhat of a broken bt, too]
+bt 30M versus me: [broken me side--very much so, somewhat of a broken bt, too]
 copied good
 VaryParameter.varyParameterAndRsync('vary_parameter/vr_yanc_and_bittorrent_100_take22_url_use_bittorrent_fromStart_falseby_AndMajorTimes_1_times_0.0666666666666667s__0s_30000000B_255000BPS_125000s_1.0s_2.0s_100000B', 'Using BitTorrent',[0, 1],
-[
- ["yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run1_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run2_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run3_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run4_of_4_major_2_of_2"],
+[ ["yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run1_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run2_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run3_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run4_of_4_major_2_of_2"],
  ["yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run1_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run2_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run3_of_4_major_2_of_2", "yanc_and_bittorrent_100_take22_url_use_bittorrent_attrue_run4_of_4_major_2_of_2"]])
 
 downloadtime!"download total times %'iles'"
 "131.11 139.3 148.32 163.5 2786.08"
 
 
-
-me side 30MB:
+me side 30MB: (backed up good)
 
 Parameter.varyParameterAndRsync('vary_parameter/vr_largefile_no_prefetc\h_1_url_use_bittorrent_fromStart_falseby_AndMajorTimes_0_times_0.0666666666666667s__0s_30000000B_255000BPS_125000s_1.0\s_2.0s_256000B', 'Using BitTorrent',[0],[["largefile_no_prefetch_1_url_use_bittorrent_atfalse_run1_of_4_major_1_of_1",\ "largefile_no_prefetch_1_url_use_bittorrent_atfalse_run2_of_4_major_1_of_1", "largefile_no_prefetch_1_url_use_bittorr\ent_atfalse_run3_of_4_major_1_of_1", "largefile_no_prefetch_1_url_use_bittorrent_atfalse_run4_of_4_major_1_of_1"], ["l\argefile_no_prefetch_1_url_use_bittorrent_atfalse_run1_of_4_major_1_of_1", "largefile_no_prefetch_1_url_use_bittorrent\_atfalse_run2_of_4_major_1_of_1", "largefile_no_prefetch_1_url_use_bittorrent_atfalse_run3_of_4_major_1_of_1", "largef\ile_no_prefetch_1_url_use_bittorrent_atfalse_run4_of_4_major_1_of_1"]])
 
 "download total times %'iles'"
 "613.82 730.61 847.1 882.51 982.67"
 
-
 vary number of total blocks at a time: vary_blocks -- backed up good
-
-Note well: BT doesn't have to relookup *everyone* per block [relookup
-same peers], and also BT has the seed limiting itself, so that it can
-seed full blocks more quickly--which would help us.
-
-got something good at ilab2 tmp currently...it is...number of peers--makes little difference.
-
-Also could establish a 'oh BTW I want these other blocks should you
-ever get them contact me at 435-right-here' and just keep passing
-messages back and forth that way [oh you have it now? I don't need it,
-however...]
-Use comma separated, I suppose :P
-
-xor for mor reliable insta trackable md5's? Or perhaps nxn sub md5's? or n^n md5's?
