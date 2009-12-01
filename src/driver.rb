@@ -18,7 +18,7 @@ require 'benchmark'
 require 'forky'
 
 if clientHasGraphLibraries # ltodo with driver it sends the 'old old' time when it finally fires 'em
-  require 'singleMultipleGraphs.rb'
+  require 'multiple_runs_same_setting_grapher.rb'
   require 'vary_parameter_graphs.rb'
 else
   print "ack no graphing libraries! will not be creating anything!"
@@ -145,8 +145,10 @@ class Driver
   # ltodo say 'we had to get ALL the hosts -- future work writeup -- would be to get 'certainly' active hosts.
   @@useLocalHostAsListener = false
   @@grabPeerMutex = Mutex.new
+
   CacheName = "planetlab_alive_with_p2pweb_cached.txt"
-  CacheNameRaw = "planetlab_hosts_raw_as_ips.txt"
+  CacheNameRaw = "../distro/planetlab_hosts.txt.all.ips.txt"
+
   @@localAndForeignServerPort = 7778
 
   def self.servers_port
@@ -266,7 +268,7 @@ class Driver
         exit 0
       end
 
-      opts.on('--updateCache', 'update the cached list of live planetlab proxies') do
+      opts.on('--updateCache', 'update the cached list of live listeners on planetlab proxies') do
         # I'm...not sure if this is working right for sure...
         @@useLocalHostAsListener = false
         Driver.initializeVarsAndListeners CacheNameRaw
