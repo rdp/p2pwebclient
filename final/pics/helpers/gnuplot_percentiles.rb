@@ -81,8 +81,10 @@ class P2PPlot
     end
 
 
-   # this is for plotting a single line style plot
-    # expect hash_values is like ['abc' => [[1,1], [1,2]...]]
+    #
+    # this is for plotting a single line style plot, and yes, only one line currently
+    # expect hash_values is like {'abc' => [[1,1], [1,2]...]}
+    #
     def plotNormal xlabel, ylabel, hash_values, name
       
       Gnuplot.open do |gp|
@@ -106,10 +108,11 @@ class P2PPlot
 
     end
 
-
     named_args
 
 
   end
 
 end
+
+puts P2PPlot.method(:plotNormal).source_location

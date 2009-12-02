@@ -13,7 +13,13 @@ all = stats.map{|file|
     [total, file[:filename]]
     total
   end
-}.compact!
+}.compact.sort.map.with_index{|v, i| [i, v]}
+
 puts all
+
+require 'gnuplot_percentiles.rb'
+
+P2PPlot.plotNormal :xlabel => 'Number of Peers', :ylabel => 'Percentage of File via P2P', :hash_values => {'CDF' => all}, :name => 'yanc_30_mb_cdf.pdf'
+
 
   
