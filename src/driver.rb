@@ -17,6 +17,8 @@ load 'constants.rb'
 require 'benchmark'
 require 'forky'
 
+require 'forky_replacement_fake.rb' # had enough with the pauses...
+
 if clientHasGraphLibraries # ltodo with driver it sends the 'old old' time when it finally fires 'em
   require 'multiple_runs_same_setting_grapher.rb'
   require 'vary_parameter_graphs.rb'

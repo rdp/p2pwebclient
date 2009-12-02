@@ -1,6 +1,7 @@
-require "#{ dir = File.dirname __FILE__ }/../lib/arguments"
-#$DEBUG = 1
+require 'rubygems'
 require 'benchmark'
+require "#{ dir = File.dirname __FILE__ }/../lib/arguments"
+require 'spec/autorun'
 
 # TODO: Refactor specs for clarity and better coverage
 describe Arguments do
@@ -63,6 +64,12 @@ describe Arguments do
     Klass.klass_method(1,2,3,5, 6).should == 5
   end
 
+  it "should allow for method within a class' self block to be used with a class name" do
+    Klass.send(:named_arguments_for, :'self.klass_method3')
+    Klass.klass_method3(1,4).should == 4
+    Klass.klass_method3(:a => 1, :b => 4).should == 4
+  end
+
   it "should parse larger methods" do
      Klass.send( :named_arguments_for, :'self.startCSWithP2PEM')
      Klass.startCSWithP2PEM 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n' # 3
@@ -72,7 +79,6 @@ describe Arguments do
      Klass.startCSWithP2PEM 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', :dhtClassToUse => 44, :completion_proc => nil, :use_this_shared_logger => nil, :do_not_shutdown_logger => false, :termination_proc => nil # 44
 
   end
-
 
   it "should allow for class arguments in class methods defined with like Name.method" do
     Klass.send( :named_arguments_for, :'self.klass_defaults_with_class2')
@@ -137,7 +143,7 @@ describe Arguments do
     rescue ArgumentError => e
       e
     end
-    error.to_s.should == "`four, five` are not recognized argument keywords"
+    error.to_s.should == "`four, five` are not recognized argument keywords" rescue  error.to_s.should == "`five, four` are not recognized argument keywords"
   end
   
   it "should not patch methods that accept no args" do
@@ -161,11 +167,18 @@ describe Arguments do
     @instance.splatted4(1, :b => 2, :args => 1).should == [1, {:b => 2, :args => 1}, []]
   end
   
-  it "should not patch methods with no optionals" do
+  it "should patch methods with no optionals" do
     Klass.send( :named_arguments_for, :no_opts )
-    @instance.method(:no_opts).arity.should == 3
+    @instance.method(:no_opts).arity.should == -1
   end
   
+  it "should handle named blocks" do
+    @instance.with_block3(3, 3).should==3
+    Klass.send(:named_args, :with_block3)
+    @instance.with_block3(3, nil, 4).should==4
+    @instance.with_block3(3).should==3
+  end
+
   it "should patch all methods" do
     Klass.send( :named_args )
     @instance.two(1, :three => 3).should == [1, 2, 3]
@@ -196,4 +209,6 @@ describe Arguments do
       end
     }
   end
+
+
 end
