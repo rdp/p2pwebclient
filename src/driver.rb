@@ -3,10 +3,11 @@
 # todo: skip some of the graphs--who cares...except there are some stats in there that aren't shown in vary parameter graphs yet--single things. Leave them :)
 # ltodo: still figure out more 'tight' close stats--does graphing graphing take forever?
 # ltodo better TTL maybe...5hr. total
-require 'listener'
 require 'resolv-replace'
 require 'optparse'
-require_rel 'constants', 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here'
+require './constants'
+require_rel 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here', 'listener'
+
 # require 'facets' # just for driver :)
 # ltodo improvement don't just save file size header info on the DHT, save more :)
 
@@ -751,12 +752,12 @@ class Driver
           # attempt at avoiding concurrency probs. Not sure if this belongs here or in doSingleRunWithCurrent
           my_run_marker = ENV['HOME'] + "/bittorrent_#{@@url_use_bittorrent}_run_in_progress_" + 'pid:' + Process.pid.to_s + '_' + Socket.gethostname
           all_contestants = ENV['HOME'] + "/bittorrent_#{@@url_use_bittorrent}_run_in_progress_*"
-          while Dir.glob(all_contestants) != [my_run_marker]
+          while (all = Dir.glob(all_contestants)) != [my_run_marker]
             File.delete my_run_marker if File.exist? my_run_marker
             if Dir.glob(all_contestants) == []
               FileUtils.touch my_run_marker
             else
-              print "waiting for other run to end"
+              print "waiting for other run to end #{all}"
               sleep 1
             end
           end
