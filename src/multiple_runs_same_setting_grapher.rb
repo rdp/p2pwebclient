@@ -82,17 +82,19 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
       endTimesThisRun = []
       for client in run
         @allClientsInOne << client
+
+        filename = client.filename # for logging
         if !client.start
           print "ERROR client has not a start " + filename + " has not a start"
         end
         startTimes << client.start if client.start
         startTimesThisRun << client.start if client.start
         if not client.logFinished
-          print "ERROR SEEDO client has not a log end! "  + filename.to_s + client.subject.lastLine.to_s + "\n\n\n\n"
+          print "ERROR SEEDO client has not a log end! "  + filename + client.subject.lastLine.to_s + "\n\n\n\n"
         end
 
         if not client.end
-          print "ERROR SEEDO client has not a file downloading end "  + filename.to_s + client.subject.lastLine.to_s + "\n\n\n\n"
+          print "ERROR SEEDO client has not a file downloading end "  + filename + client.subject.lastLine.to_s + "\n\n\n\n"
         else
           endTimes << client.end
           endTimesThisRun << client.end
@@ -108,11 +110,6 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
       print "ERROR SOME FINISHED NOT!!!\n\n\n"
     end
     print "%d started, %d ended\n" % [startTimes.length, endTimes.length]
-
-  end
-
-  def self.testSelf
-    print "RunGrapher testself done"
 
   end
 
