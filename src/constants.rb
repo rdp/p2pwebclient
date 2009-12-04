@@ -34,7 +34,12 @@ require_rel 'lib/ruby_useful_here.rb'
 
 # EM
 ruby_version = (RUBY_VERSION + '.' + RUBY_PLATFORM)
-$: << __DIR__ + 'ext/em/' + ruby_version # em libs
+em_ext_dir = __DIR__ + 'ext/em/' + ruby_version # em libs
+if File.exist? em_ext_dir
+    $: << em_ext_dir
+else
+    raise 'no em binaries?' + em_ext_dir
+end
 ENV['INLINEDIR'] = 'ext/' + ruby_version # ext/xxx/.ruby_inline dirs
 
 require_rel 'eventmachinee'

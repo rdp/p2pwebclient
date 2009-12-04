@@ -25,6 +25,7 @@ if clientHasGraphLibraries # ltodo with driver it sends the 'old old' time when 
   require 'vary_parameter_graphs.rb'
 else
   print "ack no graphing libraries! will not be creating anything!"
+  raise 'no graphing libs'
   $shouldDoGraphsSingle = false
   $shouldDoVaryParameterGraphs = false
 end

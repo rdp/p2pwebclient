@@ -200,8 +200,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
   # it must not be saving typically...because..uh...um...it's only run during the huge runs
   # and just hasn't been setup for it yet [nor the others, really]...
   
-  def createTotalThroughPutsReturnPartial(filenameOutputRaw = nil, include_peer_received_bytes = false, 
-        include_host_bytes = false, include_peer_send_bytes = false, write_to_file = false) # ltodo combine with other functions that do the same thing :) maybe memoize
+  def createTotalThroughPutsReturnPartial(filenameOutputRaw = nil, include_peer_received_bytes = false, include_host_bytes = false, include_peer_send_bytes = false, write_to_file = false) # ltodo combine with other functions that do the same thing :) maybe memoize
     raise unless include_peer_received_bytes || include_host_bytes || include_peer_send_bytes
     filenameOutputRaw ||= @templateName + "total_throughput" + ".#{include_host_bytes}.raw.txt"
     allReceivedArrays = []

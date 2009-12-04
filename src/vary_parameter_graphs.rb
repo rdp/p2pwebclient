@@ -261,20 +261,8 @@ class VaryParameter
     print "wrote stats to #{@outputFile.path}\n"
   end
 
-  def VaryParameter.testSelf()
-    # ?? @outputFile.close # avoid bug in fork on 1.9.1...
-    runs = ['10_seconds','two_minutes', '10_seconds_2']
-    vary = VaryParameter.new(MultipleRunsSameSettingGrapher.pictureDirectory + '/vary_parameter/' + "../test_vary/test_vary_output_dir", "time run ran", [10,120],[['10_seconds','10_seconds_2'],['two_minutes']])
-    vary.numberStatsForEachSettingOfVarianceVariable
-    #vary.doAllAndRsync
-    vary = VaryParameter.new(MultipleRunsSameSettingGrapher.pictureDirectory + '/vary_parameter/' + "test/testvary", "my fake x", [0.5], [['testVary2_run0_at0.5', 'testVary2_run1_at0.5']]) # no graphs!
-    vary.doAllAndRsync
-    VaryParameter.doStatsSingleRun(['test2-10-v2_0_0.5', 'test2-10-v2_1_0.5'])
-    VaryParameter.varyParameterAndRsync(MultipleRunsSameSettingGrapher.pictureDirectory + '/vary_parameter/' + "test_vary_parameter_graphs_default", 'Server Bytes/Peer/S', [1, 5, 10], [['1_1'], ['5_1', '5_2'], ['10_1', '10_2']]) # visual inspect, I suppose
-  end
-
   # runNames can be 'run12_at1' or ['run12_at1', 'run12_at1_take2']
-  def VaryParameter.doStatsSingleRun(runNames, existingGraphs = nil, outputDirectoryForStats = MultipleRunsSameSettingGrapher.pictureDirectory)
+  def VaryParameter.doStatsSingleRun(runNames, existingGraphs = nil, outputDirectoryForStats = MultipleRunsSameSettingGrapher.pictureDirectory + '/' + runNames.join('_')[0..60])
     print "doing #{runNames} stats single run, as all one combined stats, I think => #{outputDirectoryForStats}/single_shot_stats"
     runNames = Array(runNames)
     assert existingGraphs.class == Array if existingGraphs
@@ -282,21 +270,6 @@ class VaryParameter
   end
 
 end
-# doctest: should run some tests together, create some graphs
-#
-# >> File.delete "../#{Socket.gethostname}/vary_parameter/vary_parameter/vr_vary_parameter_test7_@@dT_fromStart_1by_AndMajorTimes_1_times_0.0666666666666667s__0s_100000B_255000BPS_125000s_1s_2.0s_100000B//number_stats.txt" rescue nil
-#
-# >> File.delete  "../#{Socket.gethostname}/vary_parameter/vary_parameter/vr_vary_parameter_test7_@@dT_fromStart_1by_AndMajorTimes_1_times_0.0666666666666667s__0s_100000B_255000BPS_125000s_1s_2.0s_100000B/dht_Remove_PercentileLine.gif" rescue nil
-#
-# >> VaryParameter.varyParameterAndRsync(MultipleRunsSameSettingGrapher.pictureDirectory + '/vary_parameter/vr_vary_parameter_test7_@@dT_fromStart_1by_AndMajorTimes_1_times_0.0666666666666667s__0s_100000B_255000BPS_125000s_1s_2.0s_100000B', 'T (seconds) -- smalltest',[1.0, 3.0],[["vary_parameter_test7_@@dT_at1_run1_of_2_major_1_of_2", "vary_parameter_test7_@@dT_at1_run2_of_2_major_1_of_2"], ["vary_parameter_test7_@@dT_at3_run1_of_2_major_2_of_2", "vary_parameter_test7_@@dT_at3_run2_of_2_major_2_of_2"]])
-#
-# # does its thing
-#
-#>> File.exist? "../#{Socket.gethostname}/vary_parameter/vary_parameter/vr_vary_parameter_test7_@@dT_fromStart_1by_AndMajorTimes_1_times_0.0666666666666667s__0s_100000B_255000BPS_125000s_1s_2.0s_100000B//number_stats.txt"
-#=> true
-#>> File.exist? "../#{Socket.gethostname}/vary_parameter/vary_parameter/vr_vary_parameter_test7_@@dT_fromStart_1by_AndMajorTimes_1_times_0.0666666666666667s__0s_100000B_255000BPS_125000s_1s_2.0s_100000B/dht_Remove_PercentileLine.gif"
-#=> true
-
 
 if runOrRunDebug? __FILE__
   require 'singleMultipleGraphs.rb' # should work -- there may be some dependency problem in there
