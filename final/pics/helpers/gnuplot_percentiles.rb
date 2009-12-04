@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'sane' # #assert
 require 'gnuplot' # rogerdpack-gnuplot
-ENV['RB_GNUPLOT'] = '\cygwin\bin\gnuplot'# tell it where it is by default...
+ENV['RB_GNUPLOT'] = '\cygwin\bin\gnuplot' if OS.windows?# tell it where it is by default...
 require 'arguments' # rogerdpack-arguments
 
 # gnuplot expects something like

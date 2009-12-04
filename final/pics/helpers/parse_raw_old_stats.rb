@@ -8,7 +8,6 @@ doctest: parses a conjunto right
 >> parse( File.read 'test/single_run.txt')['server upload distinct seconds [instantaneous server upload per second]'] == {25.0 => [37565.0, 126882.5, 181103.5, 243156.5, 458349.5]}
 => true
 
-
 =end
 
 # this one just parses out the file
@@ -64,7 +63,6 @@ class Parser
     all
   end
 end
-
 
 
 
@@ -168,6 +166,7 @@ end
 
 if $0 == __FILE__
   puts 'syntax: raw file name1 [raw file name2 if you want comparison...] "dT (s)"'
+  puts 'generates files like server_speed_Percentile_line.pdf in the local dir, using gnuplot'
   raise unless ARGV[0] && !ARGV[0].in?(['--help', '-h'])
 
   # so lazy
