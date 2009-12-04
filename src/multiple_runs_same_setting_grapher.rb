@@ -39,7 +39,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
   attr_reader :arrayContainingArraysOfClientsPerRun
 
   def self.get_log_files_list runName
-    glob_string = "../logs/**/#{runName}_*/peer*.log.txt" # ignore  extra parameters..., allows for 'super runs' , too of submitting a 'higher' spec... i.e. run_10 incorporated run_10_1 an drun_10_3-- all in one
+    glob_string = "../logs/**/*#{runName}_*/peer*.log.txt" # ignore  extra parameters..., allows for 'super runs' , too of submitting a 'higher' spec... i.e. run_10 incorporated run_10_1 an drun_10_3-- all in one
     files = Dir.glob(glob_string)
     assert(files.length > 0, "ACK I THINK RUN DID NOT WORK no files found! #{runName} #{glob_string}")
     files
