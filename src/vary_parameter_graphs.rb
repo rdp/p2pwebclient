@@ -174,11 +174,11 @@ class VaryParameter
       graph.nextPoint(value, percentiles[index])
     }
     begin
-      File.open(@outputDir + short_name + '.raw.txt', 'w') { |f|
+      File.open(@outputDir + '/' +  short_name + '.raw.txt', 'w') { |f|
         f.write percentiles.dup.inspect
         f.write @variedValues.inspect
       }
-      graph.generate(@outputDir + short_name, title, unitsY, @unitsX)
+      graph.generate(@outputDir + '/' + short_name, title, unitsY, @unitsX)
     rescue NoMethodError => e
       print "ARRRRRR FAILED #{command} or something\n\n\n seedo fix me! #{e}#{e.backtrace.inspect}"
     end
@@ -262,7 +262,7 @@ class VaryParameter
   end
 
   # runNames can be 'run12_at1' or ['run12_at1', 'run12_at1_take2']
-  def VaryParameter.doStatsSingleRun(runNames, existingGraphs = nil, outputDirectoryForStats = MultipleRunsSameSettingGrapher.pictureDirectory + '/' + runNames.join('_')[0..60])
+  def VaryParameter.doStatsSingleRun(runNames, existingGraphs = nil, outputDirectoryForStats = MultipleRunsSameSettingGrapher.pictureDirectory + '/' + 'all_summary_stats_go_here')
     print "doing #{runNames} stats single run, as all one combined stats, I think => #{outputDirectoryForStats}/single_shot_stats"
     runNames = Array(runNames)
     assert existingGraphs.class == Array if existingGraphs
@@ -274,7 +274,7 @@ end
 if runOrRunDebug? __FILE__
   require 'singleMultipleGraphs.rb' # should work -- there may be some dependency problem in there
   if ARGV.length > 0
-    print "doing single stats on #{ARGV}"
+    print "doing single stats on #{ARGV} to the generic dir!"
     VaryParameter.doStatsSingleRun(ARGV)
   else
     raise 'tell me what to run on!'
