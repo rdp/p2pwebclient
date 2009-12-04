@@ -723,6 +723,7 @@ class Driver
       howManyStepsOfTheMajorVariable = settingsToTryArray.length
       operator = '='
       firstValue = settingsToTryArray.shift
+      operandEachMajorLoop = 'fixed_setting' # for output
     end
     Driver.initializeVarsAndListeners nil, setupOnceString
 
@@ -737,7 +738,8 @@ class Driver
     @@allRunLogger.log "instantiated #{whatToAddTo} at " + eval("#{whatToAddTo}").to_s
 
     whatToAddToFilenameSanitized = whatToAddTo.to_s.gsub('@', '')
-
+require 'sane'
+_dbg
     varyParameterOutputName = "vr_#{runName}_#{whatToAddToFilenameSanitized}_fromStart_" + eval("#{whatToAddTo}").to_s + "by_#{operandEachMajorLoop}AndMajorTimes_#{howManyStepsOfTheMajorVariable - 1}_times_#{@@spaceBetweenNew}s_" +
     "_#{@@linger}s_#{@@fileSize}B_#{@@serverBpS}BPS_#{@@dR}s_#{@@dT}s_#{@@dW}s_#{@@blockSize}B"
 
