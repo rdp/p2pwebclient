@@ -1,22 +1,18 @@
 ====================actually really todo (in order of priority):
 
+
 redo the dR one--it had a *way* too low dT! [and was "broken" because of other reasons, as well, I believe] in process
 
-dW
+redo: vary block size again--uh...we should be getting better medians than 30s for 100KB blocks. !!!
 
-redo: vary block size again--uh...we should be getting better medians than 30s for 100KB blocks.
 
 ------------maybe don't have to? --------------------
 
-redo block size: it seems odd to increase to 30s for what originally 
-
-if 13, 14 go together, make 13 a, b -- everywhere
+if 13, 14 go together, make 13 a, b
 
 %LTODO note unfairness: vr_multiples_tak_1 client upload sum. wow.
 
 ummm....dr was a "broken" test basically
-
-dw is the one we used with a "bad" server [too fast!]
 
 appendix with tons [?]
 appendix with one, single run [?]
@@ -26,20 +22,16 @@ with start and end times, can I find a correlation (30MB)
 
 CDF for "percent from peers" for the BitTorrent download. [fix axes]
 
-
----------------------------later todo (unordered): possibly never
 profile single run, include here.
+
 %% TODO could put in some cool graphs of a single run of p2p vs. cs--at least the first few files that is quite interesting :)
 %% TODO we never got the stats for > 25 peers/s for yanc transfer
 %% TODO re run this p2p load test--how did we get such dang good DHT times?
-there was a future_work file (doc?) in the proposal...useful?
 
 You might try running at lower loads.  Maybe at a really low load,
 then dR becomes a factor.
 
-an opendht why do you stink test
-
-do a test against apache with 4 max. (large file)
+an opendht how you do stink test
 
 %% ltodo: compare ilab3/4 dw with opendht few, dw with opendht many (i.e. an opendht test)
 
@@ -61,3 +53,4 @@ do a test against apache with 4 max. (large file)
 % ltodo: a single test with 20 blocks that shows "hey one block is dirt slow!"
 
 %% vltodo fix large file transfer :) (backoff the origin, I'd wager--but how really?)--
+do a test against apache with 4 max. (large file)
