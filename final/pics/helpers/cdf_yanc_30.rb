@@ -13,7 +13,7 @@ all = stats.map{|file|
     [total, file[:filename]]
     total
   end
-}.compact.sort.map.with_index{|v, i| [i, v]}
+}.compact.sort.map.with_index{|v, i| [i/4, v]}
 
 puts all
 
