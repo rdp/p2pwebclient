@@ -73,7 +73,7 @@ class Driver
   @@fileSize = 100.kb
   @@serverBpS = 255.kbps
   @@dR = 125.kb#@@serverBpS*0.9
-  @@peerTokens = 20 # as per Dr. Z's email :) tough to tell, though...very tough...almost might want unlimited!
+  @@peerTokens = 5 # as per Dr. Z's email :) tough to tell, though...very tough...almost might want unlimited!
   @@dW = 2.00 # you probably want this greater than @@dT, though it starts the window only after dT is passed.
   @@blockSize = 100.kb
   @@fakeStartWaitAsSeconds = nil#20
