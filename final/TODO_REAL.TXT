@@ -1,6 +1,5 @@
 ====================actually really todo (in order of priority):
 
-
 redo the dR one--it had a *way* too low dT! [and was "broken" because of other reasons, as well, I believe] in process
 
 redo: vary block size again--uh...we should be getting better medians than 30s for 100KB blocks. !!!
