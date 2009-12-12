@@ -13,6 +13,8 @@ if 13, 14 go together, make 13 a, b
 
 ummm....dr was a "broken" test basically
 
+add a stat on how much overall was wasted...oh wait you can calculate that anyway though...hmm...
+
 appendix with tons [?]
 appendix with one, single run [?]
 appendix with "real future"
