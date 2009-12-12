@@ -120,6 +120,13 @@ We next test our system's ability to download large files.  We download a 30MB f
 \end{tabular}
 \end{table}
   
-\section{Peer connection limit} We next vary the maximum number of connections each peer is allowed to have at a time.  We download the same 30MB file size from the previous experiment, and vary the peer connection limit from 1 to 50.  We expect that download times will suffer if the connection limit is too low.  As expected, median download times suffered with a low connection limit, with a peak time of 1604s with a limit of 1.  Download times decreased with a higher connection limit, with a limit of 16 yielding a median download time of 931s (Fig. \ref{figs:large_file_number_of_concurrent_blocks}), however limits greater than 16 didn't yield as high of relative gains.  A 50 peer limit resulted in a median download time of 875s.
+\section{Peer connection limit} 
+We next vary the maximum number of connections each peer is allowed to have at a time.  We download the same 30MB file size from the previous experiment, and vary the peer connection limit from 1 to 50.  We expect that download times will suffer if the connection limit is too low.  As expected, median download times suffered with a low connection limit, with a peak time of 1604s with a limit of 1.  Download times decreased with a higher connection limit, with a limit of 16 yielding a median download time of 931s (Fig. \ref{figs:large_file_number_of_concurrent_blocks}), however limits greater than 16 didn't yield as high of relative gains.  A 50 peer limit resulted in a median download time of 875s.
 
 <%= figure 'pics/vr_vary_blocks_large_file/client_download_Percentile_Line.pdf', :caption => 'Download times varying number of concurrent peers', :label => 'figs:large_file_number_of_concurrent_blocks' %>
+
+\section{Varying linger time}
+We next vary the amount of linger time, to see how it affects download speeds, our hypothesis being that a longer linger time will increase download speeds, which proved correct (Fig.~\ref{figs:linger_time_download_times}).  With a linger time of 0s, median download time was near 300s, dropping to 127s with a linger time of 1s, 60s with a linger time of 2s, 34s with a linger of 4s, and staying mostly constant after that, so a linger time greater than 4s didn't result in much improvement.
+
+<%= figure 'pics/vr_unnamed497104_linger_fromStart_0by_fixed_settingAndMajorTimes_8_times_0.0666666666666667s__0s_100000B_255000BPS_125000s_1.0s_2.0s_100000B/client_download_Percentile_Line.pdf', :caption => 'Download times varying linger time', :label => 'figs:linger_time_download_times' %>
+
