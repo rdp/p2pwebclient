@@ -453,7 +453,7 @@ class Driver
         style = :multiple
       end
 
-      opts.on('--do_single_run', 'do a single test (1x1) with the defaults and the parameters you pass in') do
+      opts.on('--do_single_run', 'do a single test (1x1) with the defaults and the parameters you pass in--note this will be a lot of peers unless you specify otherwise') do
         style = :single
       end
 
