@@ -1,0 +1,60 @@
+A random assortment of things that could be worked on, referent to this project:
+
+% currently not included in the Thesis.
+
+We did not try to use any alternative DHT, for example BitTorrent's mainline DHT system, but it might be interesting to examine it as an alternate to OpenDHT.
+
+A few more aggressive optimizations would also be potential in a download system such as this.  For example TCP doesn't ramp-up as quickly as one would like it to for new connections.  Transferring over UDP with a custom-built protocol might be faster\footnote{For example, Google called recently for a new version of TCP http://www.pcworld.com/article/167360/whats\_behind\_googles\_speed\_push.html--see also Tony Arcieri thought}.  
+
+Another very interesting idea would be also include some means of ``connecting'' existing mirrors on the Internet (i.e. automatic mirror creation lists of existing content).  For example if a download is offered by 10 sources, being able to instantly know and download from all 10 is like having 10 instant seeds.  There is a file type called a ``univeral download'' (or something of the sort) that lists mirrors for certain files, as well as BitTorrent itself has a couple of extension protocol for using HTTP mirrors as seeds, however, these are not automatically setup and would require server changes.  GetRight also does something similar by automatically binding files to mirrors.  The author attempted to convince GetRight of the usefulness of an automatic BitTorrent style download, but it has yet to appear, and may be for commercial use only, so not researchable.
+
+% BitTorrent is described as ``still not for the faint in heart'' here: http://download.cnet.com/uTorrent/3000-2196\_4-10528327.html
+
+Another not explored venue is security.  For example how do you know a file is the same as that found on the origin server?  Some ideas would be to *sample* the origin server for pieces, to make sure they match, to note that some FTP sites have md5 capabilities on their files (and some web servers do), to scrape websites to look for published .md5's (or request them, as some ftp servers allow), to create an XOR of the contents of blocks so that one could check the values for consistency at start-time, to use some type of P2P trust system, etc. For now our system assumes trustworthy clients.  There's also an HTTP header returned per file that might be useful (as well as HTTP HEAD, which we do currently use).  One could also have designated servers act as ``sentinels'' downloading files only to verify their md5 sums (though this obviously breaks down with scale and very large files, it has potential).
+
+Another interesting merger would be to combine BitTorrent with this protocol, for downloads (i.e. use both protocols simultaneously).  Or to just use the BitTorrent protocol, or what not.
+
+Another potential it also has is, since it requires use of a proxy, one could use it to implement a new dns layer, a la p2p://name.files or even http://name.p2p or what not.  One could also use this system to ``publish'' files which are published then no longer stored locally [i.e. rely solely on downloaders to continue publishing files], or use it as a kind of "resurrect" system for non-downloadable files.  An integration with other caches such as google's web accelerator cache, or google's search cache, or web.archive.org (the web time machine) might be useful (see note on ruby-forum.com).
+
+Peers upload blocks of a file at the same time they are downloading others.  It might be worth putting some type of cap on upload speed while downloading a file, to allow for TCP to continue the download at top speed.  It has been noted that peer upload download speed is limited by upload speed in some cases \cite{google_note}.
+
+Note also that connecting several times to the origin (even if no peers were present), at times helps with download speeds, if only because of the shaping algorithms employed by some internet providers.
+
+It would be interesting to create a solution similar to this one that integrated Apache with BitTorrent, and FireFox with BitTorrent (with or without the DHT).  This is similar to what we do in this Thesis, if less easy to deploy
+
+When building a rendezvous system, it might be nice to examine that used in industry (BitTorrent, Azureus, Dijjer) to see how they accomplish the same.
+
+Are there other BitTorrent plugin optimizations that would be useful? What about NAT traversal (or instant NAT traversal)?  Which DHT's are fastest/most apt for this work?
+
+Could you establish some type of subscribe or ``push'' mechanism, i.e. you note in the DHT ``if anyone ever gets block X, I want it'' -- then when a peer completes a download of block X, it can immediately contact and serve that block? (Or something that doesn't require polling).  Also quite useful would be to have some dedicated caches (perhaps they can list themselves somewhere?) that you ping after downloading an uncommon file--they cache common content automatically.  Related to this is CoDeen (and/or CoBlitz) will allow a single peer to download a file and as it receives blocks it will stream them out in a tree-like fashion to peers that have contacted it and are waiting for the block.  Also related is an idea to try to use commercial sites for this http://www.ruby-forum.com/topic/189241.
+
+Local peer discovery (via UDP) would also be useful (recent BYU thesis, existent protocols that do this for BitTorrent).
+
+Another interesting facet would be exploring its usefulness in streaming.  Another would be to explore privacy and/or security and/or trust issues.
+
+Using HTTP (which we do currently) allows us to theoretically make our peers into back-up servers for (non aware) clients via redirection (ex: CoopNet did this).
+
+We do not accomodate for proximity at all, which has been shown to increase download speed in BitTorrent (in several papers).
+
+It would be interesting to accomodate for the fact that most web usage is done reading, not downloading web pages--one could leverage that down time to do most of the uploading then.
+
+We currently look up the list of peers per block, even if our current peers are listed redundantly on all lists.  Some form of gossip to determine which known peers have which blocks might decrease network overhead and increase speed.  Note that webtorrent suggests you zip up all related files into a single larger file, as an option.
+
+It should be noted that BitTorrent performs ``pre-requests'' for blocks [i.e. requesting the next sub-block before the current is done being downloaded].   HTTP/1.1 may not allow us this privilege, and it would be interesting to see if it is effective, and/or possible with HTTP/1.1.
+
+Could test against Dijjer, Squirrel, Shark,  bittorrent/azuerus DHT's, etc. Meh.
+
+Could eventually bill this as "safer" internet, since you could kinder know/share md5's on every file in existence...
+
+Also could establish a 'oh BTW I want these other blocks should you
+ever get them contact me at 435-right-here' and just keep passing
+messages back and forth that way [oh you have it now? I don't need it,
+however...]
+
+Could combine entries on the DHT, to make for fewer request/response RT's.
+
+xor for mor reliable insta trackable md5's? Or perhaps nxn sub md5's? or n^n md5's?
+
+If a file was once ``downloaded and then on a reget it said not updated'' then that one can be cached, then asked if it needs to be updated.  Share modified time, Etags?
+
+I suppose they could mark files as ``must be dynamic'' as well...maybe?  How do you tell?  Does rails specify any difference at all?

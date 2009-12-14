@@ -3,25 +3,29 @@
 # todo: skip some of the graphs--who cares...except there are some stats in there that aren't shown in vary parameter graphs yet--single things. Leave them :)
 # ltodo: still figure out more 'tight' close stats--does graphing graphing take forever?
 # ltodo better TTL maybe...5hr. total
-require 'listener'
 require 'resolv-replace'
 require 'optparse'
-require_rel 'constants', 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener'
+require './constants'
+require_rel 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here', 'listener'
+
 # require 'facets' # just for driver :)
 # ltodo improvement don't just save file size header info on the DHT, save more :)
 
 $shouldDoGraphsSingle = true # ltodo move down
 $shouldDoVaryParameterGraphs = true
+
 load 'constants.rb'
 require 'benchmark'
 require 'forky'
-require 'benchmark'
+
+require 'forky_replacement_fake.rb' # had enough with the pauses...
 
 if clientHasGraphLibraries # ltodo with driver it sends the 'old old' time when it finally fires 'em
-  require 'singleMultipleGraphs.rb'
+  require 'multiple_runs_same_setting_grapher.rb'
   require 'vary_parameter_graphs.rb'
 else
   print "ack no graphing libraries! will not be creating anything!"
+  raise 'no graphing libs'
   $shouldDoGraphsSingle = false
   $shouldDoVaryParameterGraphs = false
 end
@@ -69,7 +73,7 @@ class Driver
   @@fileSize = 100.kb
   @@serverBpS = 255.kbps
   @@dR = 125.kb#@@serverBpS*0.9
-  @@peerTokens = 20 # as per Dr. Z's email :) tough to tell, though...very tough...almost might want unlimited!
+  @@peerTokens = 5 # as per Dr. Z's email :) tough to tell, though...very tough...almost might want unlimited!
   @@dW = 2.00 # you probably want this greater than @@dT, though it starts the window only after dT is passed.
   @@blockSize = 100.kb
   @@fakeStartWaitAsSeconds = nil#20
@@ -145,8 +149,10 @@ class Driver
   # ltodo say 'we had to get ALL the hosts -- future work writeup -- would be to get 'certainly' active hosts.
   @@useLocalHostAsListener = false
   @@grabPeerMutex = Mutex.new
+
   CacheName = "planetlab_alive_with_p2pweb_cached.txt"
-  CacheNameRaw = "planetlab_hosts_raw_as_ips.txt"
+  CacheNameRaw = "../distro/planetlab_hosts.txt.all.ips.txt"
+
   @@localAndForeignServerPort = 7778
 
   def self.servers_port
@@ -181,7 +187,7 @@ class Driver
   def Driver.throwUpListener
     begin
       @@listenerObject, @@listenerThread = Listener.listen
-    rescue RuntimeError
+    rescue
       print "ACK listener already running! hope it works! returning nil!"
       return nil
     end
@@ -236,10 +242,12 @@ class Driver
 
     # handle --sanity-check in a hacky way
     if ARGV.include? '--sanity-check'
-      ARGV << ['--do=versions', '--check_for_opendhts', '--check_live_server']
+      ARGV << ['--do=versions', '--update_opendht_local_list', '--check_live_server']
       ARGV.flatten!
     end
+
     command_to_run_against_all_listeners = nil
+
     OptionParser.new do |opts|
       opts.banner = " p2pwebclient drier version #{$version} Usage: #{__FILE__}  options"
 
@@ -259,58 +267,40 @@ class Driver
       opts.on('--superStarts', 'hard kill and restart active plab listeners') do
         updateProc = Proc.new { |peer, port|
           print "failed to version ", peer, port, " -- superStarting \n\n\n"
-          system("ssh byu_p2pweb@#{peer} \"p2pwebclient/hard_kill_and_restart_listener.sh\"")
+          system("ssh byu_p2p@#{peer} \"p2pwebclient/hard_kill_and_restart_listener.sh\"")
           print "super restarted [hard restarted]", peer, port, "\n"
         }
         Driver.sendAllListeners("version", updateProc)
         exit 0
       end
 
-      opts.on('--updateCache', 'update the cached list of live planetlab proxies') do
+      opts.on('--updateCache', 'update the cached list of live listeners on planetlab') do
         # I'm...not sure if this is working right for sure...
         @@useLocalHostAsListener = false
         Driver.initializeVarsAndListeners CacheNameRaw
         File.delete CacheName if File.exists? CacheName # start afresh
-        total_successful = 0
-        conn_complete_block = proc { |conn|
-          total_successful += 1
-          writeTo = File.open(CacheName, "a")
-          info = conn.get_tcp_connection_info_hash
-          peer2 = info[:peer_host]
-          port2 = info[:peer_port]
-          print "adding to cache #{peer2+port2.to_s} #{total_successful}\n" # we'll assume that an open port means they're running a listener [bad assumption]
-          writeTo.write("#{peer2}\n")
-          writeTo.close
-          conn.close_connection
-        }
-        receive_data_block = nil
-        sum_answered = 0
-        Driver.each_peer_host {|peer, port|
-          begin
-            EM::connect( peer, port, SingleConnectionCompleted) {|conn|
-              conn.connection_completed_block = conn_complete_block if conn_complete_block
-              unbind_block = proc {|conn| info = conn.get_tcp_connection_info_hash; print "unbind #{peer} " }
-              conn.unbind_block = proc{|conn2| sum_answered += 1; unbind_block.call(conn2) if unbind_block}
-              conn.receive_data_block = receive_data_block if receive_data_block
-            }
-          rescue RuntimeError
-            sum_answered += 1
+        writeTo = File.open(CacheName, "a")
+        count = 0
+        Driver.sendAllListeners("version") { |peer, port, answer|
+          print "answer from #{peer} #{port} #{count += 1}\n\t=> #{answer}"
+          if answer.include? "Rev:"
+              writeTo.puts peer
+          else
+              puts 'ignored!'
           end
         }
-        sleep 0.1 while sum_answered < Driver.peer_count
-
-        print "warning NONE FOUND [is internet turned on?]\n" if total_successful == 0
+        writeTo.close
         exit 0
       end
+
 
       opts.on('--sanity-check', 'make sure all is ready for tests -- runs some other tests from driver') {
         puts 'check your screen'
       }
 
+      opendht_filename = 'alive_opendht_planetlab.txt.local'
 
-      opendht_filename = 'alive_opendht_planetlab.txt'
-
-      opts.on('--check_for_opendhts', "refresh the local file #{opendht_filename} with active [private] opendht participants") do
+      opts.on('--update_opendht_local_list', "refresh the local file #{opendht_filename} with active [private] opendht participants") do
         require 'lib/opendht/bamboo/known_gateways'
         hosts = $opendht_gateways
         success = 0
@@ -325,7 +315,7 @@ class Driver
             print "BAD OPENDHT MAIN SERVER #{host} #{port}...SNIFF...DOWN! #{e}\n\n"
           end
         end
-        puts "\ngot #{success} out of #{hosts.length} main opendht hosts -- hit enter to continue"
+        puts "\ngot #{success} out of #{hosts.length} main opendht hosts"
 
         latest_and_greatest = File.new opendht_filename, 'w'
         Driver.initializeVarsAndListeners CacheNameRaw
@@ -338,7 +328,7 @@ class Driver
           begin
             EM::connect( peer, opendht_port, SingleConnectionCompleted) {|conn|
               conn.connection_completed_block = proc {|conn|
-                print "s";
+                print "S";
                 number_success += 1
                 ip = conn.get_tcp_connection_info_hash[:peer_host]
                 latest_and_greatest.write("#{count_successful_so_far += 1}:\t#{ip}:#{opendht_port}\n");
@@ -360,10 +350,10 @@ class Driver
         rescue Interrupt
           print "rescued 1\n"
         end
-        puts "\ngot #{success} out of #{hosts.length} main opendht hosts -- hit enter to continue"
+        puts "\ngot #{success} out of #{hosts.length} main opendht hosts"
         puts "got successful opendht count: #{number_success}"
         latest_and_greatest.close
-        puts "remember to copy it into the opendht directory if you want to use the new list"
+        puts "remember to copy #{opendht_filename} into lib/opendht/cached_all_gateways_file_name if you want to distribute the new list"
       end
 
       opts.on('--check_live_server', 'run wget to download a small file from the origin server we set it up as -- doesnt work in ilab :)') do
@@ -400,7 +390,7 @@ class Driver
       end
 
       opts.on('-a', '--num_clients=NUMBER', "number of clients to spawn per test -- a few tests ignore this, like BitTorrent default #{@@numClientsToSpawn}") do |num|
-        num_clients = num.to_i
+        num_clients = num.to_i # was nil
         raise 'poor client count number ' + num.to_s if num_clients < 1
       end
 
@@ -451,6 +441,11 @@ class Driver
 
       opts.on('--use_arbitrary_listener=LISTENER_HOST_NAME', 'use the given listener--nothing else') do |listener|
         @@useArbitraryListener = listener
+        puts 'using arbitrary listener' + listener
+        if num_clients.nil?
+            puts 'also running only one client'
+           num_clients = 1
+        end
       end
 
       opts.on('-p', '--do_multiples_with_variant=NAME', 'multiples variant ex: ' +  @@multiples_variant_possibilities.inspect + ' note that currently for multiples test you specify multiple, it does it twice with some absolutely hard coded values for what it is changing it from and to') do |name|
@@ -458,7 +453,7 @@ class Driver
         style = :multiple
       end
 
-      opts.on('--do_single', 'do a single test with the defaults and the parameters you pass in') do
+      opts.on('--do_single_run', 'do a single test (1x1) with the defaults and the parameters you pass in') do
         style = :single
       end
 
@@ -521,16 +516,16 @@ class Driver
       command_to_run_against_all_listeners = command_to_run_against_all_listeners[0..-2] # strip the ending s's
       count = 0
       # we actually want to only use the 'live' peers for this since...they're the only ones listening to take the call!
+      puts 'running ' + command_to_run_against_all_listeners
       Driver.sendAllListeners(command_to_run_against_all_listeners) { |peer, port, answer|
         print "answer from #{peer} #{port} #{count += 1}\n\t=> #{answer}"
       }
-      puts 'exiting'
 
+      puts 'exiting'
       exit(0)
     else
       puts 'no command'
     end
-
 
 
     @@numClientsToSpawn = num_clients if num_clients
@@ -548,18 +543,20 @@ class Driver
       throwUpServer
     end
 
-    if @@useLocalHostAsListener
-      throwUpListener
-    end
+    #if @@useLocalHostAsListener
+    #throwUpListener
+    #end
 
     # now do multiple or single
     if style == :multiple
       Driver.doMultiple runName, multiples_variant
-      exit
     else
       assert style == :single
       Driver.doSingle runName
     end
+
+    exit # don't display the help screen--why necessary tho?
+
     # ltodo cleaner error message when vary_parameter called with bad run name
 
   end   # ltodo include analogger
@@ -674,7 +671,7 @@ class Driver
 
     if runStyle == 'blockSize'
       whatToAddTo = '@@blockSize'
-      settingsToTryArray = [16.kb, 32.kb, 64.kb, 128.kb]
+      settingsToTryArray = [16.kb, 32.kb, 64.kb, 100.kb]
       unitsX = 'Block size'
     end
 
@@ -702,7 +699,7 @@ class Driver
       @@blockSize = 256.kb
 
       codeToExecuteBeforeEachRun = proc {
-        system('ssh byu_p2pweb@planetlab1.flux.utah.edu "~/kill_planetlab1.byu.edu_python.sh"') # start over the tracker, etc--because otherwise the seed bugs and doesn't give us anything!
+        system('ssh byu_p2p@planetlab1.flux.utah.edu "~/kill_planetlab1.byu.edu_python.sh"') # start over the tracker, etc--because otherwise the seed bugs and doesn't give us anything!
       }
     end
 
@@ -713,7 +710,7 @@ class Driver
       whatToAddTo = '@@peerTokens'
       #	settingsToTryArray = [false] # YANC only
       codeToExecuteBeforeEachRun = proc {
-        system('ssh byu_p2pweb@planetlab1.flux.utah.edu "ssh byu_p2pweb@planetlab1.byu.edu \" /home/byu_p2pweb/installed_apache_2/bin/apachectl -k restart\""')
+        system('ssh byu_p2p@planetlab1.flux.utah.edu "ssh byu_p2p@planetlab1.byu.edu \" /home/byu_p2p/installed_apache_2/bin/apachectl -k restart\""')
       }
     end
 
@@ -726,6 +723,7 @@ class Driver
       howManyStepsOfTheMajorVariable = settingsToTryArray.length
       operator = '='
       firstValue = settingsToTryArray.shift
+      operandEachMajorLoop = 'fixed_setting' # for output
     end
     Driver.initializeVarsAndListeners nil, setupOnceString
 
@@ -740,12 +738,11 @@ class Driver
     @@allRunLogger.log "instantiated #{whatToAddTo} at " + eval("#{whatToAddTo}").to_s
 
     whatToAddToFilenameSanitized = whatToAddTo.to_s.gsub('@', '')
-
     varyParameterOutputName = "vr_#{runName}_#{whatToAddToFilenameSanitized}_fromStart_" + eval("#{whatToAddTo}").to_s + "by_#{operandEachMajorLoop}AndMajorTimes_#{howManyStepsOfTheMajorVariable - 1}_times_#{@@spaceBetweenNew}s_" +
     "_#{@@linger}s_#{@@fileSize}B_#{@@serverBpS}BPS_#{@@dR}s_#{@@dT}s_#{@@dW}s_#{@@blockSize}B"
 
     @@allRunLogger.log "Starting overall multi-run, multi-parameter driver run varying #{varyParameterOutputName} #{howManyStepsOfTheMajorVariable} steps"
-    massive_grapher =  VaryParameter.new(varyParameterOutputName, unitsX) if @@actuallyPerformMultipleRuns and $shouldDoVaryParameterGraphs
+    massive_grapher =  VaryParameter.new(MultipleRunsSameSettingGrapher.pictureDirectory + '/vary_parameter/' + varyParameterOutputName, unitsX) if @@actuallyPerformMultipleRuns and $shouldDoVaryParameterGraphs
     Driver.measure_time("full total complete all run") do
       1.upto(howManyStepsOfTheMajorVariable) { |major_variable_step|
 
@@ -756,12 +753,12 @@ class Driver
           # attempt at avoiding concurrency probs. Not sure if this belongs here or in doSingleRunWithCurrent
           my_run_marker = ENV['HOME'] + "/bittorrent_#{@@url_use_bittorrent}_run_in_progress_" + 'pid:' + Process.pid.to_s + '_' + Socket.gethostname
           all_contestants = ENV['HOME'] + "/bittorrent_#{@@url_use_bittorrent}_run_in_progress_*"
-          while Dir.glob(all_contestants) != [my_run_marker]
+          while (all = Dir.glob(all_contestants)) != [my_run_marker]
             File.delete my_run_marker if File.exist? my_run_marker
             if Dir.glob(all_contestants) == []
               FileUtils.touch my_run_marker
             else
-              print "waiting for other run to end"
+              print "waiting for other run to end #{all}"
               sleep 1
             end
           end
@@ -809,7 +806,7 @@ class Driver
             # now do these multiple (single major loop) graphs
             combined_runs = nil # heh
             Driver.measure_time('multiple graph creation -- I think should be about instant') {
-              combined_runs = RunGrapher.new(runNamesForThisSetting, "vary_parameter_singles/st_" + runName + whatToAddToFilenameSanitized + "_at_" + settingForThisMajorStep + "_severalTogether", all_runs_this_setting)
+              combined_runs = MultipleRunsSameSettingGrapher.new(runNamesForThisSetting, "vary_parameter_singles/st_" + runName + whatToAddToFilenameSanitized + "_at_" + settingForThisMajorStep + "_severalTogether", all_runs_this_setting)
             }
             [1].forky { # could truly fork here--if RAM would allow it [check]
               Driver.measure_time('sub multiple graph like a row worth, their graphs') {
@@ -1071,15 +1068,15 @@ class Driver
   def Driver.doSingleRunWithCurrentSettings(runName, totalToPotentiallyIgnoreLastPeers) # ltodo stinky
     startAllPeersAndWaitForCompletion @@blockSize, @@fileSize, @@spaceBetweenNew, @@numClientsToSpawn, @@dT, @@dR, @@dW, @@linger, runName, @@serverBpS, @@allRunLogger, totalToPotentiallyIgnoreLastPeers, @@peerTokens
   end
-  
-  named_args_for :'Driver.doSingleRunWithCurrentSettings'
+
+  named_args_for :'self.doSingleRunWithCurrentSettings'
 
   def Driver.graphAndStatSingleRun(runName, outputName = runName)
     @@allRunLogger.debug "graphing single #{runName} => #{outputName}"
-    a = RunGrapher.new([runName], outputName)
+    a = MultipleRunsSameSettingGrapher.new([runName], outputName)
     [1].forky {
       # deemed wasteful a.doAll();
-      measure_time("single stats for #{runName}") {VaryParameter.doStatsSingleRun([runName], [a], a.dirName) }
+      measure_time("single stats for #{runName}") {VaryParameter.doStatsSingleRun(runName, [a], a.dirName) }
     }
     a
   end
@@ -1168,6 +1165,7 @@ class Driver
     @logger.debug "Driver done firing threads, now will monitor listeners+collect!"
     start_collect_time = Time.now
     allPeersLeft = @peersUsed.dup
+    puts @peersUsed.inspect
     begin
       remove_mutex = Mutex.new
       start_time = Time.now
@@ -1176,11 +1174,11 @@ class Driver
         retries_left = 30
         while not doneWithPeer # let it get queried a few times till it answers yes...
           begin
+            @logger.debug "asking #{ip}:#{port} if done (after #{Time.now - start_time}s)"
             sockOut = TCPSocket.new(ip, port)
-            sockOut.writeReliable("doneWithRun?")
+            sockOut.write("doneWithRun?")
             sockOut.flush
             answer = nil
-            @logger.debug "asking #{ip}:#{port}if done after #{Time.now - start_time}s "
             Timeout::timeout(60) {
               answer = sockOut.recv(10000) # ltodo guard it this might fail in error if they are slammed! do it twice
             }
@@ -1223,10 +1221,10 @@ class Driver
       # now we have allThreads
       maximumTimeForLastFew = 20.minutes # they cannot need more than this!
       while allPeersLeft.length > totalToPotentiallyIgnoreLastPeers
-        print "#{allPeersLeft.length} left > #{totalToPotentiallyIgnoreLastPeers} desired "
+        print "#{allPeersLeft.length} left > #{totalToPotentiallyIgnoreLastPeers} desired, ex #{allPeersLeft.to_a[0]} "
         sleep 1
       end
-      @logger.debug "#{totalToPotentiallyIgnoreLastPeers} left! --starting #{maximumTimeForLastFew}s countdown\n\n\n"
+      @logger.debug "#{allPeersLeft.length} left! --starting #{maximumTimeForLastFew}s countdown\n\n\n"
       countDownStart = Time.new
       while (Time.new - countDownStart) < maximumTimeForLastFew and allPeersLeft.length > 0
         print "#{maximumTimeForLastFew - (Time.new - countDownStart)} l(#{allPeersLeft.inspect}) "; STDOUT.flush;
@@ -1266,30 +1264,33 @@ class Driver
 
     threads.times do
       allThreads << Thread.new {
+        # a thread pool!
         while thesePairsArray.length > 0
-          ip = ip2 = port = nil
+          nextGuy = nil
           grabMutex.synchronize {
             nextGuy = thesePairsArray.pop
-            if nextGuy
-              ip, port = nextGuy[0], nextGuy[1]
-              assert ip && port
-              print "ip is ", ip.inspect, "\nn\n\n\n"
-              next if ip =~ /ilab/
-              next if ip == '127.0.0.1'
-              next if ip == 'localhost'
-              next if ip == '192.168.21.102' # ilab2 LTODO this shouldn't be necessary
-              ip2 = Socket.get_ip(ip)
-              logger.error 'blank host ip?' if ip2.blank?
-              next if ip2 == Socket.get_host_ip
-            else # probably empty
-              next
-            end
           }
+          if nextGuy
+            ip, port = nextGuy[0], nextGuy[1]
+            assert ip && port
+            print "ip is ", ip.inspect, "\nn\n\n\n"
+            next if ip =~ /ilab/
+            next if ip == '127.0.0.1'
+            next if ip == 'localhost'
+            next if ip == '192.168.21.102' # ilab2 LTODO this shouldn't be necessary
+            ip2 = Socket.get_ip(ip)
+            logger.error 'blank host ip?' if ip2.blank?
+            next if ip2 == Socket.get_host_ip
+          else # probably empty
+            next
+          end
+
           logger.debug "collecting from #{ip}";
           begin
             retry_count = 5
             Dir.mkPath "../logs/#{ip}" unless File.directory? "../logs/#{ip}"
-            command = "rsync --timeout=60 -rv byu_p2pweb@#{ip}:/home/byu_p2pweb/p2pwebclient/logs/#{ip2}/#{pathWithEndingSlash.escape}* ../logs/#{ip}/#{pathWithEndingSlash.escape}"# ltodo pl1_1_run_dClient_0.25_dTotal_1.25_dw_5.0_blockSize_100000_linger_3_dr_187500.0_dt_1_serverBpS_250000
+            command = "rsync --timeout=60 -rv byu_p2p@#{ip}:/home/byu_p2p/p2pwebclient/logs/#{ip2}/#{pathWithEndingSlash.escape}* ../logs/#{ip}/#{pathWithEndingSlash.escape}"# ltodo pl1_1_run_dClient_0.25_dTotal_1.25_dw_5.0_blockSize_100000_linger_3_dr_187500.0_dt_1_serverBpS_250000
+            puts command
             success = false
             while !success and retry_count > 0
               success = system(command)
@@ -1302,6 +1303,7 @@ class Driver
         end
       }
     end
+    logger.debug "joining on rsyncing threads"
     allThreads.joinOnAllThreadsInArrayDeletingWhenDead
   end
 
@@ -1395,8 +1397,7 @@ class Driver
     directoryName = Listener.getOutputDirectoryName blockSize, spaceBetweenNew, totalSecondsToContinueGeneratingNewClients, dT, dR, dW, linger, runName, serverBpS # tlodo take out totalSeconds...
 
     if !File.directory?(directoryName)
-      print  "directory for logs #{directoryName} exists, possible double run! ack!" # ltodo tell ruby assert(not File.directory?(x))
-      print "\n" * 100
+      print  "directory for logs #{directoryName} exists, possible double run! ack!"
     end
     Dir.mkPath(directoryName)
 

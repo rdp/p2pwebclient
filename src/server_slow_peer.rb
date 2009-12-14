@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
-require 'constants' # fileSize
-require './driver.rb'
+require_rel 'constants' # fileSize
+require_rel './driver.rb'
 
 if $0 == __FILE__ or debugMe('server_slow_peer')
   if ARGV[0] == '--help' or ARGV[0] == '-h'

@@ -1,0 +1,18 @@
+# -*- ruby -*-
+
+require 'rubygems'
+require 'hoe'
+require './lib/hash_set_operators.rb'
+
+Hoe.new('hash_set_operators', HashSetOperators::VERSION) do |p|
+  p.name = 'hash_set_operators'
+  p.rubyforge_name = 'rubysideshow'
+  p.author = 'Mike Judge'
+  p.email = 'mikelovesrobots@gmail.com'
+  p.summary = 'Adds set operators to hashes'
+  p.description = p.paragraphs_of('README.txt', 1..6).join("\n\n")
+  p.url = p.paragraphs_of('README.txt', 0).first.split(/\n/)[1..-1]
+  p.changes = p.paragraphs_of('History.txt', 0..1).join("\n\n")
+end
+
+# vim: syntax=Ruby

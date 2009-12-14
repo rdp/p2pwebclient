@@ -102,30 +102,16 @@ def goGetFile(urlToGet, whereItGoes = nil)
   
 end
 
-def isGoodExecutableFile?(thisFileName)
-  if File.executable_real? thisFileName
-    return true
-  end
-  begin
-    a = IO.popen(thisFileName, "w+")
-    returnVal = true
-    # if that cleared then the exec worked
-    a.close
-    rescue => details
-    returnVal = false
-  end
-  return returnVal # ltodo there's some bug with this
-end
-
+# def isGoodExecutableFile?(thisFileName) File.executable?
 
 class String
 
   def blank?
-   self.length == 0
+   empty?
   end
 
   def contains? thisString
-    return self.index(thisString) != nil
+    include? thisString
   end
   
   def escape
@@ -135,6 +121,7 @@ class String
   def sanitize
     self.gsub(/[`\.?*\/\\|<>!&;:"'~@#\$%\^\(\)]/, '_')
   end
+
   def sanitize!
     self.gsub!(/[`\.?*\/\\|<>!&;:"'~@#\$%\^\(\)]/, '_')
   end
@@ -153,6 +140,7 @@ class String
     return output, rest # ltodo better funcs
     
   end
+
 end
 
 
@@ -225,7 +213,6 @@ end
 
 class Dir
   class << self
-    
     def createIndexFile(dirName, globIn = '*.{png,gif,jpg}')
       File.open(dirName + "/ind.html", "w") do |indexFile|
         for file in Dir.glob(dirName + '/'  + globIn) do indexFile.write("<img src=#{file.split('/')[-1]}>") end
@@ -622,29 +609,7 @@ class Hash
     end
     return sum
   end
-end
 
-
-class TCPsocket
-  
-  def writeReliable(stuffIn)
-    amountWrote = write(stuffIn)
-    assert(amountWrote == stuffIn.length, "ack a socket right (roger) failed! fix!")
-    flush # I have no idea if this does anything
-    # rest seems unnecessary
-    #  totalToSend = stuffIn.length
-    #  totalSent = 0
-    #  while totalSent < totalToSend do
-    #      if totalSent > 0
-    #          print "writeReliable looped!!!!i once you see this once then mark it as useful, comment out"
-    #      end
-    #      received = write(stuffIn)
-    #      stuffIn = stuffIn[received..10000000] # ltodo find a better way :)
-    #      totalSent += received
-    #  end# ltodo test -- appears unnecessary!
-    #  flush
-    return amountWrote
-  end
 end
 
 # code for exception handling
@@ -675,6 +640,7 @@ class Float
     return ("%.0#{decimal}f" % self).to_f
   end
 end # class
+
 class Array
   def cullDeadThreadsInArray # use array = array.cullDeadThreadsInArray
     out = []
@@ -826,7 +792,7 @@ def startThreadsThenJoin array, join = true
   assert block_given?
   allThreads = []
   for element in array
-    allThreads << Thread.new(element) { yield(element) }
+    allThreads << Thread.new(element) {|element| yield(element) }
   end
   allThreads.joinOnAllThreadsInArrayDeletingWhenDead if join
   allThreads
@@ -995,10 +961,10 @@ module Timeout
             timeThread = Thread.new(Thread.current) { |waitingThread|
               
               sleep sec # tick away
-              Thread.critical = true
+              Thread.critical = true if Thread.respond_to? :critical=
               waitingThread.raise excep, "execution expired after #{sec} secs}" if waitingThread.alive? and stillHereMutex.locked?  # we're still in the loop--extra exception thrown at us all at once could kick us out
               
-              Thread.critical = false # ltodo change it to not require a new mutex every time (save a number)
+              Thread.critical = false if Thread.respond_to? :critical= # ltodo change it to not require a new mutex every time (save a number)
             }
             answer = yield # run the timed guy
             return answer # ??? ask/point out

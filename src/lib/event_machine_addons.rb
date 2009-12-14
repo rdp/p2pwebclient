@@ -122,6 +122,7 @@ end
 
 module EventMachine
   # a thread safe 'ask EM is a port is open and sleep until it knows the answer'
+  # open meaning "I can connect to it!"
   def EventMachine.portOpen? host, port, timeout = nil
     open = false
     cv = SpringsOnce.new # eh

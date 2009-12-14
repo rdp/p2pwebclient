@@ -1,8 +1,18 @@
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
+at_exit {
+  if $!
+    puts "==== "
+    puts $!.backtrace.join("\n")
+    puts "===="
+  end
+}
+
 require File.dirname(__FILE__) + '/../constants'
-require_rel '*.rb'
+require_rel '*.rb' # listener_tests, etc.
+
+
 
 # ltodo make sure that the 'test servers quit' tests only wait like one second max :)
 
@@ -36,18 +46,16 @@ class Tester
     #  $dhtClassToUse = HangingDHT # ltodo maybe the 'wait 60 seconds then returns' dht :)
     Listener.testSelf
     if clientHasGraphLibraries
-
       # graphing
       Hash.testSelf # ltodo check -- is this just graph related? test it there
       TextLines.testSelf
       SingleLogParser.testSelf
       IndividualGraph.testSelf
-      RunGrapher.testSelf
+      MultipleRunsSameSettingGrapher.testSelf
       PercentileGraph.testSelf
       LineWithPointsFile.testSelf
       ClientLogContainerWithStats.testSelf
       PointLine.testSelf
-      RunGrapher.testSelf
       SingleLogParser.testSelf
       GraphHelper.testSelf
       VaryParameter.testSelf
@@ -57,8 +65,10 @@ class Tester
   end
 end
 
-if $0 == __FILE__ # strip that off if there
-  print "I run no matter what muhaha--never require this file!"
+if File.expand_path($0) ==File.expand_path( __FILE__ )
+  print "I run no matter what muhaha"
+else
+ raise 'dont require this file' + $0
 end
 
 Tester.all

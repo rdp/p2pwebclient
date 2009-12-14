@@ -1,2 +1,0 @@
-alice.cs.princeton.edu
-planetlab-1.cs.princeton.edu

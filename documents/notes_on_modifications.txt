@@ -47,3 +47,6 @@ Now I do have the revert to host while peer-connecting.
 
 
 We do openDHT 'piece-wise' now, moving forward from oldest to newest. see notes in constants.rb
+
+
+could eventually bill this as "safer" internet, since you could kinder know/share md5's on every file in existence...

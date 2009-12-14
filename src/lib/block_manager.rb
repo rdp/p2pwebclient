@@ -104,7 +104,7 @@ class BlockManager
     @total_peer_tokens_to_use_simultaneously = peer_tokens
     @linger = linger
     @am_bittorrent = fullUrl =~ Regexp.new('http://bittorrent')
-    debug "single file doing reversion as am_bittorrent: #{@am_bittorrent}, #{$useOriginRevertOptimization} with dR #{dRIfBelowThisCutItBps}, dW #{dWindowSeconds} #{[fullUrl, dTToWaitAtBeginning, dRIfBelowThisCutItBps, dWindowSeconds, blockSize, linger, logFileName, startTime, peer_name].join(", ")} $getAllAtBeginning #{$getAllAtBeginning} with number on the origin of #{$useOriginBackOffOrNumberConcurrent}"
+    debug "single file doing reversion as am_bittorrent: #{@am_bittorrent}, peer_tokens #{peer_tokens} #{$useOriginRevertOptimization} with dR #{dRIfBelowThisCutItBps}, dW #{dWindowSeconds} #{[fullUrl, dTToWaitAtBeginning, dRIfBelowThisCutItBps, dWindowSeconds, blockSize, linger, logFileName, startTime, peer_name].join(", ")} $getAllAtBeginning #{$getAllAtBeginning} with number on the origin of #{$useOriginBackOffOrNumberConcurrent} I think 100000 is special cased..."
     debug Time.now.inspect
     debug RUBY_VERSION
     unless on_windows? # diagnostics on system status
@@ -210,7 +210,7 @@ class BlockManager
   end
   #
 
-  def repeat_add_until_done key, value, round_id = nil, description = '', this_many_repeats_left = 3 &block
+  def repeat_add_until_done key, value, round_id = nil, description = '', this_many_repeats_left = 3, &block
     round_id ||= key + value.to_s + rand(1000000).to_s
     raise "unexpected non block!" unless block_given?
 

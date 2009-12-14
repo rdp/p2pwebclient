@@ -1,18 +1,28 @@
-#
+
 # welcome...                        
 #
-$version = "$Rev: 1515 $"
+$version = "$Rev: 1518 $"
 
 require 'pp'
 require 'socket'
 require 'base64'
+require 'timeout'
 
-Dir.glob(File.dirname(__FILE__) + '/lib/gems_here/*').each{|d| $:.unshift "#{d}/lib" }
+Dir.glob(File.dirname(__FILE__) + '/lib/gems_here/*').sort.each{|d| $:.unshift "#{d}/lib" }
+# we can load gems now.
+# phew!
 require 'sane'
-require_rel 'unique_require'
-
+$: << __DIR__
 $: << __DIR__ + "lib"
-require 'facets/times' 
+require_rel 'unique_require' if RUBY_VERSION < '1.9'
+
+#require 'facets/times' 
+class Fixnum
+ def minutes
+   self*60
+  end
+end
+require 'rubygems'
 require 'arguments'
 require 'andand.rb'
 
@@ -24,16 +34,21 @@ require_rel 'lib/ruby_useful_here.rb'
 
 # EM
 ruby_version = (RUBY_VERSION + '.' + RUBY_PLATFORM)
-$: << __DIR__ + 'ext/em/' + ruby_version # em libs
+em_ext_dir = __DIR__ + 'ext/em/' + ruby_version # em libs
+if File.exist? em_ext_dir
+    $: << em_ext_dir
+else
+    raise 'no em binaries?' + em_ext_dir
+end
 ENV['INLINEDIR'] = 'ext/' + ruby_version # ext/xxx/.ruby_inline dirs
 
-require 'eventmachine'
-require 'lib/event_machine_addons.rb'
+require_rel 'eventmachinee'
+require_rel 'lib/event_machine_addons.rb'
 
 EM::set_max_timers 10000
 
 # ltodo: wonder if there's a speedup if, while during download of a very fast file, you belay the opendht registration till the end :) like a flood when you're done, only
-require 'lib/opendht/local_drive_dht.rb'
+require_rel 'lib/opendht/local_drive_dht.rb'
 
 #require 'resolv-replace' # doesn't help EM! LTODO!
 
@@ -56,7 +71,7 @@ require 'lib/opendht/local_drive_dht.rb'
 # ltodo save as one large file
 # ltodo switch blocks => greedy get, see if it helps (get ranges, try and get everything)
 # ltodo see if one connection/peer (or x) better
-# ltodo 
+# ltodo md5 (extensions) if they exist or something [not bad]
 # ltodo url_has_all (yeah) and/or url_1
 # ltodo overall--better opendht use
 # ltodo request unended
