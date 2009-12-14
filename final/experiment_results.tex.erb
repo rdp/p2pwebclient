@@ -61,9 +61,12 @@ We expect that an extremely low value will cause transitioning too early and an 
 
 <%= figure 'pics/vr_do_dts_take6/death_reasons.pdf', :label => 'figs:dt_variance_death_reasons', :caption => 'Cause of transition to P2P download, varying T' %>
 
-%\subsection{Server minimum allowed speed R}
+\subsection{Server minimum allowed speed R}
 
-%COMMENTED OUT We next vary $R$, the server speed cut off.  This value is calculated by summing the amount received from the origin over the previous W seconds (set to 2).  W is calculated starting from the time a first byte is received.  We vary R from 32KB/s to 1MB/s, and leave T set to a reasonably high value of 10s.  The expected result was that a value of R too high would cause transition too early, and that a value too low would cause a transition too late.   Of course this is commented out because our results were corrupt.
+We next examine the effect of varying $R$, the server speed's minimum cut off.  This value is calculated by summing the amount received from the origin over the previous W seconds (set to 2).  W is calculated starting from the time a first byte is received.  We vary R from 32KB/s to 1MB/s, and leave T set to a reasonably high value of 10s.  The expected result was that a value of R too high would cause transition too early, and that a value too low would cause a transition too late.  This was the case, as with R set to 5K, median download times were 40s, with R at 40K, download times dropped to 15s, and they reached a low of 13s with R set to 160K.  Higher values than 160K resulted in slowdown, with R set to 1MB having a median download time of 30s (Fig.~\ref{figs:vary_dr_download_times}).
+
+<%= figure 'pics/vr_unnamed502788_dR_fromStart_5000by_fixed_settingAndMajorTimes_8_times_0.0666666666666667s__10s_100000B_255000BPS_5000s_10s_2.0s_100000B/client_download_Percentile_Line.pdf', :label => 'figs:vary_dr_download_times', :caption => 'Download times varying R', :width => '13cm' %>
+
 
 \subsection{Server speed time window W}
 
@@ -73,7 +76,7 @@ We next vary W, the amount of recent download history used to calculate R.  Our 
 
 % why was this higher, then?
 
-<%= figure 'pics/837145_dw/client_download_Percentile_Line.pdf', :label => 'figs:dw_download_times', :caption => 'Download times by varying W' %>
+<%= figure 'pics/837145_dw/client_download_Percentile_Line.pdf', :label => 'figs:dw_download_times', :caption => 'Download times by varying W', :width => '13cm' %>
 
 <%= figure 'pics/837145_dw/death_reasons.pdf', :label => 'figs:dw_death_reasons', :caption => 'Download times by varying W' %>
 
@@ -128,5 +131,5 @@ We next vary the maximum number of connections each peer is allowed to have at a
 \section{Varying linger time}
 We next vary the amount of linger time, to see how it affects download speeds, our hypothesis being that a longer linger time will increase download speeds, which proved correct (Fig.~\ref{figs:linger_time_download_times}).  With a linger time of 0s, median download time was near 300s, dropping to 127s with a linger time of 1s, 60s with a linger time of 2s, 34s with a linger of 4s, and staying mostly constant for higher linger times.
 
-<%= figure 'pics/vr_unnamed497104_linger_fromStart_0by_fixed_settingAndMajorTimes_8_times_0.0666666666666667s__0s_100000B_255000BPS_125000s_1.0s_2.0s_100000B/client_download_Percentile_Line.pdf', :caption => 'Download times varying linger time', :label => 'figs:linger_time_download_times' %>
+<%= figure 'pics/vr_unnamed497104_linger_fromStart_0by_fixed_settingAndMajorTimes_8_times_0.0666666666666667s__0s_100000B_255000BPS_125000s_1.0s_2.0s_100000B/client_download_Percentile_Line.pdf', :caption => 'Download times varying linger time', :label => 'figs:linger_time_download_times', :width => '13cm' %>
 

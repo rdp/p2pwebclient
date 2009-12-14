@@ -115,4 +115,3 @@ class P2PPlot
 
 end
 
-puts P2PPlot.method(:plotNormal).source_location
