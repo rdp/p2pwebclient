@@ -1,11 +1,10 @@
 require 'constants'
 #
-# so this represents kind of a codeen style proxy--either just 'request files from it' (if they're static), or request http://localhost:port/other_file_name or http://localhost:port/http://other_file_name
+# so this represents kind of a codeen style proxy--either just 'request files from it' (if they're static), or request http://localhost:port/other_file_name or http://localhost:port/http://host:port/other_file_name
+# the last one being so you can copy and paste most easily muhaha
 #
-# ltodo handle coiso
-# ltodo handle 302 responses, etc
-# ltodo output it piece-wise from this proxy :)
-
+# guess from work I'll need to run this "directly" on bp
+#
 class Proxy < EM::Connection
   @@request_count = 0
   @@all_file_getters = {}
@@ -50,7 +49,6 @@ class Proxy < EM::Connection
     # why not? -- this could maybe use some help
     # so right now it still does some queueing, up to that size...maybe?
     # right now it combats both N^2 queueing and long queueing.  Not sure if those are good, bad, whatever.
-
    
     send_proc = proc { 
       LOGGER.debug 'send proc'
@@ -109,10 +107,8 @@ class Proxy < EM::Connection
   end
 end
 
-port = 8000
-if ARGV.length > 0
-  port = ARGV[0].to_i
-end
+port = ARGV[0] || "8000"
+port = port.to_i
 logger = Logger.new('proxy_' + port.to_s, 0)
 logger.log 'starting proxy on port' + port.to_s
 
@@ -120,6 +116,7 @@ EM::run {
    Proxy.const_set('LOGGER', logger)
    Proxy.const_set('MY_PORT', port)
    EventMachine::start_server('0.0.0.0', port, Proxy) { |clientConnection| 
+     # nothing
    }
    logger.debug 'started server'
 }
