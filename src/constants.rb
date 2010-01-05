@@ -22,7 +22,6 @@ class Fixnum
    self*60
   end
 end
-require 'rubygems'
 require 'arguments'
 require 'andand.rb'
 

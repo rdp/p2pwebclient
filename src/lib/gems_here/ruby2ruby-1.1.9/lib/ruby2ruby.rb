@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby -w
 
-begin require 'rubygems'; rescue LoadError; end
 require 'sexp_processor'
 require 'unified_ruby'
 

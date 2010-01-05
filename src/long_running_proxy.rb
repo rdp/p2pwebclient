@@ -52,7 +52,7 @@ class Proxy < EM::Connection
     # right now it combats both N^2 queueing and long queueing.  Not sure if those are good, bad, whatever.
    
     send_proc = proc { 
-      LOGGER.debug 'send proc'
+      LOGGER.debug 'within send proc'
       if (@getter.done? and (last_byte_received_and_sent == (@getter.wholeFileSize - 1))) or @getter.opendht_done_and_logger_closed # meaning toast
       
 	LOGGER.log "done queueing/sending whole file, I must presume"

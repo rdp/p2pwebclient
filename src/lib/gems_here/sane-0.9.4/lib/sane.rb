@@ -1,5 +1,4 @@
 # some uber useful gems
-require 'rubygems'
 require 'require_all'
 require 'backports/tools.rb' # backports
 require 'backports/1.9/io' # File.binread

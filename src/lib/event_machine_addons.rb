@@ -1,8 +1,3 @@
-begin
-  require 'rubygems'
-  rescue Exception => e
-end
-
 require 'eventmachine'
 
 module EventMachine

@@ -799,6 +799,7 @@ class BlockManager
     end
     if not @allBlocks
       debug " asked block keeper if file was done downloading without starting up the blocks (knowing size of file...) returning without checking any for now"
+      debug caller.join("\n")
       return false
     end
     success = true

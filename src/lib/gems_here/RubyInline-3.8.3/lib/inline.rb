@@ -50,7 +50,6 @@
 require "rbconfig"
 require "digest/md5"
 require 'fileutils'
-require 'rubygems'
 
 require 'zentest_mapping'
 
@@ -71,13 +70,6 @@ module Inline
   RUBINIUS = defined? RUBY_ENGINE
   DEV_NULL = (WINDOZE ? 'nul'      : '/dev/null')
   GEM      = (WINDOZE ? 'gem.bat'  : 'gem')
-  RAKE     = if WINDOZE then
-               'rake.bat'
-             elsif RUBINIUS then
-               File.join(Gem.bindir, 'rake')
-             else
-               "#{Gem.ruby} -S rake"
-             end
 
   warn "RubyInline v #{VERSION}" if $DEBUG
 
