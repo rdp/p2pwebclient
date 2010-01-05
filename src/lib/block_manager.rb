@@ -15,7 +15,7 @@ require File.dirname(__FILE__) + '/safe_write.rb'
 class BlockManager
   @@default_dht_class = OpenDHTEM
   @@allowMultipleGrabsOfSameBlock = true # hard coded here only, at least for now (unused, actually)
-  @@error_retries_internal = 15
+  @@error_retries_internal = 5
   @@close_mutex = Mutex.new
   @@p2p_no_bytes_timeout = 5.minutes # very weak timeout, useful to make sure things terminate...ever.
 
@@ -218,7 +218,7 @@ class BlockManager
       if status == :success or this_many_repeats_left == 0 or @already_finalized
         block.call(status, values, round, key) if block
       else
-        debug "repeating because #{status} and #{this_many_repeats_left}x left and we're not finalized yet"
+        debug "repeating because #{status} and #{this_many_repeats_left} left and we're not finalized yet"
         repeat_add_until_done key, value, round_id, description, this_many_repeats_left - 1, &block
       end
     }
@@ -268,7 +268,7 @@ class BlockManager
   end
 
   def doFinalize
-    debug "doing a finalize call"
+    debug "doing a finalize call doFinalize"
     @@close_mutex.synchronize do
       if @already_finalized
         error "finalized twice--unexpected behavior except in testing, which may call doFinalize as meaning 'shut down'"
@@ -555,7 +555,7 @@ class BlockManager
       }
       debug 'post block create head retriever'
     rescue RuntimeError
-      error 'start head retriever FAILED to connect, even!'
+      error 'start head retriever FAILED to connect, even! retry in 5 left:' + this_many_attempts_left.to_s
       EM::Timer.new(5) { startHeadRetriever(this_many_attempts_left - 1) }
     end
   end
@@ -708,7 +708,7 @@ class BlockManager
   end
 
   def wholeFileSize # ltodo rename of full file
-    assert @totalNumBytesInFile
+    raise UnknownSizeException.new unless @totalNumBytesInFile
     return @totalNumBytesInFile
   end
 
@@ -799,7 +799,6 @@ class BlockManager
     end
     if not @allBlocks
       debug " asked block keeper if file was done downloading without starting up the blocks (knowing size of file...) returning without checking any for now"
-      debug caller.join("\n")
       return false
     end
     success = true

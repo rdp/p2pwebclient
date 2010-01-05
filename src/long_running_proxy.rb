@@ -41,7 +41,7 @@ class Proxy < EM::Connection
 
     maximum_BPS = 50_000_000#4_000_000_000 # empirically this only goes to like 4MB/s anyway since it has to queue, then get back to you. Bleh.
     EM::set_timer_quantum(5)#MS
-    time_interval = 0.005
+    time_interval = 1#0.005
     check_again_if_none_to_send_interval = time_interval
     block_size = maximum_BPS*time_interval
     queue_block_size = block_size/5
@@ -53,10 +53,15 @@ class Proxy < EM::Connection
    
     send_proc = proc { 
       LOGGER.debug 'within send proc'
-      if (@getter.done? and (last_byte_received_and_sent == (@getter.wholeFileSize - 1))) or @getter.opendht_done_and_logger_closed # meaning toast
-      
-	LOGGER.log "done queueing/sending whole file, I must presume"
-	close_connection_after_writing
+      begin
+        if (@getter.done? and (last_byte_received_and_sent > -1) && (last_byte_received_and_sent == (@getter.wholeFileSize - 1))) or @getter.opendht_done_and_logger_closed # meaning toast
+    	  LOGGER.log "done queueing/sending whole file, I must presume"
+	  close_connection_after_writing
+          return
+        end
+      rescue UnknownSizeException
+        write "500 never received"
+        close_connection_after_writing
         return
       end
 
@@ -83,7 +88,7 @@ class Proxy < EM::Connection
            end
         end
       else
-  	LOGGER.log "#{my_number} no new stuff--at byte #{last_byte_received_and_sent}" if rand(32) == 0
+  	LOGGER.log "#{my_number} no new stuff--at byte #{last_byte_received_and_sent}"
         EM::Timer.new check_again_if_none_to_send_interval, send_proc
       end
     }
@@ -110,7 +115,7 @@ end
 
 port = ARGV[0] || "8888"
 port = port.to_i
-logger = Logger.new('proxy_' + port.to_s, 0)
+logger = Logger.new('log.long_running_local_proxy_' + port.to_s, 0)
 logger.log 'starting proxy on port' + port.to_s
 
 EM::run {

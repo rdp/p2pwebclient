@@ -280,6 +280,7 @@ end
 class P2PWebFailure < StandardError
 end
 
+class UnknownSizeException < P2PWebFailure; end
 class TooSlowOnFirstBytes < P2PWebFailure
 end
 
