@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 require 'constants'
 #
-# so this represents kind of a codeen style proxy--either just 'request files from it' (if they're static), or request http://localhost:port/other_file_name or http://localhost:port/http://host:port/other_file_name
-# the last one being so you can copy and paste most easily muhaha
+# this represents kind of a codeen style proxy--either just 'request files from it' (like a proxy) (currently only static files), or request http://localhost:port/other_file_name or http://localhost:port/http://host:port/other_file_name.html
+# the last one being so you can copy and paste from a browser easier
 #
 # guess from work I'll need to run this "directly" on bp
 #

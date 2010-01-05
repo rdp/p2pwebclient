@@ -153,7 +153,9 @@ class GenericGetFromSinglePeer < EventMachine::Connection
           @endByte ||= totalFileSize - 1
         end
       end
-      assert @blockManager.fileSizeSet? if @amPastHeader
+      if !@blockManager.fileSizeSet && @amPastHeader
+        raise 'this file has a dynamic length--not supported yet!'
+      end
       if !@endByte and !@amPastHeader
         assert @total_bytes_received < 1000, "how can you not have an endByte given in headers yet? [#{m}]"
       end
