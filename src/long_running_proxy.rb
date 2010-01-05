@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'constants'
 #
 # so this represents kind of a codeen style proxy--either just 'request files from it' (if they're static), or request http://localhost:port/other_file_name or http://localhost:port/http://host:port/other_file_name
@@ -107,7 +108,7 @@ class Proxy < EM::Connection
   end
 end
 
-port = ARGV[0] || "8000"
+port = ARGV[0] || "8888"
 port = port.to_i
 logger = Logger.new('proxy_' + port.to_s, 0)
 logger.log 'starting proxy on port' + port.to_s
