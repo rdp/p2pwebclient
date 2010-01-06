@@ -824,8 +824,8 @@ class BlockManager
 
 end # class
 
-require 'lib/utilities_block_manager.rb' # just for the testing we do internally :)
-require_relative 'block.rb'
+require_rel 'utilities_block_manager.rb' # just for the testing we do internally :)
+require_rel 'block.rb'
 
 if $0 == __FILE__ or debugMe('block_manager')
   BlockManager.timeSelf
