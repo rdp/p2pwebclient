@@ -6,7 +6,7 @@ require 'constants'
 #
 # guess from work I'll need to run this "directly" on bp
 #
-class Proxy < EM::Connection
+class LongRunningProxy < EM::Connection
   @@request_count = 0
   @@all_file_getters = {}
   def receive_data requestIncoming
@@ -119,16 +119,10 @@ logger = Logger.new('log.long_running_local_proxy_' + port.to_s, 0)
 logger.log 'starting proxy on port' + port.to_s
 
 EM::run {
-   Proxy.const_set('LOGGER', logger)
-   Proxy.const_set('MY_PORT', port)
+   LongRunningProxy.const_set('LOGGER', logger)
+   LongRunningProxy.const_set('MY_PORT', port)
    EventMachine::start_server('0.0.0.0', port, Proxy) { |clientConnection| 
      # nothing
    }
-   logger.debug 'started server'
+   logger.debug 'started server on port ' + port.to_s
 }
-
-
-
-
-
-
