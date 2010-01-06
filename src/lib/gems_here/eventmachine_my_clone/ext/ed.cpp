@@ -669,7 +669,7 @@ void ConnectionDescriptor::Read()
 	LastIo = gCurrentLoopTime;
 
 	int total_bytes_read = 0;
-	char readbuffer [16 * 1024 + 1];
+	char readbuffer [128 * 1024 + 1];
 
 	for (int i=0; i < 10; i++) {
 		// Don't read just one buffer and then move on. This is faster
