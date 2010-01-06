@@ -121,7 +121,7 @@ logger.log 'starting proxy on port' + port.to_s
 EM::run {
    LongRunningProxy.const_set('LOGGER', logger)
    LongRunningProxy.const_set('MY_PORT', port)
-   EventMachine::start_server('0.0.0.0', port, Proxy) { |clientConnection| 
+   EventMachine::start_server('0.0.0.0', port, LongRunningProxy) { |clientConnection| 
      # nothing
    }
    logger.debug 'started server on port ' + port.to_s
