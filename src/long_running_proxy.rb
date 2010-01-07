@@ -111,18 +111,28 @@ class LongRunningProxy < EM::Connection
     send_data header
     @already_sent_header = true
   end
+  
+  def self.go port = 8888
+    logger = Logger.new('log.long_running_local_proxy_' + port.to_s, 0)
+    logger.log 'starting proxy on port' + port.to_s
+    LongRunningProxy.const_set('LOGGER', logger)
+    LongRunningProxy.const_set('MY_PORT', port)
+    EM.run {
+       EventMachine::start_server('0.0.0.0', port, LongRunningProxy) { |clientConnection| 
+         # nothing
+       }
+       logger.debug 'started server on port ' + port.to_s
+    }
+  end
+  
+  def self.go_own_thread
+    Thread.new { go }
+  end
+  
 end
 
-port = ARGV[0] || "8888"
-port = port.to_i
-logger = Logger.new('log.long_running_local_proxy_' + port.to_s, 0)
-logger.log 'starting proxy on port' + port.to_s
-
-EM::run {
-   LongRunningProxy.const_set('LOGGER', logger)
-   LongRunningProxy.const_set('MY_PORT', port)
-   EventMachine::start_server('0.0.0.0', port, LongRunningProxy) { |clientConnection| 
-     # nothing
-   }
-   logger.debug 'started server on port ' + port.to_s
-}
+if $0 == __FILE__
+  port = ARGV[0] || "8888"
+  port = port.to_i
+  LongRunningProxy.go port
+end

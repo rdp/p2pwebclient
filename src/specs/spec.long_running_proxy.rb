@@ -5,9 +5,24 @@ require_relative '../constants'
 
 describe LongRunningProxy do
 
-  it "shouldn't barf on non existent files"
+  before do
+    LongRunningProxy.go_own_thread
+  end
+  
+  after do
+    EM.stop
+  end
+    
+  it "shouldn't barf on non existent files" do
+    a = `curl http://ll:8888/bad.host`
+  end 
+  
+  it "shouldn't barf on 302's" do
+    a = `curl http://ll:8888/google.com`
+  end  
 
   it "should return 301/302's right"
+  
 
   it "should get normal files right"
 
