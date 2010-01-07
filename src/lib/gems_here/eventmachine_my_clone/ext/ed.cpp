@@ -671,7 +671,7 @@ void ConnectionDescriptor::Read()
 	int total_bytes_read = 0;
 	char readbuffer [128 * 1024 + 1];
 
-	for (int i=0; i < 10; i++) {
+	for (int i=0; i < 2; i++) {
 		// Don't read just one buffer and then move on. This is faster
 		// if there is a lot of incoming.
 		// But don't read indefinitely. Give other sockets a chance to run.
