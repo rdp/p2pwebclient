@@ -165,7 +165,7 @@ class ParseRaw
 end
 
 if $0 == __FILE__
-  puts 'syntax: raw file name1 [raw file name2 if you want comparison...] "dT (s)"'
+  puts '(always displayed) syntax: raw file name1 [raw file name2 if you want comparison...] "dT (s)"'
   puts 'generates files like server_speed_Percentile_line.pdf in the local dir, using gnuplot'
   raise unless ARGV[0] && !ARGV[0].in?(['--help', '-h'])
 

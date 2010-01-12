@@ -9,7 +9,7 @@ all = stats.map{|file|
 
   if file[:download_time]
     total = file[:p2p_p2p].to_f/total
-    sputs 'total percent is', total, 'for file', file.inspect
+    pps 'total percent is', total, 'for file', file.inspect
     [total, file[:filename]]
     total
   end
@@ -19,7 +19,4 @@ puts all
 
 require 'gnuplot_percentiles.rb'
 
-P2PPlot.plotNormal :xlabel => 'Number of Peers', :ylabel => 'Percentage of File via P2P', :hash_values => {'CDF' => all}, :name => 'yanc_30_mb_cdf.pdf'
-
-
-  
+P2PPlot.plotNormal :xlabel => 'Number of Peers', :ylabel => 'Percentage of File via P2P', :hash_values => {'CDF' => all}, :name => '../yanc_30mb/yanc_30_mb_cdf.pdf'

@@ -36,7 +36,11 @@ class P2PPlot
           plot.xlabel xlabel if xlabel
           plot.xrange "[0:#{ xs.last + 1}]"
           
-          plot.yrange "[0:#{percentiles.flatten.max * 1.1}]"
+          all_points =  percentiles
+          if percentiles2
+            all_points += percentiles2
+          end
+          plot.yrange "[0:#{all_points.flatten.max * 1.1}]"
           plot.terminal 'pdf'
           plot.output name
           #plot.logscale 'y'
