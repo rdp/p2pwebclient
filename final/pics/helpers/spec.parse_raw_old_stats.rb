@@ -1,9 +1,7 @@
 require 'parse_raw_old_stats'
-
 require 'spec/autorun'
 
 describe Parser do
-
 
   it 'should parse dt lines' do
 
@@ -25,23 +23,9 @@ describe Parser do
   end
 
 
-end
-
-describe P2PPlot do
-
-  it "should be able to take a hahs and calculate minimum x values from it as if it were graph lines" do
-    P2PPlot.get_smallest_x({'abc' => [[1,1], [1,2]]}).should == 1
-  end
-
-  it "should generate a graph" do
-    File.delete 'name.pdf' if File.exist? 'name.pdf'
-    P2PPlot.plotNormal 'x label', 'y label', {'abc' => [[1,1], [2,2], [3,3]]}, 'name.pdf'
-    assert File.exist? 'name.pdf'
-  end
-
   it "should generate a delete_cause graph" do
     Dir.chdir 'test' do
-      ParseRaw.go 'raw_example.txt'
+      ParseRaw.go '../raw_example.txt'
       assert File.exist? 'death_reasons.pdf'
     end
   end

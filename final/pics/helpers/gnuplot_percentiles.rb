@@ -45,8 +45,15 @@ class P2PPlot
             add_percentile_plot plot, [xs2] + percentiles2, legend2_addition
           end
 
+          smallest_range = xs.last - xs.first
+          previous = xs.first
+          for x in xs[1..-1]
+            space_between_these_two = x - previous
+            smallest_range = [smallest_range, space_between_these_two].min
+          end            
+
           # box_width is only for percentiles
-          box_width = xrange*3/100
+          box_width = [xrange*3/100, smallest_range/2.0].min
           plot.boxwidth box_width
 
         end
@@ -64,19 +71,20 @@ class P2PPlot
 
 
     def add_percentile_plot plot, all_data, addition_for_legend = nil
-
-      plot.data << Gnuplot::DataSet.new( all_data ) do |ds|
+        plot.data << Gnuplot::DataSet.new( all_data ) do |ds|
         ds.using = "1:3:2:6:5"
         ds.with = "candlesticks title '1,25,75,99 percentiles #{addition_for_legend}' "
       end
 
       #add the median...all it is is a line
-      plot.data << Gnuplot::DataSet.new( all_data) do |ds|
-        #  ds.using = "1:4:4:4:4"
-        #  ds.with = "candlesticks lt -1"
-        #  ds.notitle
-        ds.with = "lines title '50 percentile #{addition_for_legend}'"
-        ds.using = "1:4" # just x,median
+      plot.data << Gnuplot::DataSet.new(all_data) do |ds|
+        ds.using = "1:4:4:4:4"
+        ds.with = "candlesticks lt -1"
+        ds.notitle
+        
+        # if you want to connect the medians...
+        #ds.with = "lines title '50 percentile #{addition_for_legend}'"
+        #ds.using = "1:4" # just x,median
       end
     end
 
