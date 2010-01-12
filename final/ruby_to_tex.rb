@@ -48,7 +48,7 @@ class RubyToTex
   #
   def figure filename, options
          options[:caption] ||= '' # always need at least a blank one
-         options[:width] = '80mm' unless options.has_key? :width
+         options[:width] = '70mm' unless options.has_key? :width
 	 options[:filename] = filename
     	"\\begin{figure}[htp]\n" + 
     	     self.picture_options(options).indent +
