@@ -25,11 +25,19 @@ describe P2PPlot do
   it "should graph the median lines" do
     assert @a.data[1].with.contain? "candlesticks lt -1"  
   end
-  
+
   it "should never be wider than half the difference between the smallest xes" do
     a = P2PPlot.plot [0.1,0.2,100], [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,6]] 
     assert a.boxwidth.assoc('boxwidth')[1] == 0.05
+    
+    
+    #it "should also show the median line in cases where a few points are scrunched together" do
+    assert a.data[1].using.include?("1:4 ") # the percentiles
+    assert a.data[1].with.include?("lines") # the 50 percentile line
+    assert !a.data[1].with.include?("candlesticks") # the 50 percentile candlesticks
+    
   end
+  
   
   it "should have a boxwidth not too large if they are far separated" do
     assert @a.boxwidth.assoc('boxwidth')[1] == 6

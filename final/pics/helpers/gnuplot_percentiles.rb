@@ -45,11 +45,6 @@ class P2PPlot
           plot.output name
           #plot.logscale 'y'
 
-          add_percentile_plot plot, [xs] + percentiles, legend1_addition
-          if(xs2)
-            add_percentile_plot plot, [xs2] + percentiles2, legend2_addition
-          end
-
           smallest_range = xs.last - xs.first
           previous = xs.first
           for x in xs[1..-1]
@@ -60,6 +55,19 @@ class P2PPlot
           # box_width is only for percentiles
           box_width = [xrange*3/100, smallest_range/2.0].min
           plot.boxwidth box_width
+          
+          if xrange > 100*smallest_range
+            add_median_line = true
+          else
+            add_median_line = false
+          end
+          
+          add_percentile_plot plot, [xs] + percentiles, legend1_addition, add_median_line
+          if(xs2)
+            add_percentile_plot plot, [xs2] + percentiles2, legend2_addition, add_median_line
+          end
+
+
 
         end
       end
@@ -75,8 +83,8 @@ class P2PPlot
     end
 
 
-    def add_percentile_plot plot, all_data, addition_for_legend = nil
-        plot.data << Gnuplot::DataSet.new( all_data ) do |ds|
+    def add_percentile_plot plot, all_data, addition_for_legend, add_median_line
+      plot.data << Gnuplot::DataSet.new( all_data ) do |ds|
         ds.using = "1:3:2:6:5"
         ds.with = "candlesticks title '1,25,75,99 percentiles #{addition_for_legend}' "
         #ds.notitle 
@@ -84,13 +92,16 @@ class P2PPlot
 
       #add the median...all it is is a line
       plot.data << Gnuplot::DataSet.new(all_data) do |ds|
-        ds.using = "1:4:4:4:4"
-        ds.with = "candlesticks lt -1 title '50th percentile #{addition_for_legend}'"
-        #ds.notitle
-        
         # if you want to connect the median lines...
-        #ds.with = "lines "
-        #ds.using = "1:4" # just x,median
+        if add_median_line
+         ds.with = "lines "
+         ds.using = "1:4 " # just x,median
+        else
+         ds.using = "1:4:4:4:4"
+         ds.with = "candlesticks lt -1 "
+         #ds.notitle we do too have a title        
+       end
+       ds.with += "title '50th percentile #{addition_for_legend}'"       
       end
     end
 
