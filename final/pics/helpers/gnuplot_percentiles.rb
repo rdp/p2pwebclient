@@ -30,12 +30,13 @@ class P2PPlot
       Gnuplot.open do |gp|
         Gnuplot::Plot.new( gp ) do |plot|
 
-          #plot.title  "Example" # we don't need no shtinkin titles
+          #plot.title  "Example" 
+          # we don't need no shtinkin titles
           plot.ylabel ylabel if ylabel
           plot.xlabel xlabel if xlabel
           plot.xrange "[0:#{ xs.last + 1}]"
-          #    plot.yrange "[0:10]" auto calculated
-          # is there an xmin?
+          
+          plot.yrange "[0:#{percentiles.flatten.max * 1.1}]"
           plot.terminal 'pdf'
           plot.output name
           #plot.logscale 'y'
@@ -74,16 +75,17 @@ class P2PPlot
         plot.data << Gnuplot::DataSet.new( all_data ) do |ds|
         ds.using = "1:3:2:6:5"
         ds.with = "candlesticks title '1,25,75,99 percentiles #{addition_for_legend}' "
+        #ds.notitle 
       end
 
       #add the median...all it is is a line
       plot.data << Gnuplot::DataSet.new(all_data) do |ds|
         ds.using = "1:4:4:4:4"
-        ds.with = "candlesticks lt -1"
-        ds.notitle
+        ds.with = "candlesticks lt -1 title '50th percentile #{addition_for_legend}'"
+        #ds.notitle
         
-        # if you want to connect the medians...
-        #ds.with = "lines title '50 percentile #{addition_for_legend}'"
+        # if you want to connect the median lines...
+        #ds.with = "lines "
         #ds.using = "1:4" # just x,median
       end
     end
@@ -103,14 +105,18 @@ class P2PPlot
           plot.terminal 'pdf'
           raise unless name.include? 'pdf' # gotta have that
           plot.output name
+          ymax = 0
           hash_values.each{|name, data|
             xs = data.map{|x, y| x}
             ys = data.map{|x, y| y}
+            ymax = [ymax, ys.max].max
             plot.data << Gnuplot::DataSet.new( [xs, ys]) do |ds|; 
               ds.title = name
               ds.with = 'lines'
             end          
           }
+          plot.yrange "[0:#{ymax * 1.1}]"
+          
         end
       end
 

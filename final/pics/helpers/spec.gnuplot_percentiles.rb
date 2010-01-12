@@ -8,10 +8,14 @@ describe P2PPlot do
     P2PPlot.get_smallest_x({'abc' => [[1,1], [1,2]]}).should == 1
   end
 
-  it "should generate a graph" do
-    File.delete 'name.pdf' if File.exist? 'name.pdf'
-    P2PPlot.plotNormal 'x label', 'y label', {'abc' => [[1,1], [2,2], [3,3]]}, 'name.pdf'
-    assert File.exist? 'name.pdf'
+  def plot_single
+    File.delete 'test.pdf' if File.exist? 'test.pdf'
+    P2PPlot.plotNormal 'x label', 'y label', {'abc' => [[1,1], [2,2], [3,3]]}, 'test.pdf'
+  end
+  
+  it "should generate a straight line graph too" do
+    plot_single
+    assert File.exist? 'test.pdf'
   end
   
   before do
@@ -19,7 +23,7 @@ describe P2PPlot do
   end
   
   it "should graph the median lines" do
-    assert @a.data[1].with == "candlesticks lt -1"  
+    assert @a.data[1].with.contain? "candlesticks lt -1"  
   end
   
   it "should never be wider than half the difference between the smallest xes" do
@@ -31,7 +35,17 @@ describe P2PPlot do
     assert @a.boxwidth.assoc('boxwidth')[1] == 6
   end
   
-  it "should allow for custom legends"
+  it "should allow for custom legends in the median too"
   
+  it "should have a y that's taller than the tallest y...climb every mountain..." do
+    y = 6 * 1.1
+    @a.yrange.assoc('yrange')[1].should == "[0:#{y}]"    
+  end
+  
+  it "should have a tall y for single line graphs, too" do
+    a = plot_single
+    y = 3*1.1
+    a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
+  end
 
 end
