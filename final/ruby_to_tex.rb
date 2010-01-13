@@ -69,8 +69,8 @@ class RubyToTex
     'percent_from_clients_Percentile_Line.pdf' => ['CDF of percent of file received from peers', 'cdf_from_peers']}
 
     sum = 
-    "\\begin{figure*}
-       \\begin{center}"
+    "\\begin{figure*}" + 
+      "\\begin{center}"
 
     for filename, (description, label) in names
       options = {}
@@ -80,11 +80,10 @@ class RubyToTex
       sum += figure dir_name + '/' + filename, options
     end
     
-    sum += "
-        \\end{center}
-      \\end{figure*}"
+    sum += "\\end{center}" + 
+      "\\end{figure*}"
       
-    sum += "\n\\clearpage\n" # avoid annoying 'too many floating points' errors
+    #sum += "\n\\clearpage\n" # avoid annoying 'too many floating points' errors
   end
 
   #attempt to create a nicely embedded picture, a la
@@ -96,7 +95,7 @@ class RubyToTex
 
     figure = "figure"
     if options[:subfigure]
-      beginning = "\\subfigure[#{options.delete(:caption)}] {\n"
+      beginning = "\n\\subfigure[#{options.delete(:caption).gsub('_', "\\_")}] {\n"
       ending =  "}"
     else
       beginning = "\\begin{figure}[htp]\n"
