@@ -62,11 +62,16 @@ class RubyToTex
   # use like subfig:vary_dt_download_times
   # subfig:vary_dt_cdf_from_peers
   # subfig:vary_dt_origin_server_load
-  def figure_directory dir_name, label_prefix, caption
-
+  def figure_directory dir_name, label_prefix, caption, include_death = false
+    
+    dir_name = 'pics/' + dir_name
     names = {'server_speed_Percentile_Line.pdf' => ['Load on the origin server', 'origin_server_load'],
       'client_download_Percentile_Line.pdf' => ['Download times', 'download_times'],
     'percent_from_clients_Percentile_Line.pdf' => ['CDF of percent of file received from peers', 'cdf_from_peers']}
+
+  if include_death 
+    names['death_reasons.pdf'] = ['Cause of transition to P2P download', 'death_reasons']
+  end
 
     sum = 
     "\\begin{figure*}" + 
@@ -75,7 +80,7 @@ class RubyToTex
     for filename, (description, label) in names
       options = {}
       options[:subfigure] = true
-      options[:label] = 'subfig:' + label_prefix + '_' + label
+      options[:label] = 'fig:' + label_prefix + '_' + label
       options[:caption] = description
       sum += figure dir_name + '/' + filename, options
     end
