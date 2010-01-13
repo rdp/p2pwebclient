@@ -22,29 +22,11 @@ We first test a traditional client-server transfer, to establish a base line fro
 
 We next test our system under the same loads.  For system parameters, we chose reasonable defaults of a block size of 100KB, origin minimum allowed speed (R) of 128KB/s, R's calculation window (W) of 2s, and first-byte timeout (T) of 1s.  Peers linger, serving the file, for 20 seconds after completing a download, and download from at most 5 others peers at a time.  Results were that download median times (Fig. \ref{fig:yanc_download_times}) start at 1.4s at 1 peer entering the system/second, grow to 5.23s at 6 peers/s and 7.46s at 20 peers/s.  At a load of 20 peers/s 99.5\% of peers took one second (T) to give up on the origin server, because of not having received a response byte.  They then query the DHT for a peer list, and receive a response with a median latency of 5.215s, and then download the file almost immediately, hence the median of about 7s.  Of those that took longer there were two basic causes.  One was that poorly connected peers would take so long to download a file that the linger times of peers serving it to them would expire.  They would then have to request a new list of peers, causing an increase in latency.  This problem was exacerbated by the fact that we request the last block from multiple peers, in order to download the last block more efficiently.  This causes some redundancy in bytes received, which slows down slow peers, causing them to timeout their peer connections more often.  The other factor causing slowdown is a sometimes unresponsive DHT.  We set DHT requests to timeout after 60s if no response was received--a reasonable value to keep from overloading the DHT.  Typically requests came back quickly, however at times they would timeout, andpeers would end up downloading the entire file from an (overloaded) origin, or perform a new query after 60s, and then quickly download the file after that.
 
-The amount received from the origin decreases with higher load, mostly because mod\_bw serves very little when it is under high load, but also because the peers receive the file much more quickly from their peers (Fig. \ref{fig:yanc_server_load}).
+The amount received from the origin decreases with higher load, mostly because mod\_bw serves very little when it is under high load, but also because the peers receive the file much more quickly from their peers (Fig. \ref{fig:yanc_origin_server_load}).
 
-\begin{figure*}
-  \begin{center}
-    \subfigure[Download times]{
-      \includegraphics[width=7cm]{pics/vr_medium_p2p_load_tak4/client_download_Percentile_Line.pdf}
-      \label{fig:yanc_download_times}
-    }     
-    \subfigure[Load on the origin server]{
-      \includegraphics[width=7cm]{pics/vr_medium_p2p_load_tak4/server_speed_Percentile_Line.pdf}
-      \label{fig:yanc_server_load}
-    }
-    
-    \subfigure[CDF of percent of file received from peers] {
-      \includegraphics[width=7cm,]{pics/vr_medium_p2p_load_tak4/percent_from_clients_Percentile_Line.pdf}
-      \label{fig:yanc_from_client_percentile}
-    }
-    
-    \caption{P2P Download}
-  \end{center}
-\end{figure*}
+<%= figure_directory 'vr_medium_p2p_load_tak4', 'yanc', 'P2P results varying load' %>
 
-The amount of P2P transfer also increases under higher loads.  Under low load peers tend to download the file only from the origin, however, after about 10 peers/s almost 100\% of the transfer is being done from peers (Fig.~\ref{fig:yanc_from_client_percentile}--a 1 on the graph means 100\% of the file transfer is from peers).  The reason it isn't always at 100\% for lower load levels is that peers start downloading the file from the origin, receive some portion of it within the first W (2) seconds, then transition to P2P and receive the rest, hence it being a lower percentage of transfer under higher load levels.  The fastest percentile almost always download the entire file from the origin (typically the first few peers to enter the system), and later peers almost always download the file using p2p, because they encounter a bogged down origin server.
+The amount of P2P transfer also increases under higher loads.  Under low load peers tend to download the file only from the origin, however, after about 10 peers/s almost 100\% of the transfer is being done from peers (Fig.~\ref{fig:yanc_cdf_from_peers}--a 1 on the graph means 100\% of the file transfer is from peers).  The reason it isn't always at 100\% for lower load levels is that peers start downloading the file from the origin, receive some portion of it within the first W (2) seconds, then transition to P2P and receive the rest, hence it being a lower percentage of transfer under higher load levels.  The fastest percentile almost always download the entire file from the origin (typically the first few peers to enter the system), and later peers almost always download the file using p2p, because they encounter a bogged down origin server.
 
 \section{Impact of various parameters}
 
@@ -53,13 +35,11 @@ Theoretically, if a peer can download from a fast origin,  it does not need to d
 \subsection{Varying time to wait for first byte T}
 
 We first vary $T$, the timeout for waiting for a first response byte from the origin server\footnote{By first byte we mean any byte received from the origin server--a header byte or a content byte--i.e. we exclude the TCP handshake packet as counting as a first byte.}.  
-We expect that an extremely low value will cause transitioning too early and an extremely high value will cause transitioning too late.  The results held to our hypothesis for low values but not for high.  With a T setting of 0s, median download time was 12s.  It then dropped to 4.5s with T set at 0.75s, and rose to 10s with T set at 2s, and then flattened out for higher values (Fig. \ref{fig:dt_download_times}). The reason it flattened out with higher values was that T's relative importance decreases when it is high, and R causes the transition more often (Fig. \ref{fig:dt_death_reasons}).  With low values of T, almost 100\% of peers transitioned to P2P download because of T.  With T set at 10 seconds about 50\% of peers transitioned because of T, and 50\% because of R.  
+We expect that an extremely low value will cause transitioning too early and an extremely high value will cause transitioning too late.  The results held to our hypothesis for low values but not for high.  With a T setting of 0s, median download time was 12s.  It then dropped to 4.5s with T set at 0.75s, and rose to 10s with T set at 2s, and then flattened out for higher values (Fig. \ref{fig:vary_t_download_times}). The reason it flattened out with higher values was that T's relative importance decreases when it is high, and R causes the transition more often (Fig. \ref{fig:vary_t_death_reasons}).  With low values of T, almost 100\% of peers transitioned to P2P download because of T.  With T set at 10 seconds about 50\% of peers transitioned because of T, and 50\% because of R.  
 
 %The outliers for download time were usually peers who were poorly connected to the DHT, so they sometimes received answers to their queries after the answers were already outdated, so had trouble connecting to live peers.
 
-<%= figure_directory 'vr_do_dts_take6', 'dt' %>
-
-<%= figure 'pics/vr_do_dts_take6/death_reasons.pdf', :label => 'fig:dt_death_reasons', :caption => 'Cause of transition to P2P download, varying T' %>
+<%= figure_directory 'vr_do_dts_take6', 'vary_t', 'Result varying T', true %>
 
 \subsection{Server minimum allowed speed R}
 

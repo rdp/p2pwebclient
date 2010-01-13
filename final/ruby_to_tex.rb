@@ -82,7 +82,7 @@ class RubyToTex
       options[:subfigure] = true
       options[:label] = 'fig:' + label_prefix + '_' + label
       options[:caption] = description
-      sum += figure dir_name + '/' + filename, options
+      sum += (figure dir_name + '/' + filename, options).indent
     end
     
     sum += "
