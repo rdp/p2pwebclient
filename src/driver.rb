@@ -20,18 +20,6 @@ require 'forky'
 
 require 'forky_replacement_fake.rb' # had enough with the pauses...
 
-if clientHasGraphLibraries # ltodo with driver it sends the 'old old' time when it finally fires 'em
-  require 'multiple_runs_same_setting_grapher.rb'
-  require 'vary_parameter_graphs.rb'
-else
-  print "ack no graphing libraries! will not be creating anything!"
-  raise 'no graphing libs'
-  $shouldDoGraphsSingle = false
-  $shouldDoVaryParameterGraphs = false
-end
-
-$doIndividuals = false
-
 # ltodo run it 'without' CS (since we DO have CS in there already!) -- should be fastest!
 class Thread
   def wait_till_dead this_many_seconds = 60, kill = true
@@ -506,6 +494,21 @@ class Driver
       print 'done, no run style specified'
       exit
     end
+    
+        
+    if clientHasGraphLibraries # ltodo with driver it sends the 'old old' time when it finally fires 'em
+      require 'multiple_runs_same_setting_grapher.rb'
+      require 'vary_parameter_graphs.rb'
+    else
+      print "ack no graphing libraries! will not be creating anything!"
+      raise 'no graphing libs--aborting run'
+      $shouldDoGraphsSingle = false
+      $shouldDoVaryParameterGraphs = false
+    end
+    
+    $doIndividuals = false
+
+    
 
     Driver.initializeVarsAndListeners # sets up from globals
     # a few need to be set 'after' the rest so that they don't get nuked by a call to initializeVarsAndListeners
