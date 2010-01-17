@@ -262,7 +262,7 @@ class Driver
         exit 0
       end
 
-      opts.on('--updateCache', 'update the cached list of live listeners on planetlab') do
+      opts.on('--updateCache', 'update the cached list of live yanc proxies on planetlab') do
         # I'm...not sure if this is working right for sure...
         @@useLocalHostAsListener = false
         Driver.initializeVarsAndListeners CacheNameRaw
