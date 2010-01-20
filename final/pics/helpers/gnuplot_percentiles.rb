@@ -1,6 +1,7 @@
 require 'rubygems'
-require 'sane' # #assert
-require 'gnuplot' # rogerdpack-gnuplot
+require 'sane/test'
+require 'show'
+require 'gnuplot' # rdp-gnuplot
 ENV['RB_GNUPLOT'] = '\cygwin\bin\gnuplot' if OS.windows?# tell it where it is by default...
 require 'arguments' # rogerdpack-arguments
 
@@ -18,7 +19,7 @@ require 'arguments' # rogerdpack-arguments
 class P2PPlot
   class << self
     def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil, xs2 = nil, percentiles2 = nil, legend1_addition = nil, legend2_addition = nil
-      xrange = xs.last - xs.first
+      xrange = xs.last - 0 # 0 is our low x :)
 
       if(xs2)
         assert(percentiles2)
@@ -45,7 +46,7 @@ class P2PPlot
           plot.output name
           #plot.logscale 'y'
 
-          smallest_range = xs.last - xs.first
+          smallest_range = xs.last - xs.first # pick some large value
           previous = xs.first
           for x in xs[1..-1]
             space_between_these_two = x - previous
@@ -55,10 +56,12 @@ class P2PPlot
           # box_width is only for percentiles
           box_width = [xrange*3/100, smallest_range/2.0].min
           plot.boxwidth box_width
-          
-          if xrange > 100*smallest_range
+          pps 'xrange', xrange, 'smallest_range', smallest_range
+          if xrange >= 100*smallest_range
+            puts 'yes'
             add_median_line = true
           else
+            puts 'no'
             add_median_line = false
           end
           
@@ -67,12 +70,9 @@ class P2PPlot
             add_percentile_plot plot, [xs2] + percentiles2, legend2_addition, add_median_line
           end
 
-
-
         end
       end
     end
-
 
     def get_smallest_x hash_values
       all_xs = []

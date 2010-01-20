@@ -142,9 +142,9 @@ class ParseRaw
         columnss = []
         for data in [data1, data2]
           next unless data
-          xss << data.sort.map(:first) # the easy one
+          xss << data.sort.map_by(:first) # the easy one
           columns = []
-          data.sort.map(:last).each{ |row|
+          data.sort.map_by(:last).each{ |row|
             row.each_with_index{|setting, i|
               columns[i] ||= []
               columns[i] << setting
@@ -158,7 +158,7 @@ class ParseRaw
       end
 
     end
-    puts 'remain', all.keys.inspect, "\n\n\n"
+    puts 'keys never used:', all.keys.inspect, "\n\n\n"
 
   end
 

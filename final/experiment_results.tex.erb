@@ -35,11 +35,11 @@ Theoretically, if a peer can download from a fast origin,  it does not need to d
 \subsection{Varying time to wait for first byte T}
 
 We first vary $T$, the timeout for waiting for a first response byte from the origin server\footnote{By first byte we mean any byte received from the origin server--a header byte or a content byte--i.e. we exclude the TCP handshake packet as counting as a first byte.}.  
-We expect that an extremely low value will cause transitioning too early and an extremely high value will cause transitioning too late.  The results held to our hypothesis for low values but not for high.  With a T setting of 0s, median download time was 12s.  It then dropped to 4.5s with T set at 0.75s, and rose to 10s with T set at 2s, and then flattened out for higher values (Fig. \ref{fig:vary_t_download_times}). The reason it flattened out with higher values was that T's relative importance decreases when it is high, and R causes the transition more often (Fig. \ref{fig:vary_t_death_reasons}).  With low values of T, almost 100\% of peers transitioned to P2P download because of T.  With T set at 10 seconds about 50\% of peers transitioned because of T, and 50\% because of R.  
+We expect that an extremely low value will cause transitioning too early and an extremely high value will cause transitioning too late.  The results held to our hypothesis for low values but not for high.  With a T setting of 0s, median download time was 12s.  It then dropped to 4.5s with T set at 0.75s, and rose to 10s with T set at 2s, and then flattens out for higher values (Fig. \ref{fig:vary_t_download_times}). The reason it flattens out with higher values was that T's relative importance decreases when it is high, and R causes the transition more often (Fig. \ref{fig:vary_t_death_reasons}).  With low values of T, almost 100\% of peers transitioned to P2P download because of T.  With T set at 10 seconds about 80\% of peers transitioned because of T, and 20\% because of R.  
 
 %The outliers for download time are usually peers who were poorly connected to the DHT, so they sometimes received answers to their queries after the answers were already outdated, so had trouble connecting to live peers.
 
-<%= figure_directory 'vr_do_dts_take6', 'vary_t', 'Result varying T', true %>
+<%= figure_directory 'vr_unnamed17712_dT', 'vary_t', 'Result varying T', true %>
 
 \subsection{Server minimum allowed speed R}
 
