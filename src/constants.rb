@@ -14,7 +14,7 @@ Dir.glob(File.dirname(__FILE__) + '/lib/gems_here/*').sort.each{|d| $:.unshift "
 require 'sane'
 $: << __DIR__
 $: << __DIR__ + "lib"
-require_rel 'unique_require' if RUBY_VERSION < '1.9'
+require_relative 'unique_require' if RUBY_VERSION < '1.9'
 
 #require 'facets/times' 
 class Fixnum
@@ -29,7 +29,7 @@ require 'digest/sha1'
 
 $: << File.dirname(__FILE__) + '/lib/graphing/personal-gruff-0.2.8/lib' # gruff, for later
 
-require_rel 'lib/ruby_useful_here.rb'
+require_relative 'lib/ruby_useful_here.rb'
 
 # EM
 ruby_version = (RUBY_VERSION + '.' + RUBY_PLATFORM)
@@ -41,13 +41,13 @@ else
 end
 ENV['INLINEDIR'] = 'ext/' + ruby_version # ext/xxx/.ruby_inline dirs
 
-require_rel 'eventmachinee'
-require_rel 'lib/event_machine_addons.rb'
+require_relative 'eventmachinee'
+require_relative 'lib/event_machine_addons.rb'
 
 EM::set_max_timers 10000
 
 # ltodo: wonder if there's a speedup if, while during download of a very fast file, you belay the opendht registration till the end :) like a flood when you're done, only
-require_rel 'lib/opendht/local_drive_dht.rb'
+require_relative 'lib/opendht/local_drive_dht.rb'
 
 #require 'resolv-replace' # doesn't help EM! LTODO!
 

@@ -6,8 +6,9 @@
 #require 'fast_require' if RUBY_VERSION > '1.8'
 require 'resolv-replace'
 require 'optparse'
-require './constants'
-require_rel 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here', 'listener'
+for file in ['constants', 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here', 'listener'] do
+ require_relative file
+end
 
 # require 'facets' # just for driver :)
 # ltodo improvement don't just save file size header info on the DHT, save more :)
