@@ -1,11 +1,15 @@
+require 'fileutils'
 
 class File
+  
   if RUBY_PLATFORM =~ /mingw|mswin/
-    File.open('temp_file', 'w') {}
-    @@saver_file = File.new  'temp_file', 'r'
+    FileUtils.touch 'temp_file'
+    @@loc = 'temp_file'
   else
-    @@saver_file = File.new '/dev/random', 'r' # save a descriptor for our own purposes muhaha
+    @@loc = '/dev/random'
   end
+  @@saver_file = File.new @@loc, 'r'
+  
   def self.append_to to_this_file, data
     begin
       to_this = File.new to_this_file, 'a+'
@@ -14,7 +18,7 @@ class File
       raise 'bad'unless size == data.length
       return size
     rescue => e
-      print "EMERGENCY WRITE to #{to_this_file}\n"
+      print "EMERGENCY WRITE to #{to_this_file} #{e}\n"
       begin
         @@saver_file.close
         to_this = File.new to_this_file, 'a+'
@@ -23,10 +27,10 @@ class File
         raise 'bad' unless length == data.length
         return length
       rescue => e
-        print "FATAL FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIL"*10
+        print "FATAL FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIL"*10 + e.to_s
         raise
       ensure
-        @@saver_file = File.new '/dev/random', 'r'
+        @@saver_file = File.new @@loc, 'r'
       end
     end
     

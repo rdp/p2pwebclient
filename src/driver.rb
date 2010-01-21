@@ -20,18 +20,6 @@ require 'forky'
 
 require 'forky_replacement_fake.rb' # had enough with the pauses...
 
-if clientHasGraphLibraries # ltodo with driver it sends the 'old old' time when it finally fires 'em
-  require 'multiple_runs_same_setting_grapher.rb'
-  require 'vary_parameter_graphs.rb'
-else
-  print "ack no graphing libraries! will not be creating anything!"
-  raise 'no graphing libs'
-  $shouldDoGraphsSingle = false
-  $shouldDoVaryParameterGraphs = false
-end
-
-$doIndividuals = false
-
 # ltodo run it 'without' CS (since we DO have CS in there already!) -- should be fastest!
 class Thread
   def wait_till_dead this_many_seconds = 60, kill = true
@@ -74,7 +62,7 @@ class Driver
   @@serverBpS = 255.kbps
   @@dR = 125.kb#@@serverBpS*0.9
   @@peerTokens = 5 # as per Dr. Z's email :) tough to tell, though...very tough...almost might want unlimited!
-  @@dW = 2.00 # you probably want this greater than @@dT, though it starts the window only after dT is passed.
+  @@dW = 2.0 # you probably want this greater than @@dT, though it starts the window only after dT is passed.
   @@blockSize = 100.kb
   @@fakeStartWaitAsSeconds = nil#20
   #$PRETEND_CLIENT_SERVER_ONLY = false # do we actually pass this out to the new clients? if so then remove from constants :) ltodo cleanup
@@ -274,7 +262,7 @@ class Driver
         exit 0
       end
 
-      opts.on('--updateCache', 'update the cached list of live listeners on planetlab') do
+      opts.on('--updateCache', 'update the cached list of live yanc proxies on planetlab') do
         # I'm...not sure if this is working right for sure...
         @@useLocalHostAsListener = false
         Driver.initializeVarsAndListeners CacheNameRaw
@@ -506,6 +494,21 @@ class Driver
       print 'done, no run style specified'
       exit
     end
+    
+        
+    if clientHasGraphLibraries # ltodo with driver it sends the 'old old' time when it finally fires 'em
+      require 'multiple_runs_same_setting_grapher.rb'
+      require 'vary_parameter_graphs.rb'
+    else
+      print "ack no graphing libraries! will not be creating anything!"
+      raise 'no graphing libs--aborting run'
+      $shouldDoGraphsSingle = false
+      $shouldDoVaryParameterGraphs = false
+    end
+    
+    $doIndividuals = false
+
+    
 
     Driver.initializeVarsAndListeners # sets up from globals
     # a few need to be set 'after' the rest so that they don't get nuked by a call to initializeVarsAndListeners
@@ -630,6 +633,26 @@ class Driver
 
     if runStyle == "dT"
       whatToAddTo = "@@dT"; settingsToTryArray = [0.0, 0.1, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 10];  unitsX = "T (seconds)"
+      if true
+        puts 'doing just single run!'
+        settingsToTryArray = [10]
+        @@howManySubRepetitions = 2
+      end
+    end
+
+    if runStyle == 'dW'
+      # and vary W from 1s
+      #  to 10s
+      @@linger = 60 # try to match an old one that did this
+      setupOnceString += "@@dT = 10;"
+      whatToAddTo = "@@dW"; settingsToTryArray = [0.10, 0.25, 0.5] + (1..10).map{|n| n}
+      unitsX = 'dW (seconds)'
+
+      if true
+        @@howManySubRepetitions = 2
+          puts 'doing just single run!'
+          settingsToTryArray = [2]
+      end
     end
 
     if runStyle == 'dR'
@@ -640,13 +663,6 @@ class Driver
       unitsX = "R (B/S)"
     end
 
-    if runStyle == 'dW'
-      # and vary W from 1s
-      #  to 10s
-      setupOnceString += "@@dT = 10;"
-      whatToAddTo = "@@dW"; settingsToTryArray = [0.10, 0.25, 0.5] + (1..10).map{|n| n}
-      unitsX = 'dW (seconds)'
-    end
 
     if runStyle == 'linger'
       whatToAddTo = "@@linger"
@@ -716,7 +732,7 @@ class Driver
 
     raise 'must specify what is varying' unless whatToAddTo
 
-    if !settingsToTryArray and not defined? firstValue # then use some default values -- not sure if these are ever even used
+    if !settingsToTryArray and not defined? firstValue # then use some default values -- not sure if these are ever even used these days...
       firstValue = 0.01; operator = "*="; operandEachMajorLoop = 2; # the normal 'ramp up' way
       howManyStepsOfTheMajorVariable = 2 # constant
     else
@@ -786,6 +802,7 @@ class Driver
           } if @@actuallyPerformMultipleRuns && !@@useLocalHostAsListener && !runStyle.in?( ['smallTest', 'teenyTest', 'multipleFiles'])
 
           runNamesForThisSetting << run_name_single_run
+          puts 'added', run_name_single_run
           restartThread.wait_till_dead(60) if restartThread and !runStyle.in? ['smallTest', 'teenyTest', 'multipleFiles'] # the only reason wait_till_dead is that sometimes it would hang--suspected Ruby bug [?]
         } # ltodo don't use @@ as much here...
 
@@ -836,9 +853,10 @@ class Driver
       if $shouldDoVaryParameterGraphs
         # these will not run as well if set for a single setting...therefore
         if runNamesForEachHowVaried.length == 1 # handle the case of not actually varying the variable :)
-          print "PRETENDING TO HAVE DONE MORE THAN ONE SETTING OF THE VARIABLE, TO ALLOW For some graphical numbers THIS IS PROBABLY BROKEN!!!"
-          runNamesForEachHowVaried = [runNamesForEachHowVaried[0], runNamesForEachHowVaried[0] + '_fake']
+          print "PRETENDING TO HAVE DONE MORE THAN ONE SETTING OF THE VARIABLE, TO ALLOW For some graphical numbers (THIS MIGHT BE BROKEN)!!!"
+          runNamesForEachHowVaried =  [runNamesForEachHowVaried[0],  runNamesForEachHowVaried[0].map{|n| n + '_fake'}]
           run_objects_for_how_each_varied_to_avoid_having_to_recompute *= 2
+          howVaried = [howVaried[0], howVaried[0] + 0.01]
         end
         # note: should get printed out twice--one with the 'about to start' then one after done :)
         varyDescriptionString = "vary parameter graphs of VaryParameter.varyParameterAndRsync('vary_parameter/#{varyParameterOutputName}', '#{unitsX}'," + howVaried.inspect + "," + runNamesForEachHowVaried.inspect + ") " + "\n --- with runs generated of "+ runNamesForEachHowVaried.join(',')

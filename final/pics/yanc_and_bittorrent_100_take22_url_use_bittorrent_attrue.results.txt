@@ -1,3 +1,5 @@
+bittorrent's download stats (30MB file):
+
 e re run graphs when they're all done?WARNING no
 downloadtime!"download total times %'iles'"
 "131.11 139.3 148.32 163.5 2786.08"

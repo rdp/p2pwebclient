@@ -5,9 +5,9 @@ for dir in Dir['../*'] do
      stats_file = Dir['number_stats*'][0]
      if stats_file
        type = 'Load (Peers per Second)'
-       mapping = {'do_dts' => 'T (s)', 'blockSize' => 'BlockSize (B)',
-              'vary_blocks' => 'Peer Connection Limit', '_dw' => 'W (S)',
-              'vr_unnamed502788_dR' => 'R (Bytes/s)'}
+       mapping = {'17712_dT' => 'T (s)', 'blockSize' => 'BlockSize (B)',
+              'vary_blocks' => 'Peer Connection Limit', '_dw' => 'W (s)',
+              'vr_unnamed502788_dR' => 'R (bytes/s)'}
        for key, y in mapping
           if dir.include? key
              type = y
@@ -26,5 +26,10 @@ for dir in Dir['../*'] do
 
 end
 
-# also ruby parse_raw_old_stats.rb ..\vr_multiples_take_1\number_stats_smaller.txt ..\vr_unnamed937328_multiple_files_cs\number_stats.txt "p2p" "cs"
+system "ruby cdf_yanc_30.rb"
+
+Dir.chdir '../multiples_p2p_versus_cs_pics' do
+   # remake these, too
+   system 'ruby ../helpers/parse_raw_old_stats.rb ..\vr_multiples_take_1\number_stats_smaller.txt ..\vr_unnamed937328_multiple_files_cs\number_stats.txt "p2p" "cs"'
+end
 

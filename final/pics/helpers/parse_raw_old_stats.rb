@@ -107,6 +107,7 @@ class ParseRaw
 
     for name, y_and_this_output_filename in {
       "download times %'iles'" => ['Peer Download Times (seconds)', 'client_download_Percentile_Line'],
+      "download total times %'iles'" => ['Peer Download Times All files (seconds)', 'client_download_all_files_Percentile_Line'],
       "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/S)', 'server_speed_Percentile_Line'],
       # server upload is changed for some reason in newer stuffs
       "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/S)', 'server_speed_Percentile_Line'],
@@ -142,9 +143,9 @@ class ParseRaw
         columnss = []
         for data in [data1, data2]
           next unless data
-          xss << data.sort.map(:first) # the easy one
+          xss << data.sort.map_by(:first) # the easy one
           columns = []
-          data.sort.map(:last).each{ |row|
+          data.sort.map_by(:last).each{ |row|
             row.each_with_index{|setting, i|
               columns[i] ||= []
               columns[i] << setting
@@ -158,14 +159,14 @@ class ParseRaw
       end
 
     end
-    puts 'remain', all.keys.inspect, "\n\n\n"
+    puts 'keys never used:', all.keys.inspect, "\n\n\n"
 
   end
 
 end
 
 if $0 == __FILE__
-  puts 'syntax: raw file name1 [raw file name2 if you want comparison...] "dT (s)"'
+  puts '(always displayed) syntax: raw file name1 [raw file name2 if you want comparison...] "dT (s)"'
   puts 'generates files like server_speed_Percentile_line.pdf in the local dir, using gnuplot'
   raise unless ARGV[0] && !ARGV[0].in?(['--help', '-h'])
 
