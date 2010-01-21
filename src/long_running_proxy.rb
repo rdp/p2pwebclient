@@ -88,7 +88,7 @@ class LongRunningProxy < EM::Connection
            end
         end
       else
-  	LOGGER.log "#{my_number} no new stuff--at byte #{last_byte_received_and_sent}"
+  	LOGGER.log "#{my_number} no new stuff--at byte #{last_byte_received_and_sent} #{fullUrl}"
         EM::Timer.new check_again_if_none_to_send_interval, send_proc
       end
     }
