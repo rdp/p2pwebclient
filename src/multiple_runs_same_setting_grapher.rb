@@ -2,7 +2,7 @@
 require 'rubygems'
 require 'RMagick'
 #$skip_gruff = true
-$skip_opendht_processing = true
+#$skip_opendht_processing = true # DANGER, will Robinson, danger!
 
 require './unique_require'
 $LOADED_FEATURES << __FILE__ # fake that we've been here
