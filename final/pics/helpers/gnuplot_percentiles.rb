@@ -2,7 +2,7 @@ require 'rubygems'
 require 'sane/test'
 require 'show'
 require 'gnuplot' # rdp-gnuplot
-ENV['RB_GNUPLOT'] = '\cygwin\bin\gnuplot' if OS.windows?# tell it where it is by default...
+ENV['RB_GNUPLOT'] = '\cygwin\bin\gnuplot' if OS.windows?
 require 'arguments' # rogerdpack-arguments
 
 # gnuplot expects something like
@@ -19,7 +19,7 @@ require 'arguments' # rogerdpack-arguments
 class P2PPlot
   class << self
     def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil, xs2 = nil, percentiles2 = nil, legend1_addition = nil, legend2_addition = nil
-      xrange = xs.last - 0 # 0 is our low x :)
+      xrange = xs.last - xs.first # 0 is our low x :)
 
       if(xs2)
         assert(percentiles2)

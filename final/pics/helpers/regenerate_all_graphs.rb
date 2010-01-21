@@ -5,9 +5,9 @@ for dir in Dir['../*'] do
      stats_file = Dir['number_stats*'][0]
      if stats_file
        type = 'Load (Peers per Second)'
-       mapping = {'do_dts' => 'T (s)', 'blockSize' => 'BlockSize (B)',
-              'vary_blocks' => 'Peer Connection Limit', '_dw' => 'W (S)',
-              'vr_unnamed502788_dR' => 'R (Bytes/s)'}
+       mapping = {'17712_dT' => 'T (s)', 'blockSize' => 'BlockSize (B)',
+              'vary_blocks' => 'Peer Connection Limit', '_dw' => 'W (s)',
+              'vr_unnamed502788_dR' => 'R (bytes/s)'}
        for key, y in mapping
           if dir.include? key
              type = y

@@ -1,5 +1,8 @@
-require 'rubygems'
-require 'fast_require' if RUBY_VERSION >= '1.9'
+if RUBY_VERSION >= '1.9'
+  require 'fast_require' 
+else
+  require 'rubygems'   
+end
 require 'sane'
 require_relative 'gnuplot_percentiles.rb'
 require 'spec/autorun'

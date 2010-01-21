@@ -107,6 +107,7 @@ class ParseRaw
 
     for name, y_and_this_output_filename in {
       "download times %'iles'" => ['Peer Download Times (seconds)', 'client_download_Percentile_Line'],
+      "download total times %'iles'" => ['Peer Download Times All files (seconds)', 'client_download_all_files_Percentile_Line'],
       "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/S)', 'server_speed_Percentile_Line'],
       # server upload is changed for some reason in newer stuffs
       "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/S)', 'server_speed_Percentile_Line'],

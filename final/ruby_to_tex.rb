@@ -90,7 +90,8 @@ class RubyToTex
     \\end{center}
     \\end{figure*}"
       
-    sum += "\n\\clearpage\n" # avoid annoying 'too many floating points' errors
+    #sum += "\n\\clearpage\n" # avoid annoying 'too many floating points' errors
+    # yet it took up too much space though...
   end
 
   #attempt to create a nicely embedded picture, a la
