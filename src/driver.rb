@@ -3,6 +3,7 @@
 # todo: skip some of the graphs--who cares...except there are some stats in there that aren't shown in vary parameter graphs yet--single things. Leave them :)
 # ltodo: still figure out more 'tight' close stats--does graphing graphing take forever?
 # ltodo better TTL maybe...5hr. total
+#require 'fast_require' if RUBY_VERSION > '1.8'
 require 'resolv-replace'
 require 'optparse'
 require './constants'
@@ -501,7 +502,7 @@ class Driver
       require 'vary_parameter_graphs.rb'
     else
       print "ack no graphing libraries! will not be creating anything!"
-      raise 'no graphing libs--aborting run'
+      raise 'no graphing libs--aborting run' unless !@@actuallyPerformMultipleRuns
       $shouldDoGraphsSingle = false
       $shouldDoVaryParameterGraphs = false
     end
@@ -741,6 +742,7 @@ class Driver
       firstValue = settingsToTryArray.shift
       operandEachMajorLoop = 'fixed_setting' # for output
     end
+    
     Driver.initializeVarsAndListeners nil, setupOnceString
 
     # ltodo a backoff on the origin key by querying +rand(1000000) +rand(10000) etc. and setting oneself to those, as well [ok maybe not a great idea...hmm..] or geographic queries (not random) [a la that one thing Leopard]
@@ -766,13 +768,14 @@ class Driver
         settingForThisMajorStep = eval("#{whatToAddTo}").to_s
         @@allRunLogger.log "NEXTTTTTTTT major step of variable!doing #{whatToAddTo} currently set at " + settingForThisMajorStep + "\n\n\n\n\n"
         1.upto(@@howManySubRepetitions) { |n|
+          system("ssh rdp@bp \"/home/rdp/dev/p2pwebclient/distro/restart_byu1_server.sh\"")
           # attempt at avoiding concurrency probs. Not sure if this belongs here or in doSingleRunWithCurrent
-          my_run_marker = ENV['HOME'] + "/bittorrent_#{@@url_use_bittorrent}_run_in_progress_" + 'pid:' + Process.pid.to_s + '_' + Socket.gethostname
-          all_contestants = ENV['HOME'] + "/bittorrent_#{@@url_use_bittorrent}_run_in_progress_*"
+          my_run_marker = File.expand_path('~') + "/bittorrent_#{@@url_use_bittorrent}_run_in_progress_" + 'pid ' + Process.pid.to_s + '_' + Socket.gethostname
+          all_contestants = File.expand_path('~') + "/bittorrent_#{@@url_use_bittorrent}_run_in_progress_*"
           while (all = Dir.glob(all_contestants)) != [my_run_marker]
             File.delete my_run_marker if File.exist? my_run_marker
             if Dir.glob(all_contestants) == []
-              FileUtils.touch my_run_marker
+              FileUtils.touch my_run_marker              
             else
               print "waiting for other run to end #{all}"
               sleep 1

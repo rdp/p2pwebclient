@@ -1,16 +1,15 @@
 ====================actually really todo (in order of priority):
 
-zappala comments
+restart embarrassing :)
 
 note the dedicated tracker
 
 conclusion that rox/edit the other sections
 
+redo block size -- man that thing is ugh-ly
+
+
 ------------maybe don't have to? --------------------
-
-redo: vary block size again--uh...we should be getting better medians than 30s for 100KB blocks. !!!
-
-if 13, 14 go together, make 13 a, b
 
 %LTODO note unfairness: vr_multiples_tak_1 client upload sum. wow. [FUTURE WORK?]
 
@@ -18,17 +17,6 @@ appendix with tons [?]
 appendix with one, single run [?]
 
 more runs that would be interesting
-
-
-
-
-
-
-
-
-
-
-
 
 
 -- probably never --
