@@ -1,9 +1,7 @@
-require 'require_all' # a necessary gem
-
 Thread.abort_on_exception = true # typically you *want* to know when a thread dies unexpectedly.
 
 require 'socket'
-BasicSocket.do_not_reverse_lookup = true
+BasicSocket.do_not_reverse_lookup = true # avoid some bugs...
 
 # abstracted from require 'facets/file' ===>
 class File
@@ -37,37 +35,19 @@ class Object
     collection.include?(self)
   end unless respond_to? :in
 
-  # ex: assert(some statement)
-  # or
-  # assert(some statement, "some helper string")
-  def assert(should_be_true, string = nil)
-    if(!should_be_true)
-      raise "assertion failed #{string}"
-    end
-  end unless respond_to? :assert
-
   # helper to bring up a debugger with less writing [just _dbg]
   def _dbg
-    require 'rubygems'
-    require 'pp' # who would want debug without pp? not I
     begin
       require 'ruby-debug'
       debugger
     rescue LoadError => e
-      throw "unable to load ruby-debug gem for _dbg... #{e}"
+      require 'rubygems'
+      begin
+        require 'ruby-debug'
+      rescue LoadError => e
+        throw "unable to load ruby-debug gem for _dbg... #{e}"
+      end
     end
-  end
-
-  # a method like puts but all on one line--very much like java's println--which lacks in ruby
-  def sprint *args
-    print(*args)
-    puts
-  end
-
-  def aliash hash
-    hash.each_pair {|new, old|
-      alias_method new, old
-    }
   end
 
   def singleton_class
@@ -79,11 +59,13 @@ end
 
 module Kernel
   BASE_DIR = Dir.getwd
+  
   def __DIR__
     dir = (/^(.+)?:\d+/ =~ caller[0]) ? File.expand_path(File.dirname($1), BASE_DIR) : nil
     dir += '/' if dir
     dir
   end unless defined?(__DIR__)
+  alias __dir__ __DIR__ unless defined?(__dir__)
 end
 
 if RUBY_VERSION >= '1.9.2'
