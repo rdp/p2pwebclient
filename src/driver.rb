@@ -6,6 +6,7 @@
 #require 'fast_require' if RUBY_VERSION > '1.8'
 require 'resolv-replace'
 require 'optparse'
+require 'sane' # gem?
 for file in ['constants', 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here', 'listener'] do
  require_relative file
 end
