@@ -1,12 +1,23 @@
-# some uber useful gems
-require 'require_all'
-require 'backports/tools.rb' # backports
-require 'backports/1.9/io' # File.binread
-require 'hash_set_operators' # not sure why these aren't in core
-require_rel 'sane' # require all sub files
+# require some "necessary" other gems
+
+# shouldn't need this next line
+# require 'rubygems' if RUBY_VERSION < '1.9' # for the other requires
+
+require 'os'
+require 'andand'
+for file in Dir[File.dirname(__FILE__) + '/sane/*'] do
+   require file
+end
 
 class Sane
+ # helper for installing it locally on 1.8
+ # if you want to be able to use it without rubygems
+ # except, then you'll still need rubygems anyway...
+ # I hate 1.8
  def self.install_local!
+   if RUBY_VERSION >= '1.9'
+     raise 'you dont need to install local for 1.9!'
+   end
    require 'fileutils'
    require 'rbconfig'
 

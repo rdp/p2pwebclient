@@ -2,17 +2,8 @@
 require 'rubygems'
 require 'RMagick'
 #$skip_gruff = true
-$skip_opendht_processing = true
+#$skip_opendht_processing = true # DANGER, will Robinson, danger!
 
-
-
-# ltodo average speed/active client/instantaneous second graph :) [pretty similar to total throughput]
-
-# graph of 'opendht get to size got', opendht scatter
-# upload quantity to download speed, upload max speed to upload quantity
-#
-#
-#
 require './unique_require'
 $LOADED_FEATURES << __FILE__ # fake that we've been here
 $LOADED_FEATURES << File.expand_path(__FILE__)
@@ -74,7 +65,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
         @arrayContainingArraysOfClientsPerRun << thisRunsClientsArray
       end
     end
-    
+
     # continue onward...
 
     for run in @arrayContainingArraysOfClientsPerRun
@@ -141,11 +132,11 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     allMethods['dT'] = 0
     allMethods['died'] = 0
     for client in @allClientsInOne
-     if client.end
-       allMethods[client.endMethod] += 1
-     else
-       allMethods['died'] += 1
-     end
+      if client.end
+        allMethods[client.endMethod] += 1
+      else
+        allMethods['died'] += 1
+      end
     end
     allMethods = allMethods.divideValuesBy(@runs.length)
     # ltodo use these '% age' graphs :)
@@ -199,7 +190,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
   # which it is
   # it must not be saving typically...because..uh...um...it's only run during the huge runs
   # and just hasn't been setup for it yet [nor the others, really]...
-  
+
   def createTotalThroughPutsReturnPartial(filenameOutputRaw = nil, include_peer_received_bytes = false, include_host_bytes = false, include_peer_send_bytes = false, write_to_file = false) # ltodo combine with other functions that do the same thing :) maybe memoize
     raise unless include_peer_received_bytes || include_host_bytes || include_peer_send_bytes
     filenameOutputRaw ||= @templateName + "total_throughput" + ".#{include_host_bytes}.raw.txt"
@@ -224,15 +215,15 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
       end
       #
       # except they *do* have the edges currently...
-      # 
-      pointsWithoutTheEdges += nonpointsWithoutTheEdges.onlyFromHereToHere(0,10000000)#spanDuple[0], spanDuple[1])      
-      
+      #
+      pointsWithoutTheEdges += nonpointsWithoutTheEdges.onlyFromHereToHere(0,10000000)#spanDuple[0], spanDuple[1])
+
     }
-    
-    
+
+
     # I think my goal here was save off/graph all points
     # but if vary parameter requested the data, i would pass it back only the fromHereToHere data
-    
+
     pointsWithoutTheEdges = [pointsWithoutTheEdges].combineSeveralArraysToBucketsWithZeroes @graphSmoothFactor
     pointsWithoutTheEdges = pointsWithoutTheEdges.divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length)
 
@@ -269,8 +260,8 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     @totalBytesServedFromPeersAcrossAllRuns = totalBytesServedFromPeersAcrossAllRuns if include_peer_send_bytes
     return pointsWithoutTheEdges
   end
-  
-  
+
+
   # here I pass back partial data but save "all" data
   def createServerBytesPerSecondReturnPartial(rawFilename = @templateName + "server_total" + ".raw.txt")
     partialServedPoints = []
@@ -285,9 +276,9 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     }
     partialServedPoints = partialServedPoints.combineSeveralArraysToBucketsWithZeroes().divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length)
 
-   # now make [recreate] the full thing, without restriction
-   # to pass back
-   # which is also insanity
+    # now make [recreate] the full thing, without restriction
+    # to pass back
+    # which is also insanity
 
     allEntries = []
     # ltodo combine with above loop!
@@ -300,11 +291,11 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     newBuckets = newBuckets.divideEachValueBy(@arrayContainingArraysOfClientsPerRun.length) # we should be 'too high' :) this will bring us down to size
     newBucketsCopy = LineWithPointsFile.writeAndReadSingle(rawFilename, "server received by peer points", newBuckets)
     # fails in error ...    assertEqual newBucketsCopy, newBuckets
-    partialServedPoints# guess we don't want to flatten here?  
+    partialServedPoints# guess we don't want to flatten here?
   end
-  
-  
-  
+
+
+
 
   attr_reader :totalBytesReceivedFromPeersAcrossAllRuns, :totalBytesUploadedByServerAcrossAllRuns, :totalBytesServedFromPeersAcrossAllRuns
 
@@ -507,7 +498,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     end
 
     if total_failed > 0
-        puts "had failures total #{use_total_for_all_files}: #{total_failed}"
+      puts "had failures total #{use_total_for_all_files}: #{total_failed}"
     end
 
     parsedOut = LineWithPointsFile.writeAndReadSingleToHashInt(rawFilename, "client start and end times", downloadTimes) # yields sums
@@ -557,9 +548,9 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     end
 
     if failed_count > 0
-        puts " #{failed_count} clients failed--no download time--ignoring them! use total: #{use_total_all_files}"
+      puts " #{failed_count} clients failed--no download time--ignoring them! use total: #{use_total_all_files}"
     else
-        puts "all clients succeeded #{@allClientsInOne.length}"
+      puts "all clients succeeded #{@allClientsInOne.length}"
     end
 
     if allTimes.length == 0
@@ -606,7 +597,7 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
   end
 
   def allServerServedPointsPartial
-    createServerBytesPerSecondReturnPartial().flipIndexValueOfContainedDuples    
+    createServerBytesPerSecondReturnPartial().flipIndexValueOfContainedDuples
   end
 
 
@@ -621,28 +612,28 @@ class MultipleRunsSameSettingGrapher # should be called MultipleRunsSameSettingG
     end
   end
 
-class ::Array
+  class ::Array
 
-  def combineSeveralArraysToBucketsWithZeroes(secondsMod = 1)
-    found_something = false
-    for subArray in self
+    def combineSeveralArraysToBucketsWithZeroes(secondsMod = 1)
+      found_something = false
+      for subArray in self
         assert subArray.is_a? Array
         # unfortunately it might be [[]] totally empty, like for all p2p traffic on a CS run
-    end
-    combined = self.combineSeveralArraysToStraightHash # ltodo is this call really necessary?
-    return combined.truncate_and_combine_keys(secondsMod).toArrayWithIntermediateZeroesByResolution(secondsMod)
-  end
-
-  def combineSeveralArraysToStraightHash
-    newBuckets = {}
-    for timePointArray in self
-      for time, bytes in timePointArray
-        newBuckets.addToKey(time, bytes)
       end
+      combined = self.combineSeveralArraysToStraightHash # ltodo is this call really necessary?
+      return combined.truncate_and_combine_keys(secondsMod).toArrayWithIntermediateZeroesByResolution(secondsMod)
     end
-    return newBuckets
+
+    def combineSeveralArraysToStraightHash
+      newBuckets = {}
+      for timePointArray in self
+        for time, bytes in timePointArray
+          newBuckets.addToKey(time, bytes)
+        end
+      end
+      return newBuckets
+    end
   end
-end
 
   # ltodo give back to gruff
   def createAllIndividuals
@@ -706,10 +697,10 @@ class Hash
   # to be just integer keys
   def truncate_and_combine_keys(seconds_mod)
     new_truncated = {}
-    
+
     for key, value in self
-        extra = key.to_i % seconds_mod
-        new_truncated.addToKey(key.to_i - extra, value)
+      extra = key.to_i % seconds_mod
+      new_truncated.addToKey(key.to_i - extra, value)
     end
     # if we've been conglomming 5seconds worth into each reading
     # that one reading should actually be 1/5th itself, as if it were one second...
@@ -719,10 +710,10 @@ class Hash
     }
     new_truncated_and_divided
   end
-        
-  # this doesn't change the values but just 'spreads' them all out int he new one, with finer granularity 
+
+  # this doesn't change the values but just 'spreads' them all out int he new one, with finer granularity
   # (like having .1.1.1.1.1 instead of just .1 which is...still the same..mostly)
-  # howManyTenthsTotal = 10 
+  # howManyTenthsTotal = 10
   # >> {1.0 => 300}.toTenthsSummedHash(10)
   # => {0.60=>300.0, 0.7=>1000.0...}
   #

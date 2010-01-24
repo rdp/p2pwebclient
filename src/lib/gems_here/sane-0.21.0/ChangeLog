@@ -1,8 +1,3 @@
-require 'rubygems'
-require 'jeweler'
-Jeweler::Tasks.new do |s|
-
-  s.name = %q{sane}
   #     3: add hash_set_operators
   # 0.2.2: add Regex+Regex, bug fixes
   # 0.2.0:
@@ -19,13 +14,3 @@ Jeweler::Tasks.new do |s|
   # 0.1.3 require 'pp' with _dbg
   # 0.1.2 add singleton_class
   # 0.1.1 add aliaz
-
-  s.homepage = 'http://github.com/rogerdpack/sane_ruby'
-  s.authors = ["Roger Pack"]
-  s.description = s.summary =  %q{Helper methods for ruby to make it easier to work with out of the box--things that are missing from core but should be there}
-  s.email = ["rogerdpack@gmail.com"]
-
-  s.add_runtime_dependency("require_all")
-  s.add_runtime_dependency("backports")
-  s.add_runtime_dependency("hash_set_operators")
-end

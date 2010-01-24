@@ -6,8 +6,10 @@
 #require 'fast_require' if RUBY_VERSION > '1.8'
 require 'resolv-replace'
 require 'optparse'
-require './constants'
-require_rel 'cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here', 'listener'
+require 'constants' # need this for the sane gem
+for file in ['cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here', 'listener'] do
+ require_relative file
+end
 
 # require 'facets' # just for driver :)
 # ltodo improvement don't just save file size header info on the DHT, save more :)
@@ -289,7 +291,7 @@ class Driver
 
       opendht_filename = 'alive_opendht_planetlab.txt.local'
 
-      opts.on('--update_opendht_local_list', "refresh the local file #{opendht_filename} with active [private] opendht participants") do
+      opts.on('--update_opendht_local_list', "refresh the local file #{opendht_filename} with active [private] opendht participants (doesn't actually do anything)") do
         require 'lib/opendht/bamboo/known_gateways'
         hosts = $opendht_gateways
         success = 0
@@ -604,6 +606,7 @@ class Driver
     assert @@multiples_variant_possibilities.index(runStyle), 'must have a multiples variant in ' + @@multiples_variant_possibilities.inspect + "you passed us " + runStyle
 
     if runStyle.contains? "peersPerSecond" or runStyle.contains?('multipleFiles')
+      peersPerSecond = nil
       whatToAddTo = "peersPerSecond"
       unitsX = "Peers per Second"
       settingsToTryArray = [1,2,3,6,10,15,20,25] # HERE IT IS one other option: [1,2,5]

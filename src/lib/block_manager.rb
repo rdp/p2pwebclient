@@ -1,15 +1,9 @@
 require 'constants'
 require 'thread' # Mutex
 Dir.mkPath "/tmp/blocks" # ltodo take off
-require_rel '../cs_and_p2p_client', 'opendht/opendht_em.rb', 'opendht/opendht_em_fake.rb', '../p2p_server', '../bittorrent_peer'
-
-# ltodo test: it starts and can't get opendht headers the first time around, at least
-# ltodo what if a set is still outbound when you want to RM! (test)
-# ltodo case of we get file size from ODHT--don't need to re-check it
-# ltodo set file size only once per err coming back (not a big prob, though, only the first 2 might err)
-# ltodo appears we do a DNS on startup for local host name--I just want to kinda grab the IP faster!
-# TODOR don't check + set the oDHT filesize if that's where you retrieved it from
-
+for file in ['../cs_and_p2p_client', 'opendht/opendht_em.rb', 'opendht/opendht_em_fake.rb', '../p2p_server', '../bittorrent_peer']
+     require_relative file
+end
 require File.dirname(__FILE__) + '/safe_write.rb'
 
 class BlockManager
@@ -495,7 +489,7 @@ class BlockManager
     @@local_ip_address
   end
 
-  require_rel 'head_retriever'
+  require_relative 'head_retriever'
 
   def startHeadRetriever this_many_attempts_left
     @head_attempts_left = this_many_attempts_left
@@ -824,8 +818,8 @@ class BlockManager
 
 end # class
 
-require_rel 'utilities_block_manager.rb' # just for the testing we do internally :)
-require_rel 'block.rb'
+require_relative 'utilities_block_manager.rb' # just for the testing we do internally :)
+require_relative 'block.rb'
 
 if $0 == __FILE__ or debugMe('block_manager')
   BlockManager.timeSelf
