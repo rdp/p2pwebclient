@@ -290,7 +290,7 @@ class Driver
 
       opendht_filename = 'alive_opendht_planetlab.txt.local'
 
-      opts.on('--update_opendht_local_list', "refresh the local file #{opendht_filename} with active [private] opendht participants") do
+      opts.on('--update_opendht_local_list', "refresh the local file #{opendht_filename} with active [private] opendht participants (doesn't actually do anything)") do
         require 'lib/opendht/bamboo/known_gateways'
         hosts = $opendht_gateways
         success = 0
@@ -605,6 +605,7 @@ class Driver
     assert @@multiples_variant_possibilities.index(runStyle), 'must have a multiples variant in ' + @@multiples_variant_possibilities.inspect + "you passed us " + runStyle
 
     if runStyle.contains? "peersPerSecond" or runStyle.contains?('multipleFiles')
+      peersPerSecond = nil
       whatToAddTo = "peersPerSecond"
       unitsX = "Peers per Second"
       settingsToTryArray = [1,2,3,6,10,15,20,25] # HERE IT IS one other option: [1,2,5]
