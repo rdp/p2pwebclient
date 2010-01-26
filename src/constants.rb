@@ -1,7 +1,6 @@
-
 # welcome...                        
 #
-$version = "$Rev: 1518 $"
+$version = "$Rev: 1519 $"
 
 require 'pp'
 require 'socket'
