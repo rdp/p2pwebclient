@@ -17,7 +17,6 @@ end
 $shouldDoGraphsSingle = true # ltodo move down
 $shouldDoVaryParameterGraphs = true
 
-load 'constants.rb'
 require 'benchmark'
 require 'forky'
 
@@ -51,15 +50,8 @@ class Driver
   @@peersPurged = nil
   @@dT = 1.0 # tlodo have this adjusted to 'mean' skip CS very low means skip CS
   # ltodo optimization -- if on original HTTP and NONE are listed (like for first block or the size is not even listed in the DHT then do NOT give up no matter what...that's an interesting case because theoretically could spawn some new p2p clients to look, though...ltodo later
-  peer_per_second_entering = 15
-  @@spaceBetweenNew = 1.0/peers_per_second_entering = 15 # note you'd want to increase this if you set fake start
-  use_peer_total = true
-  unless use_peer_total # else use seconds_for_the_run
-    seconds_for_the_run = 60
-    @@numClientsToSpawn = seconds_for_the_run/@@spaceBetweenNew
-  else
-    @@numClientsToSpawn = 1000
-  end
+  @@numClientsToSpawn = 1000
+  @@spaceBetweenNew = 66/@@numClientsToSpawn # 15/s
   @@linger = 10
   @@fileSize = 100.kb
   @@serverBpS = 255.kbps
@@ -609,8 +601,8 @@ class Driver
       peersPerSecond = nil
       whatToAddTo = "peersPerSecond"
       unitsX = "Peers per Second"
-      settingsToTryArray = [1,2,3,6,10,15,20,25] # HERE IT IS one other option: [1,2,5]
-      total_seconds = 100 # can be 10 for tests
+      settingsToTryArray = [1,2,3,6,10,15,20,25]
+      total_seconds = 100
       codeToExecuteAfterEachMajorLoopAndAtBeginning = proc {
         @@spaceBetweenNew = 1.0/peersPerSecond
         @@numClientsToSpawn = total_seconds*peersPerSecond
@@ -692,6 +684,7 @@ class Driver
     if runStyle == 'blockSize'
       whatToAddTo = '@@blockSize'
       settingsToTryArray = [16.kb, 32.kb, 64.kb, 100.kb]
+      settingsToTryArray = [100.kb]
       unitsX = 'Block size'
     end
 
@@ -1070,21 +1063,10 @@ class Driver
 
   end
 
-  def Driver.rss_current
-    if RUBY_PLATFORM =~ /darwin/
-      `ps u | grep #{Process.pid} | grep -v grep`.strip
-    elsif RUBY_PLATFORM =~ /mingw|mswin/
-      0
-    else
-      # assume linux
-      (File.read "/proc/#{Process.pid}/statm").strip
-    end
-  end
-
   def Driver.measure_time message = nil
-    @@allRunLogger.log "begin timing #{message} ram before running it: #{rss_current}"
+    @@allRunLogger.log "begin timing #{message} ram before running it: #{OS.rss_bytes}"
     time = Benchmark.measure { yield }
-    msg = " #{message} took #{time.inspect} #{time.real/60.0/60}h RAM usage now: #{rss_current} #{Time.now}"
+    msg = " #{message} took #{time.inspect} #{time.real/60.0/60}h RAM usage now: #{OS.rss_bytes} #{Time.now}"
     @@allRunLogger.log msg
     msg
   end
