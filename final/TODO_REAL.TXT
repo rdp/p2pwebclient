@@ -1,12 +1,8 @@
 ====================actually really todo (in order of priority):
 
-restart embarrassing :) (multiple file) (done)
-
-note the dedicated tracker
-
 conclusion that rox/edit the other sections
 
-redo block size -- man that thing is ugh-ly
+note 15/s
 
 ------------maybe don't have to? --------------------
 
