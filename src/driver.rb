@@ -5,14 +5,10 @@
 # ltodo better TTL maybe...5hr. total
 
 
-begin
-  #$FAST_REQUIRE_DEBUG = 1
-  require 'fast_require' # this is faster...though not perfect
-  # I think still slow in 1.9 because of the use of arguments/ruby_parser (?)
-rescue LoadError
-  require 'faster_rubygems' if RUBY_VERSION < '1.9'
-  require 'fast_require'
-end
+#$FAST_REQUIRE_DEBUG = 1
+require 'faster_rubygems' if RUBY_VERSION < '1.9'
+require 'fast_require' # this is faster...though not perfect
+# I think still slow in 1.9 because of the use of arguments/ruby_parser (?)
 
 require 'constants' # need this for require_relative
 for file in ['cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here', 'listener'] do
