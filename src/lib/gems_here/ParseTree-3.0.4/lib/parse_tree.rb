@@ -5,7 +5,9 @@ raise LoadError, "ParseTree doesn't work with ruby #{RUBY_VERSION}" if
 raise LoadError, "ParseTree isn't needed with rubinius" if
   defined? RUBY_ENGINE and RUBY_ENGINE == "rbx"
 
+require 'rubygems'
 require 'inline'
+require 'unified_ruby'
 
 class Module
   def modules
@@ -39,9 +41,9 @@ end
 #                [:args],
 #                [:return, [:call, [:lit, 1], "+", [:array, [:lit, 1]]]]]]]]]
 
-class ParseTree
+class RawParseTree
 
-  VERSION = '2.2.0'
+  VERSION = '3.0.4'
 
   ##
   # Front end translation method.
@@ -256,6 +258,8 @@ class ParseTree
     builder.include '"st.h"'
     builder.include '"env.h"'
 
+    builder.prefix '#define _sym(s) ID2SYM(rb_intern((s)))'
+
     if RUBY_VERSION < "1.8.6" then
       builder.prefix '#define RARRAY_PTR(s) (RARRAY(s)->ptr)'
       builder.prefix '#define RARRAY_LEN(s) (RARRAY(s)->len)'
@@ -272,7 +276,8 @@ class ParseTree
       builder.add_compile_flags "-Wno-long-long"
 
       # NOTE: this flag doesn't work w/ gcc 2.95.x - the FreeBSD default
-      # builder.add_compile_flags "-Wno-strict-aliasing"
+      builder.add_compile_flags "-Wno-strict-aliasing"
+
       # ruby.h screws these up hardcore:
       # builder.add_compile_flags "-Wundef"
       # builder.add_compile_flags "-Wconversion"
@@ -287,19 +292,20 @@ class ParseTree
     # 1) Get me a login on your box so I can repro this and get it fixed.
     # 2) Fix it and send me the patch
     # 3) (quick, but dirty and bad), comment out the following line:
-    builder.add_compile_flags "-Werror"
+    builder.add_compile_flags "-Werror" unless RUBY_PLATFORM =~ /mswin/
 
     builder.prefix %{
         #define nd_3rd   u3.node
         static unsigned case_level = 0;
         static unsigned when_level = 0;
         static unsigned inside_case_args = 0;
+        static int masgn_level = 0;
     }
 
     builder.prefix %{
       static VALUE wrap_into_node(const char * name, VALUE val) {
         VALUE n = rb_ary_new();
-        rb_ary_push(n, ID2SYM(rb_intern(name)));
+        rb_ary_push(n, _sym(name));
         if (val) rb_ary_push(n, val);
         return n;
       }
@@ -346,10 +352,9 @@ void add_to_parse_tree(VALUE self, VALUE ary, NODE * n, ID * locals) {
   VALUE current;
   VALUE node_name;
   static VALUE node_names = Qnil;
-  static int masgn_level = 0;
 
   if (NIL_P(node_names)) {
-    node_names = rb_const_get_at(rb_path2class("ParseTree"),rb_intern("NODE_NAMES"));
+    node_names = rb_const_get_at(rb_path2class("RawParseTree"),rb_intern("NODE_NAMES"));
   }
 
   if (!node) return;
@@ -366,7 +371,7 @@ again:
         (RNODE(node)->u3.node != NULL ? "u3 " : "   "));
     }
   } else {
-    node_name = ID2SYM(rb_intern("ICKY"));
+    node_name = _sym("ICKY");
   }
 
   current = rb_ary_new();
@@ -507,15 +512,32 @@ again:
 
   case NODE_BREAK:
   case NODE_NEXT:
+    if (node->nd_stts)
+      add_to_parse_tree(self, current, node->nd_stts, locals);
+
+    break;
+
   case NODE_YIELD:
     if (node->nd_stts)
       add_to_parse_tree(self, current, node->nd_stts, locals);
+
+    // if node is newline, it is aref_args w/ a splat, eg: yield([*[1]])
+    if (node->nd_stts && nd_type(node->nd_stts) == NODE_NEWLINE)
+      rb_ary_push(current, Qtrue);
+
+    // array is an array, not list of args
+    if (node->nd_stts
+        && (nd_type(node->nd_stts) == NODE_ARRAY
+            || nd_type(node->nd_stts) == NODE_ZARRAY)
+        && !node->nd_state)
+      rb_ary_push(current, Qtrue);
+
     break;
 
   case NODE_RESCUE:
-      add_to_parse_tree(self, current, node->nd_1st, locals);
-      add_to_parse_tree(self, current, node->nd_2nd, locals);
-      add_to_parse_tree(self, current, node->nd_3rd, locals);
+    add_to_parse_tree(self, current, node->nd_1st, locals);
+    add_to_parse_tree(self, current, node->nd_2nd, locals);
+    add_to_parse_tree(self, current, node->nd_3rd, locals);
     break;
 
   /*
@@ -548,10 +570,31 @@ again:
     add_to_parse_tree(self, current, node->nd_2nd, locals);
     break;
 
-  case NODE_DOT2:
-  case NODE_DOT3:
   case NODE_FLIP2:
   case NODE_FLIP3:
+    if (nd_type(node->nd_beg) == NODE_LIT) {
+      /*
+       new somewhere between 1.8.6 p287 to p368 and 1.8.7 p72 to p160.
+       [:flip2, [:call, [:lit, 1], :==, [:array, [:gvar, :$.]]],
+      */
+      VALUE result = rb_ary_new3(1, _sym("call"));
+      add_to_parse_tree(self, result, node->nd_beg, locals);
+      rb_ary_push(result, _sym("=="));
+      rb_ary_push(result, rb_ary_new3(2, _sym("array"),
+                                      rb_ary_new3(2, _sym("gvar"),
+                                                     _sym("$."))));
+      rb_ary_push(current, result);
+    } else {
+      add_to_parse_tree(self, current, node->nd_beg, locals);
+    }
+
+
+    // add_to_parse_tree(self, current, node->nd_beg, locals);
+    add_to_parse_tree(self, current, node->nd_end, locals);
+    break;
+
+  case NODE_DOT2:
+  case NODE_DOT3:
     add_to_parse_tree(self, current, node->nd_beg, locals);
     add_to_parse_tree(self, current, node->nd_end, locals);
     break;
@@ -625,10 +668,10 @@ again:
 #endif
     switch (node->nd_mid) {
     case 0:
-      rb_ary_push(current, ID2SYM(rb_intern("||")));
+      rb_ary_push(current, _sym("||"));
       break;
     case 1:
-      rb_ary_push(current, ID2SYM(rb_intern("&&")));
+      rb_ary_push(current, _sym("&&"));
       break;
     default:
       rb_ary_push(current, ID2SYM(node->nd_mid));
@@ -643,10 +686,10 @@ again:
 
     switch (node->nd_next->nd_mid) {
     case 0:
-      rb_ary_push(current, ID2SYM(rb_intern("||")));
+      rb_ary_push(current, _sym("||"));
       break;
     case 1:
-      rb_ary_push(current, ID2SYM(rb_intern("&&")));
+      rb_ary_push(current, _sym("&&"));
       break;
     default:
       rb_ary_push(current, ID2SYM(node->nd_next->nd_mid));
@@ -664,15 +707,25 @@ again:
 
   case NODE_MASGN:
     masgn_level++;
-    add_to_parse_tree(self, current, node->nd_head, locals);
+    if (node->nd_head) {
+      add_to_parse_tree(self, current, node->nd_head, locals);
+    } else {
+      rb_ary_push(current, Qnil);
+    }
     if (node->nd_args) {
       if (node->nd_args != (NODE *)-1) {
         add_to_parse_tree(self, current, node->nd_args, locals);
       } else {
         rb_ary_push(current, wrap_into_node("splat", 0));
       }
+    } else {
+      rb_ary_push(current, Qnil);
     }
-    add_to_parse_tree(self, current, node->nd_value, locals);
+    if (node->nd_value) {
+      add_to_parse_tree(self, current, node->nd_value, locals);
+    } else {
+      rb_ary_push(current, Qnil);
+    }
     masgn_level--;
     break;
 
@@ -907,15 +960,10 @@ again:
   case NODE_STR:              /* u1 */
   case NODE_LIT:
     rb_ary_push(current, node->nd_lit);
-    if (node->nd_cflag) {
-      rb_ary_push(current, INT2FIX(node->nd_cflag));
-    }
     break;
 
   case NODE_MATCH:            /* u1 -> [:lit, u1] */
-    {
-      rb_ary_push(current, wrap_into_node("lit", node->nd_lit));
-    }
+    rb_ary_push(current, wrap_into_node("lit", node->nd_lit));
     break;
 
   case NODE_NEWLINE:
@@ -981,8 +1029,8 @@ again:
     /* Nothing to do here... we are in an iter block */
     break;
 
-  case NODE_CFUNC:
   case NODE_IFUNC:
+  case NODE_CFUNC:
     rb_ary_push(current, INT2NUM((long)node->nd_cfnc));
     rb_ary_push(current, INT2NUM(node->nd_argc));
     break;
@@ -1017,6 +1065,28 @@ again:
 @ # end of add_to_parse_tree block
 
     builder.c %Q{
+  static VALUE parse_tree_for_proc(VALUE proc) {
+    VALUE result = rb_ary_new();
+    struct BLOCK *data;
+    Data_Get_Struct(proc, struct BLOCK, data);
+
+    rb_ary_push(result, _sym("iter"));
+    rb_ary_push(result, rb_ary_new3(4, _sym("call"), Qnil, _sym("proc"),
+                                    rb_ary_new3(1, _sym("arglist"))));
+    masgn_level++;
+    if (data->var) {
+      add_to_parse_tree(self, result, data->var, NULL);
+    } else {
+      rb_ary_push(result, Qnil);
+    }
+    add_to_parse_tree(self, result, data->body, NULL);
+    masgn_level--;
+
+    return result;
+  }
+}
+
+    builder.c %Q{
 static VALUE parse_tree_for_meth(VALUE klass, VALUE method, VALUE is_cls_meth) {
   VALUE n;
   NODE *node = NULL;
@@ -1036,9 +1106,9 @@ static VALUE parse_tree_for_meth(VALUE klass, VALUE method, VALUE is_cls_meth) {
   }
   if (st_lookup(RCLASS(klass)->m_tbl, id, &n)) {
     node = (NODE*)n;
-    rb_ary_push(result, ID2SYM(rb_intern(is_cls_meth ? "defs": "defn")));
+    rb_ary_push(result, _sym(is_cls_meth ? "defs": "defn"));
     if (is_cls_meth) {
-      rb_ary_push(result, rb_ary_new3(1, ID2SYM(rb_intern("self"))));
+      rb_ary_push(result, rb_ary_new3(1, _sym("self")));
     }
     rb_ary_push(result, ID2SYM(id));
     add_to_parse_tree(self, result, node->nd_body, NULL);
@@ -1050,9 +1120,12 @@ static VALUE parse_tree_for_meth(VALUE klass, VALUE method, VALUE is_cls_meth) {
 }
 }
 
-    builder.prefix " extern NODE *ruby_eval_tree_begin; " \
+    extern_mode = RUBY_PLATFORM =~ /mswin/ ? 'RUBY_EXTERN' : 'extern'
+    builder.prefix " #{extern_mode} NODE *ruby_eval_tree_begin; " \
       if RUBY_VERSION < '1.9.0'
 
+    # FIXME: ruby_in_eval is not properly exported across platforms
+    # http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-core/13558
     builder.c %Q{
 static VALUE parse_tree_for_str(VALUE source, VALUE filename, VALUE line) {
   VALUE tmp;
@@ -1093,4 +1166,34 @@ static VALUE parse_tree_for_str(VALUE source, VALUE filename, VALUE line) {
 }
 
   end # inline call
-end # ParseTree class
+end # RawParseTree class
+
+class ParseTree < RawParseTree
+  ##
+  # Initializes a ParseTree instance. Includes newline nodes if
+  # +include_newlines+ which defaults to +$DEBUG+.
+
+  def initialize(include_newlines=$DEBUG)
+    super
+    @unifier = Unifier.new
+  end
+
+  ##
+  # Main driver for ParseTree. Returns a Sexp instance containing the
+  # AST representing the input given. This is a UnifiedRuby sexp, not
+  # a raw sexp from ruby. If you want raw, use the old
+  # parse_tree_for_xxx methods... Please tell me if/why you want raw,
+  # I'd like to know so I can justify keeping the code around.
+
+  def process(input, verbose = nil, file = "(string)", line = -1)
+    case input
+    when Array then
+      @unifier.process(input)
+    when String then
+      pt = self.parse_tree_for_string(input, file, line, verbose).first
+      @unifier.process(pt)
+    else
+      raise ArgumentError, "Unknown input type #{input.inspect}"
+    end
+  end
+end

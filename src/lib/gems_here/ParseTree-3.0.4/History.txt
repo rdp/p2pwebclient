@@ -1,3 +1,93 @@
+=== 3.0.4 / 2009-06-23
+
+* 4 minor enhancements:
+
+  * Pulled unique.rb from ParseTree to sexp_processor.
+  * Switched to minitest
+  * UnifiedRuby strips flip2 back down to expected values
+  * Updated Rakefile for new hoe
+
+* 2 bug fixes:
+
+  * 1.8.6p287 & 1.8.7 changed flip2 with fixnum start. fixed
+  * 1.8.6p287 & 1.8.7 removed the begin node. fixed.
+
+=== 3.0.3 / 2009-01-20
+
+* 4 bug fixes:
+
+  * Added gauntlet_parsetree.rb. Bug finding/fixing much faster & easier now.
+  * Fixed alias tests for r2r. Added masgn and heredoc tests.
+  * Fixed conflicting flags (-u vs -r).
+  * Unwrap RHS from array IF it is only a splat node.
+
+=== 3.0.2 / 2008-11-04
+
+* 1 minor enhancement:
+
+  * parse_tree_show now defaults to unified, added -U to UNunify output.
+
+* 4 bug fixes:
+
+  * UnifiedRuby#rewrite_defn kinda sorta deals with cfunc now. Stupid rails.
+  * Fixed ambiguities in splatted nodes in a bunch of contexts.
+  * Fixed 1 arg form of parse_tree_for_proc
+  * KNOWN ISSUE: 0 arg form (||) of parse_tree_for_proc segfaults.
+
+=== 3.0.1 / 2008-10-23
+
+* 1 bug fix:
+
+  * Fixed the dependency on sexp_processor (accidentally camelcased). thanks ez!
+
+=== 3.0.0 / 2008-10-22
+
+* 3 major enhancements:
+
+  * Split out sexp_processor project.
+  * ParseTree#process outputs a UnifiedRuby parse tree.
+    * Switched all ParseTree tests to RawParseTree tests.
+    * Added ParseTree tests.
+  * Added UnifiedRuby#process.
+
+* 28 minor enhancements:
+
+  * PTTC: Added a comprehensive suite of tests for every combo of defn args.
+  * PTTC: Added a ton of new tests.
+  * PTTC: Added extra tests for mri verbose flag testing (horrid horrid bug imhfo)
+  * PTTC: Don't generate tests if class has "TestCase" in the class name.
+  * PTTC: Made self.previous more overridable.
+  * PTTC: Now all tests that have "mri_verbose_flag" activate $VERBOSE
+  * PTTC: Officially added clone_same phase to generate_tests
+  * PTTC: Refactored test generation to make subclasses more flexible.
+  * PTTC: Refactored to use new add_tests. Much much cleaner.
+  * PTTC: Removed Unique from PTTC... subclasses need to deal with this
+  * PTTC: Removed some stupid tests.
+  * PTTC: Renamed a bunch of tests to be more uniform.
+  * UR: Added rewrite_attrasgn to normalize arg array into arglist.
+  * UR: Added rewrite_op_asgn1 to ensure the arglist is an arglist.
+  * UR: Flattened resbodies in rescue node.
+  * UR: Flattened super and yield args yet, deal with array arg properly.
+  * UR: Handle yield(*ary) properly.
+  * UR: Nuked argspush.
+  * UR: Removed begin node from unified sexps.
+  * UR: Removed block from rewritten resbody if only 1 element.
+  * UR: Removed dasgn, dasgn_curr, and dvar nodes.
+  * UR: Removed s(:block_arg, :block) in favor of :"&block"
+  * UR: Rewrote argscat to be a splat inside an array.
+  * UR: Rewrote block_pass into arglist of inner call/super.
+  * UR: Rewrote call to ALWAYS have an argslist (no more splat as arglist).
+  * UR: Rewrote rewrite_resbody from scratch... MUUCH cleaner.
+  * UR: zarray -> array
+  * Used Hoe#add_include_dirs to clean up rakefile.
+  * Moved PT dependent code from ruby2ruby to here (eg Proc#to_sexp & friends).
+
+* 2 bug fixes:
+
+  * UR: Fixed a bug with resbody that starts with an lasgn.
+  * UR: Fixed args for attrset
+  * Fixed export of symbols to work across platforms.
+
 === 2.2.0 / 2008-06-09
 
 * 18 minor enhancements:

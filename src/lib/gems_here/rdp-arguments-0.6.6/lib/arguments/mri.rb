@@ -1,4 +1,3 @@
-gem 'ParseTree', '>= 3.0.3'
 require 'parse_tree'
 
 module Arguments
