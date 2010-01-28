@@ -3,15 +3,24 @@
 # todo: skip some of the graphs--who cares...except there are some stats in there that aren't shown in vary parameter graphs yet--single things. Leave them :)
 # ltodo: still figure out more 'tight' close stats--does graphing graphing take forever?
 # ltodo better TTL maybe...5hr. total
-#require 'fast_require' if RUBY_VERSION > '1.8'
-require 'resolv-replace'
-require 'optparse'
-require 'constants' # need this for the sane gem
+
+
+begin
+  #$FAST_REQUIRE_DEBUG = 1
+  require 'fast_require' # this is faster...though not perfect
+  # I think still slow in 1.9 because of the use of arguments/ruby_parser (?)
+rescue LoadError
+  require 'faster_rubygems' if RUBY_VERSION < '1.9'
+  require 'fast_require'
+end
+
+require 'constants' # need this for require_relative
 for file in ['cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here', 'listener'] do
  require_relative file
 end
+require 'resolv-replace'
+require 'optparse'
 
-# require 'facets' # just for driver :)
 # ltodo improvement don't just save file size header info on the DHT, save more :)
 
 $shouldDoGraphsSingle = true # ltodo move down
@@ -19,8 +28,7 @@ $shouldDoVaryParameterGraphs = true
 
 require 'benchmark'
 require 'forky'
-
-require 'forky_replacement_fake.rb' # had enough with the pauses...
+require 'forky_replacement_fake.rb' # had enough with the pauses...though might actually be ok in 1.9.2...
 
 # ltodo run it 'without' CS (since we DO have CS in there already!) -- should be fastest!
 class Thread

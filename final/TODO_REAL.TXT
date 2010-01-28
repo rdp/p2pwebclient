@@ -2,23 +2,16 @@
 
 conclusion that rox/edit the other sections
 
-note 15/s
-
 ------------maybe don't have to? --------------------
 
 %LTODO note unfairness: vr_multiples_tak_1 client upload sum. wow. [FUTURE WORK?]
 
-appendix with tons [?]
+appendix with tons of stuff [?]
 appendix with one, single run [?]
-
-more runs that would be interesting
-
 
 -- probably never --
 
 add a stat on how much overall was wasted...oh wait you can calculate that anyway though...hmm...
-
-appendix with "real future"
 
 with start and end times, can I find a correlation (30MB)
 
