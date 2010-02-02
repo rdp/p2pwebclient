@@ -1,5 +1,13 @@
 ====================actually really todo (in order of priority):
 
+another pass/images
+
+
+fix it to restart the server (yeesh)
+restart "many many p2p"
+fix it to only one on the origin! yes!
+
+
 conclusion that rox/edit the other sections
 
 ------------maybe don't have to? --------------------

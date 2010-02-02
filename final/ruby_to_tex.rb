@@ -22,8 +22,8 @@ end
 
 class RubyToTex
   # translate something.abc to something [tex]
-  def translate string, file_name_long
-    filename = file_name_long.split('.')[0..-2].join('.')
+  def translate string, filename_long
+    filename = filename_long.gsub('.erb.tex', '.tex')     
     puts 'writing to', filename
     File.open(filename, 'w') do |f|
       result = (ERB.new string).result(binding)

@@ -1,21 +1,8 @@
-=begin
-doctest: parses a conjunto right
->> all = "Doing stats on runs runs just numbers unnamed316651_at25_run1unnamed316651_at25_run2\ndownload times %'iles'\n61.51 161.8 352.64 560.03 992.02"
->> parse(all)
-=> {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}}
->> parse( File.read 'test/single_run.txt')['download times'] == {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}
-=> true
->> parse( File.read 'test/single_run.txt')['server upload distinct seconds [instantaneous server upload per second]'] == {25.0 => [37565.0, 126882.5, 181103.5, 243156.5, 458349.5]}
-=> true
-
-=end
-
 # this one just parses out the file
 # into something like
 # {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}...}
 require 'sane'
-require File.dirname(__FILE__) + '/gnuplot_percentiles' # this is not gnuplot itself!
-
+require_relative 'gnuplot_percentiles'
 
 class Parser
   def self.parse large_string
@@ -97,7 +84,7 @@ class ParseRaw
 
     require 'rubygems' if RUBY_VERSION < '1.9'
     require 'sane'
-
+    out = []
     all = Parser.parse File.read(file1)
     if file2
       all2 = Parser.parse(File.read(file2))
@@ -105,7 +92,7 @@ class ParseRaw
       all2 = {}
     end
 
-    for name, y_and_this_output_filename in {
+    for name, (y, this_output_filename) in {
       "download times %'iles'" => ['Peer Download Times (seconds)', 'client_download_Percentile_Line'],
       "download total times %'iles'" => ['Peer Download Times All files (seconds)', 'client_download_all_files_Percentile_Line'],
       "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/S)', 'server_speed_Percentile_Line'],
@@ -118,8 +105,6 @@ class ParseRaw
       'dht gets' => ['DHT Set Time (S)', 'dht_get_Percentile_Line'],
       'death methods' => ['Number of peers', 'death_reasons'],
       "percentiles of percent received from just peers (not origin)" => ['Percent of File received from Peers', 'percent_from_clients_Percentile_Line']} do
-
-      y, this_output_filename = y_and_this_output_filename
 
       data1 = all.delete name
       data2 = all2.delete(name)
@@ -153,14 +138,22 @@ class ParseRaw
           }
           columnss << columns
         end
-        puts "percentile plotting", xss.inspect, columnss.inspect, "to", this_output_filename if $VERBOSE
-        P2PPlot.plot xss[0], columnss[0], this_output_filename + '.pdf', x, y, :xs2 => xss[1], :percentiles2 => columnss[1], :legend1_addition => legend1, :legend2_addition => legend2
+        ymax = nil
+        if name =~ /download times/
+          ymax = 180
+        end 
         
+        if name =~ /server upload distinct seconds/
+          ymax = 400_000
+        end          
+          
+        puts "percentile plotting", xss.inspect, columnss.inspect, "to", this_output_filename if $VERBOSE
+        out << P2PPlot.plot(xss[0], columnss[0], this_output_filename + '.pdf', x, y, :xs2 => xss[1], :percentiles2 => columnss[1], :legend1_addition => legend1, :legend2_addition => legend2, :ymax => ymax)        
       end
 
     end
     puts 'keys never used:', all.keys.inspect, "\n\n\n"
-
+    out
   end
 
 end

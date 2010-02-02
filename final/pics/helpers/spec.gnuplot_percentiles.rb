@@ -1,8 +1,6 @@
-if RUBY_VERSION >= '1.9'
-  require 'fast_require' 
-else
-  require 'rubygems'   
-end
+require 'faster_rubygems' if RUBY_VERSION < '1.9'
+require 'faster_require'
+
 require 'sane'
 require_relative 'gnuplot_percentiles.rb'
 require 'spec/autorun'
@@ -23,12 +21,16 @@ describe P2PPlot do
     assert File.exist?('test.pdf')
   end
   
+  def options
+     {:xs => [0,100, 200], :percentiles => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,6]], :legend1_addition => 'legend1_addition_here'}
+  end
   before do
-    @a = P2PPlot.plot [0,100, 200], [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,6]], :legend1_addition => 'legend1_addition_here'
+    
+    @a = P2PPlot.plot options
   end
   
   it "should graph the median lines" do
-    assert @a.data[1].with.contain? "candlesticks lt -1"  
+    assert @a.data[1].with.contain? "candlesticks lt -1"
   end
 
   context "it should never be wider than half the difference between the smallest xes" do
@@ -61,13 +63,19 @@ describe P2PPlot do
     a = P2PPlot.plot :xs => [0,100, 200], :percentiles => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,6]] , :xs2 =>  [0,100, 200], :percentiles2 => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,7]]
     y = 7 * 1.1
     a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
-  end
-  
+  end  
   
   it "should have a tall y for single line graphs, too" do
     a = plot_single
     y = 3*1.1
     a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
+  end
+  
+  it "should have an optional y that you pass in" do
+    options = self.options
+    options[:ymax] = '101'
+    out =  P2PPlot.plot options
+    out.yrange.assoc('yrange')[1].should == "[0:101]"
   end
 
 end
