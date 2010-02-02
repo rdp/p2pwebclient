@@ -1,6 +1,7 @@
 # this one just parses out the file
 # into something like
 # {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}...}
+require 'faster_require'
 require 'sane'
 require_relative 'gnuplot_percentiles'
 
@@ -140,12 +141,14 @@ class ParseRaw
         end
         ymax = nil
         if name =~ /download times/
-          ymax = 180
+          unless columnss.map(&:last).max.max > 450 # allow for the huge test to have its own
+            ymax = 180
+          end
         end 
         
-        if name =~ /server upload distinct seconds/
+        if name =~ /server upload/          
           ymax = 400_000
-        end          
+        end        
           
         puts "percentile plotting", xss.inspect, columnss.inspect, "to", this_output_filename if $VERBOSE
         out << P2PPlot.plot(xss[0], columnss[0], this_output_filename + '.pdf', x, y, :xs2 => xss[1], :percentiles2 => columnss[1], :legend1_addition => legend1, :legend2_addition => legend2, :ymax => ymax)        
