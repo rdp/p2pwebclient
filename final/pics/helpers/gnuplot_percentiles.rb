@@ -19,7 +19,7 @@ require 'arguments' # rogerdpack-arguments
 class P2PPlot
   class << self
     def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil, xs2 = nil, percentiles2 = nil, legend1_addition = nil, legend2_addition = nil, ymax = nil
-      xrange = xs.last - xs.first # 0 is our low x :)
+      xrange = xs.last - 0
 
       if(xs2)
         assert(percentiles2)
@@ -35,7 +35,9 @@ class P2PPlot
           # we don't need no shtinkin titles
           plot.ylabel ylabel if ylabel
           plot.xlabel xlabel if xlabel
-          plot.xrange "[0:#{ xs.last + 1}]"
+		  above_x = [(xrange*1.05).to_i, xrange + 1].max
+
+          plot.xrange "[0:#{ above_x }]"
           
           all_points =  percentiles
           if percentiles2
@@ -48,7 +50,7 @@ class P2PPlot
           end
           plot.terminal 'pdf'
           plot.output name
-          #plot.logscale 'y'
+          #plot.logscale 'y' # if ever useful...
 
           smallest_range = xs.last - xs.first # pick some large value
           previous = xs.first
@@ -60,7 +62,6 @@ class P2PPlot
           # box_width is only for percentiles
           box_width = [xrange*3/100, smallest_range/2.0].min
           plot.boxwidth box_width
-          pps 'xrange', xrange, 'smallest_range', smallest_range
           if xrange >= 100*smallest_range
             add_median_line = true
           else

@@ -24,11 +24,18 @@ describe P2PPlot do
   def options
      {:xs => [0,100, 200], :percentiles => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,6]], :legend1_addition => 'legend1_addition_here'}
   end
-  before do
-    
+
+  before do    
     @a = P2PPlot.plot options
   end
-  
+
+
+  def go_to_ten
+    o = options
+    o[:xs] = [0,1,10]
+    @a = P2PPlot.plot o
+  end
+
   it "should graph the median lines" do
     assert @a.data[1].with.contain? "candlesticks lt -1"
   end
@@ -56,16 +63,29 @@ describe P2PPlot do
   
   it "should have a y that's taller than the tallest y...climb every mountain..." do
     y = 6 * 1.1
-    @a.yrange.assoc('yrange')[1].should == "[0:#{y}]"    
+    @a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
+    @a.xrange.assoc('xrange')[1].should == "[0:210]"
+  end
+
+  it "should have an xrange that is always plus one" do
+    go_to_ten
+	 @a.xrange.assoc('xrange')[1].should == "[0:11]"
   end
   
   it "should have a taller y if you pass it in two graphs" do
-    a = P2PPlot.plot :xs => [0,100, 200], :percentiles => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,6]] , :xs2 =>  [0,100, 200], :percentiles2 => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,7]]
+    a = P2PPlot.plot :xs => [0,100, 200], :percentiles => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,6]] , :xs2 =>  [0,100, 200], 
+          :percentiles2 => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,7]]
     y = 7 * 1.1
     a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
   end  
   
   it "should have a tall y for single line graphs, too" do
+    a = plot_single
+    y = 3*1.1
+    a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
+  end
+
+  it "should setup x range to be 10% past the highest x" do
     a = plot_single
     y = 3*1.1
     a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
