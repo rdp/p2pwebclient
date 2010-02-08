@@ -1,6 +1,6 @@
 \section {Abstract}
 In the traditional web client-server model, available bandwidth decreases as the number of clients increases.  
-This can cause servers to serve files slowly or to become completely overwhelmed.  
+This can cause servers to serve files slowly or to become completely overwhelmed when the number of clients passes a certain threshold.  
 Our protocol counters this by integrating peer-to-peer swarming with traditional client-server downloads.  
-Clients initially attempt to download the original file.  If this is too slow, they ask their peers for pieces of the file, 
+Clients initially attempt to download the file from a server.  If this is too slow, they ask their peers for pieces of the file, 
 and then offer those pieces to other peers.

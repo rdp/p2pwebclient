@@ -1,11 +1,11 @@
 \section {Problem Introduction}
-In the traditional Internet architecture, a single server (or server pool in one data center) handles multiple incoming client requests.  
-The bottleneck in such systems under high load can be lack of bandwidth to and from the server \cite{coopnet}, because bandwidth is split $N$ 
+In the traditional Internet architecture, a single server handles multiple incoming client requests.  
+The bottleneck in such systems under high load can become lack of bandwidth from the server \cite{coopnet}, because bandwidth is split $N$ 
 ways among the requesting clients (see Fig. \ref{fig:traditional_http}).  When an increasing number of clients request a web page, that page 
 therefore loads more and more slowly for users.  This problem occurs anytime the ratio of bandwidth to clients is low.  For example, when a server 
 is poorly provision, a server experiences spikes in load, or a small number of incoming clients download very large files.  An example of this problem 
-is the ``slashdot" effect, in which a sudden flash crowd of clients suddenly requests certain (news-worthy) pages, overwhelming unexpectant servers
-.  These situations cause web servers to become overwhelmed and even crash.
+is the ``slashdot" effect, in which a sudden flash crowd of clients suddenly requests certain (news-worthy) pages, overwhelming unexpectant servers.  
+These situations cause web servers to become overwhelmed and even crash.
 
 \section {Related work}
 This problem is commonly combated by distributing the requests among a set of servers that mirror the content of the original server (Fig. \ref{fig:server_only}).  
