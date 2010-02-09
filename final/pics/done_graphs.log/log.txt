@@ -48,12 +48,14 @@ VaryParameter.varyParameterAndRsync('vary_parameter/vr_yanc_and_bittorrent_100_t
 downloadtime!"download total times %'iles'"
 "131.11 139.3 148.32 163.5 2786.08"
 
-me side 30MB: (backed up good)
+me side 30MB (yanc_30): (backed up good)
 
 Parameter.varyParameterAndRsync('vary_parameter/vr_largefile_no_prefetc\h_1_url_use_bittorrent_fromStart_falseby_AndMajorTimes_0_times_0.0666666666666667s__0s_30000000B_255000BPS_125000s_1.0\s_2.0s_256000B', 'Using BitTorrent',[0],[["largefile_no_prefetch_1_url_use_bittorrent_atfalse_run1_of_4_major_1_of_1",\ "largefile_no_prefetch_1_url_use_bittorrent_atfalse_run2_of_4_major_1_of_1", "largefile_no_prefetch_1_url_use_bittorr\ent_atfalse_run3_of_4_major_1_of_1", "largefile_no_prefetch_1_url_use_bittorrent_atfalse_run4_of_4_major_1_of_1"], ["l\argefile_no_prefetch_1_url_use_bittorrent_atfalse_run1_of_4_major_1_of_1", "largefile_no_prefetch_1_url_use_bittorrent\_atfalse_run2_of_4_major_1_of_1", "largefile_no_prefetch_1_url_use_bittorrent_atfalse_run3_of_4_major_1_of_1", "largef\ile_no_prefetch_1_url_use_bittorrent_atfalse_run4_of_4_major_1_of_1"]])
 
 "download total times %'iles'"
 "613.82 730.61 847.1 882.51 982.67"
+
+yanc_30mb_3 -- I don't know what that is, actually.
 
 vary number of total blocks at a time: vary_blocks -- backed up good
 

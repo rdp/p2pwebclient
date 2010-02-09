@@ -204,14 +204,13 @@ and both protocols' origin servers are rate limited to 256KB/s. With both system
 is set to 0s. The expected result is that the two fare similarly. It turned out that a few peers download 
 faster with our system, but most download faster with BitTorrent (Table~\ref{fig:yanc_vs_bt}). 
 Ours had a slower median than BitTorrent (847s to 148s), though BitTorrent was worse for the 99th 
-percentile (2786s to 847s). One reason for the difference is that the BitTorrent's seed (origin 
-server) limits the number of outgoing connections it will entertain to 7 (Apache--our server--does 
+percentile (2786s to 847s). We're not entirely sure exactly what makes BitTorrent faster.  One reason for the difference is that the BitTorrent's seed 
+limits the number of outgoing connections it will entertain to 7 (Apache--our server--does 
 too, but to 256). This limit enables BitTorrent to propagate blocks more quickly to peers, who then 
 spread the blocks among the other peers. BitTorrent seeds also favor peers who have higher download 
 speeds, which helps speed propagation of blocks. For our test BitTorrent uses a dedicated tracker, 
-which also made peer rendezvous quicker than using our DHT. These differences combined allow it 
-to respond to a flash crowd such as this one better. One thing to note is how close the relative download 
-percentiles are. The difference between 25th and 75th percentiles of our system is about 150s, 
+which also made peer rendezvous quicker than using our DHT.  It also uses a ``rarest block first" policy in block selection, enabling it to share blocks more efficiently.  These differences combined allow it 
+to respond to a flash crowd such as this one better.  In future work we will optimize our system to handle flash crowds such as this one better, by backing off more on the origin server.  One interesting statistic is the relative download percentiles. The difference between 25th and 75th percentiles of our system is about 150s, 
 or 5\% of the 75th percentile's time. The difference between the 25th and 75th percentiles of BitTorrent 
 is 24s, or about 7\%. These numbers being close means that once a few of the peers have downloaded 
 the file, it doesn't take (relatively) long in either system for the rest of the peers to complete 
