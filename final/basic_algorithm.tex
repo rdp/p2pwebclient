@@ -44,7 +44,7 @@ If a peer only has a few blocks remaining, it will try to download the last few 
 encountered by BitTorrent \cite{bram}.  It downloads remaining blocks from up to $b$ peers, so if $b$ is set to 6 and 3 blocks are left, it will download each block from 2 peers, until
 the last block is downloaded redundantly from $b$ peers all at once.
 
-After downloading a block, the peer adds itself to the list of peers willing to share that block (Fig. \ref{fig:download_all_steps}).  
+After downloading a block, the peer adds itself to the list of peers willing to share that block (Fig. \ref{fig:download_all_steps}). 
 
 While downloading a file, if a peer learns the size of the file (via its original HTTP request or its HTTP HEAD request), it does a request to the DHT to see if this
 data is listed.  If it isn't, it adds this meta-data to the DHT for later peers to be able to use.
@@ -56,10 +56,10 @@ It should be noted that we implemented this algorithm using the Ruby language, w
 
 \begin{figure*}
   \begin{center}
-    \subfigure[Peer downloads list of blocks]{\includegraphics[width=7cm]{description_pics/peer_step_1.png}}
-    \subfigure[Peer downloads a list of peers which have a block]{\includegraphics[width=7cm]{description_pics/peer_step_2.png}}
-    \subfigure[Peer adds itself to list of peers who have that block]{\includegraphics[width=7cm]{description_pics/peer_step_3.png}}
-    \caption{Steps to accomplish a peer-to-peer-web download.}
+    \subfigure[Peer downloads meta-data]{\includegraphics[width=7cm]{description_pics/peer_step_1.png}}
+    \subfigure[Peer downloads a list of peers that have a block]{\includegraphics[width=10cm]{description_pics/peer_step_2.png}}
+    \subfigure[Peer adds itself to list of peers who have the block]{\includegraphics[width=8cm]{description_pics/peer_step_3.png}}
+    \caption{Steps to accomplish a peer-to-peer-web download}
     \label{fig:download_all_steps}
   \end{center}
 \end{figure*}

@@ -2,7 +2,7 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
@@ -13,11 +13,22 @@
    height="1052.3622047"
    id="svg1307"
    sodipodi:version="0.32"
-   inkscape:version="0.44"
+   inkscape:version="0.46"
    sodipodi:docbase="/home/rdp/files/thesis/pics"
-   sodipodi:docname="peer_step_3.svg">
+   sodipodi:docname="peer_step_3.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="E:\dev\ruby\p2pwebclient\final\description_pics\peer_step_3.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs1309">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective737" />
     <marker
        inkscape:stockid="Arrow1Lend"
        orient="auto"
@@ -4566,14 +4577,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="0"
      inkscape:zoom="0.35"
-     inkscape:cx="-26.365897"
+     inkscape:cx="-446.3659"
      inkscape:cy="862.85714"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:window-width="1198"
      inkscape:window-height="907"
-     inkscape:window-x="0"
-     inkscape:window-y="0" />
+     inkscape:window-x="22"
+     inkscape:window-y="29"
+     showgrid="false" />
   <metadata
      id="metadata1312">
     <rdf:RDF>
@@ -4601,9 +4613,11 @@
          x="-622.81653"
          y="470.64236">Peer</tspan></text>
     <path
-       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:black;stroke-width:1.3499881px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:none;fill-opacity:0.75000000000000000;fill-rule:evenodd;stroke:black;stroke-width:3.175;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="M -131.40606,-210.3055 C -152.26772,-193.48511 -188.54245,-154.51951 -214.96281,-129.11465 C -239.06224,-105.94152 -236.95144,-83.063233 -236.95144,-54.689713 C -236.95144,-20.333522 -217.4772,-12.162616 -192.9742,12.969331 C -173.88567,32.5478 -118.93707,35.861988 -91.826544,40.032946 C -67.645321,43.753232 -37.483309,40.032946 -12.66752,40.032946 C 12.340328,40.032946 22.514268,13.121239 22.514268,46.798851 C 22.514268,71.012816 31.113177,83.708944 44.502888,104.30903 C 59.795533,127.83679 80.255179,145.34332 106.07102,165.20217 C 144.38799,194.67752 176.5367,202.45391 220.41184,219.32941 C 249.81442,230.63838 309.48335,226.0953 343.5481,226.0953 C 369.12269,226.0953 400.21596,181.50472 409.51395,171.96807 C 423.79194,157.32361 418.30941,129.72543 418.30941,111.07494 C 418.30941,92.453506 463.23989,146.8876 479.87754,161.81922 C 504.99592,184.36193 530.95945,207.72357 563.43428,222.71235 C 605.35835,242.06242 654.35692,246.39302 704.16144,246.39302 C 761.15263,246.39302 835.14994,252.01162 880.0704,226.0953 C 921.97479,201.91906 948.29576,170.13664 963.62714,134.7556 C 978.02619,101.52619 998.80894,80.810699 998.80894,43.415898 C 998.80894,20.172986 973.39533,12.969331 946.03625,12.969331 C 924.07969,12.969331 893.28451,2.8285269 893.26357,2.8204754 C 868.07724,-6.8668247 939.31789,-22.457982 959.22942,-37.774946 C 983.34026,-56.322222 998.80894,-103.75692 998.80894,-129.11465 C 998.80894,-161.90007 1009.4335,-187.19362 990.01349,-217.0714 C 975.4207,-239.52243 906.9566,-240.75206 880.0704,-240.75206 C 839.94963,-240.75206 795.11497,-244.71178 756.93413,-237.36911 C 711.26656,-228.58667 718.06282,-227.94662 743.74096,-254.28387 C 759.06432,-270.00053 752.53642,-302.21185 752.53642,-321.94291 C 752.53642,-350.05833 714.08231,-377.11232 686.57055,-392.9849 C 641.63559,-418.90959 608.30597,-436.79126 554.63885,-447.11214 C 523.46022,-453.10818 482.18947,-445.86527 453.49119,-440.34623 C 401.02009,-430.25538 360.29129,-397.63138 308.36632,-386.219 C 276.60255,-379.23777 226.88923,-343.84041 202.82094,-325.32586 C 181.6225,-309.01895 178.64663,-289.79474 158.8437,-305.02816 C 138.86696,-320.39527 131.63917,-334.09795 110.46874,-342.24063 C 95.328197,-348.06407 66.424414,-345.62357 44.502888,-345.62357 C 16.472972,-345.62357 -13.808473,-347.09563 -39.053866,-342.24063 C -63.474988,-337.54413 -84.461564,-323.3593 -109.41744,-318.55996 C -126.98901,-315.18073 -140.63019,-296.94319 -144.59924,-284.73044 C -149.31654,-270.21528 -148.99696,-253.83455 -148.99696,-237.36911 C -148.99696,-221.33695 -150.75137,-225.18689 -131.40606,-210.3055 z "
-       id="path1321" />
+       id="path1321"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <text
        xml:space="preserve"
        style="font-size:163.71116638px;font-style:normal;font-weight:normal;fill:black;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
@@ -4616,9 +4630,12 @@
          x="-15.0224"
          y="-85.892876">OpenDHT</tspan></text>
     <path
-       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Lend)"
+       style="fill:none;fill-opacity:0.75000000000000000;fill-rule:evenodd;stroke:#000000;stroke-width:3.175;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Lend);stroke-miterlimit:4;stroke-dasharray:none"
        d="M -574.28571,266.6479 C -574.28571,266.6479 -745.71429,-107.63782 -268.57143,-90.49496"
-       id="path1327" />
+       id="path1327"
+       inkscape:export-filename="E:\dev\ruby\p2pwebclient\final\description_pics\path1321.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <g
        transform="matrix(0.290474,0,0,0.290474,-570.1186,543.0768)"
        id="g14860">
@@ -4943,14 +4960,14 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-size:72px;font-style:normal;font-weight:normal;fill:black;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Times New Roman"
-       x="-1465.7141"
-       y="-64.78067"
+       style="font-size:72px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Times New Roman"
+       x="-1482.8569"
+       y="-124.78067"
        id="text2602"><tspan
          sodipodi:role="line"
          id="tspan2604"
-         x="-1465.7141"
-         y="-64.78067"
+         x="-1482.8569"
+         y="-124.78067"
          style="font-size:144px">Add Self &lt;Block X&gt;</tspan></text>
   </g>
 </svg>
