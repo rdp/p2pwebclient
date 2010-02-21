@@ -1,13 +1,15 @@
 %% note: todo's go in todo, as well as optionally in here
 
 \section{Experiment Results}
-For our initial experiments we first test how well our system scales. We download a small file (100KB) 
-under several different loads. In each test a given number of peers enter the system within 
+For our initial experiments we first test how well our system scales under load. We download a small file (100KB) 
+under different loads. In each test a given number of peers enter the system within 
 the first 100s, using a poisson distribution with an inter arrival time that is 100s/number of peers, 
 so that they all enter pseudo-randomly within the first 100s. Peers start out by requesting the file from 
 an origin server located on a well provisioned machine at BYU running an Apache2 web server that it 
 bandwidth limited (using mod\_bw) to 256KB/s and 256 max connections. Peers are randomly selected from available PlanetLab 
-hosts (a pool of up to 300 scattered world-wide on the PlanetLab system). Experiments run until 
+hosts (a pool of up to 300 scattered world-wide on the PlanetLab system).  If more than 300 peers are used,
+then some PlanetLab hosts are re-used as proxies, though connections to other hosts on the same computer
+are disallowed.  Experiments run until 
 all peers finish downloading the file. Each experiment is repeated 3 times and results are averaged. 
 A different filename is used with each run, so as to not reuse the same DHT keys. We collect the download 
 times of all peers and calculate the 1st, 25th, 50th, 75th, and 99th percentiles. We also 
