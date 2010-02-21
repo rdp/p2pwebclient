@@ -48,7 +48,7 @@ class P2PPlot
           else
             plot.yrange "[0:#{all_points.flatten.max * 1.1}]"
           end
-          plot.terminal 'pdf'
+          plot.terminal 'pdf monochrome'
           plot.output name
           #plot.logscale 'y' # if ever useful...
 
@@ -120,7 +120,7 @@ class P2PPlot
           plot.ylabel ylabel
           plot.xlabel xlabel
           #plot.xrange "[0:#{ get_smallest_x(hash_values) + 1}]"
-          plot.terminal 'pdf'
+          plot.terminal 'pdf monochrome'
           raise unless name.include? 'pdf' # gotta have that
           plot.output name
           ymax = 0

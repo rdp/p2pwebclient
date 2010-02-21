@@ -1,4 +1,5 @@
-stats = eval File.read('../yanc_30mb/yanc_30mb_3.stats.txt')
+
+require 'sane'stats = eval File.read('../yanc_30mb/yanc_30mb_3.stats.txt')
 puts stats
 
 # all_cs_bytes, p2p_p2p
