@@ -1,71 +1,66 @@
-\section {Problem Introduction}
+\section {Introduction}
+
 In the traditional Internet architecture, a single server handles multiple incoming client requests.  
 The bottleneck in such systems under high load can become lack of bandwidth from the server \cite{coopnet}, because bandwidth is split $N$ 
-ways among the requesting clients (see Fig. \ref{fig:traditional_http}).  When an increasing number of clients request a web page, that page 
+ways among the requesting clients (Fig. \ref{fig:traditional_http}).  When an increasing number of clients request a web page, that page 
 therefore loads more and more slowly for users.  This problem occurs anytime the ratio of bandwidth to clients is low.  For example, when a server 
-is poorly provision, a server experiences spikes in load, or a small number of incoming clients download very large files.  An example of this problem 
-is the ``slashdot" effect, in which a sudden flash crowd of clients suddenly requests certain (news-worthy) pages, overwhelming unexpectant servers.  
+is poorly provisioned, it experiences a sudden spike in load, or a small number of incoming clients download very large files.  An example of this problem 
+is the ``slashdot" effect, in which a sudden flash crowd of clients suddenly requests certain pages, overwhelming unexpectant servers.  
 These situations cause web servers to become overwhelmed and even crash.
 
-\section {Related work}
 This problem is commonly combated by distributing the requests among a set of servers that mirror the content of the original server (Fig. \ref{fig:server_only}).  
 A company establishes mirrors by locating a set of servers in many different places on the Internet, then automatically redirecting clients to these servers, thus 
 distributing the load to provide better performance.  An example of this is the large commercial CDN run by Akamai \cite{akamai}, which performs distributed
-downloads for its clients (for example Apple uses it to distribute their iTunes\texttrademark  program).  This solution however requires a dedicated pool of 
-servers to provide the extra bandwidth.  Not all sites can afford a CDN, and the mirrors require cooperation, configuration, and maintenance, hence their expensive.
+downloads for its clients.  For example Apple uses Akamai's CDN to distribute their iTunes\texttrademark  program.  This solution,  however, requires a dedicated pool of 
+servers to provide the extra bandwidth.  Not all sites can afford a CDN, and  mirrors require cooperation, configuration, and maintenance.
 
 As a cheaper alternative, many web sites are beginning to use \emph{peer-to-peer content distribution}, or \emph{swarming}, with BitTorrent.  In BitTorrent, clients 
-download only parts of a file from a central server, and download the rest of it from their peers in the system.  While a client participates, it is both downloading 
-the parts (blocks) it needs and uploading the blocks it has to other peers (see Fig. \ref{fig:normal_swarm}).  Peer-to-peer content distribution enables a 
+download only some blocks of a file from a central server, and download the other blocks of it from their peers in the system.  While a client participates, it is both downloading 
+the  blocks it needs and uploading the blocks it has to other peers (Fig. \ref{fig:normal_swarm}).  Peer-to-peer content distribution enables a 
 web server to serve a large file to a large numbers of users with good speeds \cite{zappala}. Swarming protocols have been shown to actually decrease total download 
 time per peer as the number of peers increases, which is the opposite of the traditional client-server paradigm \cite{slurpie}. 
 
 \begin{figure}
-\begin{center}
-   \includegraphics[width=11cm]{description_pics/traditional_http.png}
-    \caption{Traditional HTTP download}
- \label{fig:traditional_http}
- \end{center}
-\end{figure}
-\begin{figure}
-    \centering
+  \subfigure[Traditional HTTP download]{
+   \includegraphics[width=8cm]{description_pics/traditional_http.png}
+   \label{fig:traditional_http}
+  }
+\subfigure[Server CDN example]{
   \includegraphics[width=8cm]{description_pics/server_side_only.png}
-  \caption{Server CDN example}
   \label{fig:server_only}
-\end{figure}   
+  }
+  \caption{Traditionall client server download}
+\end{figure}
+
 \begin{figure}
  \centering
- \includegraphics[width=4.5cm]{description_pics/normal_swarm.png}
+ \includegraphics[width=8cm]{description_pics/normal_swarm.png}
  \caption{Swarming example.  Arrows represent block exchanges.}
  \label{fig:normal_swarm}
 \end{figure}
 
-BitTorrent, however, currently requires setup for both servers and users, and isn't well-integrated into normal HTTP downloads.  BitTorrent peers first locate a 
-file with a ``.torrent'' extension from an out of band source such as a web server.  This file lists a target file's size, MD5 hashes of the blocks of the file, and 
-the IP address of a tracker for that file.  This tracker is a dedicated machine which helps connect the peers to each another.  Peers contact the tracker to receive 
-a list of peers who are currently downloading the file.  They then establish connections and begin sharing and receiving blocks with their neighbors.
+Using BitTorrent currently some configuration for both servers and clients, and isn't well-integrated into normal HTTP downloads.  A server wishing to use BitTorrent 
+must first create a special file with a ``.torrent'' extension that lists a target file's size, the MD5 hashes for each block of the file, and 
+the IP address of a tracker for that file.  The tracker is a dedicated machine that helps connect the peers to each another, and must be administered
+by the site using BitTorrent.  Users start a BitTorrent download by selecting the ``.torrent'' file on a web server, which launches a BitTorrent client program.
+BitTorrent will contact the tracker to receive a list of peers who are currently downloading the file.  They then establish connections and begin sharing and receiving blocks with their neighbors.
 
 %->final ?:BitTorrent, for the download of the last block of a file, uses a kind of 'many peers downloading the same blocks.  It requests the last block simultaneously from many peers, so that if one peer is transmitting it very slowly, they will be quickly passed by one of the faster seeds, and thus download it quickly.
 
-BitTorrent is not commonly used for serving all the files of a web site.  It is used mostly for large files, and requires configuration on both the server and client sides.  
-Every file shared has a .torrent file must be created, and a tracker established for that file\footnote{There have been some proposals of integrating BitTorrent with Apache
- \cite{webtorrent}, which show that even if a few clients contribute it helps with speedup, however this is mostly proposed as a server and client-side solution.  
- There are applets that will download BitTorrent files, and FireFox plugins to make downloading more seamless, but it still has a high barrier to entry for most users, 
- and servers must understand the protocol.}.  This type of configuration is difficult for an entire web site, and typically requires users to switch browsers in order to complete the download.  
- This somewhat manual process is non user-friendly for small files, for example those of a web page.  BitTorrent also employys incentives to share blocks of files, which can cause longer boot-strapping 
- time for new peers, which is poorly suited to small file downloads.  Recent improvements to BitTorrent include a ``trackerless'' option, which means peer lookup is 
- shared amongst the peers themselves, but access to the original .torrent files is still centralized (.torrent files must still be created).  This design requires 
- that all web servers and clients know and use a peer-to-peer protocol, causing a barrier to entry (for example, download sites offer links to BitTorrent downloads 
- which are ignored).
+BitTorrent is not commonly used for serving all the files of a web site since it requires per file configuration, and a tracker must be established for that file.  It is used mostly for large files where sharing
+bandwidth is most useful, and configuration time is not as much of an issue.  Since BitTorrent uses a separate program, it will not work well for downloading web pages which must be viewed in a browser.  
+BitTorrent also requires users to install client software and understand how and when to use it, creating a barrier to entry.  For example, many download sites offer links to BitTorrent downloads,
+but users may ignore them.  There have been proposals to integrate HTTP with BitTorrent downloads (known as web seeding), but doing this requires even more configuration by the server, and still suffer from the problems
+discussed above.
 
-\section {Thesis Statement}\label{section:thesis}
-Our hypothesis is that a system of cooperating web clients can reduce load on an origin web server by automatically switching from client-server file transfer to
- peer-to-peer content delivery.  This system can provide fast download times for objects of many sizes, especially small files.  It should be equivalent in speed 
- to BitTorrent for larger files, without requiring any manual configuration or participation from web servers.
+In this thesis, we integrate peer-to-peer download into a standard web client, so that an unmodified web server can automatically offload traffic as load increases. 
+Using experiments on PlanetLab, we show that peers who request small files can receive them at a rate of up to 30x the speed of traditional file server download, and
+actually decrease the load on servers, up to a point. This system provides for automatic integration of swarming type downloads with HTTP, thus lessening the configuration
+and manual intervention needed for use.
 
 \section{Related Work}\label{section:related_work}
-Much work has been done to distribute file downloads.  Solutions fall into three basic categories: client-side protocols, client and server-side protocols, 
-and server-side protocols.  Each category has certain trade-offs and advantages.
+Much work has been done to study distributed file downloading.  Solutions fall into three basic categories: client-side protocols, cooperative (client and server-side) protocols, 
+and server-side protocols.
 
 \subsection{Client-Side Only Protocols}
 Protocols that use only client-side protocols are popular in the literature.  Client-side protocols involve peers self-organizing to share content.  
@@ -94,11 +89,11 @@ Overall, client-side solutions alleviate flash-crowds. There are few that provid
 
 \subsection{Server-side and Client-side Cooperative Protocols}
 
-The most popular type of load alleviation currently is a server and client-side cooperative protocol, BitTorrent,  developed in 2001 by Bram Cohen \cite{cohen}.
+The most popular type of load alleviation currently is a server and client-side cooperative protocol, BitTorrent, released in 2002 by Bram Cohen \cite{cohen}.
 %Many file distribution protocols include some cooperation and previous knowledge between the server and client.  In these protocols clients typically access blocks of a file from the server and also from peers.  Server-side and client-side cooperative protocols basically fall into two categories: those used for web redirection, and those used to download single objects.  For web redirection, servers typically redirect clients to former clients that have downloaded files previously \cite{pseudoserving, coopnet}.  This allows a server to 'meter' its upload speeds and redirect peers, when appropriate, thus providing a backup strategy for over-loaded servers.  An example of this is the pseudo-server system \cite{pseudoserving}.  This style of protocol typically requires changes to both the server and client software, however, and the server could still become overloaded in extreme cases.
 Some other related protocols incorporate web-redirection (i.e. the server redirects peers to recent downloaders \cite{overhaul, webtorrent, onion, zappala, cohen,
 slurpie, mutualcast, fastreplica, avalanche, bullet_prime, onion}).  
-Swarming provides the benefit of scalable downloads of large files.  
+Swarming provides the benefit of scalable downloads of large files.
 %OnionNetworks, for instance, proposes an extension to HTTP to allow  HTTP response messages to include hashes of files and a list of peers from to which other peers may connect and download in a 
 %swarming fashion \cite{onion}.  Unfortunately their proposal has not seen wide-spread adoptance, nor research.  
 They are highly effective at serving loads orders of magnitude higher than an ordinary web server \cite{zappala}. 
@@ -113,7 +108,10 @@ It also lacks HTTP integration and a switching mechanism.
 On some sites, a user is presented the option of downloading via HTTP or via BitTorrent (swarming), depending on which they think will give them the 
 quicker download.  This provides a backup for overloaded servers.  To the users this requires an extra step\footnote{Almost always p2p download is slower, in the experience of the author, thus the choice is moot.)}. 
 
-% TODO BitTorrent web serve :)
+There have been some proposals of integrating BitTorrent with Apache \cite{webtorrent}, which show that even if a few clients participate it helps with bandwidth.  There are also applets 
+ that will download BitTorrent files, and browser plugins to make downloading BitTorrent files more seamless, but this is still has a high barrier to entry for most users, 
+ and servers must understand the protocol. Recent improvements to BitTorrent include a ``trackerless'' option, which means peer lookup is 
+ shared amongst the peers themselves, but access to the original .torrent files is still centralized (.torrent files must still be published).
 
 Dijjer \cite{dijjer} is a tool that automatically performs swarming downloads of any file.  If passed a url like http://dijjer.org/get/http://mysite.com/video.mov 
 the request is intercepted by the locally running Dijjer software, which performs a distributed download of the file.  
@@ -122,7 +120,7 @@ Dijjer contacts a quasi-DHT (similar to Freenet \cite{freenet}) for block hashes
 these blocks.  Unfortunately, Dijjer lacks automation in the transition to download, and, 
 as the Dijjer software is currently implemented, requires peers to cache material in which they were never interested, so is slightly intrusive, 
 for example causing clients to potentially (unknowingly) cache illegal or suspect web objects.  
-Also their DHT is non deterministic, which might be less than optimal.
+Also their DHT is non deterministic, which might be less than optimal.  Their protocol has little scholarly work available, as well.
 
 Overall, client and server side cooperation protocols work well at alleviating flash crowds, 
 and some existing protocols provide automation for transition to p2p delivery.  

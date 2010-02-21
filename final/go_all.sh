@@ -10,4 +10,4 @@ pdflatex just_experiment_results.tex
 bibtex thesis
 chmod a+r *.pdf
 scp *.pdf wilkboar@wilkboardonline.com:~/public_html/roger/p2p/writeup & >/dev/null
-explorer thesis.pdf
+chrome.bat thesis.pdf
