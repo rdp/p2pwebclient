@@ -1,4 +1,4 @@
-require 'faster_rubygems' if RUBY_VERSION < '1.9'
+require 'faster_rubygems' if RUBY_VERSION < '1.9.0'
 require 'faster_require'
 
 require 'sane'
@@ -7,7 +7,7 @@ require 'spec/autorun'
 
 describe P2PPlot do
 
-  it "should be able to take a hahs and calculate minimum x values from it as if it were graph lines" do
+  it "should be able to take a hash and calculate minimum x values from it as if it were graph lines" do
     P2PPlot.get_smallest_x({'abc' => [[1,1], [1,2]]}).should == 1
   end
 
@@ -25,7 +25,7 @@ describe P2PPlot do
      {:xs => [0,100, 200], :percentiles => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,6]], :legend1_addition => 'legend1_addition_here'}
   end
 
-  before do    
+  before do
     @a = P2PPlot.plot options
   end
 
@@ -97,5 +97,14 @@ describe P2PPlot do
     out =  P2PPlot.plot options
     out.yrange.assoc('yrange')[1].should == "[0:101]"
   end
+  
+  
+  it "should print in monochrome" do
+    @a.terminal.assoc("terminal")[1].should == 'pdf monochrome'
+  end
+  
+  it "should have a large font size" do
+    @a.pointsize.assoc("pointsize")[1].should be > 8
+  end  
 
 end

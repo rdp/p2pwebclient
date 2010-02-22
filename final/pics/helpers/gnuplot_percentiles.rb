@@ -35,7 +35,7 @@ class P2PPlot
           # we don't need no shtinkin titles
           plot.ylabel ylabel if ylabel
           plot.xlabel xlabel if xlabel
-		  above_x = [(xrange*1.05).to_i, xrange + 1].max
+    		  above_x = [(xrange*1.05).to_i, xrange + 1].max
 
           plot.xrange "[0:#{ above_x }]"
           
@@ -48,7 +48,7 @@ class P2PPlot
           else
             plot.yrange "[0:#{all_points.flatten.max * 1.1}]"
           end
-          plot.terminal 'pdf monochrome'
+          setup_normal plot
           plot.output name
           #plot.logscale 'y' # if ever useful...
 
@@ -108,6 +108,11 @@ class P2PPlot
       end
     end
 
+
+    def setup_normal plot
+      plot.terminal 'pdf monochrome'
+      plot.pointsize 25
+    end
 
     #
     # this is for plotting a single line style plot, and yes, only one line currently
@@ -120,7 +125,8 @@ class P2PPlot
           plot.ylabel ylabel
           plot.xlabel xlabel
           #plot.xrange "[0:#{ get_smallest_x(hash_values) + 1}]"
-          plot.terminal 'pdf monochrome'
+          setup_normal plot
+
           raise unless name.include? 'pdf' # gotta have that
           plot.output name
           ymax = 0
