@@ -63,7 +63,7 @@ describe P2PPlot do
   end
   
   it "should allow for custom legends in the median too" do
-     assert @a.data[1].with.include?('legend1_addition_here')
+     assert @a.data[1].title.include?('legend1_addition_here')
   end
   
   it "should have a y that's taller than the tallest y...climb every mountain..." do
@@ -101,8 +101,7 @@ describe P2PPlot do
     options[:ymax] = '101'
     out =  P2PPlot.plot options
     out.yrange.assoc('yrange')[1].should == "[0:101]"
-  end
-  
+  end  
   
   it "should print in monochrome" do
     @a.terminal.assoc("terminal")[1].should == 'pdf monochrome'

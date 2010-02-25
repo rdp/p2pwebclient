@@ -22,6 +22,7 @@ A peer wishing to download a file first tries to download it from the origin web
 peer-to-peer delivery:
 \begin{enumerate}
 \item First, the client waits a maximum number of seconds $T$ after the start of a download to receive the first byte of data from the origin server.  
+By first byte we mean any byte received from the origin server--a header byte or a content byte.  TCP connection handshake packets do not count as a received byte.
 If $T$ seconds pass without receiving any data, it transitions to a peer-to-peer delivery.  This allows the system to decide quickly whether the origin server is over-burdened.   
 \item After the client begins receiving data from the server, it monitors whether the download rate falls below a certain fixed 
 threshold of $R$ bytes per second over the last $W$ seconds.  If the receive rate ever drops below $R$, the client transitions to peer-to-peer delivery.  

@@ -18,6 +18,7 @@ require 'arguments' # rogerdpack-arguments
 #f = [6,5.5, 6.5] then pass in [x,b,c,d,e,f]
 class P2PPlot
   class << self
+  
     def plot xs, percentiles, name = 'unnamed.pdf', xlabel = nil, ylabel = nil, xs2 = nil, percentiles2 = nil, legend1_addition = nil, legend2_addition = nil, ymax = nil
       xrange = xs.last - 0
 
@@ -36,13 +37,13 @@ class P2PPlot
           plot.ylabel ylabel if ylabel
           plot.xlabel xlabel if xlabel
     		  above_x = [(xrange*1.05).to_i, xrange + 1].max
-
           plot.xrange "[0:#{ above_x }]"
           
           all_points =  percentiles
           if percentiles2
             all_points += percentiles2
           end
+
           if ymax
             plot.yrange "[0:#{ymax}]"
           else
@@ -50,7 +51,8 @@ class P2PPlot
           end
           setup_normal plot
           plot.output name
-          #plot.logscale 'y' # if ever useful...
+          # if ever useful...
+          #plot.logscale 'y' 
 
           smallest_range = xs.last - xs.first # pick some large value
           previous = xs.first
@@ -89,8 +91,12 @@ class P2PPlot
     def add_percentile_plot plot, all_data, addition_for_legend, add_median_line
       plot.data << Gnuplot::DataSet.new( all_data ) do |ds|
         ds.using = "1:3:2:6:5"
-        ds.with = "candlesticks title '1,25,75,99 percentiles #{addition_for_legend}' "
-        #ds.notitle 
+        ds.with = "candlesticks"
+        if addition_for_legend
+          ds.title = "1,25,75,99 percentiles #{addition_for_legend}"
+        else
+          ds.notitle 
+        end
       end
 
       #add the median...all it is is a line
@@ -101,18 +107,21 @@ class P2PPlot
          ds.using = "1:4 " # just x,median
         else
          ds.using = "1:4:4:4:4"
-         ds.with = "candlesticks lt -1 "
-         #ds.notitle we do too have a title        
+         ds.with = "candlesticks lt -1 "         
        end
-       ds.with += "title '50th percentile #{addition_for_legend}'"       
+       if addition_for_legend
+         ds.title = "50th percentile #{addition_for_legend}"
+       else
+         ds.notitle
+       end
+        
       end
     end
 
-
     def setup_normal plot
       plot.terminal 'pdf monochrome'
-      plot.pointsize 25
-    end
+#      plot.pointsize 25
+    end
 
     #
     # this is for plotting a single line style plot, and yes, only one line currently
@@ -142,14 +151,10 @@ class P2PPlot
           plot.yrange "[0:#{ymax * 1.1}]"
           
         end
-      end
-
-    end
-
-    named_args
-
+      end
+    end
+    named_args
 
   end
 
 end
-
