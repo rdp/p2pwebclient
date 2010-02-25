@@ -13,7 +13,7 @@ are disallowed.  Experiments run until
 all peers finish downloading the file. Each experiment is repeated 3 times and results are averaged. 
 A different filename is downloaded with each run, so as to uses different DHT keys. We collect the download 
 times of all peers, and measure the amount of load on the origin server by summing the bytes received within a given 
-second from the origin\footnoe{This only measures bytes received from the origin, not bytes sent, 
+second from the origin\footnote{This only measures bytes received from the origin, not bytes sent, 
 as any data received after a socket has already been closed are ignored, and peers 
 close connections early if they receive the bytes from somewhere else}. We also calculate the percentage 
 of the file received from peers versus from the origin, as well as the time required to do the DHT 
