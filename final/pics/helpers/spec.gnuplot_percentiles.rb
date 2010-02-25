@@ -14,25 +14,27 @@ describe P2PPlot do
 
   context "plotting a single line" do
 
-    def plot_single
-      FileUtils.rm_rf 'test.pdf'
-      P2PPlot.plotNormal 'x label single', 'y label single', {'abc' => [[1,1], [2,2], [3,3]]}, 'test.pdf'
+    before do
+      FileUtils.rm_rf 'singles.pdf'
+      @a = P2PPlot.plotNormal 'x label single', 'y label single', {'abc' => [[1,1], [2,2], [3,3]],
+      'def' => [[0,0], [1,1], [4,4]]}, 'singles.pdf'
     end
 
     it "should generate a straight line graph too" do
-      plot_single
-      assert File.size('test.pdf') > 0
+      assert File.size('singles.pdf') > 0
     end
     it "should have a tall y for single line graphs, too" do
-      a = plot_single
-      y = 3*1.1
-      a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
+      y = 4*1.1
+      @a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
     end
 
     it "should setup x range to be 10% past the highest x" do
-      a = plot_single
-      y = 3*1.1
-      a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
+      y = 4*1.1
+      @a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
+    end
+    
+    it "should graph with linespoints" do
+      @a.data[0].with.should == 'linespoints'    
     end
 
   end

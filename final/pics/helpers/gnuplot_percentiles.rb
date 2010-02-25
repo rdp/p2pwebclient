@@ -39,7 +39,7 @@ class P2PPlot
 
           #plot.title  "Example" 
           # we don't need no shtinkin global titles
-          add_label(plot, 'y', ylabel + 'gotcha') if ylabel
+          add_label(plot, 'y', ylabel) if ylabel
           add_label(plot, 'x', xlabel) if xlabel
     		  above_x = [(xrange*1.05).to_i, xrange + 1].max
           plot.xrange "[0:#{ above_x }]"
@@ -156,7 +156,7 @@ class P2PPlot
             ymax = [ymax, ys.max].max
             plot.data << Gnuplot::DataSet.new( [xs, ys]) do |ds|; 
               ds.title = name
-              ds.with = 'lines'
+              ds.with = 'linespoints'
             end          
           }
           plot.yrange "[0:#{ymax * 1.1}]"
