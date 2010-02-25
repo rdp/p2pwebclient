@@ -16,7 +16,7 @@ describe P2PPlot do
 
     def plot_single
       FileUtils.rm_rf 'test.pdf'
-      P2PPlot.plotNormal 'x label', 'y label', {'abc' => [[1,1], [2,2], [3,3]]}, 'test.pdf'
+      P2PPlot.plotNormal 'x label single', 'y label single', {'abc' => [[1,1], [2,2], [3,3]]}, 'test.pdf'
     end
 
     it "should generate a straight line graph too" do
@@ -39,11 +39,15 @@ describe P2PPlot do
 
   def options
     {:xs => [0,100, 200], :percentiles => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,6]], :legend1_addition => 'legend1_addition_here',
-    :ylabel => 'This is y', :xlabel => 'This is x Label'}
+      :ylabel => 'This is y', :xlabel => 'This is x Label', :name => 'percentile.pdf'}
   end
 
   before do
     @a = P2PPlot.plot options
+  end
+  
+  it "should create a graph" do
+    File.size('percentile.pdf').should be > 0
   end
 
   def plot_to_ten
@@ -113,7 +117,7 @@ describe P2PPlot do
   end
 
   it "should have a large font size" do
-    @a.pointsize.assoc("pointsize")[1].should be > 8
+    @a.to_gplot.should include 'Times-Roman'
   end
 
 end

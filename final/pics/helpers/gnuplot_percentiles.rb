@@ -18,6 +18,9 @@ require 'arguments' # rogerdpack-arguments
 #f = [6,5.5, 6.5] then pass in [x,b,c,d,e,f]
 class P2PPlot
   class << self
+    def add_label(plot, axis, text)
+      plot.arbitrary_lines << "set #{axis}label \"#{text}\" font \"Times-Roman,11\""
+    end
   
     def plot xs, percentiles, name = 'unnamed.pdf', xlabel = nil, ylabel = nil, xs2 = nil, percentiles2 = nil, legend1_addition = nil, legend2_addition = nil, ymax = nil
       xrange = xs.last - 0
@@ -28,14 +31,16 @@ class P2PPlot
         # assert(xrange == (xs2.last - xs2.first))
         xrange = [xrange, xs2.last - xs2.first].max
       end
+      
+      
 
       Gnuplot.open do |gp|
         Gnuplot::Plot.new( gp ) do |plot|
 
           #plot.title  "Example" 
-          # we don't need no shtinkin titles
-          plot.ylabel ylabel if ylabel
-          plot.xlabel xlabel if xlabel
+          # we don't need no shtinkin global titles
+          add_label(plot, 'y', ylabel + 'gotcha') if ylabel
+          add_label(plot, 'x', xlabel) if xlabel
     		  above_x = [(xrange*1.05).to_i, xrange + 1].max
           plot.xrange "[0:#{ above_x }]"
           
@@ -86,6 +91,11 @@ class P2PPlot
       }
       all_xs.min
     end
+    
+    
+    def get_label(label)
+       "#{label} with some extra  font \"Helvetica,20\""
+    end
 
 
     def add_percentile_plot plot, all_data, addition_for_legend, add_median_line
@@ -107,7 +117,8 @@ class P2PPlot
          ds.using = "1:4 " # just x,median
         else
          ds.using = "1:4:4:4:4"
-         ds.with = "candlesticks lt -1 "         
+         ds.with = "candlesticks lt -1 "
+         
        end
        if addition_for_legend
          ds.title = "50th percentile #{addition_for_legend}"
@@ -120,7 +131,7 @@ class P2PPlot
 
     def setup_normal plot
       plot.terminal 'pdf monochrome'
-#      plot.pointsize 25
+     
     end
 
     #
@@ -131,8 +142,8 @@ class P2PPlot
       
       Gnuplot.open do |gp|
         Gnuplot::Plot.new( gp ) do |plot|
-          plot.ylabel ylabel
-          plot.xlabel xlabel
+          add_label(plot, 'y', ylabel + 'gotcha') if ylabel
+          add_label(plot, 'x', xlabel) if xlabel
           #plot.xrange "[0:#{ get_smallest_x(hash_values) + 1}]"
           setup_normal plot
 
@@ -151,9 +162,9 @@ class P2PPlot
           plot.yrange "[0:#{ymax * 1.1}]"
           
         end
-      end
-    end
-    named_args
+      end
+    end
+    named_args
 
   end
 
