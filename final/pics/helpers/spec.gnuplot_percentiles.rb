@@ -4,6 +4,7 @@ require 'faster_require'
 require 'sane'
 require_relative 'gnuplot_percentiles.rb'
 require 'spec/autorun'
+require 'fileutils'
 
 describe P2PPlot do
 
@@ -12,13 +13,13 @@ describe P2PPlot do
   end
 
   def plot_single
-    File.delete 'test.pdf' if File.exist? 'test.pdf'
+    FileUtils.rm_rf 'test.pdf'
     P2PPlot.plotNormal 'x label', 'y label', {'abc' => [[1,1], [2,2], [3,3]]}, 'test.pdf'
   end
   
   it "should generate a straight line graph too" do
     plot_single
-    assert File.exist?('test.pdf')
+    assert File.size('test.pdf') > 0
   end
   
   def options
@@ -41,17 +42,21 @@ describe P2PPlot do
   end
 
   context "it should never be wider than half the difference between the smallest xes" do
-    a = P2PPlot.plot [0.1,0.2,100], [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,6]] 
-    assert a.boxwidth.assoc('boxwidth')[1] == 0.05    
+  
+    before do
+      FileUtils.rm_rf 'unnamed.pdf'
+      @a = P2PPlot.plot [0.1,0.2,100], [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,6]] 
+      assert File.size('unnamed.pdf') > 0
+      assert @a.boxwidth.assoc('boxwidth')[1] == 0.05    
+    end
     
     it "should also show the median line in cases where a few points are scrunched together" do
-      assert a.data[1].using.include?("1:4 ") # the percentiles
-      assert a.data[1].with.include?("lines") # the 50 percentile line
-      assert !a.data[1].with.include?("candlesticks") # the 50 percentile candlesticks
+      assert @a.data[1].using.include?("1:4 ") # the percentiles
+      assert @a.data[1].with.include?("lines") # the 50 percentile line
+      assert !@a.data[1].with.include?("candlesticks") # the 50 percentile candlesticks
     end
     
   end
-  
   
   it "should have a boxwidth not too large if they are far separated" do
     assert @a.boxwidth.assoc('boxwidth')[1] == 6

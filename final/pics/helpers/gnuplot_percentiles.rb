@@ -18,7 +18,7 @@ require 'arguments' # rogerdpack-arguments
 #f = [6,5.5, 6.5] then pass in [x,b,c,d,e,f]
 class P2PPlot
   class << self
-    def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil, xs2 = nil, percentiles2 = nil, legend1_addition = nil, legend2_addition = nil, ymax = nil
+    def plot xs, percentiles, name = 'unnamed.pdf', xlabel = nil, ylabel = nil, xs2 = nil, percentiles2 = nil, legend1_addition = nil, legend2_addition = nil, ymax = nil
       xrange = xs.last - 0
 
       if(xs2)
