@@ -24,6 +24,56 @@ client upload sum percentiles:
 0 0 0 0 0
  :totalBytesReceivedFromPeersAcrossAllRuns 0, :totalBytesUploadedByServerAcrossAllRuns 398432424.0 :totalBytesServedFromPeersAcrossAllRuns 0
 -----------
+Doing stats on runs runs just numbers ["unnamed497104_linger_at1_run1_of_4_major_2_of_9", "unnamed497104_linger_at1_run2_of_4_major_2_of_9", "unnamed497104_linger_at1_run3_of_4_major_2_of_9", "unnamed497104_linger_at1_run4_of_4_major_2_of_9"]
+download times %'iles'
+3.82 44.19 127.86 294.24 444.24
+download total times %'iles'
+0 0 0 0 0
+death methods
+dR 39.0 dT 952.75 died 3.75 http_straight 0.25
+server upload [received] distinct seconds [instantaneous server upload per second] %'iles'
+33282.5 97754.75 118455.5 140345.75 253965.25
+ instantaneous tenth of second throughput %'iles'
+196.43333333333334 103422.56666666667 134849.08333333334 166413.25 1233472.3666666667
+upload bytes %'iles'
+0 0 0 0 3219679
+dht gets
+0 0 0 0 0
+dht puts
+0 0 0 0 0
+dht removes
+0 0 0 0 0
+percentiles of percent received from just peers (not origin)
+0.0 0.0 0.23067885377461816 0.9166338285023048 1.0
+client upload sum percentiles:
+0 0 0 0 3219679
+ :totalBytesReceivedFromPeersAcrossAllRuns 231338312.0, :totalBytesUploadedByServerAcrossAllRuns 245020590.0 :totalBytesServedFromPeersAcrossAllRuns 620123484.0
+-----------
+Doing stats on runs runs just numbers ["unnamed497104_linger_at2_run1_of_4_major_3_of_9", "unnamed497104_linger_at2_run2_of_4_major_3_of_9", "unnamed497104_linger_at2_run3_of_4_major_3_of_9", "unnamed497104_linger_at2_run4_of_4_major_3_of_9"]
+download times %'iles'
+2.62 26.82 59.62 167.65 309.26
+download total times %'iles'
+0 0 0 0 0
+death methods
+dR 41.0 dT 951.5 died 3.0 http_straight 0.0
+server upload [received] distinct seconds [instantaneous server upload per second] %'iles'
+26988.5 73171.5 105032.0 135305.5 253383.5
+ instantaneous tenth of second throughput %'iles'
+22.8 568.5666666666667 78427.25 172643.73333333334 4008958.15
+upload bytes %'iles'
+0 0 0 0 8200931
+dht gets
+0 0 0 0 0
+dht puts
+0 0 0 0 0
+dht removes
+0 0 0 0 0
+percentiles of percent received from just peers (not origin)
+0.0 0.0 0.7597910695121786 1.0 1.0
+client upload sum percentiles:
+0 0 0 0 8200931
+ :totalBytesReceivedFromPeersAcrossAllRuns 387412160.0, :totalBytesUploadedByServerAcrossAllRuns 172220523.0 :totalBytesServedFromPeersAcrossAllRuns 1075836569.0
+-----------
 Doing stats on runs runs just numbers ["unnamed497104_linger_at4_run1_of_4_major_4_of_9", "unnamed497104_linger_at4_run2_of_4_major_4_of_9", "unnamed497104_linger_at4_run3_of_4_major_4_of_9", "unnamed497104_linger_at4_run4_of_4_major_4_of_9"]
 download times %'iles'
 1.77 16.09 33.97 51.65 141.37

@@ -1,6 +1,6 @@
 ruby ruby_to_tex.rb experiment_results.erb.tex
 
-# note -- the first pass it can't get the ref's right! 
+@rem # note -- the first pass it can't get the ref's right! 
 
 @rem # pdflatex thesis.tex
 @rem # bibtex thesis
@@ -10,7 +10,6 @@ pdflatex just_experiment_results.tex
 chmod a+r \*.pdf
 
 @rem #scp just_experiment_results.pdf wilkboar@wilkboardonline.com:~/public_html/roger/p2p/writeup
-cp just_experiment_results.pdf just_experiment_results_view_copy.pdf
-echo 'here1'
-reveal.bat
+@cp just_experiment_results.pdf just_experiment_results_view_copy.pdf
+@reveal.bat
 

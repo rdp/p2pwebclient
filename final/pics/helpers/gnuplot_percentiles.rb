@@ -70,7 +70,7 @@ class P2PPlot
           box_width = [xrange*3/100, smallest_range/2.0].min
           plot.boxwidth box_width
           if xrange >= 100*smallest_range
-            add_median_line = true
+            add_median_line = false # deemed unuseful for now
           else
             add_median_line = false
           end
@@ -92,12 +92,6 @@ class P2PPlot
       all_xs.min
     end
     
-    
-    def get_label(label)
-       "#{label} with some extra  font \"Helvetica,20\""
-    end
-
-
     def add_percentile_plot plot, all_data, addition_for_legend, add_median_line
       plot.data << Gnuplot::DataSet.new( all_data ) do |ds|
         ds.using = "1:3:2:6:5"
@@ -142,7 +136,7 @@ class P2PPlot
       
       Gnuplot.open do |gp|
         Gnuplot::Plot.new( gp ) do |plot|
-          add_label(plot, 'y', ylabel + 'gotcha') if ylabel
+          add_label(plot, 'y', ylabel) if ylabel
           add_label(plot, 'x', xlabel) if xlabel
           #plot.xrange "[0:#{ get_smallest_x(hash_values) + 1}]"
           setup_normal plot

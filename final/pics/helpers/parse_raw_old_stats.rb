@@ -170,7 +170,7 @@ if $0 == __FILE__
   if ARGV[1]
     if File.exist? ARGV[1]
       puts 'doing dual file...'
-      assert ARGV.length > 3
+      assert ARGV.length >= 2
       ParseRaw.go ARGV[0], 'Load (Peers per Second)', ARGV[1], ARGV[2], ARGV[3] # dual file mode, with legend names
     else
       ParseRaw.go ARGV[0], ARGV[1] || 'Peers Per Second' # "specify y axis" mode
