@@ -18,7 +18,11 @@ require 'arguments' # rogerdpack-arguments
 #f = [6,5.5, 6.5] then pass in [x,b,c,d,e,f]
 class P2PPlot
   class << self
-    def plot xs, percentiles, name = 'demo1.pdf', xlabel = nil, ylabel = nil, xs2 = nil, percentiles2 = nil, legend1_addition = nil, legend2_addition = nil, ymax = nil
+    def add_label(plot, axis, text)
+      plot.arbitrary_lines << "set #{axis}label \"#{text}\" font \"Times-Roman,11\""
+    end
+  
+    def plot xs, percentiles, name = 'unnamed.pdf', xlabel = nil, ylabel = nil, xs2 = nil, percentiles2 = nil, legend1_addition = nil, legend2_addition = nil, ymax = nil
       xrange = xs.last - 0
 
       if(xs2)
@@ -27,30 +31,33 @@ class P2PPlot
         # assert(xrange == (xs2.last - xs2.first))
         xrange = [xrange, xs2.last - xs2.first].max
       end
+      
+      
 
       Gnuplot.open do |gp|
         Gnuplot::Plot.new( gp ) do |plot|
 
           #plot.title  "Example" 
-          # we don't need no shtinkin titles
-          plot.ylabel ylabel if ylabel
-          plot.xlabel xlabel if xlabel
-		  above_x = [(xrange*1.05).to_i, xrange + 1].max
-
+          # we don't need no shtinkin global titles
+          add_label(plot, 'y', ylabel) if ylabel
+          add_label(plot, 'x', xlabel) if xlabel
+    		  above_x = [(xrange*1.05).to_i, xrange + 1].max
           plot.xrange "[0:#{ above_x }]"
           
           all_points =  percentiles
           if percentiles2
             all_points += percentiles2
           end
+
           if ymax
             plot.yrange "[0:#{ymax}]"
           else
             plot.yrange "[0:#{all_points.flatten.max * 1.1}]"
           end
-          plot.terminal 'pdf'
+          setup_normal plot
           plot.output name
-          #plot.logscale 'y' # if ever useful...
+          # if ever useful...
+          #plot.logscale 'y' 
 
           smallest_range = xs.last - xs.first # pick some large value
           previous = xs.first
@@ -63,7 +70,7 @@ class P2PPlot
           box_width = [xrange*3/100, smallest_range/2.0].min
           plot.boxwidth box_width
           if xrange >= 100*smallest_range
-            add_median_line = true
+            add_median_line = false # deemed unuseful for now
           else
             add_median_line = false
           end
@@ -84,13 +91,16 @@ class P2PPlot
       }
       all_xs.min
     end
-
-
+    
     def add_percentile_plot plot, all_data, addition_for_legend, add_median_line
       plot.data << Gnuplot::DataSet.new( all_data ) do |ds|
         ds.using = "1:3:2:6:5"
-        ds.with = "candlesticks title '1,25,75,99 percentiles #{addition_for_legend}' "
-        #ds.notitle 
+        ds.with = "candlesticks"
+        if addition_for_legend
+          ds.title = "1,25,75,99 percentiles #{addition_for_legend}"
+        else
+          ds.notitle 
+        end
       end
 
       #add the median...all it is is a line
@@ -102,12 +112,21 @@ class P2PPlot
         else
          ds.using = "1:4:4:4:4"
          ds.with = "candlesticks lt -1 "
-         #ds.notitle we do too have a title        
+         
        end
-       ds.with += "title '50th percentile #{addition_for_legend}'"       
+       if addition_for_legend
+         ds.title = "50th percentile #{addition_for_legend}"
+       else
+         ds.notitle
+       end
+        
       end
     end
 
+    def setup_normal plot
+      plot.terminal 'pdf monochrome'
+     
+    end
 
     #
     # this is for plotting a single line style plot, and yes, only one line currently
@@ -117,10 +136,11 @@ class P2PPlot
       
       Gnuplot.open do |gp|
         Gnuplot::Plot.new( gp ) do |plot|
-          plot.ylabel ylabel
-          plot.xlabel xlabel
+          add_label(plot, 'y', ylabel) if ylabel
+          add_label(plot, 'x', xlabel) if xlabel
           #plot.xrange "[0:#{ get_smallest_x(hash_values) + 1}]"
-          plot.terminal 'pdf'
+          setup_normal plot
+
           raise unless name.include? 'pdf' # gotta have that
           plot.output name
           ymax = 0
@@ -130,20 +150,16 @@ class P2PPlot
             ymax = [ymax, ys.max].max
             plot.data << Gnuplot::DataSet.new( [xs, ys]) do |ds|; 
               ds.title = name
-              ds.with = 'lines'
+              ds.with = 'linespoints'
             end          
           }
           plot.yrange "[0:#{ymax * 1.1}]"
           
         end
       end
-
     end
-
     named_args
-
 
   end
 
 end
-

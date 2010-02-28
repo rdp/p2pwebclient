@@ -1,4 +1,5 @@
-stats = eval File.read('../yanc_30mb/yanc_30mb_3.stats.txt')
+
+require 'sane'stats = eval File.read('../yanc_30mb/yanc_30mb_3.stats.txt')
 puts stats
 
 # all_cs_bytes, p2p_p2p
@@ -13,10 +14,9 @@ all = stats.map{|file|
     [total, file[:filename]]
     total
   end
-}.compact.sort.map.with_index{|v, i| [i/4, v]}
-
-puts all
+}.compact.sort.map.with_index{|v, i| [(v*100).to_i, i/4]}
 
 require 'gnuplot_percentiles.rb'
 
-P2PPlot.plotNormal :xlabel => 'Number of Peers', :ylabel => 'Percentage of File via P2P', :hash_values => {'CDF' => all}, :name => '../yanc_30mb/yanc_30_mb_cdf.pdf'
+P2PPlot.plotNormal :ylabel => 'Percentage of Peers', :xlabel => 'Percentage of File received from peers', 
+   :hash_values => {nil => all}, :name => '../yanc_30mb/yanc_30_mb_cdf.pdf'

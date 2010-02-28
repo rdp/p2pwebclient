@@ -1,6 +1,8 @@
 \section {Abstract}
-In the traditional web client-server model, available bandwidth decreases as the number of clients increases.  
-This can cause servers to serve files slowly or to become completely overwhelmed.  
-Our protocol counters this by integrating peer-to-peer swarming with traditional client-server downloads.  
-Clients initially attempt to download the original file.  If this is too slow, they ask their peers for pieces of the file, 
-and then offer those pieces to other peers.
+For traditional web servers, available bandwidth decreases as the number of clients increases.  
+This can cause servers to serve files slowly or to become completely overwhelmed when load becomes too high.
+BitTorrent is a peer-to-peer solution to this problem, but it requires configuration by the user for each
+file to be delivered this way.
+We develop a new system that integrates peer-to-peer file delivery with traditional client-server downloads.  
+Clients initially attempt to download a file from a web server; if this is too slow, they transition to peer-to-peer
+delivery.  Experiments with a prototype system show that it serves up to 30x faster than traditional web servers.
