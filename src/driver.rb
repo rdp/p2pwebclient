@@ -482,7 +482,7 @@ class Driver
         raise 'subs must be number' if @@howManySubRepetitions == 0
       end
 
-      opts.on('--just_display_what_would_have_run_for_multiples_settings') do
+      opts.on('--just_display_what_would_have_run_for_multiples_settings', 'dont actually run anything') do
         @@actuallyPerformMultipleRuns = false
       end
 
@@ -726,9 +726,6 @@ class Driver
       settingsToTryArray = [1,2,4,8,16,26,50]
       whatToAddTo = '@@peerTokens'
       #	settingsToTryArray = [false] # YANC only
-      codeToExecuteBeforeEachRun = proc {
-        system('ssh byu_p2p@planetlab1.flux.utah.edu "ssh byu_p2p@planetlab1.byu.edu \" /home/byu_p2p/installed_apache_2/bin/apachectl -k restart\""')
-      }
     end
 
     raise 'must specify what is varying' unless whatToAddTo
@@ -752,7 +749,7 @@ class Driver
     runNamesForEachHowVaried = []
     run_objects_for_how_each_varied_to_avoid_having_to_recompute = []
     eval("#{whatToAddTo} = #{firstValue}")
-    codeToExecuteAfterEachMajorLoopAndAtBeginning.call if codeToExecuteAfterEachMajorLoopAndAtBeginning
+    assert codeToExecuteAfterEachMajorLoopAndAtBeginning.call if codeToExecuteAfterEachMajorLoopAndAtBeginning
     @@allRunLogger.log "instantiated #{whatToAddTo} at " + eval("#{whatToAddTo}").to_s
 
     whatToAddToFilenameSanitized = whatToAddTo.to_s.gsub('@', '')
@@ -768,7 +765,7 @@ class Driver
         settingForThisMajorStep = eval("#{whatToAddTo}").to_s
         @@allRunLogger.log "NEXTTTTTTTT major step of variable!doing #{whatToAddTo} currently set at " + settingForThisMajorStep + "\n\n\n\n\n"
         1.upto(@@howManySubRepetitions) { |n|
-          system("ssh rdp@bp \"/home/rdp/dev/p2pwebclient/distro/restart_byu1_server.sh\"")
+          system("ssh rdp@thomasknoell.com \"/home/rdp/dev/p2pwebclient/distro/restart_byu1_server.sh\"")
           # attempt at avoiding concurrency probs. Not sure if this belongs here or in doSingleRunWithCurrent
           my_run_marker = File.expand_path('~') + "/bittorrent_#{@@url_use_bittorrent}_run_in_progress_" + 'pid ' + Process.pid.to_s + '_' + Socket.gethostname
           all_contestants = File.expand_path('~') + "/bittorrent_#{@@url_use_bittorrent}_run_in_progress_*"
