@@ -2,7 +2,7 @@
 
 The basic algorithm connects interested peers with one another via a Distributed Hash Table (DHT).
 
-The DHT is formed by running an instance of the Pastry OpenDHT code on approximately 300 PlanetLab peers.  3 peers are designated as ``gateways" that the others
+The DHT is formed by running an instance of the Bamboo OpenDHT code on approximately 300 PlanetLab peers.  3 peers are designated as ``gateways" that the others
 contact to join the DHT.  After peers join the DHT, each creates a web service that accepts queries from peers outside the DHT.  When they receive a
 query, they forward it through the DHT, retrieve the answer, and return it to the requestor. They store only peer information, to connect peers downloading the file to each other.
 Data is stored as key, value maps, with many values storable per key.  If there is more than one value stored, only the first 10 values are returned. 
@@ -54,7 +54,7 @@ in the DHT.  Do do this it first does a query to see if this data has already be
 can use this to retrieve the meta-data for the file.
 
 After completing a download, the peer lingers a certain number of seconds.  After its linger time is up, it drops all current connections to peers, and performs DHT remove requests to
-remove itself from the peer lists in the DHT\footnote{It should be noted that we implemented this algorithm using the Ruby language, which is interpreted so introduces a bit of a slowdown.}.
+remove itself from the peer lists in the DHT.
 
 \begin{figure*}
   \begin{center}
