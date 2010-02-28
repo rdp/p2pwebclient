@@ -1,40 +1,36 @@
 \section{Conclusion}
 
-We have shown that automated swarming can serves small files up to 30x faster than traditional web servers, and can decrease
-the load on the origin server, using a generic DHT implementation.
+We have shown that a system of cooperating web clients can reduce load on a origin web server by automatically switching
+from client-server file transfer to peer-to-peer content delivery. Our system has shown itself to be far more scalable 
+than a traditional client-server download and can significantly
+reduce download times.  The system is most effective for small files but does not yet compete well with
+BitTorrent for large files.  We have also found good settings for various system parameters.  This system is mostly useful
+for overloaded sites with static pages.
 
-An interesting question is when this protocol would be most useful. From our experiments, it appears that
-flash crowds on servers limited by origin bandwidth would benefit most, because static objects would
-be shared.  Downloaders of large files (ex: operating
-system updates) would also benefit, as the automatic transition would help speed up downloads without
-manual intervention.
-%Groups of peers in close proximity that download a files could benefit (ex: within a large business several
-%peers download the same file--it would be shared via local networks). 
-A server that is cpu bound would not benefit as much, since typically "root" pages are dynamic, hence not cacheable.
-Also from our experiments it appears that a site with large files that is hit with a sudden flash crowd would not respond well.
+Several further optimizations are possible.  For example we currently connect to the origin
+server once from each peer, causing the same blocks to be served (redundantly) to many peers in some instances.
+This is wasteful in some instances.
 
-\section{Future Work}
+We currently do not validate the integrity of files.  We assume peer trustworthiness and no file corruption.  
+We also do not provide peer incentives for sharing.
 
-Several further optimizations are left as future work for example we currently connect to the origin
-server from each peer, causing slowdown in the case of large files.
-Another is that this implementation of OpenDHT can sometimes timeout for key lookups. %#Another problem with keys is that For example, sometimes 1 key out of 20 will take 20s, while the other 19 will all be very fast. 
-This should be taken into account when building a system around OpenDHT.
-With our system, we accomodate for this by looking up redundant keys from redundant gateways, but it still
-could be more optimized.
-%Unfortunately it appears that OpenDHT overloads easily when multiple
-%keys are simultaneously requested from a single gateway. Some balance is yet to be found. Our protocol
-%could accomodate for this better.
-%We also do not examine the effectiveness of such a system for very poorly connected servers, such
-%as dial-up modem users, nor did we examine if it is useful to a web site that is well connected. We do
-%not attempt a true ``internet scale" test--i.e. many multiple files being requested simultaneously.
-We also use redundant requests for the last block, causing some waste.  We also do not ensure the 
-integrity of files (i.e. we assume peer trustworthiness and non file corruption), nor do we provide peer incentives for sharing.
+Because peer lists are always returned in order from Bamboo, oldest to youngest, our system can experience staleness if peers
+go offline without removing themselves from lists.  This ordering also causes peers to typically download the file
+most from oldest listed peers, which can cause unfairness. This ordering can also cause peers to receive lists which
+are outdated if they have a slow Internet connection.  A better algorithm for
+could be designed than the polling one we use.
 
-Because peer lists are returned in order from oldest to youngest, our system can fall prey to  staleness if peers
-go offline without removing themselves from the list. This also causes peers to prefer to download the file
-from the earliest peers, which can cause unfairness \cite{Brian_Thesis}. A better algorithm for
-this could be designed. Also, clients with a slow connections may receive peer lists that
-have become outdated.  Having to poll the DHT is less than optimal.  
-We also do not accomodate for the case of an extremely popular file, which could overwhelm the DHT members that are responsible for its keys.
+In our scalability studies, after a certain load the DHT response times increase.  There may be a way to avoid this.
 
-We leave these and many other questions for future work.
+With large files, over time clients do many requests for the different blocks.  These requests might all return the same
+peer list currently.  This redundancy might be unnecessary.
+
+If there is an extremely popular file, the requests for the peer lists might overwhelm the DHT member responsible
+for that list.
+
+Currently this system assumes static pages.  There could be some collaboration possible for peers 
+could do here to store meta-data about which files are (or appear to be) static, and which are definitely dynamic.
+This system only helps with bandwidth bound servers.  A way to also distribute CPU load to clients would be useful.
+
+Currently we only use hard-coded system parameters, like $R$ and $b$, etc.  This may be non optimal, since it is hard
+to guess the expected throughput.

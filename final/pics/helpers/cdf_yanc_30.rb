@@ -18,5 +18,5 @@ all = stats.map{|file|
 
 require 'gnuplot_percentiles.rb'
 
-P2PPlot.plotNormal :ylabel => 'Percentage of Peers', :xlabel => 'Percentage of File received from peers', 
+P2PPlot.plotNormal :ylabel => 'Percent of Peers', :xlabel => 'Percent of File from peers', 
    :hash_values => {nil => all}, :name => '../yanc_30mb/yanc_30_mb_cdf.pdf'

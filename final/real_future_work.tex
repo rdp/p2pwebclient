@@ -58,3 +58,81 @@ xor for mor reliable insta trackable md5's? Or perhaps nxn sub md5's? or n^n md5
 If a file was once ``downloaded and then on a reget it said not updated'' then that one can be cached, then asked if it needs to be updated.  Share modified time, Etags?
 
 I suppose they could mark files as ``must be dynamic'' as well...maybe?  How do you tell?  Does rails specify any difference at all?
+
+
+An interesting question is when this protocol would be most useful. From our experiments, it appears that
+flash crowds on servers limited by origin bandwidth would benefit most, because static objects would
+be shared.  Downloaders of large files (ex: operating
+system updates) would also benefit, as the automatic transition would help speed up downloads without
+manual intervention.
+Groups of peers in close proximity that download a files could benefit (ex: within a large business several
+peers download the same file--it would be shared via local networks). 
+A server that is cpu bound would not benefit as much, since typically "root" pages are dynamic, hence not cacheable.
+Also from our experiments it appears that a site with large files that is hit with a sudden flash crowd would not respond well.
+
+Bamboo can sometimes timeout for key lookups. %#Another problem with keys is that For example, sometimes 1 key out of 20 will take 20s, while the other 19 will all be very fast. 
+This should be taken into account when building a system around Bamboo.
+With our system, we accomodate for this by looking up redundant keys from redundant gateways, but it still
+could be more optimized as it multiplies 
+
+%Unfortunately it appears that OpenDHT overloads easily when multiple
+%keys are simultaneously requested from a single gateway. Some balance is yet to be found. Our protocol
+%could accomodate for this better.
+%We also do not examine the effectiveness of such a system for very poorly connected servers, such
+%as dial-up modem users, nor did we examine if it is useful to a web site that is well connected. We do
+%not attempt a true ``internet scale" test--i.e. many multiple files being requested simultaneously.
+
+peer gossip
+
+all the good things BT has and has ever had (maybe I should just leverage BT?)
+
+NAT punching
+
+mirroring based on HASH or what not (and from the web, too, those lists...and whatever GetRight does for its
+mirrors, too...)
+
+"scraping" md5's or what not
+
+proxies that contribute for free (setup something like Coral or what not).
+
+"resurrect" style (oh file is not there? go and get it from...Coral).
+
+find anonymous internet proxies and use them as some of your mirrors LOL.
+
+Anonymity isn't preserved at all.
+
+We could have a key for "well I have *all* of the entire file"
+
+or 
+
+auto scraping for BitTorrent (?) list (?)
+
+UDP "do any of my close neighbors have this file?"
+
+proximity based peer selection.
+
+privacy is a big concern with this system, because you are basically broadcasting to the world which files you are downloading.
+
+Currently we probably really overload the DHT.
+
+large files: feed out as it comes in?
+ collaborating and/or backing off?
+ 
+Letting the original origin connection "finish" as it continues to be useful to us.
+
+Avoiding waste for the last block. 
+ 
+CRC check redundancy stuff?
+
+not over saturate your upload
+
+peer gossiping
+
+make the thing actually *work* and *rock*
+
+Setup some proxies for free use.
+
+We also use redundant requests for the last block, causing wasted transfer and slowdown in some instances.  
+
+There is also a latency in retrieving DHT keys with many values, as Bamboo returns ordered lists in groups of 10.
+(this oldness and/or unfairness might be avoidable).
