@@ -31,7 +31,10 @@ $shouldDoVaryParameterGraphs = true
 require 'benchmark'
 require 'forky'
 if OS.posix?
-  raise 'fork is broken in 1.9.1' if RUBY_VERSION == '1.9.1'
+  if RUBY_VERSION == '1.9.1'
+    puts 'WARNING fork is broken in 1.9.1'
+    require 'forky_replacement_fake.rb'
+  end
 else
   puts 'no forking available...'
   require 'forky_replacement_fake.rb'
