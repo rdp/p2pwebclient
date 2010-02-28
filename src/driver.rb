@@ -5,15 +5,21 @@
 # ltodo better TTL maybe...5hr. total
 
 
-#$FAST_REQUIRE_DEBUG = 1
-require 'faster_rubygems' if RUBY_VERSION < '1.9'
-require 'fast_require' # this is faster...though not perfect
-# I think still slow in 1.9 because of the use of arguments/ruby_parser (?)
+begin
+  #$FAST_REQUIRE_DEBUG = 1
+  require 'faster_rubygems' if RUBY_VERSION < '1.9'
+  require 'fast_require' # this is faster...though not perfect
+  # I think still slow in 1.9 because of the use of arguments/ruby_parser (?)
+rescue LoadError
+ # ok
+end
 
 require 'constants' # need this for require_relative
+
 for file in ['cs_and_p2p_client', 'server_slow_peer.rb', 'listener', 'lib/ruby_useful_here', 'listener'] do
  require_relative file
 end
+
 require 'resolv-replace'
 require 'optparse'
 
@@ -24,7 +30,12 @@ $shouldDoVaryParameterGraphs = true
 
 require 'benchmark'
 require 'forky'
-require 'forky_replacement_fake.rb' # had enough with the pauses...though might actually be ok in 1.9.2...
+if OS.posix?
+  raise 'fork is broken in 1.9.1' if RUBY_VERSION == '1.9.1'
+else
+  puts 'no forking available...'
+  require 'forky_replacement_fake.rb'
+end
 
 # ltodo run it 'without' CS (since we DO have CS in there already!) -- should be fastest!
 class Thread
