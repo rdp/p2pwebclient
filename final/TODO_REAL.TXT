@@ -1,7 +1,5 @@
 ====================actually really todo (in order of priority):
 
-all refs/bibs should work Figure ??'s
-
 release
 
 restart "many many p2p" why was it so fast compared to my R and T tests?

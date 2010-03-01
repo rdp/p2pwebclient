@@ -55,7 +55,7 @@ or is not online, it chooses the next peer until it runs out of peers to use.  T
 We set DHT requests to timeout after 60 seconds if no response is received, as a reasonable value to keep from 
 overloading the DHT.  When a request times out, we automatically retry it, for up to 3 times, before giving up on the request.
 
-When a peer only has a few blocks remaining, it tries to download the last few blocks from several peers (redundantly), in an effort to avoid the last block problem \cite{bram}.  
+When a peer only has a few blocks remaining, it tries to download the last few blocks from several peers (redundantly), in an effort to avoid the last block problem \cite{last_block}.  
 It downloads all remaining blocks from a total of $b$ peers, so if $b$ is set to 6 and 3 blocks are left, it downloads each remaining block from 2 redundant peers, with the
 last block being downloaded from all $b$ peers redundantly.
 

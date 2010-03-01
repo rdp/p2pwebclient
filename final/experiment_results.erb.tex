@@ -198,7 +198,7 @@ lists take 12 seconds to set, then another 12 seconds to retrieve, and by that t
     \end{center}
     \end{figure*}
 
-As Figure \ref{fig:multiples_files_cs_download_times} shows, a client-server system still fares much worse using the same load.  The upper line is the same test using client-server download.
+As Figure \ref{fig:multiple_files_cs_download_times} shows, a client-server system still fares much worse using the same load.  The upper line is the same test using client-server download.
 
 <%= figure 'pics/multiples_p2p_versus_cs_pics/client_download_Percentile_Line.pdf', 
   :caption => 'Comparison of P2P versus client server download times for multiple files', :label => 'fig:multiple_files_cs_download_times' %> 
@@ -210,7 +210,7 @@ We next measure the effect block size has on download time. We download a 100 KB
 We start 1000 peers at an average of 15 peers entering per second. Figure \ref{fig:vary_block_size} shows that 32 KB blocks result
 in the quickest downloads.  This is faster because downloading more blocks allow our system to download 
 blocks from several peers simultaneously, without redundancy.  In this case a block size of 32 KB results in a total 3 blocks, and since $b$ by default is 5, all 3 blocks
-are downloaded simultaneously. 32 KB blocks were also shown to be most effective in \cite{TODO}.  
+are downloaded simultaneously. 32 KB blocks were also shown to be most effective in \cite{32_kb_blocks}.
 
 <%= figure_directory 'vr_unnamed240998_blockSize', 'vary_block_size', 'Varying block size', false, false %>
 
