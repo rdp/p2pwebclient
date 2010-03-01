@@ -1,7 +1,14 @@
 ====================actually really todo (in order of priority):
 
-conclusion that rox/edit the other sections
+all refs/bibs should work Figure ??'s
+
+release
+
 restart "many many p2p" why was it so fast compared to my R and T tests?
+
+"real" latex format
+
+bibliography take out shtuff?
 
 ------------maybe don't have to? --------------------
 

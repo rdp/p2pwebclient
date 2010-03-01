@@ -6,23 +6,21 @@ than a traditional client-server download and can significantly
 reduce download times.  The system is most effective for small files but does not yet compete well with
 BitTorrent for large files.  We have also found good settings for various system parameters.
 
-Several further optimizations are unexplored.  For example we currently connect to the origin
-server from each peer, at times causing the same blocks to be served (redundantly) to the many peers.
+Several aspects could be improved.  For example we currently connect to the origin
+server from each peer, at times causing the same blocks to be served (redundantly) to various peers, slowing down the origin.
+We also do not validate the integrity of downloads.  We assume peer trustworthiness and no file corruption.  We also do not provide peer incentives for sharing.
 
-We do not validate the integrity of downloads.  We assume peer trustworthiness and no file corruption.  We also do not provide peer incentives for sharing.
-
-Peer lists as we use them are sometimes unoptimal.  Because peer lists are always returned in chronological order from Bamboo (oldest first), our system can experience problems if peers
-go offline without removing themselves from lists, or when linger times expire.  This ordering also causes peers to download blocks 
-from the the oldest 10 peers listed, which can cause unfairness. It can also cause peers to receive lists which
-are already outdated if they have a slow Internet connection and linger times have already expired.  A better algorithm could be designed than what we use.
-Also, under high loads DHT response times increase.  For example, if there is an extremely popular file, the requests for that peer list might overwhelm the DHT member resonsible. 
-This may be avoidable.
-
-With large files, over time clients do many requests for the various blocks.  These requests might all return the same
-peer list currently.  This redundancy might be avoidable.
+Peer lists could be optimized.  Because they are returned in chronological order from Bamboo (oldest first), our system can experience problems if peers
+go offline without removing themselves from lists, or if linger times are close to expiring.  This also causes peers to download blocks 
+from the the oldest 10 peers listed, which can cause unfairness. In the case of a slow Internet connection, linger times may have
+already expired before peers receive the list.
+Under high loads DHT response times increase substantially.  For example, if there is an extremely popular file, the 
+requests for that peer list might overwhelm the DHT member responsible.  There is also some redundancy in peer lists currently.  
+With large files, clients do requests for several different lists, one per block.  These lists might be all the same currently, thus
+there is some avoidable redundancy and latency.
 
 Currently this system is mostly useful for overloaded sites with static pages.  There could be some way for peers to deal with dynamic pages, such as to
 store meta-data about which files are (or appear to be) static, and which are dynamic.  
-Our system also only helps with bandwidth bound servers.  A way to also distribute CPU load itself to clients would be useful.
+Our system also only helps with bandwidth bound servers.  A way to distribute CPU load to clients would be useful.
 
-Currently we only use static system parameters, like $R$ and $W$, etc.  This may be non optimal, though for a few values we have discovered optimal values.
+Currently we only set static system parameters, like $R$ and $W$, etc.  This may be non optimal in actual use.

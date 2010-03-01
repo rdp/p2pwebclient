@@ -46,7 +46,7 @@ and quickly grow to a high of 344 seconds with a load of 20 peers/second. Downlo
 of exponentially because we start a fixed number of peers and let them all complete downloads, without more peers
 entering the system. 
 The top outliers at a load of 20 peers/second typically wait in line about 900 seconds before 
-being served the file from the origin. Load on the origin server grows quickly to its 
+receiving the file from the origin. Load on the origin server grows quickly to its 
 theoretical cap of 250 KB/s (Fig.~\ref{fig:client_server_server_load}) 
 at 3 peers/second. Under a load of 20 peers/second, server speed actually decreases to 203 KB/s, which 
 shows the limitations of our bandwidth limiter in that it becomes bursty and less reliable with higher connection rates. 
@@ -113,10 +113,10 @@ will cause transitioning too late, both resulting in slow download times. Figure
 the results hold to our hypothesis. With $T$ set to 0 seconds, median download time is 46.43 seconds. It then drops to 15.35 seconds with $T$ set at 0.75 seconds, 
 but rises to 35 seconds with $T$ set to 10 seconds.
 
-Figure \ref{fig:vary_t_death_reasons} shows a break down of the reasons peers used to transition to peer-to-peer delivery.  $dT$ is the number
+Figure \ref{fig:vary_t_death_reasons} shows a break down of the reasons peers transition to peer-to-peer delivery.  $dT$ is the number
 of peers who transition to peer-to-peer delivery because of a slow first byte, $dR$ is the number of
-peers that transition because of a too low value of $R$, $died$ is the number of peers that never completed the download
-(typically because their host's network access had connectivity problems) and $http\_straight$ refers to the number of peers
+peers that transition because of a too low value of $R$, $died$ is the number of peers that never complete the download\footnote{This is 
+rare and typically occurs when their host's network has a connectivity problem and it cannot access outside hosts} and $http\_straight$ is the number of peers
 that download the entire file from the origin server.
 
 A higher value of $T$ causes $R$ to become more important.  With low values of $T$, almost 100\% of peers transition to peer-to-peer delivery because of $T$. 
@@ -218,40 +218,39 @@ are downloaded simultaneously. 32 KB blocks were also shown to be most effective
 
 We next vary the amount of linger time peers allow, our hypothesis being that a longer linger 
 time will speed downloads.  Figure \ref{fig:vary_linger_time} shows our hypothesis is correct.   
-We download a 100 KB file (using the same parameters as the original system parameters test), varying linger time from 0 to 160 seconds.
+We download a 100 KB file, varying linger time from 0 to 160 seconds.
 With a linger time of 0 seconds, median download time peaks at 300 seconds, with 
-a linger time of 1 second, median download time dropped to 127 seconds.  With a linger of 2 seconds, download time further dropped to 60 seconds, and
-with a linger time of 4 seconds, download time dropped to 34 seconds.  Download time stays at about that same level for linger times greater than 4 seconds.
+a linger time of 1 second, median download time drops to 127 seconds.  With a linger of 2 seconds, download time further drops to 60 seconds, and
+with a linger time of 4 seconds, download time drops to 34 seconds.  Download time stays at about that same level for linger times greater than 4 seconds.
 
 <%= figure_directory 'vr_unnamed497104_linger_fromStart_0by_fixed_settingAndMajorTimes_8_times_0.0666666666666667s__0s_100000B_255000BPS_125000s_1.0s_2.0s_100000B', 
  'vary_linger_time', 'Varying linger time', false, false %> 
 
 \subsection{Downloading Large Files}
 
-We next test our system's ability to download large files. We download a 30 MB file using our system and then using BitTorrent.
-For both systems, block size is set to 256 KB, origin servers are rate limited to 256 KB/s, and linger time 
-is set to 0 seconds (though peers still share the file while they are still downloading it). 100 peers enter the system at an average of 1 per second.  
-The expected result is that the two fare similarly.
+We next test our system's ability to download large files. We download a 30 MB file using our system and then again using BitTorrent.
+For both systems, block size is set to 256 KB, origin servers are rate limited to 256 KB/second, and linger time 
+is set to 0 seconds (though peers share the file while they are still downloading it). 100 peers enter the system at an average of 1 per second.  
 
-Our results, in Table \ref{fig:yanc_vs_bt}, show that a few peers download 
+The expected result is that the two fare similarly.  Our results, in Table \ref{fig:yanc_vs_bt}, show that a few peers download 
 faster with our system, but most download faster with BitTorrent. 
-Ours has a slower median time than BitTorrent (847 to 148 seconds), though ours has a faster 99th
+Ours has a slower median time than BitTorrent (847 to 148 seconds), though it has a faster 99th
 percentile (982 to 2786 seconds). We're not entirely sure why BitTorrent is faster.  
 %One factor affecting our performance is that 
 %each peer contacts the origin server in our system.   This can causes full blocks to propagate more slowly into the system.  
 % or is the the DHT? why were we slow?
 One factor affecting performance is that BitTorrent's seed limits outgoing connections to 7, whereas Apache's connection limit is 256.
-This may allow BitTorrent to propagate full blocks more quickly to peers.  BitTorrent's seeds also favor peers with higher download 
-speeds, which might help propagate blocks, and uses a dedicated tracker, 
-which makes peer rendezvous quicker than using a DHT.  BitTorrent peers use a ``rarest block first" block selection policy, enabling them to choose blocks more efficiently.  
+This may allow BitTorrent to propagate full blocks more quickly to peers.  BitTorrent's seed also favors peers with higher download 
+speeds, which might help propagate blocks,  It uses a dedicated tracker, 
+which makes peer rendezvous quicker than using a DHT.  BitTorrent peers use a ``rarest block first" selection policy, enabling them to choose blocks more efficiently.  
 These differences may allow it to respond to a flash crowd such as this one better.  In future work our system can be optimized to handle flash crowds such as this better.
 
 One interesting statistic is that the relative download times within each system are similar.
 The difference between the 25th and 75th percentile download time in our system is 150 seconds, 
 or 5\% of the 75th percentile's time. The difference between the 25th and 75th percentiles in BitTorrent 
-is 24 seconds, or about 7\% of the 75th percentile's time (a similar percentage). These numbers implies that once 
+is 24 seconds, or 7\% of the 75th percentile's time (a similar percentage). These numbers implies that once 
 a few peers have downloaded a file in its entirely, it doesn't take relatively long for the rest of the peers to complete 
-the download.  Figure \ref{fig:yanc_30mb_cdf} shows that most of the delivery eventually comes from peers.
+the download.  Figure \ref{fig:yanc_30mb_cdf} shows that most of the delivery comes from peers.
 
 <%= figure 'pics/yanc_30mb/yanc_30_mb_cdf.pdf', :caption => 'CDF of percent of file received from peers, 30MB file', :label => 'fig:yanc_30mb_cdf' %>
 
@@ -274,10 +273,9 @@ the download.  Figure \ref{fig:yanc_30mb_cdf} shows that most of the delivery ev
 \subsection{Varying peer connection limit} 
 
 We next vary the maximum number of simultaneous download connections each peer is allowed ($b$). We 
-repeat the above 30 MB download experiment, but vary the peer connection limit from 1 to 50. 
+repeat the above 30 MB download experiment, but vary the peer limit from 1 to 50. 
 We expect that download times will suffer when the connection limit is too low. Figure \ref{fig:vary_connection_count} shows that, as expected, median 
-download times suffer when the limit is low, with a median download time of 1604 seconds with a limit of 1.  Download 
-times improve with higher limits.  A limit of 16 has a median download time of 931 seconds.  Limits greater than 16 don't
-yield as much improvement, though it does improve slightly.  A 50 peer limit results in a median download time of 875 seconds.
+download times suffer with a low limit, a limit of 1 yielding a median download time of 1604 seconds.  A limit of 16 has a median download time of 931 seconds.  Limits greater than 16 yield
+slight improvements.  A 50 peer limit results in a median download time of 875 seconds.
 
 <%= figure_directory 'vr_vary_blocks_large_file', 'vary_connection_count', 'Varying number of concurrent peers', false, false %>
