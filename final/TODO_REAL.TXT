@@ -1,16 +1,16 @@
 ====================actually really todo (in order of priority):
 
-another pass/images
-
-
-fix it to restart the server (yeesh)
-restart "many many p2p"
-fix it to only one on the origin! yes!
-
-
 conclusion that rox/edit the other sections
+restart "many many p2p" why was it so fast compared to my R and T tests?
 
 ------------maybe don't have to? --------------------
+
+examine yanc 30MB -- why slow?
+
+
+
+fix it to only one on the origin! yes! why? (if I ever redo something with multiple blocks)
+
 
 %LTODO note unfairness: vr_multiples_tak_1 client upload sum. wow. [FUTURE WORK?]
 

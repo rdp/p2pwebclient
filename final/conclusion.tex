@@ -4,33 +4,25 @@ We have shown that a system of cooperating web clients can reduce load on a orig
 from client-server file transfer to peer-to-peer content delivery. Our system has shown itself to be far more scalable 
 than a traditional client-server download and can significantly
 reduce download times.  The system is most effective for small files but does not yet compete well with
-BitTorrent for large files.  We have also found good settings for various system parameters.  This system is mostly useful
-for overloaded sites with static pages.
+BitTorrent for large files.  We have also found good settings for various system parameters.
 
-Several further optimizations are possible.  For example we currently connect to the origin
-server once from each peer, causing the same blocks to be served (redundantly) to many peers in some instances.
-This is wasteful in some instances.
+Several further optimizations are unexplored.  For example we currently connect to the origin
+server from each peer, at times causing the same blocks to be served (redundantly) to the many peers.
 
-We currently do not validate the integrity of files.  We assume peer trustworthiness and no file corruption.  
-We also do not provide peer incentives for sharing.
+We do not validate the integrity of downloads.  We assume peer trustworthiness and no file corruption.  We also do not provide peer incentives for sharing.
 
-Because peer lists are always returned in order from Bamboo, oldest to youngest, our system can experience staleness if peers
-go offline without removing themselves from lists.  This ordering also causes peers to typically download the file
-most from oldest listed peers, which can cause unfairness. This ordering can also cause peers to receive lists which
-are outdated if they have a slow Internet connection.  A better algorithm for
-could be designed than the polling one we use.
+Peer lists as we use them are sometimes unoptimal.  Because peer lists are always returned in chronological order from Bamboo (oldest first), our system can experience problems if peers
+go offline without removing themselves from lists, or when linger times expire.  This ordering also causes peers to download blocks 
+from the the oldest 10 peers listed, which can cause unfairness. It can also cause peers to receive lists which
+are already outdated if they have a slow Internet connection and linger times have already expired.  A better algorithm could be designed than what we use.
+Also, under high loads DHT response times increase.  For example, if there is an extremely popular file, the requests for that peer list might overwhelm the DHT member resonsible. 
+This may be avoidable.
 
-In our scalability studies, after a certain load the DHT response times increase.  There may be a way to avoid this.
+With large files, over time clients do many requests for the various blocks.  These requests might all return the same
+peer list currently.  This redundancy might be avoidable.
 
-With large files, over time clients do many requests for the different blocks.  These requests might all return the same
-peer list currently.  This redundancy might be unnecessary.
+Currently this system is mostly useful for overloaded sites with static pages.  There could be some way for peers to deal with dynamic pages, such as to
+store meta-data about which files are (or appear to be) static, and which are dynamic.  
+Our system also only helps with bandwidth bound servers.  A way to also distribute CPU load itself to clients would be useful.
 
-If there is an extremely popular file, the requests for the peer lists might overwhelm the DHT member responsible
-for that list.
-
-Currently this system assumes static pages.  There could be some collaboration possible for peers 
-could do here to store meta-data about which files are (or appear to be) static, and which are definitely dynamic.
-This system only helps with bandwidth bound servers.  A way to also distribute CPU load to clients would be useful.
-
-Currently we only use hard-coded system parameters, like $R$ and $b$, etc.  This may be non optimal, since it is hard
-to guess the expected throughput.
+Currently we only use static system parameters, like $R$ and $W$, etc.  This may be non optimal, though for a few values we have discovered optimal values.
