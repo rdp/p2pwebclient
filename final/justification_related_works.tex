@@ -91,33 +91,33 @@ and integrates a BitTorrent tracker into the server software to handle the diffe
 These systems allow peers to manually switch to swarming if the server load becomes too high.  
 There has also been development in plugins for web browsers to ease downloading of BitTorrent files.
 There have been proposals to integrate HTTP serving into BitTorrent downloads (known as web-seeding).  This currently requires even more configuration by the server, and still suffers from 
-the problems above.  There have also been the creation of "trackerless" torrents, which allow peers themselves to act as trackers for the peer lists, but still no integration of such
-with normal HTTP downloads.
+the problems above.  There has also been the creation of ``trackerless" torrents, which allow peers themselves to act as trackers for the peer lists, but still no integration of such
+with normal HTTP downloads.  There has also been the introduction of ``Meta link" files which list both HTTP and BitTorrent sources for files, allowing for segmented downloads, but these
+files requires both servers and clients to understand and use the protocol.
 
 Dijjer \cite{dijjer} is a tool that automatically performs swarming downloads of any file.  If passed a url like http://dijjer.org/get/http://mysite.com/video.mov the request is intercepted by the locally running Dijjer software, which performs a distributed download of the file.  One can also right-click on any arbitrary file and select 'download via Dijjer' for the same effect.  Dijjer contacts a quasi-DHT (similar to Freenet \cite{freenet}) for block hashes and downloads the blocks from random peers who cache these blocks.  Unfortunately, Dijjer lacks automation in the transition to download, and, as the Dijjer software is currently implemented, requires peers to cache material in which they were never interested, so is slightly intrusive, for example causing clients to potentially cache illegal or suspect web objects.  Also their DHT is non deterministic, which might be less than optimal.
 
 Webtorrent \cite{webtorrent} is a proposal to incorporate a BitTorrent server into an Apache web server.  Again this requires modification for both and clients and servers.
 
 Overall, client and server side cooperation protocols work well at alleviating flash crowds, and some provide automation for transition to peer-to-peer delivery.  
-However, they require both the server and client to understand the protocol, which hinders their adoptability.  
+However, they require both the server and the client to understand the protocol, which hinders their adoptability.  
 The biggest drawback of these protocols is that they are not transparent to one side or the other.
 
 \section {Proposed Solution}\label{section:solution}
 Automated swarming is a client-side system that automatically switches from client-server to peer-to-peer content delivery when a server becomes overloaded.  The goals for this system include:
 \begin{enumerate}
-\item It should be transparent to servers.  This allows the origin servers to remain unchanged, so end users can benefit from the system despite using servers who know nothing about it.
-\item It should appear transparent to users by automatically transitioning to peer-to-peer content delivery when the server is slow.
-\item It should not require a dedicated special-purpose infrastructure.  Using a general-purpose infrastructure, coupled with a dependence on the clients for transferring blocks, makes this system easier to adopt.
-\item It should be non-intrusive, in that peers should not be required to cache blocks of files in which they were never interested.  
-Peers will avoid caching files they never downloaded, and will not be responsible for content they don't anticipate.  
-Users would also only be using their bandwidth for files they previously downloaded, encouraging participation and adoption.
+\item It should be transparent to servers.  This allows the origin server to remain unchanged, so end users can benefit from the system despite using servers who know nothing about it.
+\item It should be easy to use by end-users by automatically transitioning to peer-to-peer content delivery when the server is slow.
+\item It should not require a dedicated special-purpose infrastructure.  Using a general-purpose infrastructure, coupled with a dependence on the clients for transferring blocks 
+makes this system easier to adopt.
+\item It should be non-intrusive.  Peers should not be required to cache blocks of files in which they were never interested.  
+Peers will avoid caching files they never downloaded, and thus will not be responsible for content they don't anticipate.  
+Users would also only be using their bandwidth for files they previously downloaded, encouraging adoption.
 \item It should be fast for small files.
 \end{enumerate}
 
-A fundamental design decision is also whether to download the contents of blocks from peers or from the DHT itself; peers could store the block contents, 
-and have the DHT serve as a lookup of peers, or could store the block contents on the DHT itself.  The trade-off is that having the blocks on the DHT puts more stress on the 
-DHT and relies on members of the DHT for contributing bandwidth, which is intrusive.  
+A fundamental design decision is whether to download the contents of blocks from peers or from the DHT itself; peers could store the block contents, 
+and have the DHT serve as a lookup of peers, or could store the block contents on the DHT itself.  The trade-off is that storing the blocks on the DHT puts more stress on the 
+it and relies on members of the DHT for contributing bandwidth, which is intrusive, which goes against item 4.  
 Imagine for instance caching portions of a file on your personal computer which you never downloaded for yourself, and which you are then sharing with others.  
-Members of the DHT would thus intrusively cache information for which they are not interested, which goes against item 4.  
-We therefore choose the case of having peers register themselves on a DHT as being willing to serve blocks they own, 
-and have clients download directly from peers.
+We therefore choose the case of having peers register themselves on a DHT as being willing to serve blocks, and have clients lookup peer lists and download directly from their peers.
