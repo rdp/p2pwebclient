@@ -1,8 +1,6 @@
 ====================actually really todo (in order of priority):
 
-release
-
-restart "many many p2p" why was it so fast compared to my R and T tests?
+"many many p2p" why was it so fast compared to my R and T tests?
 
 "real" latex format
 
@@ -12,9 +10,9 @@ bibliography take out shtuff?
 
 examine yanc 30MB -- why slow?
 
-
-
 fix it to only one on the origin! yes! why? (if I ever redo something with multiple blocks)
+
+
 
 
 %LTODO note unfairness: vr_multiples_tak_1 client upload sum. wow. [FUTURE WORK?]

@@ -4,32 +4,33 @@
 
 \subsection {Methodology} 
 
-For our experiments, we implement a prototype client in Ruby\footnote{See http://github.com/rdp/p2pwebclient} and 
-run the client on members of the PlanetLab system, a pool of about 1000 servers scattered world-wide.
+To test our system, we implement a prototype client in the Ruby programming language\footnote{See http://github.com/rdp/p2pwebclient.} and 
+use the client on multiple simultaneous members of the PlanetLab system, a pool of about 1000 servers scattered world-wide\footnote{It should be noted
+that typically only about 300 are active at a time}.
+For each test, a central ``driver" program contacts several members of the client pool and instructs them to download a specific url.  To
+choose clients, the driver first pings known members of PlanetLab to create a list of clients currently active.  It then randomizes the list of active peers,
+and uses this list in round robin fashion. Peer launch times are decided using a Poisson distribution with an inter arrival time that is some total time 
+divided by number of peers.  For example if 1000 peers are expected to enter the system within 100 seconds, it will use a Poisson distribution with 
+an inter arrival time of 0.1 seconds to start peers, and will finish 
+starting them after about 100 seconds\footnote{There is added jitter in start times because some peers have longer latency to establish a TCP connection
+to instruct them to start.}  Peers are told their start time when they start a download, 
+and use an offset from this start time to log events.  Because of TCP latency in giving them their start times, and system clock skew over time, 
+log messages can be up to a few seconds off by the end of an experiment.
 
-To run each test, a central ``driver" program contacts several members of the pool and instructs them to download a given file.
-When peers are done downloading a file, the driver collects their logs and calculates conglomerate statistics.
-
-Peers are started using a Poisson distribution with an inter arrival time that is the total startup time divided by the number of peers.
-For example if 1000 peers are expected to enter the system within 100 seconds, the driver
-will use a Poisson distribution with an inter arrival time of 0.1 seconds to start peers, and thus will finish 
-starting them all up in about 100 seconds.  There is some jitter in start time because some peers have longer latency to establish a TCP connection
-to instruct them to start.  Also the peers are told the system time that they started, and use an offset from this start time to log events.  Because of TCP
-latency for setting this time and system clock skew over time, it can be a few seconds off.
+When peers are done downloading a file, the driver collects their logs and we calculate system statistics.  We measure 
+the amount of load on the origin server by summing the amount of 
+bytes received from the origin each second\footnote{This only measures bytes received from the origin, not necessarily all bytes sent, 
+as peers sometimes close sockets early, and any data received after a socket has already been closed are dropped by the kernel.  
+We disregard the first and last 20\% of entries for conglomerate statistics like average throughput, as the system hasn't reached steady state.}.
+We also calculate the sum percent of the file received from peers versus from the origin, and how long it took to do DHT 
+get, put, and remove operations during the course of a run, and create percentile graphs of each of these.  
+All box plots show 25th and 75th percentiles, with outlying lines showing 1st and 99th percentiles, and mid-lines showing the median.
 
 Files are downloaded from a well provisioned server at BYU running an Apache2 web server (version 2.2.4) that is
-bandwidth limited\footnote{using the mod\_bw module.} to 256 KB/s and has a 256 connection limit. 
-Peers are randomly selected from available PlanetLab hosts.  If more peers download the file than
-there are PlanetLab hosts available, some hosts are re-used, though peer-to-peer connections to the same PlanetLab
-host are disallowed.  Experiments run until 
-all peers finish downloading the file. Each experiment is repeated 3 times and results are averaged. 
-A different filename is downloaded with each run, so as to no re-use the same DHT keys. We collect the statistics from all peers, 
-and measure the amount of instantaneous load on the origin server by summing the 
-bytes received from the origin per second\footnote{This only measures bytes received from the origin, not necessarily all bytes sent, 
-as peers sometimes close sockets early, and any data received after a socket has already been closed are dropped by the kernel}.
-We also calculate the percentage of the file received from peers and from the origin, and the times required to do DHT 
-get, put, and remove operations during the course of each run, and create percentile graphs of these.  
-All box plots show 25th and 75th percentiles, with outlying lines showing 1st and 99th percentiles, and mid-lines showing the median.
+bandwidth limited\footnote{using the mod\_bw module.} to 256 KB/s and that has a 256 connection limit. 
+If more peers download the file than there are PlanetLab clients available, peers are re-used round-robin fashion, though peer-to-peer connections 
+to other peers on the same host are dis-allowed.  Experiments run until all peers finish downloading the file. 
+Each experiment is repeated 3 times and results are averaged.  A different filename is used for each run, so as to not re-use the same DHT keys.
 
 For default system parameters, we choose reasonable values 
 of block size of 100 KB, origin minimum speed ($R$) of 128 KB/s, $R$'s calculation window ($W$) 
@@ -41,15 +42,15 @@ Peers linger, serving the file, for 20 seconds after completing a download.
 For our experiments we first test how well our system performs under different loads.
 We first test a traditional client-server transfer, to establish a base line from which to compare 
 our system. Figure \ref{fig:client_server_download_times} shows the download times for client-server 
-downloads, as load increases.  Median download times start with a low of 1.33 seconds with a load of 1 peer/second,
+downloads, as load increases.  Median download times start at 1.33 seconds with a load of 1 peer/second,
 and quickly grow to a high of 344 seconds with a load of 20 peers/second. Download times increase linearly instead 
-of exponentially because we start a fixed number of peers and let them all complete downloads, without more peers
-entering the system. 
-The top outliers at a load of 20 peers/second typically wait in line about 900 seconds before 
-receiving the file from the origin. Load on the origin server grows quickly to its 
+of exponentially because we start a fixed number of peers and let all downloads complete, without more peers
+entering the system.
+The top outliers at a load of 20 peers/second typically wait in line around 900 seconds before 
+finally receiving the file from the origin. Load on the origin server grows quickly to its 
 theoretical cap of 250 KB/s (Fig.~\ref{fig:client_server_server_load}) 
-at 3 peers/second. Under a load of 20 peers/second, server speed actually decreases to 203 KB/s, which 
-shows the limitations of our bandwidth limiter in that it becomes bursty and less reliable with higher connection rates. 
+under a load of 3 peers/second. Under a load of 20 peers/second, server speed decreases to 203 KB/s, which 
+shows the limitations of our bandwidth limiter in that it becomes bursty and less reliable with higher connection rates.
 
 \begin{figure*}
   \begin{center}
