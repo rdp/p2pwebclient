@@ -21,6 +21,5 @@ there is some avoidable redundancy and latency.
 
 Currently this system is mostly useful for overloaded sites with static pages.  There could be some way for peers to deal with dynamic pages, such as to
 store meta-data about which files are (or appear to be) static, and which are dynamic.  
-Our system also only helps with bandwidth bound servers.  A way to distribute CPU load to clients would be useful.
 
-Currently we only set static system parameters, like $R$ and $W$, etc.  This may be non optimal in actual use.
+Currently we used fixed system parameters, such as $R$, $W$, and $T$.  It may be useful to dynamically optimize these values.

@@ -118,7 +118,7 @@ The other factor causing slowdown is a sometimes unresponsive DHT. Typically req
 and peers will end up downloading the entire file from the original server within that 60 seconds, or have to perform a new 
 query, and will then download the file normally after that.  We're not entirely sure why this behavior occurs with Bamboo.
 
-<%= figure_directory 'vr_medium_p2p_load_tak4', 'yanc', 'Automatic Swarming under varyied load', true %>
+<%= figure_directory 'vr_medium_p2p_load_tak4', 'yanc', 'Automatic Swarming under varyied load', {'download_times' => true, 'origin_server_load' => true, 'death_reasons' => true} %>
 
 \subsection{Impact of system parameters}
 
@@ -131,7 +131,7 @@ Peers download a 100 KB file, using a 100 KB block size, and a connection limit 
 
 We first vary $T$, the timeout for a response byte from the origin server. We expect that an extremely low value 
 will cause transitioning too early and an extremely high value 
-will cause transitioning too late, both resulting in slow download times. Figure \ref{fig:vary_t} shows that 
+will cause transitioning too late, both resulting in slow download times. Figure \ref{fig:vary_t_download_times} shows that 
 the results hold to our hypothesis. With $T$ set to 0 seconds, median download time is 46.43 seconds. It then drops to 15.35 seconds with $T$ set at 0.75 seconds, 
 but rises to 35 seconds with $T$ set to 10 seconds.
 
@@ -144,7 +144,7 @@ that download the entire file from the origin server.
 A higher value of $T$ causes $R$ to become more important.  With low values of $T$, almost 100\% of peers transition to peer-to-peer delivery because of $T$. 
 With $T$ set to 10 seconds about 80\% of peers transition because of $T$, and 20\% because of $R$, so far fewer.
 
-<%= figure_directory 'vr_unnamed17712_dT', 'vary_t', 'Varying T', true, false %>
+<%= figure_directory 'vr_unnamed17712_dT', 'vary_t', 'Varying T', {'download_times' => true, 'death_reasons' => true} %>
 
 We next examine the effect of varying $R$, the server's minimum calculated speed.  We vary $R$ from 32 KB/s to 1 MB/s, and set $T$ to a 
 reasonably high value of 10 seconds, so that $R$ will be more of a factor in causing peer-to-peer transition. 
@@ -154,7 +154,7 @@ With $R$ at 5 KBps, median download times are 40 seconds, with $R$ at 40 KBps, d
 a low of 13 seconds with $R$ set to 160 KBps. Higher values than 160 KBps, however, result in slower downloads.  $R$ set to 1 MBps has a median download time of 30 seconds. 
 
 <%= figure_directory 'vr_unnamed502788_dR_fromStart_5000by_fixed_settingAndMajorTimes_8_times_0.0666666666666667s__10s_100000B_255000BPS_5000s_10s_2.0s_100000B', 
-  'vary_dr', 'Varying R', false, false %> 
+  'vary_dr', 'Varying R', 'download_times' => true %> 
 
 We next vary $W$, the amount of recent download time used to calculate $R$. Our hypothesis is that 
 a small value for $W$ will cause the calculation to be too sensitive and thus slow download times because it will be inaccurate. 
@@ -174,7 +174,7 @@ causes most of the transitioning, and appears to be more of a dominant factor ov
 
 % why was this higher, then?
 
-<%= figure_directory '837145_dw', 'dw', 'Varying W', true, false %>
+<%= figure_directory '837145_dw', 'dw', 'Varying W', 'download_times' => true %>
 
 \subsection{Effect for a full web page}
 
@@ -193,32 +193,11 @@ this hypothesis correct.  Total download time starts at 1.3 seconds, and grows q
 at 0.41 seconds at a load of 1 peer/second, and grow to 12 seconds at a load of 25 peers/second (get and remove times are similar).
 This explains some of the download slowdown, because linger time is set to 20 seconds, peer lists are outdated soon after they are created, because
 lists take 12 seconds to set, then another 12 seconds to retrieve, and by that time peers may have already gone offline.
-%Also interesting to note is the load on the origin server.  It starts at 160 KB/second, decreases to 51 KB/s at a load of 10 peers/second, 
-%then increases at higher load levels than 10, because our 
 
 % todo is that what really happens though?
 
-\begin{figure*}\begin{center} 
- \subfigure[Download times] {
-  \includegraphics[width=8.5cm]{pics/vr_multiples_take_1/client_download_all_files_Percentile_Line.pdf}
-  \label{fig:multiple_files_download_times_all_files}
- } 
- \subfigure[Load on the origin server] {
-  \includegraphics[width=8.5cm]{pics/vr_multiples_take_1/server_speed_Percentile_Line.pdf}
-  \label{fig:multiple_files_origin_server_load}
- } 
- \subfigure[Percent of file received from peers] {
-  \includegraphics[width=8.5cm]{pics/vr_multiples_take_1/percent_from_clients_Percentile_Line.pdf}
-  \label{fig:multiple_files_cdf_from_peers}
- }
- \subfigure[DHT put times] {
-  \includegraphics[width=8.5cm]{pics/vr_multiples_take_1/dht_Put_Percentile_Line.pdf}
-  \label{fig:multiple_files_p2p_dht_put}
- }
- \label{fig:multiple_files}
-    \caption[]{Downloading multiple simultaneous files}
-    \end{center}
-    \end{figure*}
+<%= figure_directory 'vr_multiples_take_1', 'multiple_files', 'Downloading multiple simultaneous files',  
+   {'download_times' => true, 'dht_puts' => true} %>
 
 As Figure \ref{fig:multiple_files_cs_download_times} shows, a client-server system still fares much worse using the same load.  The upper line is the same test using client-server download.
 
@@ -234,11 +213,11 @@ in the quickest downloads.  This is faster because downloading more blocks allow
 blocks from several peers simultaneously, without redundancy.  In this case a block size of 32 KB results in a total 3 blocks, and since $b$ by default is 5, all 3 blocks
 are downloaded simultaneously. 32 KB blocks were also shown to be most effective in \cite{32_kb_blocks}.
 
-<%= figure_directory 'vr_unnamed240998_blockSize', 'vary_block_size', 'Varying block size', false, false %>
+<%= figure_directory 'vr_unnamed240998_blockSize', 'vary_block_size', 'Varying block size', 'download_times' => true  %>
 
 \subsection{Varying linger time}
 
-We next vary the amount of linger time peers allow, our hypothesis being that a longer linger 
+We next vary the amount of time peers linger, our hypothesis being that a longer linger 
 time will speed downloads.  Figure \ref{fig:vary_linger_time} shows our hypothesis is correct.   
 We download a 100 KB file, varying linger time from 0 to 160 seconds.
 With a linger time of 0 seconds, median download time peaks at 300 seconds, with 
@@ -246,7 +225,7 @@ a linger time of 1 second, median download time drops to 127 seconds.  With a li
 with a linger time of 4 seconds, download time drops to 34 seconds.  Download time stays at about that same level for linger times greater than 4 seconds.
 
 <%= figure_directory 'vr_unnamed497104_linger_fromStart_0by_fixed_settingAndMajorTimes_8_times_0.0666666666666667s__0s_100000B_255000BPS_125000s_1.0s_2.0s_100000B', 
- 'vary_linger_time', 'Varying linger time', false, false %> 
+ 'vary_linger_time', 'Varying linger time', 'download_times' => true  %> 
 
 \subsection{Downloading Large Files}
 
@@ -275,7 +254,8 @@ a few peers have downloaded a file in its entirely, it doesn't take relatively l
 the download.  Figure \ref{fig:yanc_30mb_cdf} shows that most of the delivery comes from peers.
 
 <%= figure 'pics/yanc_30mb/yanc_30_mb_cdf.pdf', :caption => 'CDF of percent of file received from peers, 30MB file', :label => 'fig:yanc_30mb_cdf' %>
-
+\small{
+\small{
 \begin{table}
   \caption{Download times of a 30MB file}
 \begin{center}
@@ -291,7 +271,8 @@ the download.  Figure \ref{fig:yanc_30mb_cdf} shows that most of the delivery co
 \end{tabular}
 \end{center}
 \end{table}
-
+}
+}
 \subsection{Varying peer connection limit} 
 
 We next vary the maximum number of simultaneous download connections each peer is allowed ($b$). We 
@@ -300,4 +281,4 @@ We expect that download times will suffer when the connection limit is too low. 
 download times suffer with a low limit, a limit of 1 yielding a median download time of 1604 seconds.  A limit of 16 has a median download time of 931 seconds.  Limits greater than 16 yield
 slight improvements.  A 50 peer limit results in a median download time of 875 seconds.
 
-<%= figure_directory 'vr_vary_blocks_large_file', 'vary_connection_count', 'Varying number of concurrent peers', false, false %>
+<%= figure_directory 'vr_vary_blocks_large_file', 'vary_connection_count', 'Varying number of concurrent peers' %>

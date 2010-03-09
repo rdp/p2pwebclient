@@ -62,23 +62,35 @@ class RubyToTex
   # use like subfig:vary_dt_download_times
   # subfig:vary_dt_cdf_from_peers
   # subfig:vary_dt_origin_server_load
-  def figure_directory dir_name, label_prefix, caption, include_death = false, include_percent_from_peers = true
+  # wanted_pics is like {'download_times' => true, 'origin_server_load' => true, 'death_reasons' => true, 'cdf_from_peers' => true, 'dht_puts' => true}
+  def figure_directory dir_name, label_prefix, caption, wanted_pics = {'download_times' => true, 'origin_server_load' => true}
     
     dir_name = 'pics/' + dir_name
     
     raise 'need 1.9\'s ordered hashes...' unless RUBY_VERSION >= '1.9.0' 
     
-    names = { 'client_download_Percentile_Line.pdf' => ['Download times', 'download_times'],
-       'server_speed_Percentile_Line.pdf' => ['Load on the origin server', 'origin_server_load']}
-
-  if include_death
-    names['death_reasons.pdf'] = ['Cause of transition to P2P download', 'death_reasons']
-  end
+    names = {}
+    
+    if wanted_pics['download_times']
+      names['client_download_Percentile_Line.pdf'] = ['Download times', 'download_times']
+    end
+    
+    if wanted_pics['origin_server_load']
+      names['server_speed_Percentile_Line.pdf'] = ['Load on the origin server', 'origin_server_load']
+    end
+    
+    if wanted_pics['death_reasons']
+      names['death_reasons.pdf'] = ['Cause of transition to P2P download', 'death_reasons']
+    end
   
-  if include_percent_from_peers
-    names['percent_from_clients_Percentile_Line.pdf'] = ['Percent of File received from peers', 'cdf_from_peers']
-  end
-
+    if wanted_pics['cdf_from_peers']
+      names['percent_from_clients_Percentile_Line.pdf'] = ['Percent of File received from peers', 'cdf_from_peers']
+    end
+    
+    if wanted_pics['dht_puts']
+      names['dht_Put_Percentile_Line.pdf'] = ['DHT Put times', 'dht_puts']
+    end
+    
     sum = 
     "\\begin{figure*}" + 
       "\\begin{center}"

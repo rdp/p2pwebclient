@@ -1,4 +1,5 @@
 require 'sane'
+
 for dir in Dir['../*'] do
  if File.directory? dir
    Dir.chdir(dir) {
@@ -31,8 +32,8 @@ system "ruby cdf_yanc_30.rb"
 
 Dir.chdir '../multiples_p2p_versus_cs_pics' do
    # remake these, too
-#   system 'ruby ../helpers/parse_raw_old_stats.rb ..\vr_multiples_take_1\number_stats_smaller.txt ..\vr_unnamed937328_multiple_files_cs\number_stats.txt "p2p" "cs"'
-   system 'ruby ../helpers/parse_raw_old_stats.rb ..\vr_multiples_take_1\number_stats_smaller.txt ..\vr_unnamed937328_multiple_files_cs\number_stats.txt'
-
+   # drawn by hand, currently...
+   # could add a legend...
+   #   system 'ruby ../helpers/parse_raw_old_stats.rb ..\vr_multiples_take_1\number_stats_smaller.txt ..\vr_unnamed937328_multiple_files_cs\number_stats.txt'
 end
 
