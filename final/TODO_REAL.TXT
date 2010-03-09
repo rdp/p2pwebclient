@@ -1,12 +1,16 @@
 ====================actually really todo (in order of priority):
 
-"many many p2p" why was it so fast compared to my R and T tests?
+missing some images
 
-"real" latex format
+ilab2--update what the default specs were for the original runs...until I can re-run more tests...
 
-bibliography take out shtuff?
+"many many p2p" why was it so fast compared to my R and T tests? (can't do this right now tho, and have the above)
+
+"real" latex format (like for submission to the library)
 
 ------------maybe don't have to? --------------------
+
+redundancy should have _'s and ->'s ...
 
 examine yanc 30MB -- why slow?
 
