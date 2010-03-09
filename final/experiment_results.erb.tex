@@ -2,12 +2,10 @@
 
 \section{Experiment Results}
 
-\subsection {Methodology} 
-
-To test our system, we implement a prototype client in the Ruby programming language\footnote{See http://github.com/rdp/p2pwebclient.} and 
-use the client on multiple simultaneous members of the PlanetLab system, a pool of about 1000 servers scattered world-wide\footnote{It should be noted
+To test our system, we implemented a prototype client in the Ruby programming language\footnote{See http://github.com/rdp/p2pwebclient.} and 
+ran experiments using the system, a pool of about 1000 computers scattered world-wide\footnote{It should be noted
 that typically only about 300 are active at a time}.
-For each test, a central ``driver" program contacts several members of the client pool and instructs them to download a specific url.  To
+To run each experiment, a central ``driver" program randomly selects members of the pool and instructs them to download a specific url.  To
 choose clients, the driver first pings known members of PlanetLab to create a list of clients currently active.  It then randomizes the list of active peers,
 and uses this list in round robin fashion. Peer launch times are decided using a Poisson distribution with an inter arrival time that is some total time 
 divided by number of peers.  For example if 1000 peers are expected to enter the system within 100 seconds, it will use a Poisson distribution with 

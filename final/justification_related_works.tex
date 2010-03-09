@@ -65,7 +65,8 @@ and server-side protocols.
 \subsection{Client-Side Only Protocols}
 Protocols that use only client-side protocols require no change in the server software, allowing them to be implemented in clients without requiring servers to be aware of the changes.  However, this requires that clients must self-organize without the help of the centralized server.  Our protocol is an example of such a system.
 
-Shared web caches are an example of a client-side only protocol.  They allow peers to download files from some well known cache -- typically a specific set of computers, such as those run by PlanetLab.  Coral \cite{coral} and CoDeen \cite{codeen} are examples of such caches.  Shared caches like these require a dedicated set of proxies, however.  Squirrel \cite{squirrel} is another shared web cache.  Squirrel clients join a local DHT and cache any files that map to their location in the DHT.  The DHT is used to locate the peer owner who then serves as proxy for that file.  The advantage of this is it doesn't require dedicated infrastructure.  The disadvantage is it does not offer an algorithm for transparent transition to peer-to-peer delivery, nor does it allow for partial file downloads.  It was also built on the assumption of being run on a local (well-connected) network, not on the Internet at large.
+Shared web caches are an example of a client-side only protocol.  They allow peers to download files from some well known cache -- typically a specific set of computers, such as those run by PlanetLab.  Coral \cite{coral} and CoDeen \cite{codeen} are examples of such caches.  Shared caches like these require a dedicated set of proxies, however.  Squirrel \cite{squirrel} is another shared web cache.  Squirrel clients join a local Distributed Hash Table (DHT) 
+which is used as a distributed way to track which files have been downloaded by which peers.  The DHT is later used to locate the peer owner of a file, who then serves as proxy for that file.  The advantage of this is it doesn't require dedicated infrastructure.  The disadvantage is it does not offer an algorithm for transparent transition to peer-to-peer delivery, nor does it allow for partial file downloads.  It was also built on the assumption of being run on a local (well-connected) network, not on the Internet at large.
 
 Coral-style caches have their place, but are limited.  They are constrained to the number of participants, and they require an infrastructure of hosts who are willing to altruistically provide bandwidth, which is rare, because of expense.  Also, when load surpasses the bandwidth of the 
 combined sum of proxies, they will still become overburdened.  For example, if Coral receives a request for a file too many times, it begins redirecting peers to the origin server, thus not solving the original problem.  
@@ -134,9 +135,3 @@ Peers will avoid caching files they never downloaded, and thus will not be respo
 Users would also only be using their bandwidth for files they previously downloaded, encouraging adoption.
 \item It should be fast for small files.
 \end{enumerate}
-
-A fundamental design decision is whether to download the contents of blocks from peers or from the DHT itself; peers could store the block contents, 
-and have the DHT serve as a lookup of peers, or could store the block contents on the DHT itself.  The trade-off is that storing the blocks on the DHT puts more stress on the 
-it and relies on members of the DHT for contributing bandwidth, which is intrusive, which goes against item 4.  
-Imagine for instance caching portions of a file on your personal computer which you never downloaded for yourself, and which you are then sharing with others.  
-We therefore choose the case of having peers register themselves on a DHT as being willing to serve blocks, and have clients lookup peer lists and download directly from their peers.

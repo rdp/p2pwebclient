@@ -4,6 +4,7 @@ Dir.mkPath "/tmp/blocks" # ltodo take off
 for file in ['../cs_and_p2p_client', 'opendht/opendht_em.rb', 'opendht/opendht_em_fake.rb', '../p2p_server', '../bittorrent_peer']
      require_relative file
 end
+
 require File.dirname(__FILE__) + '/safe_write.rb'
 
 class BlockManager
@@ -693,8 +694,6 @@ class BlockManager
     totalWritten
 
   end
-
-
 
   def calculateBlockAndOffset(byteNumber)
     assert byteNumber >= 0
