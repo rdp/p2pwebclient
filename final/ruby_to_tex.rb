@@ -76,7 +76,7 @@ class RubyToTex
   end
   
   if include_percent_from_peers
-    names['percent_from_clients_Percentile_Line.pdf'] = ['Percent of file received from peers', 'cdf_from_peers']
+    names['percent_from_clients_Percentile_Line.pdf'] = ['Percent of File received from peers', 'cdf_from_peers']
   end
 
     sum = 

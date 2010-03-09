@@ -15,13 +15,12 @@ This is to accomodate servers with slow connections or servers that become overl
 
 \subsection{Finding Peers}
 
-
 Peers interested in downloading the same file find each other using a Distributed Hash Table (DHT).
 A DHT is essentially a distributed P2P hash table that maps a key to a value.  A client can,
 for example, query the DHT with a key of ``file x block y" and get a list of peers with block y
 of file x.
 
-We run a DHT using the Bamboo OpenDHT code on approximately 1000 PlanetLab peers\footnote{Typically only about 300 are stably active.}.  
+We run a DHT using the Bamboo OpenDHT code on approximately 1000 PlanetLab peers\footnote{Typically about 300 are stably active.}.  
 3 peers are designated as ``gateways" that the others contact to ``bootstrap" themselves into the DHT.  After servers join the DHT, each 
 creates a web service that accepts queries from peers outside the DHT.  When a server receives a
 query, it forwards it through the DHT, retrieves the answer, and returns the answer to the requestor. The DHT is only used to store only peer information, 

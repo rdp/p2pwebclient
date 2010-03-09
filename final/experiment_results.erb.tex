@@ -2,100 +2,123 @@
 
 \section{Experiment Results}
 
-To test our system, we implemented a prototype client in the Ruby programming language\footnote{See http://github.com/rdp/p2pwebclient.} and 
+To test our system, we implemented a prototype client in the Ruby programming language and 
 ran experiments using the system, a pool of about 1000 computers scattered world-wide\footnote{It should be noted
 that typically only about 300 are active at a time}.
 To run each experiment, a central ``driver" program randomly selects members of the pool and instructs them to download a specific url.  To
-choose clients, the driver first pings known members of PlanetLab to create a list of clients currently active.  It then randomizes the list of active peers,
-and uses this list in round robin fashion. Peer launch times are decided using a Poisson distribution with an inter arrival time that is some total time 
-divided by number of peers.  For example if 1000 peers are expected to enter the system within 100 seconds, it will use a Poisson distribution with 
-an inter arrival time of 0.1 seconds to start peers, and will finish 
-starting them after about 100 seconds\footnote{There is added jitter in start times because some peers have longer latency to establish a TCP connection
-to instruct them to start.}  Peers are told their start time when they start a download, 
+choose members, the driver first pings known members of PlanetLab to create a list of currently active members.  
+It then randomizes this list and uses it in round robin fashion to launch clients
+\footnote{If more peers download the file than there are clients available, clients are re-used using the same list in a round-robin fashion, though peer-to-peer connections 
+to other peers on the same host are dis-allowed.}. 
+Client launch times are generated on after another using a Poisson distribution with an inter-arrival time that is the total startup time
+divided by the number of peers.  For example if 1000 peers are expected to enter the system within 100 seconds, it uses a Poisson distribution with 
+an average inter-arrival time of 0.1 seconds to start peers, and will finish 
+starting them in about 100 seconds\footnote{There is added jitter in start times because some peers have longer latency to establish a TCP connection
+to instruct them to start.}  Peers are told the system time when they start a download, 
 and use an offset from this start time to log events.  Because of TCP latency in giving them their start times, and system clock skew over time, 
-log messages can be up to a few seconds off by the end of an experiment.
-
-When peers are done downloading a file, the driver collects their logs and we calculate system statistics.  We measure 
-the amount of load on the origin server by summing the amount of 
-bytes received from the origin each second\footnote{This only measures bytes received from the origin, not necessarily all bytes sent, 
-as peers sometimes close sockets early, and any data received after a socket has already been closed are dropped by the kernel.  
-We disregard the first and last 20\% of entries for conglomerate statistics like average throughput, as the system hasn't reached steady state.}.
-We also calculate the sum percent of the file received from peers versus from the origin, and how long it took to do DHT 
-get, put, and remove operations during the course of a run, and create percentile graphs of each of these.  
-All box plots show 25th and 75th percentiles, with outlying lines showing 1st and 99th percentiles, and mid-lines showing the median.
+log times can be up to a few seconds off.
 
 Files are downloaded from a well provisioned server at BYU running an Apache2 web server (version 2.2.4) that is
-bandwidth limited\footnote{using the mod\_bw module.} to 256 KB/s and that has a 256 connection limit. 
-If more peers download the file than there are PlanetLab clients available, peers are re-used round-robin fashion, though peer-to-peer connections 
-to other peers on the same host are dis-allowed.  Experiments run until all peers finish downloading the file. 
+bandwidth limited to 256 KB/s using the mod\_bw module \cite{mod_bw}, and it has a 256 connection limit. 
+Experiments run until all peers finish downloading the file. 
 Each experiment is repeated 3 times and results are averaged.  A different filename is used for each run, so as to not re-use the same DHT keys.
 
-For default system parameters, we choose reasonable values 
-of block size of 100 KB, origin minimum speed ($R$) of 128 KB/s, $R$'s calculation window ($W$) 
+When peers are done downloading a file, the driver collects their logs and we calculate system statistics.  We measure 
+the following:
+
+\begin{enumerate}
+\item
+Load on the origin server.
+
+This is measured by summing the number of 
+bytes received from the origin during each second.  This only measures bytes received from the origin, not necessarily all bytes sent, 
+as peers sometimes close their socket connections to the host early, and any data received after the socket has already been closed is dropped by the kernel.  
+We disregard the first and last 20\% of entries for this (and other) conglomerate statistics, as the system hasn't reached steady state.
+\item
+Percent received from the origin.
+
+We also calculate the sum percent of the file received from peers versus from the origin.  This is the number of data bytes that were retrieved
+from the origin for any block of the file downloaded, compared to the number of data bytes received from peers during the download.
+
+\item
+DHT get, put, and remove times.
+
+We track the time it takes from the start of a DHT operation (initiating TCP contact with a DHT proxy) until an answer is received, for all peers.
+
+\item
+Type of peer download.
+
+We also keep track of the way that peers download a given file.  Some peers encounter a fast server and download the entire from the origin.
+Some transition to peer-to-peer delivery because of a slow first byte ($T$), and some transition because of a slow origin server speed ($R$).  Some peers 
+fail to complete their download (typically those with networks that didn't allow outside connections for some reason).
+
+\end{enumerate}
+
+All box plots show 25th and 75th percentiles, with outlying lines showing 1st and 99th percentiles, and mid-lines showing the median.
+For default system parameters, we choose reasonable values of block size of 100 KB, origin minimum speed ($R$) of 128 KB/s, $R$'s calculation window ($W$) 
 of 2 seconds, and first-byte timeout ($T$) of 1 second.  Peers download the file from up to 20 other peers at a time ($b$).
 Peers linger, serving the file, for 20 seconds after completing a download.
 
 \subsection{Scaling with load}
 
 For our experiments we first test how well our system performs under different loads.
-We first test a traditional client-server transfer, to establish a base line from which to compare 
+We first run a traditional client-server transfer, to establish a base line from which to compare 
 our system. Figure \ref{fig:client_server_download_times} shows the download times for client-server 
 downloads, as load increases.  Median download times start at 1.33 seconds with a load of 1 peer/second,
 and quickly grow to a high of 344 seconds with a load of 20 peers/second. Download times increase linearly instead 
 of exponentially because we start a fixed number of peers and let all downloads complete, without more peers
 entering the system.
-The top outliers at a load of 20 peers/second typically wait in line around 900 seconds before 
-finally receiving the file from the origin. Load on the origin server grows quickly to its 
-theoretical cap of 250 KB/s (Fig.~\ref{fig:client_server_server_load}) 
-under a load of 3 peers/second. Under a load of 20 peers/second, server speed decreases to 203 KB/s, which 
-shows the limitations of our bandwidth limiter in that it becomes bursty and less reliable with higher connection rates.
+The top outliers at a load of 20 peers/second typically wait in line around 800 seconds before 
+finally receiving the file from the origin. Figure \ref{fig:client_server_server_load} shows that load on the origin server grows quickly to its 
+theoretical cap of 250 KB/s under a load of 3 peers/second. Under a load of 20 peers/second, server speed decreases to 203 KB/s, which 
+shows the limitations of the rate limiter in that it becomes bursty and less reliable with higher connection rates.
 
 \begin{figure*}
   \begin{center}
-    \subfigure[Load on the origin server]{
-      \includegraphics[width=8.5cm]{pics/vr_unnamed316651_cs_stress_test/server_speed_Percentile_Line.pdf}
-      \label{fig:client_server_server_load}
-    }
     \subfigure[Download times]{
       \includegraphics[width=8.5cm]{pics/vr_unnamed316651_cs_stress_test/client_download_Percentile_Line.pdf}
       \label{fig:client_server_download_times}      
     }     
-    \caption{Traditional client server download}  
+    \subfigure[Load on the origin server]{
+      \includegraphics[width=8.5cm]{pics/vr_unnamed316651_cs_stress_test/server_speed_Percentile_Line.pdf}
+      \label{fig:client_server_server_load}
+    }
+    \caption{Traditional client server download under varied load.}  
   \end{center}
 \end{figure*}
 
-We next test our system under the same loads. Figure \ref{fig:yanc} shows our results.  Download median times 
+We next test automatic swarming under the same loads using the default parameters. Figure \ref{fig:yanc} shows that download median times 
 start at 1.4 seconds with a load of 1 peer/second, and grow 
-to 5.23 seconds with a load of 6 peers/s and 7.46 seconds with 20 peers/s. 
+to 5.23 seconds with a load of 6 peers/s and 7.46 seconds with 20 peers/s.  Thus download times with swarming are 
+30 times faster than for a client-server system.  Download 
 The graph's Y axis for download time (Fig. \ref{fig:yanc_download_times}) 
 is different than that for client-server (Fig.~\ref{fig:client_server_download_times}) 
-because the difference is so great that it would obscure the details. At a load of 20 peers/second 99.5\% 
-of peers give up on the origin server because of a slow first byte ($T$) after one second. They then query the 
+because the difference is so great that it would obscure the details. 
+
+We examined our data to determine how clients transition to swarming.  Figure \ref{fig:yanc_death_reasons} shows that at a load of 20 peers/second, 99.5\% 
+of peers give up on the origin server because of a slow first byte after one second ($T$). They then query the 
 DHT for a peer list, and receive a response with a median latency of 5.2 seconds.  They download the file almost 
 immediately once they receive the peer list, hence the median download time of about 7 seconds. 
-The percent that peers download from the origin decreases with higher load, because Apache's bandwidth module serves 
-very little when it is under high load, and also because the peers receive the file much more quickly 
-from their peers and thus abandon their connections to the origin.
 
-The amount of peer-to-peer transfer, as expected, increases with higher loads. Under low load peers tend to download 
-the file only from the origin.  After a load of about 10 peers/second almost 100\% of the transfer is from peers (Fig.~\ref{fig:yanc_cdf_from_peers}--a 1 on the graph means 100\% of the file 
-transfer is from peers). It isn't always 100\% for lower loads because peers start 
+The amount of peer-to-peer transfer, as expected, increases with higher loads. Under low load clients tend to download 
+the file only from the origin.  After a load of about 10 peers/second almost 100\% of the transfer is from 
+peers.  At the same time, load drops dramatically on the server (Fig.~\ref{fig:yanc_origin_server_load}).  For lower loads peers start 
 downloading the file from the origin, receive some portion of it within the first $W$ (2) seconds, and then
 transition to peer-to-peer transfer because the rate of download is less than $R$.  
-Thus for the first 2 seconds they are downloading from a slow origin, then they switch to fast peer-to-peer deliveyr.
-The 1st percentile of download times almost always were the first few peers who encounter a still fast origin server and download the file directly from it.
-Later later peers almost always download the file from peers, after encountering a slow origin.
+Thus for the first 2 seconds they are downloading from a slow origin, then they switch to fast peer-to-peer delivery.
+The first percentile of download times almost always are the first few clients, who encounter a still fast origin server and download the file directly from it.
+Later clients almost always download the file from peers, after encountering a slow origin.
 
-There are two basic causes for why some outlying peers take a long time to download the file.  One is that a few poorly connected peers take so long to download blocks from peers
-that their peers finish lingering and drop the existing connections.  These peers then have to request a new 
-peer list from the DHT, causing an increase in latency.  This problem is exacerbated by the fact that we request 
+There are two basic causes for why some outlying clients take a long time to download the file.  One is that a few poorly connected clients take so long to download blocks from peers
+that their peers finish lingering and drop the existing connections.  These clients then have to request a new 
+peer list from the DHT, causing an increase in latency.  This problem is exacerbated by the fact that clients request 
 the last block from multiple peers.  This causes 
-some wasted redundancy in bytes received, which slows down incoming data, causing slow peers to expire their connections' linger time even more often.
+some redundancy in bytes received, which slows down incoming data, causing slow peers to expire their connections' linger time even more often.
 The other factor causing slowdown is a sometimes unresponsive DHT. Typically requests come back quickly, however a few requests will timeout after 60 seconds, 
 and peers will end up downloading the entire file from the original server within that 60 seconds, or have to perform a new 
 query, and will then download the file normally after that.  We're not entirely sure why this behavior occurs with Bamboo.
 
-<%= figure_directory 'vr_medium_p2p_load_tak4', 'yanc', 'P2P results varying load' %>
+<%= figure_directory 'vr_medium_p2p_load_tak4', 'yanc', 'Automatic Swarming under varyied load', true %>
 
 \subsection{Impact of system parameters}
 
@@ -104,7 +127,7 @@ peers. Our system accomodates for this by specifying parameters for the conditio
 transition to a peer-to-peer delivery. We test the impact of varying these and other system parameters, in order 
 to explore the dynamics of our system. In each test we start 1000 peers, with an average of 15 peers entering 
 the system per second, using a Poisson distribution with an interarrival time of 0.066 seconds (all peers enter the system within 67 seconds). 
-Peers download a 100 KB file, using a 100 KB block size, a connection limit of 5 ($b$), $R$ set to 128 KB/second and $W$ set to 2 seconds.
+Peers download a 100 KB file, using a 100 KB block size, and a connection limit of 5 ($b$), with $R$ set to 128 KB/second and $W$ set to 2 seconds.
 
 We first vary $T$, the timeout for a response byte from the origin server. We expect that an extremely low value 
 will cause transitioning too early and an extremely high value 
