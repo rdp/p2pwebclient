@@ -1,4 +1,4 @@
-require 'faster_rubygems' if RUBY_VERSION < '1.9'
+require 'faster_rubygems' if RUBY_VERSION < '1.9.0'
 require 'faster_require'
 require 'parse_raw_old_stats'
 require 'spec/autorun'
@@ -24,20 +24,29 @@ describe Parser do
   end
   
   before(:all) do
+    FileUtils.mkdir 'test' rescue nil
     Dir.chdir 'test' do
       @all = ParseRaw.go '../raw_example.txt'
-      assert File.exist? 'death_reasons.pdf'
-    end    
+    end
   end
-
+  
 
   it "should generate a delete_cause graph" do
-    # done before now
+    assert File.exist? 'test/death_reasons.pdf'
+  end
+  
+  it "should translate certain values to percentages" do
+    @all[6].data[0].data[-1][-1].should == 40.0
   end
   
   it "should yield a hard coded yname" do
-    @all[0].yname.assoc("yrange")[1].should == "[0:180]" # max of 180s 
-    #require '_dbg'
+    @all[0].yname.assoc("yrange")[1].should == "[0:1091.222]"
+    # the default is to be at a max of 180s, even if you're less
+    # except when you're greater than 180
+    Dir.chdir 'test' do
+      @all = ParseRaw.go '../raw_example_small_download_times.txt'
+    end
+    @all[0].yname.assoc("yrange")[1].should == "[0:180]"
     @all[1].yname.assoc("yrange")[1].should == "[0:400000]" # max of 400K
     
   end
