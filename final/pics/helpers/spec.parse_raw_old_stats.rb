@@ -28,8 +28,7 @@ describe Parser do
     Dir.chdir 'test' do
       @all = ParseRaw.go '../raw_example.txt'
     end
-  end
-  
+  end  
 
   it "should generate a delete_cause graph" do
     assert File.exist? 'test/death_reasons.pdf'

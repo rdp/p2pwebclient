@@ -112,7 +112,12 @@ class ParseRaw
       next unless data1
 
       puts 'got', name, y, this_output_filename if $VERBOSE
-
+      if name =~ /percentiles of percent/
+        # multiply by 100
+        data1.each{|k, v| data1[k] = v.map{|old_number| old_number*100} }
+        data2.each{|k, v| data1[k] = v.map{|old_number| old_number*100} } if data2
+      end
+      
       # special case the single liners...
       if name == 'death methods'
         data = ParseRaw.translate_conglom_hashes_to_lined_hashes data1
