@@ -49,7 +49,7 @@ When a client transitions to peer-to-peer delivery, it first checks to see if it
 It needs to know the size in order to look up peer lists.
 If the client has previously received a TCP header with size information from the origin, it has the information it needs.  If it doesn't, it
 queries the DHT, using a key of the URL being downloaded, for known meta-data.  
-Other peers store the meta-data here when they have previously downloaded the file (Fig.~\cite{yanc_step_1}). 
+Other peers store the meta-data here when they have previously downloaded the file (Fig.~\ref{fig:yanc_step_1}). 
 While performing this DHT lookup, a client also does an HTTP HEAD request for the file to the origin server, and uses the response from either of these two to determine file size.  
 If there is no meta-data listed in the DHT, a client continues to poll the DHT every 5 seconds to see if meta-data for the file has appeared.  At some point
 either the meta-data will appear in the DHT or the HTTP HEAD request will return (with size information) and the peer will then have the meta-data 
