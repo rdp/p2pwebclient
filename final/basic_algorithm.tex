@@ -1,4 +1,4 @@
-\subsection{Transition to Peer-to-Peer Delivery}
+\section{Transition to Peer-to-Peer Delivery}
 
 A peer wishing to download a file using automated swarming first tries to download it from the origin web server using a traditional client-server download.  
 If at some point one of the following conditions occurs, the client switches to peer-to-peer delivery:
@@ -13,7 +13,7 @@ If the receive rate ever drops below $R$, the client transitions to peer-to-peer
 This is to accomodate servers with slow connections or servers that become overloaded during a download.
 \end{enumerate}
 
-\subsection{Finding Peers}
+\section{Finding Peers}
 
 Peers interested in downloading the same file find each other using a Distributed Hash Table (DHT).
 A DHT is essentially a distributed P2P hash table that maps a key to a value.  A client can,
@@ -56,7 +56,7 @@ If there is no meta-data listed in the DHT, a client continues to poll the DHT e
 either the meta-data will appear in the DHT or the HTTP HEAD request will return (with size information) and the peer will then have the meta-data 
 it needs and will start  peer-to-peer delivery.
 
-\subsection{Peer-to-Peer Delivery}
+\section{Peer-to-Peer Delivery}
 
 To accomplish peer-to-peer delivery, the client randomly chooses $b$ blocks of the file to download at a time (Fig.~\ref{fig:yanc_step_2}).  
 It retrieves the list of peers who have each block by querying the DHT for a key composed of
@@ -73,7 +73,7 @@ When a peer only has a few blocks remaining, it tries to download the last few b
 It downloads all remaining blocks from a total of $b$ peers, so if $b$ is set to 6 and 3 blocks are left, it downloads each remaining block from 2 redundant peers, with the
 last block being downloaded from all 6 peers redundantly.
 
-\subsection{Sharing}
+\section{Sharing}
 
 Clients must share information using the DHT to make automatic swarming work.  First, when a peer learns the size of the file 
 from its original HTTP request or its later HTTP HEAD request, it stores this ``meta-data" about the file

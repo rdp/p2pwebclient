@@ -1,0 +1,90 @@
+% from http://code.google.com/p/latex-byu-thesis
+
+\usepackage[
+    pdftex,
+    bookmarks=true,
+    bookmarksnumbered=true,
+    breaklinks=false,
+    raiselinks=true,
+    pdfborder={0 0 0},
+    colorlinks=false,
+    bookmarksnumbered=true,
+    ]{hyperref}
+
+
+\usepackage[all]{hypcap}
+\usepackage{natbib}
+
+\newcommand{\Title}{Automatic Transition From Traditional To Swarming Download}
+\newcommand{\Author}{Roger Deloy Pack}
+\newcommand{\MonthGraduated}{August}
+\newcommand{\YearGraduated}{2010}
+
+\hypersetup{%
+    pdftitle=\Title,%
+    pdfauthor=\Author,%
+    pdfsubject={MS Thesis, BYU CS Department: %
+                Degree Granted \MonthGraduated~\YearGraduated, Document Created \today},%
+    pdfkeywords={BYU, thesis, dissertation, LaTeX},%
+}
+
+
+
+% Rewrite the itemize, description, and enumerate environments to have more
+% reasonable spacing:
+\newcommand{\ItemSep}{\itemsep 0pt}
+\let\oldenum=\enumerate
+\renewcommand{\enumerate}{\oldenum \ItemSep}
+\let\olditem=\itemize
+\renewcommand{\itemize}{\olditem \ItemSep}
+\let\olddesc=\description
+\renewcommand{\description}{\olddesc \ItemSep}
+
+% Important settings for the byumsphd class.
+\title{\Title}
+\author{\Author}
+
+\committeechair{Daniel~Zappala~Advisor}
+\committeemembera{Mark~J.~Clement}
+\committeememberb{Christophe~Giraud-Carrier}
+
+\monthsubmitted{\MonthGraduated}
+\yearsubmitted{\YearGraduated}
+\yearcopyrighted{\YearGraduated}
+
+\documentabstract{
+For traditional web servers, available bandwidth decreases as the number of clients increases.  
+This can cause servers to serve files slowly or to become completely overwhelmed when load grows too high.
+BitTorrent is a peer-to-peer solution to this problem, but it requires manual configuration for each
+file to be delivered this way.
+We develop a new system that integrates peer-to-peer file delivery with traditional client-server downloads.  
+Clients initially attempt to download a file from a web server; if this is too slow, they transition to peer-to-peer
+delivery.  Experiments with a prototype system show that it serves up to 30x faster than traditional web servers.
+}
+
+\documentkeywords{%
+    Peer-to-Peer Web, BitTorrent
+}
+
+\acknowledgments{%
+    Thank you to my loving wife and all my other family members who made this possible.
+}
+
+\department{Computer~Science}
+\graduatecoordinator{Kent~E.~Seamons}
+\collegedean{Thomas~W.~Sederberg}
+\collegedeantitle{Associate~Dean}
+
+% Remove all widows an orphans.  This is not normally recommended, but in a
+% paper dissertation there is no reasonable way around it; you can't exactly
+% rewrite already-published content to fix the problem.
+\clubpenalty 10000
+\widowpenalty 10000
+
+% Allow pages to have extra blank space at the bottom in order to accommodate
+% removal of widows and orphans.
+\raggedbottom
+
+% Get a little less fussy about word spacing on a line.  Sometimes produces
+% ugly results, so keep your eyes peeled.
+\sloppy

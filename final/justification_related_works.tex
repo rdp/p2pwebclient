@@ -1,4 +1,4 @@
-\section {Introduction}
+\chapter {Introduction}
 
 In the traditional Internet architecture, a single server handles multiple simultaneous incoming client requests.  
 The bottleneck in such systems under high load can become lack of bandwidth from the server \cite{coopnet}, because bandwidth is split $N$ 
@@ -58,11 +58,11 @@ This system provides for automatic integration of swarming downloads with HTTP, 
 Using experiments on PlanetLab, we show that peers who request small files can receive them at a rate of up to 30x the speed of traditional file server download, and
 can decrease the load on busy servers.  
 
-\section{Related Work}
+\chapter{Related Work}
 Much work has been done to study distributed file downloading.  Solutions fall into three basic categories: client-side protocols, cooperative (client and server-side) protocols, 
 and server-side protocols.
 
-\subsection{Client-Side Protocols}
+\section{Client-Side Protocols}
 Protocols that use only client-side interaction require no change in the server software, allowing them to be implemented in clients without requiring servers to be aware of the changes.  However, this requires that clients must self-organize without the help of the centralized server.  Our protocol is an example of such a system.
 
 Shared web caches are an example of a client-side only protocol.  They allow peers to download files from some well known cache -- typically a specific set of computers, such as those run by PlanetLab.  Coral \cite{coral} and CoDeen \cite{codeen} are examples of such caches.  Shared caches like these require a dedicated set of proxies, however.  
@@ -77,7 +77,7 @@ Coral is also limited in the size of files it can cache by PlanetLab policies.  
 
 %The effect of  flash crowds can also be alleviated by searching among a random subset of Internet peers for desired files.  PROOFS \cite{proofs} (P2P Randomized Overlays to Obviate Flash-crowd Symptoms) uses flooded search to allow peers to locate 'popular' or 'flash crowded' files from other peers who have previously downloaded the same.  The creators conjecture that files that are the subjects of a flash crowd are likely to be locatable among random sets of peers, since they are popular, hence their use of a random flood search.  The benefit of this system is that nodes need not maintain a structured search system (such as a DHT). However, not having a DHT for lookup makes searches more random and slightly less accurate, with potentially higher overhead.  PROOFS also does not include parallel downloads nor offer a protocol for automatic transition to a peer-to-peer solution.
 
-\subsection{Cooperative Protocols}
+\section{Cooperative Protocols}
 
 With cooperative protocols, a server and clients work together to provide scalable downloads.  Participation by the server makes it easier to build a system,
 but it will only work for those sites that adopt the new mechanism.  
@@ -118,7 +118,7 @@ and their protocol has little published research.
 Overall, client and server side cooperation protocols work well at alleviating flash crowds, and a few provide manual transition to peer-to-peer delivery.  
 However, they require both the server and the client to understand the protocol, which hinders their adoptability, and lack an automatic transition.
 
-\subsection{Server-side Protocols}
+\section{Server-side Protocols}
 
 Server-side only solutions typically create a pool of servers that mirror each others' content, helping to alleviate the impact of flash crowds \cite{backslash, dotSlash}.  
 In these systems, servers will cover for each other, so that if one becomes very crowded then the others will share the load with it until load decreases.  Backslash \cite{backslash} is one example.  In Backslash, when one server becomes overloaded it redirects requests and uploads necessary files to other servers for them to act as temporary mirrors, therefore relying on the volunteer hosts in the system.  
@@ -126,7 +126,7 @@ In these systems, servers will cover for each other, so that if one becomes very
 Overall, server-side systems still tend to be susceptible to flash crowds (albeit to a lesser extent), 
 because of their collaboration, and are built to serve clients that are not p2p enabled, which helps in adoption but offers no P2P delivery.
 
-\section {Automated Swarming}\label{section:solution}
+\chapter {Automated Swarming}\label{section:solution}
 
 Automated swarming is our client-side system that automatically switches from client-server to peer-to-peer content delivery when a server becomes overloaded.  The goals for this system include:
 \begin{enumerate}

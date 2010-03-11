@@ -118,7 +118,7 @@ class RubyToTex
   #
   def figure filename, options
     options[:caption] ||= '' # always need at least a blank caption...
-    options[:width] ||= '8.5cm'
+    options[:width] ||= '6.5cm'
 
     figure = "figure"
     if options[:subfigure]

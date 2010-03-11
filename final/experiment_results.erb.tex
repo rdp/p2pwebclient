@@ -1,6 +1,6 @@
 %% note: todo's go in todo, as well as optionally in here
 
-\section{Experiment Results}
+\chapter{Experiment Results}
 
 To test our system, we implemented a prototype client in the Ruby programming language and 
 ran experiments using the client on a pool of about 1000 computers scattered world-wide on the PlanetLab system\footnote{It should be noted
@@ -61,7 +61,7 @@ For default system parameters, we choose reasonable values of block size of 100 
 of 2 seconds, and first-byte timeout ($T$) of 1 second.  Peers download the file from up to 20 other peers at a time ($b$).
 Peers linger, serving the file, for 60 seconds after completing a download.
 
-\subsection{Scaling with load}
+\section{Scaling with load}
 
 For our experiments we first test how well our system performs under different loads.
 We run a traditional client-server transfer, to establish a base line from which to compare 
@@ -122,7 +122,7 @@ query, and then download the file normally from their peers after that.  We're n
 
 <%= figure_directory 'vr_medium_p2p_load_tak4', 'yanc', 'Automatic Swarming under varyied load', {'download_times' => true, 'origin_server_load' => true, 'death_reasons' => true} %>
 
-\subsection{Impact of system parameters}
+\section{Impact of system parameters}
 
 If a peer can download a file quickly from the origin, it does no help to also download the file from its
 peers. Our system accomodates for this by specifying parameters for the conditions under which it will 
@@ -178,7 +178,7 @@ These 200 peers transition more quickly to peer-to-peer with a lower $W$, but th
 
 <%= figure_directory '837145_dw', 'dw', 'Varying W', 'download_times' => true %>
 
-\subsection{Effect for a full web page}
+\section{Effect for a full web page}
 
 We next run an experiment where clients download a full web page.  The normal pattern for a page view 
 is to first access some root page which references several other objects, such as images, 
@@ -206,7 +206,7 @@ As Figure \ref{fig:multiple_files_cs_download_times} shows, a client-server syst
 <%= figure 'pics/multiples_p2p_versus_cs_pics/client_download_Percentile_Line.pdf', 
   :caption => 'Comparison of P2P versus client server download times for multiple files', :label => 'fig:multiple_files_cs_download_times' %> 
 
-\subsection{Varying Block Size}
+\section{Varying Block Size}
 
 We next measure the effect block size has on download time. We download a 100 KB file with block sizes ranging from 
 16 KB to 100 KB, using the same default parameters as specified above.  Figure \ref{fig:vary_block_size} shows that 32 KB blocks result
@@ -216,7 +216,7 @@ are downloaded simultaneously. 32 KB blocks were also shown to be most effective
 
 <%= figure_directory 'vr_unnamed240998_blockSize', 'vary_block_size', 'Varying block size', 'download_times' => true  %>
 
-\subsection{Varying linger time}
+\section{Varying linger time}
 
 We next vary the amount of time peers linger, our hypothesis being that a longer linger 
 time will speed downloads.  Figure \ref{fig:vary_linger_time} shows this to be correct.
@@ -228,7 +228,7 @@ with a linger time of 4 seconds, download time drops to 34 seconds.  Download ti
 <%= figure_directory 'vr_unnamed497104_linger_fromStart_0by_fixed_settingAndMajorTimes_8_times_0.0666666666666667s__0s_100000B_255000BPS_125000s_1.0s_2.0s_100000B', 
  'vary_linger_time', 'Varying linger time', 'download_times' => true  %> 
 
-\subsection{Downloading Large Files}
+\section{Downloading Large Files}
 
 We next test our system's ability to download large files. We download a 30 MB file using our system and then again using BitTorrent.
 For both systems, block size is set to 256 KB, origin servers are rate limited to 256 KB/second, and linger time 
@@ -276,7 +276,7 @@ the download.  Figure \ref{fig:yanc_30mb_cdf} shows that most of the delivery co
 \end{table}
 }
 }
-\subsection{Varying peer connection limit} 
+\section{Varying peer connection limit} 
 
 We next vary the maximum number of simultaneous download connections each peer is allowed ($b$). We 
 repeat the above 30 MB download experiment, but vary the peer limit from 1 to 50. 
