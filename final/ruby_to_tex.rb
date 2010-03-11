@@ -4,12 +4,14 @@ require 'erb'
 # note--if you want subfigures then at the very beginning of your latex file you'll want to \include{subfigure}
 #
 # Helper methods
-#
-# doctest: String#indent
-# >> 'abc'.indent
-# => ' abc'
-# >> "abc\ndef\nyo".indent
-# => " abc\n def\n yo"
+=begin
+ doctest: String#indent
+ >> 'abc'.indent
+ => ' abc'
+ >> "abc\ndef\nyo".indent
+ => " abc\n def\n yo"
+=end
+
 class String
   def indent
     all = ''
@@ -32,37 +34,12 @@ class RubyToTex
     File.read(filename)
   end
 
-
-=begin
-\begin{figure*}
-  \begin{center}
-    \subfigure[Download times]{
-      \includegraphics[width=7cm]{pics/vr_medium_p2p_load_tak4/client_download_Percentile_Line.pdf}
-      \label{figs:yanc_download_times}
-    }     
-    \subfigure[Load on the origin server]{
-      \includegraphics[width=7cm]{pics/vr_medium_p2p_load_tak4/server_speed_Percentile_Line.pdf}
-      \label{figs:yanc_server_load}
-    }
-    
-    \subfigure[CDF of percent of file received from peers] {
-      \includegraphics[width=7cm,]{pics/vr_medium_p2p_load_tak4/percent_from_clients_Percentile_Line.pdf}
-      \label{figs:yanc_from_client_percentile}
-    }
-    
-    \caption{P2P Download}
-  \end{center}
-\end{figure*}
-
-
-=end
-
-  #
   # options :label (like vary_dt), :caption (like "Vary T")
   # use like subfig:vary_dt_download_times
   # subfig:vary_dt_cdf_from_peers
   # subfig:vary_dt_origin_server_load
-  # wanted_pics is like {'download_times' => true, 'origin_server_load' => true, 'death_reasons' => true, 'cdf_from_peers' => true, 'dht_puts' => true}
+  # wanted_pics is like 
+  # {'download_times' => true, 'origin_server_load' => true, 'death_reasons' => true, 'cdf_from_peers' => true, 'dht_puts' => true}
   def figure_directory dir_name, label_prefix, caption, wanted_pics = {'download_times' => true, 'origin_server_load' => true}
     
     dir_name = 'pics/' + dir_name
@@ -96,15 +73,16 @@ class RubyToTex
       "\\begin{center}"
 
     for filename, (description, label) in names
+      # add subfigures
       options = {}
       options[:subfigure] = true
       options[:label] = 'fig:' + label_prefix + '_' + label
       options[:caption] = description
-      sum += (figure dir_name + '/' + filename, options).indent
+      sum += (figure(dir_name + '/' + filename, options)).indent
     end
     
     sum += "
-    \\caption[]{#{caption}}
+    \\caption[#{caption}]{#{caption}}
     \\label{fig:#{label_prefix}}
     \\end{center}
     \\end{figure*}"
@@ -122,7 +100,8 @@ class RubyToTex
 
     figure = "figure"
     if options[:subfigure]
-      beginning = "\n\\subfigure[#{options.delete(:caption).gsub('_', "\\_")}] {\n"
+      caption = options.delete(:caption).gsub('_', "\\_")
+      beginning = "\n\\subfigure[#{caption}] {\n"
       ending =  "}"
     else
       beginning = "\\begin{figure}[htp]\n"
