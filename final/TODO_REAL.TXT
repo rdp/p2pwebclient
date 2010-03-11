@@ -1,11 +1,5 @@
 ====================actually really todo (in order of priority):
 
-missing some images
-
-ilab2--update what the default specs were for the original runs...until I can re-run more tests...
-
-"many many p2p" why was it so fast compared to my R and T tests? (can't do this right now tho, and have the above)
-
 "real" latex format (like for submission to the library)
 
 ------------maybe don't have to? --------------------
@@ -16,7 +10,7 @@ examine yanc 30MB -- why slow?
 
 fix it to only one on the origin! yes! why? (if I ever redo something with multiple blocks)
 
-
+rerun the p2p stress test with 60 second linger
 
 
 %LTODO note unfairness: vr_multiples_tak_1 client upload sum. wow. [FUTURE WORK?]

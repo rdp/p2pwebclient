@@ -59,7 +59,7 @@ fail to complete the download (typically those with networks that didn't allow o
 All box plots show 25th and 75th percentiles, with outlying lines showing 1st and 99th percentiles, and mid-lines showing the median.
 For default system parameters, we choose reasonable values of block size of 100 KB, origin minimum speed ($R$) of 128 KB/s, $R$'s calculation window ($W$) 
 of 2 seconds, and first-byte timeout ($T$) of 1 second.  Peers download the file from up to 20 other peers at a time ($b$).
-Peers linger, serving the file, for 20 seconds after completing a download.
+Peers linger, serving the file, for 60 seconds after completing a download.
 
 \subsection{Scaling with load}
 
@@ -130,6 +130,7 @@ transition to a peer-to-peer delivery. We test the impact of varying these and o
 to explore the dynamics of our system. In each test we start 1000 peers, with an average of 15 peers entering 
 the system per second, using a Poisson distribution with an interarrival time of 0.066 seconds (all peers enter the system within 67 seconds). 
 Peers download a 100 KB file, using a 100 KB block size, $b$ (connection limit) set to 5, $R$ set to 128 KB/second and $W$ set to 2 seconds.
+Peers' linger time is set to 20 seconds.
 
 We first vary only $T$, the timeout for a response byte from the origin server. We expect that an extremely low value 
 will cause transitioning too early and an extremely high value 
