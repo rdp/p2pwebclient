@@ -90,12 +90,12 @@ describe P2PPlot do
   it "should have a y that's taller than the tallest y...climb every mountain..." do
     y = 6 * 1.1
     @a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
-    @a.xrange.assoc('xrange')[1].should == "[0:210]"
+    @a.xrange.assoc('xrange')[1].should == "[-20:210]"
   end
 
   it "should have an xrange that is always plus one" do
     plot_to_ten
-    @a.xrange.assoc('xrange')[1].should == "[0:11]"
+    @a.xrange.assoc('xrange')[1].should == "[-1:11]"
   end
 
   it "should have a taller y if you pass it in two graphs" do

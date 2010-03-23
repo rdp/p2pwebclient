@@ -6,8 +6,8 @@ than a traditional client-server download and can significantly
 reduce download times.  The system is most effective for small files but does not yet compete well with
 BitTorrent for large files.  We have also found good settings for various system parameters.
 
-Several aspects could be improved.  We currently connect to the origin
-server from each peer, at times causing the same blocks to be served (redundantly) to various peers, slowing down transfer.
+Several aspects could be improved.  All clients currently connect to the origin
+server, at times causing the same blocks to be served (redundantly) to various clients, slowing down transfer.
 We also do not validate the integrity of downloads.  We assume peer trustworthiness and no file corruption.  We also do not provide peer incentives for sharing.
 Peer lists could be optimized.  Because they are returned in chronological order from Bamboo (oldest first), our system can experience problems if peers
 go offline without removing themselves from lists, or if linger times are close to expiring.  This also causes peers to download blocks 
@@ -16,7 +16,7 @@ already expired before peers even receive the list.
 
 Under high loads DHT response times increase substantially.  For example, if there is an extremely popular file, the 
 requests for that peer list might overwhelm the DHT member responsible.  There is also some redundancy in peer lists for large files.  
-clients request several different peer lists, one per block.  These lists might be all the same currently, thus
+Clients request several different peer lists, one per block.  These lists might be all the same currently, thus
 there is some avoidable redundancy and latency.
 
 Currently this system is mostly useful for overloaded sites with static pages.  There could be some way for peers to deal with dynamic pages, such as to

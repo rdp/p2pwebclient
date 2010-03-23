@@ -29,7 +29,7 @@ the following:
 
 The time for a client or peer to download the file, in seconds.
 
-\item \emph{Server upload speed--}
+\item \emph{Server upload speeds--}
 
 Average bytes uploaded over the time of the experiment, from the origin.
 This is measured by summing the number of bytes received from the origin during each second.  
@@ -44,16 +44,16 @@ from the origin for any block of the file downloaded, compared to the number of 
 
 \item \emph{DHT get, put, and remove times--}
 
-We track the time it takes from the start of a DHT operation (initiating a TCP connection with a DHT proxy) 
-until an answer is received, for all peers during the course of an experiment.
+We track the time it takes to do a DHT operation by measuring time elapsed from initiating a TCP connection with the DHT proxy 
+until an answer is received, for peers during the course of an experiment.
 
 \item \emph{Type of peer downloads--}
 
 We also keep track of the way that peers download a given file.  Some peers encounter a fast server and download the entire file from the origin.
 Some peers transition to peer-to-peer delivery and complete the download that way, either because of a slow first byte ($T$), 
-or a slow origin server speed ($R$)\footnote{Note that if a peer transitions to peer-to-peer delivery, we count it as
-a peer-to-peer delivery download, regardless of whether they actually receive any bytes from their peers.}.  Some peers 
-fail to complete the download (typically those with networks that didn't allow outside connections for some reason).
+or a slow origin server speed ($R$).  Note that if a peer transitions to peer-to-peer delivery, we count this as
+a peer-to-peer download, regardless of whether they actually receive bytes from their peers--in a few cases they may end up still downloading
+it all from the origin.  Some peers fail to complete the download, typically because of network problems on their host.
 
 \end{enumerate}
 
@@ -82,19 +82,21 @@ We next test automatic swarming under the same loads, using the default paramete
 start at 1.4 seconds with a load of 1 peer/second, and grow 
 to 5.23 seconds with a load of 6 peers/s and 7.46 seconds with 20 peers/s.  Thus download times with swarming are 
 30 times faster than for a client-server system.   
-The graph's Y axis for download time (Fig. \ref{fig:yanc_download_times}) 
-is different than that for client-server (Fig.~\ref{fig:client_server_download_times}) 
-because the difference is so great that it would obscure the details. 
+The Y axis for Fig. \ref{fig:yanc_download_times} is different than that for client-server in 
+Fig.~\ref{fig:client_server_download_times} because the difference is so great that it would obscure the details. 
 
-We examined our data to determine how clients transition to swarming.  Figure \ref{fig:yanc_death_reasons} shows that at a load of 20 peers/second, 99.5\% 
+We examined our data to determine how clients transition to swarming.  
+Figure \ref{fig:yanc_death_reasons} shows which clients transition due to $R$ (slow download), which due to $T$ (slow first byte),
+and which stay with the origin server.  At a load of 20 peers/second, 99.5\% 
 of peers give up on the origin server because of a slow first byte after one second ($T$). They then query the 
 DHT for a peer list, and receive a response with a median latency of 5.2 seconds.  They download the file almost 
 immediately once they receive the peer list, hence the median download time of about 7 seconds. 
 
 The amount of peer-to-peer transfer, as expected, increases with higher loads. Under low load clients tend to download 
 the file only from the origin.  After a load of about 10 peers/second almost 100\% of the transfer is from 
-peers.  At the same time, load drops dramatically on the server (Fig.~\ref{fig:yanc_origin_server_load}).  For lower loads peers start 
-downloading the file from the origin, receive some portion of it within the first $W$ (2) seconds, and then
+peers.  At the same time, load drops dramatically on the server, as shown in Fig.~\ref{fig:yanc_origin_server_load}.
+For smaller loads, peers start downloading the file from the origin, 
+receive some portion of it within the first $W$ (2) seconds, and then
 transition to peer-to-peer transfer because the rate of download is less than $R$.  
 Thus for the first 2 seconds they are downloading from a slow origin, then they switch to fast peer-to-peer delivery.
 The first percentile of download times almost always are the first few clients, who encounter a still fast origin server and download the file directly from it.
@@ -118,7 +120,7 @@ If a peer can download a file quickly from the origin, it does no help to also d
 peers. Our system accomodates for this by specifying parameters for the conditions under which it will 
 transition to a peer-to-peer delivery. We test the impact of varying these and other system parameters, in order 
 to explore the dynamics of our system. In each test we start 1000 peers, with an average of 15 peers entering 
-the system per second, using a Poisson distribution with an interarrival time of 0.066 seconds (all peers enter the system within 67 seconds). 
+the system per second, using a Poisson distribution with an interarrival time of 0.066 seconds.  Thus all peers enter the system within the first 67 seconds. 
 Peers download a 100 KB file, using a 100 KB block size, $b$ (connection limit) set to 5, $R$ set to 128 KB/second and $W$ set to 2 seconds.
 Peers' linger time is set to 20 seconds.
 
@@ -128,9 +130,9 @@ will cause transitioning too late, both resulting in slow download times. Figure
 the results hold to our hypothesis. With $T$ set to 0 seconds, median download time is 46.43 seconds. It then drops to 15.35 seconds with $T$ set at 0.75 seconds, 
 but rises to 35 seconds with $T$ set to 10 seconds.
 
-Figure \ref{fig:vary_t_death_reasons} shows a break down of the reasons peers transition to peer-to-peer delivery.  $dT$ is the number
-of peers who transition to peer-to-peer delivery because of a slow first byte, $dR$ is the number of
-peers that transition because of a too low value of $R$, $died$ is the number of peers that never complete the download and $http\_straight$ is the number of peers
+Figure \ref{fig:vary_t_death_reasons} shows a breakdown of the reasons peers transition to peer-to-peer delivery.  $T$ is the number
+of peers who transition to peer-to-peer delivery because of a slow first byte, $R$ is the number of
+peers that transition because of a too low value of $R$, $died$ is the number of peers that never complete the download and $origin$ is the number of peers
 that download the entire file from the origin server.
 Higher values of $T$ cause $R$ to become more important.  With low values of $T$, almost 100\% of peers transition to peer-to-peer delivery because of $T$. 
 With $T$ set to 10 seconds about 80\% of peers transition because of $T$, and 20\% because of $R$, so far fewer.
@@ -154,7 +156,7 @@ to 10 seconds and run the same experiment described above, but with $T$ set to 1
 slightly different than our hypothesis. Varying $W$ does make some difference, but only when set 
 to a very low value. Median download times are 17 seconds with $W$ set to 0.25 seconds. For $W$ \textgreater{} 0.25 seconds
 median download times stay at approximately 25 seconds. Surprisingly, 
-most peers (about 800 out of 1000) still transition to peer-to-peer delivery because of 
+about 80\% peers still transition to peer-to-peer delivery because of 
 a slow first byte ($T$), even with $T$ set to its larger value of 10 seconds. 
 The reason for this is that we don't start calculating $R$ until after the first byte is received, and 
 in the majority of cases (800/1000) $T$ expires first, so $T$ still 
@@ -174,15 +176,15 @@ We next run an experiment where clients download a full web page.  The normal pa
 is to first access some root page which references several other objects, such as images, 
 javascript, flash, css, etc. This is the case for a 2007 snapshot of the byu.edu web site, which had a medium sized main page that 
 linked to over 10 smaller, objects.  To model this behavior, we run a test where each peer first 
-downloads a 100 KB file; when that file completes download each peer then downloads ten other 10 KB files simultaneously 
-(from the same origin server), and the total time to download all 11 files is logged. We set the parameters 
+downloads a 100 KB file; when that file download completes each peer then downloads ten other 10 KB files in parallel from 
+the same origin server, and the total time to download all 11 files is logged. We set the parameters 
 to be those mentioned above for testing system parameters, and vary the load from 1 peer/second to 25 peers/second. 
 
 The expected result for this experiment is that downloading multiple pages will be slower than one, 
 since it will put more stress on the DHT.  Our results in Figure \ref{fig:multiple_files} prove
 this hypothesis correct.  Total download time starts at 1.3 seconds, and grows quickly with higher load, approaching 
 150 seconds at a load of 25 peers/second. DHT response times also grow similarly with load.  Median DHT ``put'' times start 
-at 0.41 seconds at a load of 1 peer/second, and grow to 12 seconds at a load of 25 peers/second (get and remove times are similar).
+at 0.41 seconds at a load of 1 peer/second, and grow to 12 seconds at a load of 25 peers/second.  DHT get and remove times show a similar growth.
 This explains some of the download slowdown.  Because linger time is set to 20 seconds, peer lists are outdated soon after they are created, because
 they typically take 12 seconds to set, then another 12 seconds to retrieve, and by that time peers' linger times have already expired.
 
@@ -199,7 +201,8 @@ As Figure \ref{fig:multiple_files_cs_download_times} shows, a client-server syst
 \section{Varying Block Size}
 
 We next measure the effect block size has on download time. We download a 100 KB file with block sizes ranging from 
-16 KB to 100 KB, using the same default parameters as specified above.  Figure \ref{fig:vary_block_size} shows that 32 KB blocks result
+16 KB to 100 KB, using the same default parameters as specified above, and 100 peers entering the system within 100 seconds.  
+Figure \ref{fig:vary_block_size} shows that 32 KB blocks result
 in the quickest downloads.  This is faster because downloading more blocks allow our system to download 
 blocks from several peers simultaneously, without redundancy.  In this case a block size of 32 KB results in a total 3 blocks, and since $b$ by default is 5, all 3 blocks
 are downloaded simultaneously. 32 KB blocks were also shown to be most effective in \cite{32_kb_blocks}.
@@ -210,7 +213,7 @@ are downloaded simultaneously. 32 KB blocks were also shown to be most effective
 
 We next vary the amount of time peers linger, our hypothesis being that a longer linger 
 time will speed downloads.  Figure \ref{fig:vary_linger_time} shows this to be correct.
-We download a 100 KB file using the above parameters, varying linger time from 0 to 160 seconds.
+We download a 100 KB file using the above default parameters, varying linger time from 0 to 160 seconds, with 100 peers entering the system within 100 seconds.
 With a linger time of 0 seconds, median download time peaks at 300 seconds, with 
 a linger time of 1 second, median download time drops to 127 seconds.  With a linger of 2 seconds, download time further drops to 60 seconds, and
 with a linger time of 4 seconds, download time drops to 34 seconds.  Download time stays at about that same level for linger times greater than 4 seconds.
@@ -222,7 +225,7 @@ with a linger time of 4 seconds, download time drops to 34 seconds.  Download ti
 
 We next test our system's ability to download large files. We download a 30 MB file using our system and then again using BitTorrent.
 For both systems, block size is set to 256 KB, origin servers are rate limited to 256 KB/second, and linger time 
-is set to 0 seconds (though peers share the file while they are still downloading it). 100 peers enter the system at an average of 1 per second.  
+is set to 0 seconds, though peers still share the file while downloading it. 100 peers enter the system at an average of 1 per second.  
 
 The expected result is that the two fare similarly.  Our results, in Table \ref{fig:yanc_vs_bt}, show that a few peers download 
 faster with our system, but most download faster with BitTorrent. 
@@ -242,13 +245,12 @@ In future work our system can be optimized to handle loads such as this better.
 One interesting statistic is that the relative download times for each system are similar.
 The difference between the 25th and 75th percentile download time in our system is 150 seconds, 
 or 5\% of the 75th percentile's time. The difference between the 25th and 75th percentiles in BitTorrent 
-is 24 seconds, or 7\% of the 75th percentile's time (a similar percentage). These numbers implies that once 
+is 24 seconds, or 7\% of the 75th percentile's time: a similar percentage. These numbers implies that once 
 a few peers have downloaded a file in its entirely, it doesn't take relatively long for the rest of the peers to complete 
 the download.  Figure \ref{fig:yanc_30mb_cdf} shows that most of the delivery comes from peers.
 
 <%= figure 'pics/yanc_30mb/yanc_30_mb_cdf.pdf', :caption => 'CDF of percent of file received from peers, 30MB file', :label => 'fig:yanc_30mb_cdf' %>
-\small{
-\small{
+
 \begin{table}
   \caption{Download times of a 30MB file}
 \begin{center}
@@ -264,8 +266,7 @@ the download.  Figure \ref{fig:yanc_30mb_cdf} shows that most of the delivery co
 \end{tabular}
 \end{center}
 \end{table}
-}
-}
+
 \section{Varying peer connection limit} 
 
 We next vary the maximum number of simultaneous download connections each peer is allowed ($b$). We 

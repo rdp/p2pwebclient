@@ -96,15 +96,15 @@ class ParseRaw
     for name, (y, this_output_filename) in {
       "download times %'iles'" => ['Client Download Time (seconds)', 'client_download_Percentile_Line'],
       "download total times %'iles'" => ['Peer Download Times All files (seconds)', 'client_download_all_files_Percentile_Line'],
-      "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/s)', 'server_speed_Percentile_Line'],
+      "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (bytes/s)', 'server_speed_Percentile_Line'],
       # server upload is changed for some reason in newer stuffs
-      "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/s)', 'server_speed_Percentile_Line'],
+      "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (bytes/s)', 'server_speed_Percentile_Line'],
       "upload bytes %'iles'" => ['Peer Bytes Uploaded (Bytes)', 'upload bytes'],
-      "instantaneous tenth of second throughput %'iles'" => ['Total ThroughPut (Bytes/s)', 'total throughput'],
+      "instantaneous tenth of second throughput %'iles'" => ['Total ThroughPut (bytes/s)', 'total throughput'],
       'dht removes' => ['DHT Removal Time (S)', 'dht_Remove_Percentile_Line'],
       'dht puts' => ['DHT Set Time (S)', 'dht_Put_Percentile_Line'],
       'dht gets' => ['DHT Set Time (S)', 'dht_get_Percentile_Line'],
-      'death methods' => ['Number of peers', 'death_reasons'],
+      'death methods' => ['Percent of Peers', 'death_reasons'],
       "percentiles of percent received from just peers (not origin)" => ['Percent of File received from Peers', 'percent_from_clients_Percentile_Line']} do
 
       data1 = all.delete name
@@ -121,7 +121,7 @@ class ParseRaw
       # special case the single line graphs...
       if name == 'death methods'
         # do some renames, too
-        map = {'dR' => 'R', 'dT' => 'T', 'http_straight' => 'Origin', 'died' => 'Failed'}
+        map = {'dR' => 'R', 'dT' => 'T', 'http_straight' => 'Origin', 'died' => 'Died'}
         data1_mapped = {}
         data1.each{|second, values|
           values_mapped = {}

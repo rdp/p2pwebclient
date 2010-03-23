@@ -14,9 +14,9 @@ Users would also only be using their bandwidth for files they previously downloa
 \item It should be fast for small files.
 \end{enumerate}
 
-To accomplish this, peers monitor file downloads and transition to Peer-to-Peer delivery when a download becomes slow.
-Interested peers find each other using a Distributed Hash Table (DHT).
-They download the file from a peer that already has it, then add themselves to the list of peers willing to share the file.
+To accomplish this, in automated swarming peers monitor downloads and transition to Peer-to-Peer delivery 
+when a download becomes slow.  Interested peers then find each other using a Distributed Hash Table (DHT).
+They download the file from peers, then add themselves to a list of peers willing to share the file.
 
 \section{Transition to Peer-to-Peer Delivery}
 

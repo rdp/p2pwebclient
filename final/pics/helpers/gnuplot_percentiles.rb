@@ -31,7 +31,10 @@ class P2PPlot
         xrange = [xrange, xs2.last - xs2.first].max
       end
       
-      
+      xrange_min = 0
+      if xs.first < 1       
+        xrange_min = (-xrange*0.1).to_i # so we can see it
+      end      
 
       Gnuplot.open do |gp|
         Gnuplot::Plot.new( gp ) do |plot|
@@ -41,7 +44,7 @@ class P2PPlot
           add_label(plot, 'y', ylabel) if ylabel
           add_label(plot, 'x', xlabel) if xlabel
     		  above_x = [(xrange*1.05).to_i, xrange + 1].max
-          plot.xrange "[0:#{ above_x }]"
+          plot.xrange "[#{xrange_min}:#{ above_x }]"
           
           all_points =  percentiles
           if percentiles2

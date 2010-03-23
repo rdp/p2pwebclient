@@ -87,8 +87,9 @@ One style of cooperation for web servers uses redirection.  For web redirection,
 
 A second style of cooperation uses swarming to download large files.  This is best exemplified by BitTorrent.  Swarming protocols are highly effective at serving loads orders of magnitude higher than an ordinary web server \cite{zappala}.
 
-OnionNetworks has proposed an extension to HTTP to incorporate swarming.  With this protocol, HTTP response messages include hashes of files and a list of peers that clients
-may connect to and download from in a swarming fashion \cite{onion}.  Unfortunately their proposal has not seen wide-spread adoptance nor research, and in extreme
+OnionNetworks has proposed an extension to HTTP to incorporate swarming.  With this protocol, 
+HTTP response messages include hashes of files and a list of peers that clients
+may connect to, and download from, in a swarming fashion \cite{onion}.  Unfortunately their proposal has not seen wide-spread adoptance nor research, and in extreme
 cases the origin server could still be overwhelmed.
 
 The Shark \cite{shark} filesystem allows clients to download blocks of files from nearby neighbors who have blocks already on their local machines.  
