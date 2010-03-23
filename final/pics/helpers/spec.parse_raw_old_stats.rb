@@ -28,14 +28,18 @@ describe Parser do
     Dir.chdir 'test' do
       @all = ParseRaw.go '../raw_example.txt'
     end
-  end  
+  end
+  
+  it "should do percentages from death reasons, and R and T translation, too" do
+   @all[6].data[2].data[1][0].should == 100
+  end
 
   it "should generate a delete_cause graph" do
     assert File.exist? 'test/death_reasons.pdf'
   end
   
   it "should translate certain values to percentages" do
-    @all[6].data[0].data[-1][-1].should == 40.0
+    @all[7].data[0].data[-1][-1].should == 40.0
   end
   
   it "should yield a hard coded yname" do

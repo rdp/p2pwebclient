@@ -125,15 +125,17 @@ class ParseRaw
         data1_mapped = {}
         data1.each{|second, values|
           values_mapped = {}
+          sum = 0
+          values.each{|name, value| sum += value}
           values.each{|name, value|
             new_name = map[name]
             raise name unless new_name
-            values_mapped[new_name] = value
+            values_mapped[new_name] = value*100/sum
           }
           data1_mapped[second] = values_mapped
         }
         data = ParseRaw.translate_conglom_hashes_to_lined_hashes data1_mapped
-        P2PPlot.plotNormal x, y, data, this_output_filename + '.pdf'
+        out << (P2PPlot.plotNormal x, y, data, this_output_filename + '.pdf')
       else
 
         # we have already to split it into lines
