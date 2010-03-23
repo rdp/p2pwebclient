@@ -3,7 +3,7 @@
 In the traditional Internet architecture, a single server handles multiple simultaneous incoming client requests.  
 The bottleneck in such systems under high load can become lack of bandwidth from the server \cite{coopnet}, because bandwidth is split $N$ 
 ways among the requesting clients (Fig. \ref{fig:traditional_http}).  When an increasing number of clients request a web page, that page 
-therefore loads more and more slowly for users.  This problem occurs anytime the ratio of bandwidth to clients is low, for example, when a server 
+therefore loads more and more slowly for users.  This problem occurs any time the ratio of bandwidth to clients is low, for example, when a server 
 is poorly provisioned, it experiences a sudden spike in load, or a small number of incoming clients download very large files.  An example of this problem 
 is the ``slashdot" effect, in which a sudden flash crowd of clients suddenly requests certain pages, overwhelming unexpectant servers.  
 These situations cause web servers to server files slowly, become overwhelmed, or even crash.
@@ -71,6 +71,7 @@ which is used to track which files have been downloaded by which peers.
 The DHT is then used to locate the peer owners of files, who then serve as proxies for that file.  
 The advantage of this is it doesn't require dedicated infrastructure.  
 The disadvantage is it does not offer an algorithm for transparent transition to peer-to-peer delivery, nor does it allow for partial file downloads.  It was also built on the assumption of being run on a local (well-connected) network, not on the Internet at large.
+
 Coral-style caches are useful, but have limitations.  They are constrained to the number of participants, and they require an infrastructure of hosts who are willing to altruistically provide bandwidth, which is rare, because of expense.  Also, when load surpasses the bandwidth of the 
 combined sum of proxies, they will still become overburdened.  For example, if Coral receives a request for a file too many times, it begins redirecting peers back to the origin server, thus not solving the original problem.  
 Coral is also limited in the size of files it can cache by PlanetLab policies.  With our system this should not be a problem, as more peers means that more are available to upload.  These systems also lack an algorithm for transition to peer-to-peer delivery, and sharing of blocks among peers.  They also add an extra hop in network latency per request, even if a request from the origin server would have been the fastest way to download the file.    
@@ -86,8 +87,8 @@ One style of cooperation for web servers uses redirection.  For web redirection,
 
 A second style of cooperation uses swarming to download large files.  This is best exemplified by BitTorrent.  Swarming protocols are highly effective at serving loads orders of magnitude higher than an ordinary web server \cite{zappala}.
 
-OnionNetworks has proposed an extension to HTTP to incorporate swarming.  With this protocol, HTTP response messages include hashes of files and a list of peers that other peers 
-may connect and download from in a swarming fashion \cite{onion}.  Unfortunately their proposal has not seen wide-spread adoptance nor research, and in extreme
+OnionNetworks has proposed an extension to HTTP to incorporate swarming.  With this protocol, HTTP response messages include hashes of files and a list of peers that clients
+may connect to and download from in a swarming fashion \cite{onion}.  Unfortunately their proposal has not seen wide-spread adoptance nor research, and in extreme
 cases the origin server could still be overwhelmed.
 
 The Shark \cite{shark} filesystem allows clients to download blocks of files from nearby neighbors who have blocks already on their local machines.  
@@ -95,8 +96,8 @@ Shark is similar to our proposed system, except applied to files in a file syste
 and a central server for hash values of files.  It also lacks HTTP integration.
 
 Some recent proposals integrate HTTP clients with BitTorrent itself \cite{webtorrent}.  In these solutions a user is presented the option of downloading via HTTP or via BitTorrent (swarming), 
-depending on which they think will give them the quicker download.  This provides a backup for overloaded servers.  To the users this requires a manual choice between normal to 
-swarming download.  
+depending on which they think will give them the quicker download.  This provides a backup for overloaded servers.  To the users this requires a manual choice between normal and 
+swarming downloads.  
 The Osprey system \cite{osprey} is an FTP server that automatically generates .torrent files for all files in an FTP sub-directory, 
 and integrates a BitTorrent tracker into the server software to handle the different types of requests.  
 These systems allow peers to manually switch to swarming if the server load becomes too high.  
@@ -107,12 +108,12 @@ with normal HTTP downloads.  There has also been the introduction of ``Metalink"
 allowing for combined HTTP and BitTorrent downloads, but use of these files requires their creation and that both servers and clients to understand and use the protocol.
 
 Dijjer \cite{dijjer} is a tool that automatically performs swarming downloads of any web file.  
-If passed a url like http://dijjer.org/get/http://mysite.com/video.mov, the request is intercepted by the locally running Dijjer software, 
+If passed a URL like http://dijjer.org/get/http://mysite.com/video.mov, the request is intercepted by the locally running Dijjer software, 
 which performs a distributed download of the file.  One can also right-click on any arbitrary link and select ``download via Dijjer'' for the same effect. 
 Dijjer contacts a quasi-DHT (similar to Freenet \cite{freenet}) for block hashes and downloads the blocks from random peers, 
-also cacheing blocks from random peers that contact it and request blocks.  Unfortunately, Dijjer lacks automation in the transition to download, and, 
+also caching blocks from random peers that contact it and request blocks.  Unfortunately, Dijjer lacks automation in the transition to download, and, 
 as the Dijjer software is currently implemented, requires peers to cache material in which they were never interested.
-This may be instrusive, for example by clients potentially cacheing illegal or unethical web objects.  Also the DHT they use is non deterministic, which might be less than optimal,
+This may be instrusive, for example by clients potentially caching illegal or unethical web objects.  Also the DHT they use is non-deterministic, which might be less than optimal,
 and their protocol has little published research.
 
 Overall, client and server side cooperation protocols work well at alleviating flash crowds, and a few provide manual transition to peer-to-peer delivery.  
@@ -123,19 +124,6 @@ However, they require both the server and the client to understand the protocol,
 Server-side only solutions typically create a pool of servers that mirror each others' content, helping to alleviate the impact of flash crowds \cite{backslash, dotSlash}.  
 In these systems, servers will cover for each other, so that if one becomes very crowded then the others will share the load with it until load decreases.  Backslash \cite{backslash} is one example.  In Backslash, when one server becomes overloaded it redirects requests and uploads necessary files to other servers for them to act as temporary mirrors, therefore relying on the volunteer hosts in the system.  
 
-Overall, server-side systems still tend to be susceptible to flash crowds (albeit to a lesser extent), 
-because of their collaboration, and are built to serve clients that are not p2p enabled, which helps in adoption but offers no P2P delivery.
+Although server-side systems can help, they require cooperation among web sites, which typically doesn't happen.  Client-side solutions have the potential to provide good
+performance, regardless of whether the server has taken steps to deal with high load.
 
-\chapter {Automated Swarming}\label{section:solution}
-
-Automated swarming is our client-side system that automatically switches from client-server to peer-to-peer content delivery when a server becomes overloaded.  The goals for this system include:
-\begin{enumerate}
-\item It should be transparent to servers.  This allows the origin server to remain unchanged, so end users can benefit from the system despite using servers who know nothing about it.
-\item It should be easy to use by end-users by automatically transitioning to peer-to-peer content delivery when the server is slow.
-\item It should not require dedicated, special-purpose infrastructure.  Using a general-purpose infrastructure, coupled with a dependence on the clients for transferring blocks,
-makes this system easier to adopt.
-\item It should be non-intrusive.  Peers should not be required to cache blocks of files in which they were never interested.  
-Peers will avoid caching files they never downloaded, and thus will not be responsible for content they don't anticipate.  
-Users would also only be using their bandwidth for files they previously downloaded, encouraging adoption.
-\item It should be fast for small files.
-\end{enumerate}

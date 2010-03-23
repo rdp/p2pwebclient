@@ -11,5 +11,5 @@ chmod a+r \*.pdf
 
 @rem #scp just_experiment_results.pdf wilkboar@wilkboardonline.com:~/public_html/roger/p2p/writeup
 @cp just_experiment_results.pdf just_experiment_results_view_copy.pdf
-@reveal.bat
+@chrome just_experiment_results_view_copy.pdf
 

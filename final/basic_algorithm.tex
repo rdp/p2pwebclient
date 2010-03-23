@@ -1,14 +1,34 @@
+\chapter {Automated Swarming}\label{section:solution}
+
+Automated swarming is a client-side system that automatically switches from client-server to peer-to-peer content delivery when a server becomes overloaded.  
+
+The goals for this system include:
+\begin{enumerate}
+\item It should be transparent to servers.  This allows the origin server to remain unchanged, so end users can benefit from the system despite using servers who know nothing about it.
+\item It should be easy to use by end-users by automatically transitioning to peer-to-peer content delivery when the server is slow.
+\item It should not require dedicated, special-purpose infrastructure.  Using a general-purpose infrastructure, coupled with a dependence on the clients for transferring blocks,
+makes this system easier to adopt.
+\item It should be non-intrusive.  Peers should not be required to cache blocks of files in which they were never interested.  
+Peers will avoid caching files they never downloaded, and thus will not be responsible for content they don't anticipate.  
+Users would also only be using their bandwidth for files they previously downloaded, encouraging adoption.
+\item It should be fast for small files.
+\end{enumerate}
+
+To accomplish this, peers monitor file downloads and transition to Peer-to-Peer delivery when a download becomes slow.
+Interested peers find each other using a Distributed Hash Table (DHT).
+They download the file from a peer that already has it, then add themselves to the list of peers willing to share the file.
+
 \section{Transition to Peer-to-Peer Delivery}
 
 A peer wishing to download a file using automated swarming first tries to download it from the origin web server using a traditional client-server download.  
 If at some point one of the following conditions occurs, the client switches to peer-to-peer delivery:
 \begin{enumerate}
 \item First, the client waits a maximum number of seconds $T$ after the start of a download, to receive the first byte of data from the origin server.  
-First data byte means any byte received from the origin--a header or content byte.  TCP connection handshake packets do not count as a data byte.
+The first data byte means any byte received from the origin--a header or content byte.  TCP connection handshake packets do not count as a data byte.
 If $T$ seconds pass without the client receiving any data, it transitions to a peer-to-peer delivery.  This allows the system to decide quickly whether the origin server is over-burdened.   
 \item After the client begins receiving data from the server, it monitors whether the download rate falls below a certain 
-threshold of $R$ bytes per second over the last $W$ seconds.  It starts measuring this after the first byte is received\footnote{This means that it will
-only ever decide that the server is slow after $W$ + the time it took to receive its first data byte, or at least $W$, and at most $T$ + $W$.}.  
+threshold of $R$ bytes per second over the last $W$ seconds.  It starts measuring this after the first byte is received.  This means that it will
+only ever decide that the server is slow after $W$ + the time it took to receive its first data byte, or at least $W$, and at most $T$ + $W$.  
 If the receive rate ever drops below $R$, the client transitions to peer-to-peer delivery.  
 This is to accomodate servers with slow connections or servers that become overloaded during a download.
 \end{enumerate}
@@ -16,12 +36,12 @@ This is to accomodate servers with slow connections or servers that become overl
 \section{Finding Peers}
 
 Peers interested in downloading the same file find each other using a Distributed Hash Table (DHT).
-A DHT is essentially a distributed P2P hash table that maps a key to a value.  A client can,
+A DHT is essentially a distributed peer-to-peer hash table that maps a key to a value.  A client can,
 for example, query the DHT with a key of ``file x block y" and get a list of peers with block y
 of file x.
 
-We run a DHT using the Bamboo OpenDHT code on approximately 1000 PlanetLab peers\footnote{Typically about 300 are stably active.}.  
-3 peers are designated as ``gateways" that the others contact to bootstrap themselves into the DHT.  After servers join the DHT, each 
+We run a DHT using the Bamboo OpenDHT code on available PlanetLab peers--typically about 300 are active.
+Three peers are designated as ``gateways" that the others contact to bootstrap themselves into the DHT.  After servers join the DHT, each 
 creates a web service that accepts queries from peers outside the DHT.  When a server receives a
 query, it forwards it through the DHT, retrieves the answer, and returns the answer to the requestor. 
 Members of the DHT run continously, servicing requests.
@@ -36,18 +56,18 @@ they ``port sniff" on the web service ports of DHT members, to create a list of 
 They query 10 DHT servers at a time, until they have found at least 5 that are active.
 They then round robin across the list of known active members for queries they later perform.
 
-When a peer performs a query, for example for a key ``http://host/filename peers for block num y'', it requests this key and also a ``redundant key" for the same, 
-like ``http://host/filename peers for block num y key redundancy 1''\footnote{Note that Bamboo actually queries a hash of the query string, not the full string.}.  
-It requests both keys from 2 different gateways (using the round robin described above), 
-thus the total number of queries per request is 4.  
+When a peer performs a query, for example for a key ``http://host/filename\_peers\_for\_block\_num\_y'', it requests this key and also a ``redundant key" for the same, 
+like ``http://host/filename\_peers\_for\_block\_num\_y\_key\_redundancy\_1''.  Note that Bamboo actually queries a hash of the query string, not the string itself.  
+The peer requests both keys from two different gateways (using the round robin described above), 
+thus the total number of queries per request is four.
 The reason for this is that sometimes keys are hosted on poorly connected members of the DHT, making response time slow.
 Sometimes gateways themselves are temporarily slow, so using multiple gateways per request avoids this slowdown, as recommended by the authors of OpenDHT \cite{opendht_embarrassing}.
 The client times out DHT requests after 60 seconds if no response is received, as a reasonable value to keep from 
-overloading the DHT.  When a request times out, the client will automatically retry it, for up to 3 times, before giving up on the request.
+overloading the DHT.  When a request times out, the client will automatically retry it, for up to three times, before giving up on the request.
 
 When a client transitions to peer-to-peer delivery, it first checks to see if it knows enough meta-data about the file it is downloading.  
 It needs to know the size in order to look up peer lists.
-If the client has previously received a TCP header with size information from the origin, it has the information it needs.  If it doesn't, it
+If the client has previously received an HTTP header with size information from the origin, it has the information it needs.  If it doesn't, it
 queries the DHT, using a key of the URL being downloaded, for known meta-data.  
 Other peers store the meta-data here when they have previously downloaded the file (Fig.~\ref{fig:yanc_step_1}). 
 While performing this meta-data lookup, a client also does an HTTP HEAD request for the file to the origin server, 
@@ -61,7 +81,7 @@ it needs and will start  peer-to-peer delivery.
 To accomplish peer-to-peer delivery, the client randomly chooses $b$ blocks of the file to download at a time (Fig.~\ref{fig:yanc_step_2}).  
 It retrieves the list of peers who have each block by querying the DHT for a key composed of
 the URL concatenated with a given block number (like ``http://host/filename\_peers\_for\_block\_num\_y").  
-If there are no peers listed yet for that block, it polls the DHT every 1 second to see if new peers have arrived.
+If there are no peers listed yet for that block, it polls the DHT every second to see if new peers have arrived.
 While it does not yet have a list of any peers, it also contacts the origin and starts a download of the block, so as to 
 not waste time in the case that no peers are ever available.  This is useful for some peers that have DHT connections that are too slow.
 When it receives a peer list from the DHT, the client shuffles the list randomly, then connects to each peer one at a time, and requests the block.  
@@ -70,8 +90,9 @@ If the peer interrupts the connection or is not online, the client chooses the n
 Then it repeats the steps for that block, but requesting the next 10 peers listed in the DHT.
 
 When a peer only has a few blocks remaining, it tries to download the last few blocks from several peers (redundantly), in an effort to avoid the last block problem \cite{last_block}.  
-It downloads all remaining blocks from a total of $b$ peers, so if $b$ is set to 6 and 3 blocks are left, it downloads each remaining block from 2 redundant peers, with the
-last block being downloaded from all 6 peers redundantly.
+It downloads all remaining blocks from a total of $b$ peers, so if $b$ is set to 6 and 3 blocks are left, 
+it downloads each remaining block from two redundant peers, with the
+last block being downloaded from all six peers redundantly.
 
 \section{Sharing}
 
@@ -85,9 +106,9 @@ and performs DHT remove requests to remove itself from the peer lists in the DHT
 
 \begin{figure*}
   \begin{center}
-    \subfigure[Peer downloads meta-data]{\includegraphics[width=7cm]{description_pics/peer_step_1.png}\label{fig:yanc_step_1}}
-    \subfigure[Peer downloads a list of peers that have a block]{\includegraphics[width=10cm]{description_pics/peer_step_2.png}\label{fig:yanc_step_2}}
-    \subfigure[Peer adds itself to list of peers who have the block]{\includegraphics[width=8cm]{description_pics/peer_step_3.png}\label{fig:yanc_step_3}}
+    \subfigure[Peer downloads meta-data]{\includegraphics[width=6cm]{description_pics/peer_step_1.png}\label{fig:yanc_step_1}}
+    \subfigure[Peer downloads a list of peers that have a block]{\includegraphics[width=9cm]{description_pics/peer_step_2.png}\label{fig:yanc_step_2}}
+    \subfigure[Peer adds itself to list of peers who have the block]{\includegraphics[width=7cm]{description_pics/peer_step_3.png}\label{fig:yanc_step_3}}
     \caption{Steps to accomplish a peer-to-peer-web download}
     \label{fig:yanc_all_steps}
   \end{center}
