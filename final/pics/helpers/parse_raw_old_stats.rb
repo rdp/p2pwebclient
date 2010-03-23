@@ -1,7 +1,7 @@
 # this one just parses out the file
 # into something like
 # {'download times' => {25.0 => [61.51, 161.8, 352.64, 560.03, 992.02]}...}
-require 'faster_require'
+#require 'faster_require'
 require 'sane'
 require_relative 'gnuplot_percentiles'
 
@@ -31,7 +31,7 @@ class Parser
         numbers = [$1.to_f, $2.to_f, $3.to_f, $4.to_f, $5.to_f]
       elsif line =~ /death methods/
         name = 'death methods'
-      elsif (scans = line.scan /(\S+) (\d+\.\d+)/).length > 0 # like dt 1234
+      elsif (scans = line.scan /(\S+) (\d+\.\d+)/).length > 0 # like died 1234.0
         hash = {}
         scans.each{|death_type, value| hash[death_type] = value.to_f }
         numbers = hash
@@ -118,9 +118,21 @@ class ParseRaw
         data2.each{|k, v| data1[k] = v.map{|old_number| old_number*100} } if data2
       end
       
-      # special case the single liners...
+      # special case the single line graphs...
       if name == 'death methods'
-        data = ParseRaw.translate_conglom_hashes_to_lined_hashes data1
+        # do some renames, too
+        map = {'dR' => 'R', 'dT' => 'T', 'http_straight' => 'Origin', 'died' => 'Failed'}
+        data1_mapped = {}
+        data1.each{|second, values|
+          values_mapped = {}
+          values.each{|name, value|
+            new_name = map[name]
+            raise name unless new_name
+            values_mapped[new_name] = value
+          }
+          data1_mapped[second] = values_mapped
+        }
+        data = ParseRaw.translate_conglom_hashes_to_lined_hashes data1_mapped
         P2PPlot.plotNormal x, y, data, this_output_filename + '.pdf'
       else
 

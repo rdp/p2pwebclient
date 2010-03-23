@@ -10,10 +10,10 @@ describe Parser do
     deaths = "
     Doing stats on runs runs just numbers do_dts_take6_at0.1_run1_of_2_major_2_of_12do_dts_take6_at0.1_run2_of_2_major_2_of_12
     death methods
-    dR 109.0 dT 794.5 http_straight 0.0"
+    dR 109.0 dT 794.5 http_straight 0.0 died 0.0"
 
     a = Parser.parse deaths
-    a['death methods'].should == {0.1 => {'dR' => 109.0, 'dT' => 794.5, 'http_straight' => 0.0}}
+    a['death methods'].should == {0.1 => {'dR' => 109.0, 'dT' => 794.5, 'http_straight' => 0.0, 'died' => 0.0}}
   end
 
   it "should translate well" do

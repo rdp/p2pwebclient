@@ -1,7 +1,9 @@
 for development:
 
+sane
+faster_require
 optiflag
-rogerdpack-gnuplot
+gnuplot
 rdp-arguments
 
 rmagick
