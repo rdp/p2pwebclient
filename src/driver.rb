@@ -69,7 +69,7 @@ class Driver
   @@dT = 1.0 # tlodo have this adjusted to 'mean' skip CS very low means skip CS
   # ltodo optimization -- if on original HTTP and NONE are listed (like for first block or the size is not even listed in the DHT then do NOT give up no matter what...that's an interesting case because theoretically could spawn some new p2p clients to look, though...ltodo later
   @@numClientsToSpawn = 1000
-  @@spaceBetweenNew = 66/@@numClientsToSpawn # 15/s
+  @@spaceBetweenNew = 66.0/@@numClientsToSpawn # 15/s
   @@linger = 10
   @@fileSize = 100.kb
   @@serverBpS = 255.kbps
@@ -615,7 +615,7 @@ class Driver
 
     assert @@multiples_variant_possibilities.index(runStyle), 'must have a multiples variant in ' + @@multiples_variant_possibilities.inspect + "you passed us " + runStyle
 
-    if runStyle.contains? "peersPerSecond" or runStyle.contains?('multipleFiles')
+    if runStyle.in? ["peersPerSecond", 'multipleFiles']
       peersPerSecond = nil
       whatToAddTo = "peersPerSecond"
       unitsX = "Peers per Second"
@@ -625,6 +625,7 @@ class Driver
         @@spaceBetweenNew = 1.0/peersPerSecond
         @@numClientsToSpawn = total_seconds*peersPerSecond
       }
+      @@linger = 60 if runStyle == 'peersPerSecond' # for some reason I did it like this...
     end
 
     if runStyle == "peersPerSecondCS"
