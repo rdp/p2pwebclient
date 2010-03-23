@@ -94,13 +94,13 @@ class ParseRaw
     end
 
     for name, (y, this_output_filename) in {
-      "download times %'iles'" => ['Peer Download Times (seconds)', 'client_download_Percentile_Line'],
+      "download times %'iles'" => ['Client Download Time (seconds)', 'client_download_Percentile_Line'],
       "download total times %'iles'" => ['Peer Download Times All files (seconds)', 'client_download_all_files_Percentile_Line'],
-      "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/S)', 'server_speed_Percentile_Line'],
+      "server upload [received] distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/s)', 'server_speed_Percentile_Line'],
       # server upload is changed for some reason in newer stuffs
-      "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/S)', 'server_speed_Percentile_Line'],
+      "server upload distinct seconds [instantaneous server upload per second] %'iles'" => ['Server Upload Speed (Bytes/s)', 'server_speed_Percentile_Line'],
       "upload bytes %'iles'" => ['Peer Bytes Uploaded (Bytes)', 'upload bytes'],
-      "instantaneous tenth of second throughput %'iles'" => ['Total ThroughPut (Bytes/S)', 'total throughput'],
+      "instantaneous tenth of second throughput %'iles'" => ['Total ThroughPut (Bytes/s)', 'total throughput'],
       'dht removes' => ['DHT Removal Time (S)', 'dht_Remove_Percentile_Line'],
       'dht puts' => ['DHT Set Time (S)', 'dht_Put_Percentile_Line'],
       'dht gets' => ['DHT Set Time (S)', 'dht_get_Percentile_Line'],
@@ -176,7 +176,7 @@ if $0 == __FILE__
     if File.exist? ARGV[1]
       puts 'doing dual file...'
       assert ARGV.length >= 2
-      ParseRaw.go ARGV[0], 'Load (Peers per Second)', ARGV[1], ARGV[2], ARGV[3] # dual file mode, with legend names
+      ParseRaw.go ARGV[0], 'Load (peers per second)', ARGV[1], ARGV[2], ARGV[3] # dual file mode, with legend names
     else
       ParseRaw.go ARGV[0], ARGV[1] || 'Peers Per Second' # "specify y axis" mode
     end

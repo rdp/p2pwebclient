@@ -3,50 +3,51 @@
 \chapter{Experiment Results}
 
 To test our system, we implemented a prototype client in the Ruby programming language and 
-ran experiments using the client on a pool of about 1000 computers scattered world-wide on the PlanetLab system\footnote{It should be noted
-that typically only about 300 are active at a time}.
-To run each experiment, a central ``driver" program randomly selects members of the pool and instructs them to download a specific url.  To
+ran experiments using the client on the Planetlab system.  Typically about 300 clients participated in each experiment.
+To run each experiment, a central ``driver" program randomly selects members of the pool and instructs them to download a specific URL.  To
 choose members, the driver first pings known members of PlanetLab to create a list of currently active clients.  
-It then randomizes this list and uses it in round robin fashion to launch clients\footnote{If more peers download the file than there are clients available, clients are re-used using the same list in a round-robin fashion, though peer-to-peer connections 
-to other peers on the same host are dis-allowed.}. 
+It then randomizes this list and uses it in round robin fashion to launch clients.  If more peers download the file than there are clients available, clients are re-used using the same list in a round-robin fashion, though peer-to-peer connections 
+to other peers on the same host are dis-allowed. 
 Client launch times are generated serially using a Poisson distribution with an inter-arrival time that is the total startup time
 divided by the number of peers.  For example if 1000 peers are expected to enter the system within 100 seconds, it uses a Poisson distribution with 
 an average inter-arrival time of 0.1 seconds to start peers, and finishes
-starting them in about 100 seconds\footnote{There is added jitter in start times because some peers have longer latency to establish a TCP connection
-to instruct them to start.}  Peers are told the system time when they start a download, 
+starting them in about 100 seconds.  Peers are told the system time when they start a download, 
 and use an offset from this time to log events.  Because of TCP latency in transmitting the time, and system clock skew over time, 
 log times can be up to a few seconds off.
 
 Files are downloaded from a well provisioned server at BYU running an Apache2 web server (version 2.2.4) that is
 bandwidth limited to 256 KB/s using the mod\_bw module \cite{mod_bw}, and it has a 256 connection limit. 
 Experiments run until all peers finish downloading the file. 
-Each experiment is repeated 3 times and results are averaged.  A different filename is used for each run, so as to not re-use the same DHT keys.
+Each experiment is repeated three times and results are averaged.  A different filename is used for each run, so as to not re-use the same DHT keys.
 
 When peers are done downloading a file, the driver collects their logs and we calculate statistics.  We measure 
 the following:
 
 \begin{enumerate}
-\item
-Load on the origin server.
 
-This is measured by summing the number of 
-bytes received from the origin during each second.  This only measures bytes received from the origin, not necessarily all bytes sent, 
+\item \emph{Download times--}
+
+The time for a client or peer to download the file, in seconds.
+
+\item \emph{Server upload speed--}
+
+Average bytes uploaded over the time of the experiment, from the origin.
+This is measured by summing the number of bytes received from the origin during each second.  
+This only measures bytes received from the origin, not necessarily all bytes sent, 
 as peers sometimes close their socket connections to the host early, and any data received after the socket has already been closed is dropped by the kernel.  
 We disregard the first and last 20\% of entries for this, as the system hasn't reached steady state during those times.
-\item
-Percent received from the origin.
+
+\item \emph{Percent received from peers--}
 
 We also calculate the sum percent of the file received from peers versus from the origin.  This is the number of data bytes that were retrieved
 from the origin for any block of the file downloaded, compared to the number of data bytes received from peers during the download.
 
-\item
-DHT get, put, and remove times.
+\item \emph{DHT get, put, and remove times--}
 
 We track the time it takes from the start of a DHT operation (initiating a TCP connection with a DHT proxy) 
 until an answer is received, for all peers during the course of an experiment.
 
-\item
-Type of peer download.
+\item \emph{Type of peer downloads--}
 
 We also keep track of the way that peers download a given file.  Some peers encounter a fast server and download the entire file from the origin.
 Some peers transition to peer-to-peer delivery and complete the download that way, either because of a slow first byte ($T$), 
@@ -71,23 +72,11 @@ and quickly grow to a high of 344 seconds with a load of 20 peers/second. Downlo
 of exponentially because we start a fixed number of peers and let all downloads complete, without more peers
 entering the system.
 The top outliers at a load of 20 peers/second typically wait in line around 800 seconds before 
-finally receiving the file from the origin. Figure \ref{fig:client_server_server_load} shows that load on the origin server grows quickly to its 
+finally receiving the file from the origin. Figure \ref{fig:client_server_origin_server_load} shows that load on the origin server grows quickly to its 
 theoretical cap of 250 KB/s under a load of 3 peers/second. Under a load of 20 peers/second, server speed decreases to 203 KB/s, which 
 shows the limitations of the rate limiter in that it becomes bursty and less reliable with higher connection rates.
 
-\begin{figure*}
-  \begin{center}
-    \subfigure[Download times]{
-      \includegraphics[width=8.5cm]{pics/vr_unnamed316651_cs_stress_test/client_download_Percentile_Line.pdf}
-      \label{fig:client_server_download_times}      
-    }     
-    \subfigure[Load on the origin server]{
-      \includegraphics[width=8.5cm]{pics/vr_unnamed316651_cs_stress_test/server_speed_Percentile_Line.pdf}
-      \label{fig:client_server_server_load}
-    }
-    \caption{Traditional client server download under varied load.}  
-  \end{center}
-\end{figure*}
+<%= figure_directory 'vr_unnamed316651_cs_stress_test', 'client_server', 'Traditional client server download under varied load.', {'download_times' => true, 'origin_server_load' => true} %>
 
 We next test automatic swarming under the same loads, using the default parameters. Figure \ref{fig:yanc} shows that download median times 
 start at 1.4 seconds with a load of 1 peer/second, and grow 
@@ -120,7 +109,7 @@ The other factor causing slowdown is a sometimes unresponsive DHT. Typically req
 and peers either end up downloading the entire file from the original server within that 60 seconds, or have to perform a new 
 query, and then download the file normally from their peers after that.  We're not entirely sure why this behavior occurs with Bamboo.
 
-<%= figure_directory 'vr_medium_p2p_load_tak4', 'yanc', 'Automatic Swarming under varyied load', {'download_times' => true, 'origin_server_load' => true, 'death_reasons' => true} %>
+<%= figure_directory 'vr_medium_p2p_load_tak4', 'yanc', 'Automatic Swarming under varied load', {'download_times' => true, 'origin_server_load' => true, 'death_reasons' => true} %>
 
 \section{Impact of system parameters}
 
