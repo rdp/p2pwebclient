@@ -42,41 +42,28 @@ class RubyToTex
   # {'download_times' => true, 'origin_server_load' => true, 'death_reasons' => true, 'cdf_from_peers' => true, 'dht_puts' => true}
   def figure_directory dir_name, label_prefix, caption, wanted_pics = {'download_times' => true, 'origin_server_load' => true}
     
-    dir_name = 'pics/' + dir_name
+    all_map = {}
+    all_map['download_times'] = ['client_download_Percentile_Line.pdf', 'Download times']
+    all_map['origin_server_load'] = ['server_speed_Percentile_Line.pdf', 'Load on the origin server']
+    all_map['death_reasons'] = ['death_reasons.pdf', 'Cause of transition to P2P download']
+    all_map['cdf_from_peers'] = ['percent_from_clients_Percentile_Line.pdf', 'Percent of File received from peers']
+    all_map['dht_puts'] = ['dht_Put_Percentile_Line.pdf', 'DHT Put times']
     
-    raise 'need 1.9\'s ordered hashes...' unless RUBY_VERSION >= '1.9.0' 
-    
-    names = {}
-    
-    if wanted_pics['download_times']
-      names['client_download_Percentile_Line.pdf'] = ['Download times', 'download_times']
+    raise 'require 1.9\'s ordered hashes...' unless RUBY_VERSION >= '1.9.0'
+    desired = []
+    for wanted_pic, true_value in wanted_pics
+      desired << [wanted_pic, all_map[wanted_pic]].flatten
     end
-    
-    if wanted_pics['origin_server_load']
-      names['server_speed_Percentile_Line.pdf'] = ['Load on the origin server', 'origin_server_load']
-    end
-    
-    if wanted_pics['death_reasons']
-      names['death_reasons.pdf'] = ['Cause of transition to P2P download', 'death_reasons']
-    end
-  
-    if wanted_pics['cdf_from_peers']
-      names['percent_from_clients_Percentile_Line.pdf'] = ['Percent of File received from peers', 'cdf_from_peers']
-    end
-    
-    if wanted_pics['dht_puts']
-      names['dht_Put_Percentile_Line.pdf'] = ['DHT Put times', 'dht_puts']
-    end
-    
+    dir_name = 'pics/' + dir_name    
+
     sum = 
     "\\begin{figure*}" + 
       "\\begin{center}"
-
-    for filename, (description, label) in names
+    for name, filename, description in desired
       # add subfigures
       options = {}
       options[:subfigure] = true
-      options[:label] = 'fig:' + label_prefix + '_' + label
+      options[:label] = 'fig:' + label_prefix + '_' + name
       options[:caption] = description
       sum += (figure(dir_name + '/' + filename, options)).indent
     end
@@ -87,8 +74,6 @@ class RubyToTex
     \\end{center}
     \\end{figure*}"
       
-    #sum += "\n\\clearpage\n" # avoid annoying 'too many floating points' errors
-    # yet it took up too much space though...
   end
 
   #attempt to create a nicely embedded picture, a la
