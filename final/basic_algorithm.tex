@@ -14,7 +14,7 @@ Users would also only be using their bandwidth for files they previously downloa
 \item It should be fast for small files.
 \end{enumerate}
 
-To accomplish this, in automated swarming peers monitor downloads and transition to Peer-to-Peer delivery 
+To accomplish this, in automated swarming clients monitor downloads and transition to peer-to-peer delivery 
 when a download becomes slow.  Interested peers then find each other using a Distributed Hash Table (DHT).
 They download the file from peers, then add themselves to a list of peers willing to share the file.
 
@@ -48,7 +48,7 @@ Members of the DHT run continously, servicing requests.
 Data is stored as key, value maps, with many values storable per key.  
 If there are more than ten values stored, only the first 10 values are returned for the first request. 
 If a peer wants more than the first 10 values, it must make a repeat query and request values 11-20, etc.  
-We use the DHT to store peer information, to help peers find each other.  Anf alternative design would be to store blocks of the file in the DHT.  
+We use the DHT to store peer information, to help peers find each other.  An alternative design would be to store blocks of the file in the DHT.  
 However, this would put more stress on the DHT, due to bandwidth demands.  This design would also violate design goal \#4.
 
 In order for our clients to use this DHT, each is given a list of all known DHT members out-of-band.  When they are instructed to download a file, 
