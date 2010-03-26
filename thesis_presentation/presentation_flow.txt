@@ -29,6 +29,6 @@ slide: future work: privacy
 
 
 
-slide: here's what you can do currently (and problems): BT.
+slide: here's what you can do currently (and problems): BT. Coral.
 
 stuff from the thesis itself: (pics mostly... [?])
