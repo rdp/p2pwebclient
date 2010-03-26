@@ -3,15 +3,11 @@ Roger's Thesis project (BYU).
 This project allows you to download any arbitrary internet file, then share it among your peers--kind of like an instant bittorrent for any arbitrary file. 
 
 How to get it to work:
-gem install eventmachine
-then ruby ./long_running_proxy.rb
-
-then request files from http://localhost:8000/host_name/file_name.whatever and it will instantly share with those those who have already downloaded it!
 
 Doesn't really work yet, sorry--still in the research/development phase, not release/production phase.  Subject to future/massive changes.  If interested chat me through github.
 
-Competitors: google web accelerator, dijjer. Related: bittorrent, getright.
+Competitors: google web accelerator, dijjer. Related: bittorrent, getright.  See the writeup for lots of others.
 
 Contact: email rogerdpack@gmail.com freely :)
 
-(c) 2009 MIT License.
+(c) 2010 MIT License.

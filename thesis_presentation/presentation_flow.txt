@@ -6,5 +6,29 @@ This is very frustrating to today's work flow, and hard.
 
 Add a picture of being force to pick between BitTorrent and normal (and picking BitTorrent and it being slower LOL).
 
-
 a live demo (a recorded demo as a backup)
+
+
+"today's bottleneck is no longer the disk--it's the network!"
+"all this wasted bandwidth"
+
+
+
+Could give a demo (maybe just in the slide) of all the steps.
+
+
+
+
+
+
+slide: setting up BT is a pain
+
+slide: Coral can't scale either (?)
+
+slide: future work: privacy
+
+
+
+slide: here's what you can do currently (and problems): BT.
+
+stuff from the thesis itself: (pics mostly... [?])
