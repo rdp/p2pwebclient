@@ -32,3 +32,9 @@ slide: future work: privacy
 slide: here's what you can do currently (and problems): BT. Coral.
 
 stuff from the thesis itself: (pics mostly... [?])
+
+
+
+
+
+gem rdoc --rdoc --ri ruby_core_ri
