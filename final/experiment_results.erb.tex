@@ -89,7 +89,7 @@ shows the limitations of the rate limiter in that it becomes bursty and less rel
 <%= figure_directory 'vr_unnamed316651_cs_stress_test', 'client_server', 'Traditional client server download under varied load.', {'download_times' => true, 'origin_server_load' => true} %>
 
 We next test automatic swarming under the same loads, using the default parameters. 
-Median download times using automated swarming are more than 30 times faster than client-server times (Fig. \ref{fig:yanc_download_times}).
+Median download times using automated swarming are more than 30 times faster than client-server times (Fig. \ref{fig:yanc_download_times} versus \ref{fig:client_server_download_times}).
 Times start at 1.4 seconds with a load of 1 peer/second, and grow 
 to 5.23 seconds with a load of 6 peers/s and 7.46 seconds with 20 peers/s, compared to 344 seconds for client-server.
 The Y axis for Fig. \ref{fig:yanc_download_times} is different than that for client-server in 

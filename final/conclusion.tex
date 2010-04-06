@@ -5,11 +5,11 @@ from client-server file transfer to peer-to-peer content delivery.
 Experiments show that our system is capable of serving up to 30x faster than a traditional web server.
 We have also found good settings for various system parameters.
 A server timeout ($T$) setting of 0.75 seconds resulted in best performance, as did a bandwidth limit ($R$) of 160 KBps.
-File block size of 32 KB was most effective, as was a linger time of 4 seconds or more, and a peer connection count of 16 or more.
+File block size of 32 KB was most effective, as was a linger time of 4 seconds or more and a peer connection count of 16 or more.
 The system is most effective for small files but does not yet compete well with
 BitTorrent for large files.  % nor for multiple files, except that that test was run with a low linger, so aggravated its own problems, and might still
 % actually be quite fast, so don't mention it here.
-Our system met our goals of transparency to servers and ease of use, showing itself a viable option for users who wish to automate faster downloads.
+The system met our goals of transparency to servers and ease of use, showing itself a viable option for users who wish to automate faster downloads.
 
 % how could a linger of 4 be effective, when 20 versus 60 caused *so* much improvement?
 
