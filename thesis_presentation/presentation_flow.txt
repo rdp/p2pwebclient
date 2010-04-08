@@ -1,40 +1,41 @@
-Today's Internet is slow.  It is.  We don't watch videos on the Internet because it is slow.
+...They can offer p2p...works like this (Melissa style), works well...
 
-I'll show you how it happens (pictures).
+however it then still has two problems: 
 
-This is very frustrating to today's work flow, and hard.
+1) should be ignored typically [it's slower (but you're never sure when), non standard, typically not integrated with normal HTTP sites--except in a few rare cases].
 
-Add a picture of being force to pick between BitTorrent and normal (and picking BitTorrent and it being slower LOL).
+2) small files
+It would be painful to have to do this for many small files, like browsing a web page.  Up to 10 files for byu's web site.  Even if they *did* a BitTorrent file for each of these small files, it would annoy the user to death with today's system to have to go and get them all manually.  Not as user-friendly.  Modern browsers aren't equipped to handle inline p2p.
+
+3) Though awesome, most servers don't allow you this option [unless they offer large popular files], as it's extra hassle, non-conventional.
+
+[plus any other goals that are actually worth mentioning]
+
+"We provide a fourth solution
+
+basic basic
+
+This overcomes these problems thus:
+
+" [cross each one out in turn] -- ours is a purely client-side modification, so servers don't have to 
+be configured at all to participate ... [3]
+
+Because ours provides an automatic transition to P2P, so even with small files it can switch automatically, which makes it  more user-friendly [no manual intervention required] [2].
+
+Ours uses standard client-server until this is deemed slow, so it "knows" when P2P will be faster, thus alleviating the user from having to choose whether to ignore it or not [1].
+
+30x? [+ graph]
+
+more in depth algorithm
+
+
+
+
+... 
+
+
+conclusion: "real" use is probably currently [who knows for sure] "most useful in the wild" for larger static files, still.  Kind of an auto-BitTorrent for all files on the Internet, though we have shown it can work well for small files, too.
+
+future work: privacy
 
 a live demo (a recorded demo as a backup)
-
-
-"today's bottleneck is no longer the disk--it's the network!"
-"all this wasted bandwidth"
-
-
-
-Could give a demo (maybe just in the slide) of all the steps.
-
-
-
-
-
-
-slide: setting up BT is a pain
-
-slide: Coral can't scale either (?)
-
-slide: future work: privacy
-
-
-
-slide: here's what you can do currently (and problems): BT. Coral.
-
-stuff from the thesis itself: (pics mostly... [?])
-
-
-
-
-
-gem rdoc --rdoc --ri ruby_core_ri

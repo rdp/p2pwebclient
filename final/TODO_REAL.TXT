@@ -1,10 +1,10 @@
 ====================actually really todo (in order of priority):
 
-"real" latex format (like for submission to the library)
+Presentation that papers
+
+Presentation that rox
 
 ------------maybe don't have to? --------------------
-
-redundancy should have _'s and ->'s ...
 
 examine yanc 30MB -- why slow?
 
@@ -12,13 +12,16 @@ fix it to only one on the origin! yes! why? (if I ever redo something with multi
 
 rerun the p2p stress test with 60 second linger
 
+show: the startling difference between 20 and 60s linger for a stress run [whoa].
 
-%LTODO note unfairness: vr_multiples_tak_1 client upload sum. wow. [FUTURE WORK?]
+show: how does DHT latency increase with time? Is it 4 seconds or 60 that you want?
+
+-- probably never --
 
 appendix with tons of stuff [?]
 appendix with one, single run [?]
 
--- probably never --
+%LTODO note unfairness: vr_multiples_tak_1 client upload sum. wow. [FUTURE WORK?]
 
 add a stat on how much overall was wasted...oh wait you can calculate that anyway though...hmm...
 
