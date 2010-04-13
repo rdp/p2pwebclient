@@ -72,6 +72,7 @@ describe P2PPlot do
     end
 
     it "should also show the median line in cases where a few points are scrunched together" do
+    # advisor no likey
 #      assert @a.data[1].using.include?("1:4 ") # the 50th percentile line
 #      assert @a.data[1].with.include?("lines") # the 50 percentile line
 #      assert !@a.data[1].with.include?("candlesticks") # the 50 percentile candlesticks
@@ -100,7 +101,7 @@ describe P2PPlot do
 
   it "should have a taller y if you pass it in two graphs" do
     a = P2PPlot.plot :xs => [0,100, 200], :percentiles => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,6]] , :xs2 =>  [0,100, 200],
-    :percentiles2 => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,7]]
+        :percentiles2 => [[1,2,3], [0,1,2], [1,2,3], [3,4,5], [4,5,7]]
     y = 7 * 1.1
     a.yrange.assoc('yrange')[1].should == "[0:#{y}]"
   end

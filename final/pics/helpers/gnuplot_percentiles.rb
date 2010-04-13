@@ -1,8 +1,15 @@
 require 'rubygems'
 require 'sane'
-require 'gnuplot' # rdp-gnuplot
-ENV['RB_GNUPLOT'] = 'c:\cygwin\bin\gnuplot' if OS.windows?
-require 'arguments' # rogerdpack-arguments
+require 'gnuplot'
+if OS.windows?
+  if File.exist? 'c:\cygwin\bin\gnuplot.exe' 
+   ENV['RB_GNUPLOT'] = 'c:\cygwin\bin\gnuplot.exe' 
+  else
+   ENV['RB_GNUPLOT'] = 'c:\installs\cygwin\bin\gnuplot.exe' 
+  end
+end
+  
+require 'arguments' # rdp-arguments
 
 # gnuplot expects something like
 # x    1st     25th    50th   75th    99th
@@ -126,8 +133,8 @@ class P2PPlot
     end
 
     def setup_normal plot
-      plot.terminal 'pdf monochrome'
-     
+#      plot.terminal 'pdf monochrome'
+      plot.terminal 'pdf'    
     end
 
     #

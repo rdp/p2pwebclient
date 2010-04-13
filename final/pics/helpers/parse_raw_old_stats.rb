@@ -161,7 +161,8 @@ class ParseRaw
         ymax = nil
         if name =~ /download times/
           unless columnss.map(&:last).max.max > 450 # allow for the huge test to have its own
-            ymax = 180
+            # also if we're comparing two, let it go...I think that's right
+            ymax = 180 unless file2
           end
         end 
         
@@ -170,7 +171,8 @@ class ParseRaw
         end        
           
         puts "percentile plotting", xss.inspect, columnss.inspect, "to", this_output_filename if $VERBOSE
-        out << P2PPlot.plot(xss[0], columnss[0], this_output_filename + '.pdf', x, y, :xs2 => xss[1], :percentiles2 => columnss[1], :legend1_addition => legend1, :legend2_addition => legend2, :ymax => ymax)        
+        out << P2PPlot.plot(xss[0], columnss[0], this_output_filename + '.pdf', x, y, :xs2 => xss[1], :percentiles2 => columnss[1], :legend1_addition => legend1, 
+          :legend2_addition => legend2, :ymax => ymax)        
       end
 
     end

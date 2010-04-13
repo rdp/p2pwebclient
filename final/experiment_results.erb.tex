@@ -86,7 +86,8 @@ finally receiving the file from the origin. Figure \ref{fig:client_server_origin
 theoretical cap of 250 KB/s under a load of 3 peers/second. Under a load of 20 peers/second, server speed decreases to 203 KB/s, which 
 shows the limitations of the rate limiter in that it becomes bursty and less reliable with higher connection rates.
 
-<%= figure_directory 'vr_unnamed316651_cs_stress_test', 'client_server', 'Traditional client server download under varied load.', {'download_times' => true, 'origin_server_load' => true} %>
+<%= figure_directory 'vr_unnamed316651_cs_stress_test', 'client_server', 
+  'Traditional client server download under varied load.', {'download_times' => true, 'origin_server_load' => true} %>
 
 We next test automatic swarming under the same loads, using the default parameters. 
 Median download times using automated swarming are more than 30 times faster than client-server times (Fig. \ref{fig:yanc_download_times} versus \ref{fig:client_server_download_times}).
