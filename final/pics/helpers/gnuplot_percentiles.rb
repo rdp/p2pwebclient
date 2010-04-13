@@ -1,7 +1,7 @@
 require 'rubygems'
-require 'sane/test'
+require 'sane'
 require 'gnuplot' # rdp-gnuplot
-ENV['RB_GNUPLOT'] = '\cygwin\bin\gnuplot' if OS.windows?
+ENV['RB_GNUPLOT'] = 'c:\cygwin\bin\gnuplot' if OS.windows?
 require 'arguments' # rogerdpack-arguments
 
 # gnuplot expects something like
