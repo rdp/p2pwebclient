@@ -8,6 +8,8 @@ Presentation that rox
 
 add a "real" comparison graph
 
+note: system can be gamed quite easily currently, I'd imagine (even destructively)
+
 note: some new goals from the presentation, really.  I think (?)
 
 note: a run with more linger time for the vs. BT run (yeah).
