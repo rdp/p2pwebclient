@@ -15,9 +15,9 @@
    version="1.1"
    inkscape:version="0.47 r22583"
    sodipodi:docname="algorithm explanation.svg"
-   inkscape:export-filename="C:\dev\ruby\p2pwebclient\thesis_presentation\algorithm explanation.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-filename="C:\rdp\dev\p2pwebclient\thesis_presentation\algorithm explanation.png"
+   inkscape:export-xdpi="43.720001"
+   inkscape:export-ydpi="43.720001">
   <defs
      id="defs2818">
     <marker
@@ -81,7 +81,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>

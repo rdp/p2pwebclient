@@ -6,15 +6,21 @@ Presentation that rox
 
 ------------maybe don't have to? --------------------
 
+add a "real" comparison graph
+
+note: some new goals from the presentation, really.  I think (?)
+
+note: a run with more linger time for the vs. BT run (yeah).
+
+note: this happens anytime the sum of the client exceeds the server's, or when far away.
+
 examine yanc 30MB -- why slow?
 
 fix it to only one on the origin! yes! why? (if I ever redo something with multiple blocks)
 
-rerun the p2p stress test with 60 second linger
-
 show: the startling difference between 20 and 60s linger for a stress run [whoa].
 
-show: how does DHT latency increase with time? Is it 4 seconds or 60 that you want?
+show: how does DHT latency increase with time? Is it 4 seconds or 60 that you want? huh?
 
 -- probably never --
 
