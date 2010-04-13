@@ -1,21 +1,23 @@
 %% Roger's %%
 
 @InProceedings{slurpie,
-      title =   "Slurpie: {A} Cooperative Bulk Data Transfer Protocol",
+      title =   {{Slurpie: A Cooperative Bulk Data Transfer Protocol}},
         author =        "Rob Sherwood and Ryan Braud",
           year =        "2004",
+            pages={941--951},
+
             bibdate =   "2005-04-18",
               bibsource =       "DBLP,
-                         http://dblp.uni-trier.de/db/conf/infocom/infocom2004.html#SherwoodB04",
+                         http://dblp.uni-trier.de/db/conf/INFOCOM/INFOCOM2004.html#SherwoodB04",
                            booktitle =  "INFOCOM",
-                             URL =      "http://www.ieee-infocom.org/2004/Papers/19_3.PDF",
+                             URL =      "http://www.ieee-INFOCOM.org/2004/Papers/19_3.PDF",
 annote = "Slurpie is an alternative protocol to BitTorrent \cite{slurpie} developed at the University of MD.  It allows only a few peers to connect to a central seed at a time, allowing those connected to the seed to download unique, rare blocks quickly and begin to share them, thus decreasing the overall download time.  Unfortunately they assume well-connected peers and poorly connected seeds, and therefore fail to discover what makes their download system faster than BitTorrent (which it is).",
 }
 
 @article{zappala,
-      title={{The Scalability of Swarming Peer-to-Peer Content Delivery}},
+      title={{The Scalability of Swarming Peer-To-Peer Content Delivery}},
         author={Stutzbach, D. and Zappala, D. and Rejaie, R.},
-          journal={Proc. of the 4th International IFIP-TC6 Networking Conference},
+          journal={Proc. of the 4th International International Federation for Information Processing-TC6 Networking Conference},
             pages={15--26},
               publisher={Springer},
               year=2004,
@@ -23,10 +25,12 @@ annote = "Slurpie is an alternative protocol to BitTorrent \cite{slurpie} develo
 }
 
 @article{dotslash,
-      title={{DotSlash: A self-configuring and scalable rescue system for handling web hotspots effectively}},
+      title={{DotSlash: A Self-Configuring and Scalable Rescue System for Handling Web Hotspots Effectively}},
         author={Zhao, W. and Schulzrinne, H.},
-          journal={International Workshop on Web Caching and Content Distribution (WCW)},
+          journal={{International Workshop on Web Caching and Content Distribution}},
             publisher={Springer},
+              pages={1--18},
+
 annote="The DotSlash  system operates by contacting backup servers one and a time and asking each to become a redirection cache for an overloaded server.",
 year=2004,
 }
@@ -72,18 +76,18 @@ annote="LURP is a file discovery protocol that uses UDP to ping the broadcast ar
       title={{ChunkCast: An Anycast Service for Large Content Distribution}},
         author={Chun, B.G. and Wu, P. and Weatherspoon, H. and Kubiatowicz, J.},
           year={2006},
-            publisher={IPTPS},
+            publisher={{The International Workshop on Peer-To-Peer Systems}},
             annote="ChunkCast leverages proximity to help peers locate blocks which are closer.  Chunkcast seems to be most useful when there are many local peers downloading the same file, and may not show as much improvement when downloaders are sparsely located or more slow.  But then again, it may.  They also send queries not for blocks, but for nearby peers, and thereby download quick blocks first and fast.  The basic system is to have a locality based lookup where you first query some central location to see if it knows of any peers with blocks (that you need) close, then you query some 'broader' central location to ask the same, etc."
 }
             
-@article{bharambe,
-      title={{Analyzing and Improving BitTorrent Performance}},
-        author={Bharambe, A.R. and Herley, C. and Padmanabhan, V.N.},
-          journal={Microsoft Research, Microsoft Corporation One Microsoft Way Redmond, WA},
-            volume={98052},
-              pages={2005--03},
-              annote="This paper analyzes some aspects of BitTorrent, such as the fact that outward-degree, or number of peers, increases up to 20, then decreases, though this seems like a relatively little studied aspect."
+@conference{last_block,
+  title={{Analyzing and Improving a Bittorrent Networks Performance Mechanisms}},
+  author={Bharambe, A.R. and Herley, C. and Padmanabhan, V.N.},
+  booktitle={Proceedings of IEEE INFOCOM},
+  volume={378},
+  year={2006},
 }
+
 @article{bullet_prime,
       title={{Maintaining High Bandwidth under Dynamic Network Conditions}},
         author={Kostic, D. and Braud, R. and Killian, C. and Vandekieft, E. and Anderson, J.W. and Snoeren, A.C. and Vahdat, A.},
@@ -91,7 +95,7 @@ annote="LURP is a file discovery protocol that uses UDP to ping the broadcast ar
 }
 
 @techreport{mutualcast,
-      title={{Mutualcast: An Efficient Mechanism for Content Distribution in a Peer-to-Peer (P2P) Network}},
+      title={{Mutualcast: An Efficient Mechanism for Content Distribution in a Peer-To-Peer (P2P) Network}},
         author={Li, J. and Chou, P.A. and Zhang, C.},
           institution={MSR-TR-2004-100, Sept. 2004},
           year=2004,
@@ -107,9 +111,9 @@ annote="LURP is a file discovery protocol that uses UDP to ping the broadcast ar
 }
 
 @article{shark,
-      title={{Shark: Scaling File Servers via Cooperative Caching}},
+      title={{Shark: Scaling File Servers Via Cooperative Caching}},
         author={Annapureddy, S. and Freedman, M.J. and Mazieres, D.},
-          journal={Proceedings of the 2nd USENIX/ACM Symposium on Networked Systems Design and Implementation (NSDI), Boston, USA, May},
+          journal={Proceedings of the 2nd USENIX/ACM Symposium on Networked Systems Design and Implementation, Boston, USA, May},
             year={2005},
         annote="Shark uses block distribution through a DHT named Coral \cite{coral}.  It basically uses coral to lookup local peers who have a copy (locally) of a file and downloads it from them.  It requires a custom DHT for this, and has a central server which is also cognizant of the protocol."
 }
@@ -119,6 +123,8 @@ annote="LURP is a file discovery protocol that uses UDP to ping the broadcast ar
         author={Wang, L. and Park, K. and Pang, R. and Pai, V. and Peterson, L.},
           journal={Proceedings of the USENIX 2004 Annual Technical Conference},
             year={2004},
+              pages={14},
+
       annote="CoDeen has heart-beat monitor of its neighbors, so it knows to direct queries only to live neighbors.  It accomplishes this by downloading small HTTP files and using pings to determine liveness, among other things.  When large files are requested (i.e. many different proxies request the same large file), it uses a kind of 'multi-cast' from one peer through a tree expansion stream to the others (which assumes that the first peer in the stream is fast).  This is bad if the tree is non-optimal, but reasonable if the original server is slow so that that won't make a difference.  CoDeen at least once in their experiments, ran out of bandwidth (i.e. saturated a single proxy connection which many members were using."
 
 }
@@ -139,31 +145,35 @@ annote="LURP is a file discovery protocol that uses UDP to ping the broadcast ar
         author={Park, K.S. and Pai, V.S.},
 annote="CoBlitz is used within CoDeen to allow members to cache large files in a distributed way on the system.  CoBlitz distributes large files block by block among the different members participating in the system.  Files are thus not saved in the cache of single members of the proxy-system, but are instead saved block-wise by several members, and 'gathered up,' from those, when the fiel is requested.",
     year=2006,
-    journal={NSDI '06},
+    journal={Networked Systems Design and Implementation 2006},
 }
 
 @article{coral,
-      title={{Democratizing content publication with Coral}},
+      title={{Democratizing Content Publication With Coral}},
       year=2004,
         author={Freedman, M.J. and Freudenthal, E. and Mazieres, D.},
-          journal={Proceedings of the 1st Symposium on Networked Systems Design and Implementation (NSDI 2004)},
+          journal={Proceedings of the 1st Symposium on Networked Systems Design and Implementation},
             pages={239-252},
 annote="The search avoids hot spots and leverages locality by creating concentric DHT's.  Each node is a member of several DHT rings representing nodes who are within certain proximity of it (and to each other).  It creates these rings with expanding size--i.e. DHT for nodes within 100ms, and one within 500ms, and one with global scope.  Members first query the DHT of nodes close to them, then the next ring up, then the next, until they find a node that has cached the file, or it is not found.  This allows them to use DHT queries for 'close' nodes, first (reducing latency), and to contact members who are close.  Coral does well in finding local copies of files quickly.  Coral relies on a central access point for redirection, and does not have automatic fall over to swarming download, though it does have excellent locality properties. Coral pages are 'cached' by accessing a url like http://outside.page.nyud.net:8090/subdir/pagename."
 }
  
 @article{akamai,
-      title={{Akamai}},
-        author={Inc, A.T.},
-          journal={URL http://www.akamai.com/en/html/services/edgesuite.html},
+      title={{Akamai EdgeSuite Content Distribution Network}},
+        author={Akamai},
+          note={http://www.akamai.com/en/html/services/edgesuite.html},
             year={2006},
             month={October},
-            annote="Akamai provides a large scale Content Distribution Network that consists of 20,000 servers in 71 countries, allowing corporations to effectively avoid flash crowds, who use it."
+            annote="Akamai provides a large scale Content Distribution Network that consists of 20,000 servers in 71 countries, allowing corporations to effectively avoid flash crowds, who use it.",
+   note = "[Online; accessed October-2006]"
+
+
 }
       
 @article{coopnet,
-      title={{The case for cooperative networking}},
+      title={{The Case for Cooperative Networking}},
         author={Padmanabhan, V.N. and Sripanidkulchai, K.},
-          journal={Proceedings of IPTPS '02},
+          journal={{Proceedings of the International Workshop on Peer-To-Peer Systems}},
+            pages={178--190},
           year=2002,
             publisher={Springer},
 annote="In CoopNet the server assigns peers to others who are 'close in IP' (same prefix at a certain byte range) in an attempt to assign peers to others which are close to them. CoopNet (the Co-operative Network) redirects incoming peers to peers who have recently downloaded the file and have agreed to act as mirrors.  They suggest some form of blocking for cached multimedia files but leave the research up to future work."
@@ -172,7 +182,7 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
 
 @misc{scarywater,
   author = "Scarywater web cache",
-  note = "http://f.scarywater.net/",
+  note = "http://f.scarywater.net",
   annote = "Has BitTorrent files automatically created for all files linked to from articles listed on slashdot.com"
 
 }
@@ -180,7 +190,7 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
 @article{landmarks,
       title={{Locality Prediction for Oblivious Clients}},
         author={Shanahan, K. and Freedman, M.J.},
-          journal={Intl. Workshop on Peer-To-Peer Systems},
+          journal={{International Workshop on Peer-To-Peer Systems}},
           year=2005,
           annote="This paper shows that by using a certain number of landmarks approximate location in the internet may be easily found."
 }
@@ -189,28 +199,17 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
 @InProceedings{cohen,
       address = "Berkeley, CA, USA",
         author =        "B. Cohen",
-          booktitle =   "Proceedings of the Workshop on Economics of
-                         Peer-to-Peer Systems",
+          booktitle =   "Proceedings of the Workshop on Economics of Peer-To-Peer Systems",
             keywords =  "P2P",
               language =        "English",
                 title = "Incentives Build Robustness in BitTorrent",
-                  URL =         "http://citeseer.nj.nec.com/cohen03incentives.html",
+                  note =         "http://citeseer.nj.nec.com/cohen03incentives.html",
                     year =      "2003",
                     annote = "BitTorrent's makers recently came out with the capability to search for files without contacting the central server (via a DHT search), bringing that product one step closer to automatically downloading any file. BitTorrent motivates peers' cooperation with a `Tit For Tat' incentive policy.  Peers which upload most quickly to others have a higher chance of being in turn uploaded to.  Peers accomplish this by choosing four neighboring peers which upload more quickly to it as those to which it will then choose to upload to.",
 }
 
-@article{last_block,
-  title={{Analyzing and improving BitTorrent performance}},
-  author={Bharambe, A.R. and Herley, C. and Padmanabhan, V.N.},
-  journal={Microsoft Research, Microsoft Corporation One Microsoft Way Redmond, WA},
-  volume={98052},
-  pages={2005--2003},
-  year={2005},
-  publisher={Citeseer}
-}
-
 @article{32_kb_blocks,
-  title={{Swarming: Scalable content delivery for the masses}},
+  title={{Swarming: Scalable Content Delivery for the Masses}},
   author={Stutzbach, D. and Zappala, D. and Rejaie, R.},
   journal={Techincal Report, University of Oregon},
   year={2004},
@@ -219,41 +218,45 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
 
 @misc{slashdot_article,
     author = "Slashdot discussion on automated BitTorrent",
-    note = "http://ask.slashdot.org/article.pl?sid=03/04/28/1514206/",
+    note = "http://ask.slashdot.org/article.pl?sid=03/04/28/1514206",
     annote = "Apr. 28 '03 discussion on slashdot of then current options for downloading, natively, BitTorrent files.",
     year=2003,
 }
 
 @misc{modtorrent,
     author = "Apache mod_torrent",
-    note = "http://mod-torrent.sourceforge.net/",
+    note = "http://mod-torrent.sourceforge.net",
     annote = "An apache plugin in which apache servers serve as apache servers and simultaneously as BitTorrent seeds for certain files (kind of a hack combination of apache with BitTorrent.  Written in C.",
 }
 
 % http://rimey.org/ken/papers/axmedis.pdf has some interesting references for WebTorrent style stuff
 
 @misc{opera,
-    author = "Opera web browser + BitTorrent Announcement",
-    note = "http://operawatch.blogspot.com/2005/07/opera-adds-support-for-bit-torrent.html",
-    annote = "Opera Web Browser announcement that it natively integrates and supports BitTorrent downloads in the latest version of its browser.  Notice that it does not natively switch to this style of download, only perform it.",
-    year=2005,
+    author = "Opera",
+    title = {{Opera Integrates BitTorrent in Upcoming Browser}},
+    note = "http://www.opera.com/press/releases/2006/02/06",
+    annote = "Opera natively integrates and supports BitTorrent downloads in the latest version of its browser.  
+      Notice that it does not natively switch to this style of download, only perform it.",
+    year=2006,
 }
 
 @misc{foxtorrent,
-  note = "http://code.google.com/p/foxtorrent/",
-  author = "FoxTorrent FireFox BitTorrent inline plugin",
+  note = "http://code.google.com/p/foxtorrent",
+  author= "Tom Jacobs",
+  title = {{FoxTorrent FireFox BitTorrent Inline Plugin}},
   year=2008
 }
 
 @misc{bitlet,
- author = "BitLet - the BitTorrent Applet",
+ author = "Daniele Castagna, and Alessandro Bahgat and Shehata",
+ title = "BitLet - {T}he {B}itTorrent {A}pplet",
  note = "http://www.bitlet.org",
  year = 2010
 }
 
 @misc{ bittorrent_wikipedia,
    author = "Wikipedia",
-   title = "BitTorrent (protocol)--- {W}ikipedia{,} The Free Encyclopedia",
+   title = {{BitTorrent (protocol)--- {W}ikipedia{,} The Free Encyclopedia}},
    year = "2010",
    url = "http://en.wikipedia.org/w/index.php?title=BitTorrent_%28protocol%29&oldid=347835030",
    note = "[Online; accessed 09-March-2010]"
@@ -262,35 +265,35 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
 @misc{fivebean,
   author = {{Fivebean Media, LLC}},
   title = {{FiveBean VPS Hosting FAQ}},
-  url = "http://fivebean.com/vpshosting/vpsfaq.php",
+  note = "http://fivebean.com/vpshosting/vpsfaq.php",
   year = "2010",
-  note = "[Online; accessed 01-April-2010]",
-  annote = "Five Bean has an option for 'unlimited' network at 10 Mbps"
+  note2 = "[Online; accessed 01-April-2010]",
+  annote = "Five Bean has an option for 'unlimited' bandwidth at 10 Mbps"
 }
 
 @misc{comcast,
-  author= "Comcast, Inc.",
-  title = "Comcast High Speed Internet: Speed Comparison",
-  url = "http://www.comcast.com/Corporate/Learn/HighSpeedInternet/speedcomparison.html",
+  author= "Comcast",
+  title = {{Comcast {H}igh {S}peed {I}nternet: Speed Comparison}},
+  note = "http://www.comcast.com/Corporate/Learn/HighSpeedInternet/speedcomparison.html",
   year = "2010",
-  note = "[Online; accessed 01-April-2010]",
+  note2 = "[Online; accessed 01-April-2010]",
   annote = "Comcast Performance (lowest tier) advertises 2 Mbps upload speeds."
   }
 
 @misc{ metalink_wikipedia,
    author = "Wikipedia",
-   title = "Metalink --- {W}ikipedia{,} The Free Encyclopedia",
+   title = {{Metalink --- {W}ikipedia{,} The Free Encyclopedia}},
    year = "2010",
    url = "http://en.wikipedia.org/w/index.php?title=Metalink&oldid=345258395",
    note = "[Online; accessed 09-March-2010]"
 }
 
 @misc{ mod_bw,
- author = "Ivan Barrera A.",
- title = "Summer Of Code Project : Bandwidth Limiter For Apache (mod\_bw)",
+ author = "Ivan Barrera",
+ title = {{Summer Of Code Project : Bandwidth Limiter for Apache (mod\_bw)}},
  year = "2006",
- url = "http://bwmod.sourceforge.net/",
- note = "[Online; accessed 09-March-2010]"
+ note = "http://bwmod.sourceforge.net",
+ note2 = "[Online; accessed 09-March-2010]"
 }
 
 @misc{bittorrent_powerful,
@@ -308,14 +311,15 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
 }
 
 @misc{dijjer,
-    note="http://code.google.com/p/dijjer/",
-    author="Dijjer Development Team",
+    title = {{Dijjer Peer-To-Peer File Distribution}},
+    note="http://code.google.com/p/dijjer",
+    author="Ian Clarke",
     annote="Dijjer provides distributed download for any file on the internet via intercepting url's of the form http://www.dijjer.com/linkToThisFile.  It uses a DHT similar to Freenet to lookup the different blocks, after first getting the hash values of the blocks saved somewhere in the DHT, as well.  It unfortunately is invasive as peers need to cache blocks for which they are not directly concerned, and also its lookup is not totally guaranteed to succeed.",
     year=2006
 }
 
 @misc{resurrect,
-    note="https://addons.mozilla.org/firefox/2570/",
+    note="https://addons.mozilla.org/firefox/2570",
     author="Anthony Lieuallen",
     year={2006},
     month={October},
@@ -323,14 +327,14 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
 }
 
 @misc{allpeers,
-    note="http://www.allpeers.com/",
+    note="http://www.allpeers.com",
     author="The AllPeers Development Team",
     year={2006},
     annote="AllPeers is a firefox plugin that allows shared directories between users."
 }
 
 @misc{zsync,
-    note="http://zsync.moria.org.uk/",
+    note="http://zsync.moria.org.uk",
     author="Colin Phipps",
     title="Zsync optimised rsync over HTTP",
     annote="Zsync allows rsync (block coordination for updating files based on only those blocks in those files which have changed) to perform all of the complex calculation on the client before contacting the server.",
@@ -341,7 +345,7 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
 
 @misc{google_cache,
     annote=" Another recent advent toward combined, distributed download is the recently created google cache system.  The google cache system pre-emptively downloads pages, and downloads only diff's of pages to ones computer, thus saving on bandwidth.  They do not deal with swarming downloads, however.",
-    note="http://webaccelerator.google.com/",
+    note="http://webaccelerator.google.com",
     author="Google, Inc.",
     year=2006,
     month={October},
@@ -370,7 +374,7 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
 }
 
 @article{freenet,
-      title={{Freenet: A distributed anonymous information storage and retrieval system}},
+      title={{Freenet: A Distributed Anonymous Information Storage and Retrieval System}},
         author={Clarke, I. and Sandberg, O. and Wiley, B. and Hong, T.W.},
           journal={Workshop on Design Issues in Anonymity and Unobservability},
             volume={320},
@@ -380,10 +384,11 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
 
 }
 @article{backslash,
-      title={{Peer-to-peer caching schemes to address flash crowds}},
+      title={{Peer-To-Peer Caching Schemes to Address Flash Crowds}},
         author={Stading, T. and Maniatis, P. and Baker, M.},
-          journal={1st International Workshop on Peer-to-Peer Systems (IPTPS 2002)},
+          journal={1st International Workshop on Peer-To-Peer Systems},
             year={2002},
+              pages={203--213},
               publisher={Springer},
               annote="Backslash is a server based system in which servers cache each others content to prevent overload."
 }
@@ -410,10 +415,11 @@ annote="PlanetLab is a global distributed test bed available to researchers for 
 }
 
 @conference{opendht_embarrassing,
-  title={{Fixing the embarrassing slowness of OpenDHT on PlanetLab}},
+  title={{Fixing the Embarrassing Slowness of OpenDHT on PlanetLab}},
   author={Rhea, S. and Chun, B.G. and Kubiatowicz, J. and Shenker, S.},
   booktitle={Proc. of the Second USENIX Workshop on Real, Large Distributed Systems},
-  year={2005}
+  year={2005},
+  pages={25-30}
 }
 
 @article{rabin,
@@ -442,17 +448,18 @@ annote="PlanetLab is a global distributed test bed available to researchers for 
 }
 
 @article{squirrel,
-      title={{Squirrel: A decentralized, peer-to-peer web cache}},
+      title={{Squirrel: A Decentralized, Peer-To-Peer Web Cache}},
         author={Iyer, S. and Rowstron, A. and Druschel, P.},
-          journal={Proceedings of the 21st Annual PODC},
+          journal={Proceedings of the 21st Annual Principles of Distributed Computing},
             year={2002},
-            annote="Squirrel networks the caches of computers residing on a LAN to allow them to lookup files in this shared cache and thereby save on bandwidth, if they have been accessed recently by users.  It does not provide a distributed download, however."
+            annote="Squirrel networks the caches of computers residing on a LAN to allow them to lookup files in this shared cache and thereby save on bandwidth, if they have been accessed recently by users.  It does not provide a distributed download, however.",
+  pages={222},
 
 }
 @article{overhaul,
       title={{Overhaul: Extending HTTP to combat flash crowds}},
         author={Patel, J.A. and Gupta, I.},
-          journal={Lecture notes in computer science, WCW '04},
+          journal={Lecture notes in computer science,Web Caching and Content Delivery Workshop '04},
             pages={34-43},
               publisher={Springer},
               year=2004,
@@ -460,17 +467,19 @@ annote="PlanetLab is a global distributed test bed available to researchers for 
 }
 
 @article{webtorrent,
-  title={{Webtorrent: a bittorrent extension for high availability servers}},
+  title={{Webtorrent: A Bittorrent Extension For High Availability Servers}},
   author={Sivek, G. and Sivek, S. and Wolfe, J. and Zhivich, M.},
-  journal={Webtorrent Mozilla meets BitTorrent as web pages are packaged into larger files which are then served using BitTorrent. To locate this paper you must use google scholar’s cached copy},
+  annote={In Webtorrent Mozilla meets BitTorrent as web pages are packaged into larger files which are then served using BitTorrent. To locate this paper you must use google scholar’s cached copy},
   publisher={Citeseer},
   year=2004
 }
 
+
+
 @article{pseudoserving,
       title={{Pseudo-Serving: A User-Responsible Paradigm for Internet Access}},
         author={Kong, K. and Ghosal, D.},
-          journal={WWW6 / Computer Networks},
+          journal={Computer Networks and ISDN Systems},
             volume={29},
               number={8-13},
                 pages={1053-1064},
@@ -481,14 +490,14 @@ annote="PlanetLab is a global distributed test bed available to researchers for 
 @article{avalanche,
       title={{Network Coding for Large Scale Content Distribution}},
         author={Gkantsidis, C. and Rodriguez, P. and others},
-          journal={Proceedings of IEEE Infocom},
+          journal={Proceedings of IEEE INFOCOM},
             year={2005},
       annote="Avalanche is a BitTorrent like protocol that uses Forward Error correcting codes to make it so that clients only need to download a certain percentage of the total blocks to then be able to recreate the entire original file.  They show this helps with some rare block problems, especially for faster peers."
 }
 @article{osprey,
-      title={{Osprey: peer-to-peer enabled content distribution}},
+      title={{Osprey: Peer-To-Peer Enabled Content Distribution}},
         author={Reuning, J. and Jones, P.},
-          journal={Proceedings of the 5th ACM/IEEE-CS joint conference on Digital libraries},
+          journal={Proceedings of the 5th ACM/IEEE-CS Joint Conference on Digital Libraries},
             pages={396-396},
               year={2005},
                 publisher={ACM Press New York, NY, USA},
@@ -587,7 +596,7 @@ sectionWired -- the rest of this is old stuff from some other paper
 @inproceedings{adv,
   author = " Rajendra V. Boppana and Satyadeva P. Konduru ",
   title = "{ An Adaptive Distance Vector Routing Algorithm for Mobile, Ad Hoc Networks }",
-  booktitle = " IEEE INFOCOM ",
+  booktitle = "IEEE INFOCOM",
   year = " 2001 "}
 
 @inproceedings{olsr,
@@ -600,7 +609,7 @@ sectionWired -- the rest of this is old stuff from some other paper
 @inproceedings{ tora,
   author = "Vincent D. Park and M. Scott Corson",
   title = "A Highly Adaptive Distributed Routing Algorithm for Mobile Wireless Networks",
-  booktitle = "{INFOCOM} (3)",
+  booktitle = "{INFOCOM}",
   pages = "1405-1413",
   year = "1997",
 }
@@ -757,8 +766,8 @@ sectionWired -- the rest of this is old stuff from some other paper
 
 @article{ content_location,
 	author = "Kunwadee Sripanidkulchai, Bruce Maggs, and Hui Zhang",
-	title = "{Efficient Content Location Using Interest-Based Locality in Peer-to-Peer Systems}",
-	journal = "IEEE Infocom",
+	title = "{Efficient Content Location Using Interest-Based Locality in Peer-To-Peer Systems}",
+	journal = "IEEE INFOCOM",
 	month = "April",
 	year = "2003"
 }

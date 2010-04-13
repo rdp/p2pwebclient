@@ -157,7 +157,8 @@ With $R$ at 5 KBps, median download times are 40 seconds, with $R$ at 40 KBps, d
 a low of 13 seconds with $R$ set to 160 KBps. Higher values than 160 KBps, however, result in slower downloads.  $R$ set to 1 MBps has a median download time of 30 seconds. 
 
 <%= figure_directory 'vr_unnamed502788_dR_fromStart_5000by_fixed_settingAndMajorTimes_8_times_0.0666666666666667s__10s_100000B_255000BPS_5000s_10s_2.0s_100000B', 
-  'vary_dr', 'Varying R', 'download_times' => true %> 
+  'vary_dr', 'Varying R', 'download_times' => true #, 'death_reasons' => true 
+  %> 
 
 We next vary $W$, the amount of recent download history used to calculate $R$. Our hypothesis is that 
 a small value for $W$ will cause the calculation to be too sensitive and thus slow download times because it will be inaccurate. 
