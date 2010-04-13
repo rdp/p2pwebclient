@@ -8,6 +8,8 @@ Fix that one graph for the real thesis.
 
 ------------maybe don't have to? --------------------
 
+note: no intelligent peer selection
+
 do a 30 MB run with a single cheater or something like that. Yeah.
 
 add a "real" comparison graph
