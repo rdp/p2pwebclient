@@ -6,6 +6,8 @@ Presentation that rox
 
 ------------maybe don't have to? --------------------
 
+do a 30 MB run with a single cheater or something like that. Yeah.
+
 add a "real" comparison graph
 
 note: system can be gamed quite easily currently, I'd imagine (even destructively)
