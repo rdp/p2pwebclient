@@ -8,6 +8,8 @@ Fix that one graph for the real thesis.
 
 ------------maybe don't have to? --------------------
 
+add transition causes for my p2p run (interesting graph)
+
 note: no intelligent peer selection
 
 do a 30 MB run with a single cheater or something like that. Yeah.
