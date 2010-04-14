@@ -84,7 +84,7 @@ annote="LURP is a file discovery protocol that uses UDP to ping the broadcast ar
   title={{Analyzing and Improving a BitTorrent Networks Performance Mechanisms}},
   author={Bharambe, A.R. and Herley, C. and Padmanabhan, V.N.},
   booktitle={Proceedings of IEEE INFOCOM},
-  pages={}
+  pages={1-12},
   volume={378},
   year={2006},
 }
@@ -124,11 +124,9 @@ annote="LURP is a file discovery protocol that uses UDP to ping the broadcast ar
         author={Wang, L. and Park, K. and Pang, R. and Pai, V. and Peterson, L.},
           journal={Proceedings of the USENIX 2004 Annual Technical Conference},
             year={2004},
-              pages={14},
-
       annote="CoDeen has heart-beat monitor of its neighbors, so it knows to direct queries only to live neighbors.  It accomplishes this by downloading small HTTP files and using pings to determine liveness, among other things.  When large files are requested (i.e. many different proxies request the same large file), it uses a kind of 'multi-cast' from one peer through a tree expansion stream to the others (which assumes that the first peer in the stream is fast).  This is bad if the tree is non-optimal, but reasonable if the original server is slow so that that won't make a difference.  CoDeen at least once in their experiments, ran out of bandwidth (i.e. saturated a single proxy connection which many members were using."
-
 }
+
 @inproceedings{ cfs,
       author = "Frank Dabek and M. Frans Kaashoek and David Karger and Robert Morris and Ion Stoica",
         title = "Wide-area cooperative storage with {CFS}",
@@ -158,7 +156,7 @@ annote="CoBlitz is used within CoDeen to allow members to cache large files in a
 annote="The search avoids hot spots and leverages locality by creating concentric DHT's.  Each node is a member of several DHT rings representing nodes who are within certain proximity of it (and to each other).  It creates these rings with expanding size--i.e. DHT for nodes within 100ms, and one within 500ms, and one with global scope.  Members first query the DHT of nodes close to them, then the next ring up, then the next, until they find a node that has cached the file, or it is not found.  This allows them to use DHT queries for 'close' nodes, first (reducing latency), and to contact members who are close.  Coral does well in finding local copies of files quickly.  Coral relies on a central access point for redirection, and does not have automatic fall over to swarming download, though it does have excellent locality properties. Coral pages are 'cached' by accessing a url like http://outside.page.nyud.net:8090/subdir/pagename."
 }
  
-@article{akamai,
+@misc{akamai,
       title={{Akamai EdgeSuite Content Distribution Network}},
         author={Akamai},
           note={http://www.akamai.com/en/html/services/edgesuite.html},
@@ -248,8 +246,8 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
 }
 
 @misc{bitlet,
- author = "Daniele Castagna, and Alessandro Bahgat and Shehata",
- title = "BitLet - {T}he {B}itTorrent {A}pplet",
+ author = "Daniele Castagna and Alessandro Bahgat and Shehata",
+ title = "BitLet - {T}he {B}it{T}orrent {A}pplet",
  note = "http://www.bitlet.org",
  year = 2010
 }
@@ -258,7 +256,7 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
    author = "Wikipedia",
    title = {{BitTorrent (protocol)--- {W}ikipedia{,} The Free Encyclopedia}},
    year = "2010",
-   note = {{http://en.wikipedia.org/w/index.php?title=BitTorrent\_\%28protocol\%29\&oldid=347835030}},
+   note = {{http://en.wikipedia.org/wiki/BitTorrent\_(protocol)}},
    note2 = "[Online; accessed 09-March-2010]"
 }
 
@@ -284,7 +282,7 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
    author = "Wikipedia",
    title = {{Metalink --- {W}ikipedia{,} The Free Encyclopedia}},
    year = "2010",
-   note = {{http://en.wikipedia.org/w/index.php?title=Metalink\&oldid=345258395}},
+   note = {{http://en.wikipedia.org/wiki/Metalink}},
    note2 = "[Online; accessed 09-March-2010]"
 }
 
@@ -373,16 +371,17 @@ annote="In CoopNet the server assigns peers to others who are 'close in IP' (sam
                 annote="Vivaldi gives a system where you can place yourself on a 2D plane, as if the Internet were just one plane, so it give syou reliable coordinates.  Useful for locating close neighbors."
 }
 
-@article{freenet,
-      title={{Freenet: A Distributed Anonymous Information Storage and Retrieval System}},
-        author={Clarke, I. and Sandberg, O. and Wiley, B. and Hong, T.W.},
-          journal={Workshop on Design Issues in Anonymity and Unobservability},
-            volume={320},
-              year={2000},
-                publisher={Springer},
-                annote="Freenet is an anonymous lookup for web pages.  It uses a DHT style lookup where queries tend toward peers that tend to have the block, and uses intermediate caching."
-
+@conference{freenet,
+  title={{Freenet: A Distributed Anonymous Information Storage and Retrieval System}},
+  author={Clarke, I. and Sandberg, O. and Wiley, B. and Hong, T.},
+  booktitle={Designing Privacy Enhancing Technologies},
+  pages={46--66},
+  year={2009},
+  organization={Springer},
+  annote="Freenet is an anonymous lookup for web pages.  It uses a DHT style lookup where queries tend toward peers that tend to have the block, and uses intermediate caching."
 }
+
+
 @article{backslash,
       title={{Peer-To-Peer Caching Schemes to Address Flash Crowds}},
         author={Stading, T. and Maniatis, P. and Baker, M.},
@@ -453,7 +452,7 @@ annote="PlanetLab is a global distributed test bed available to researchers for 
           journal={Proceedings of the 21st Annual Principles of Distributed Computing},
             year={2002},
             annote="Squirrel networks the caches of computers residing on a LAN to allow them to lookup files in this shared cache and thereby save on bandwidth, if they have been accessed recently by users.  It does not provide a distributed download, however.",
-  pages={222},
+  pages={213-222},
 
 }
 @article{overhaul,
@@ -466,11 +465,12 @@ annote="PlanetLab is a global distributed test bed available to researchers for 
       annote="Overhaul is a server system in which the server starts serving only blocks of a file when it becomes overloaded, while connecting peers to each other to download the various blocks.  The authors show that `chunking' (splitting the file into blocks) immensely benefits the system in its strength against flash crowds."
 }
 
-@article{webtorrent,
+@misc{webtorrent,
   title={{Webtorrent: A BitTorrent Extension For High Availability Servers}},
   author={Sivek, G. and Sivek, S. and Wolfe, J. and Zhivich, M.},
   annote={In Webtorrent Mozilla meets BitTorrent as web pages are packaged into larger files which are then served using BitTorrent. To locate this paper you must use google scholar’s cached copy},
   publisher={Citeseer},
+  note={{http://pdos.csail.mit.edu/6.824-2004/reports/jwolfe.pdf}},
   year=2004
 }
 
@@ -759,7 +759,7 @@ sectionWired -- the rest of this is old stuff from some other paper
 
 @inproceedings{imperatives,
   author = "I.  Chlamatac and M. Conti and J. Liu ",
-  title = "{Mobile Ad Hoc Networking: Imperatives and Challenges}",
+  title = {{Mobile Ad Hoc Networking: Imperatives and Challenges}},
   booktitle = "Ad Hoc Networks 1 pp. 13-64",
   month = " ",
   year = "2003" }

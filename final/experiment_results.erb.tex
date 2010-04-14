@@ -217,7 +217,7 @@ We next measure the effect block size has on download time. We download a 100 KB
 Figure \ref{fig:vary_block_size} shows that 32 KB blocks result
 in the quickest downloads.  This is faster because downloading more blocks allow our system to download 
 blocks from several peers simultaneously, without redundancy.  In this case a block size of 32 KB results in a total 3 blocks, and since $b$ by default is 5, all 3 blocks
-are downloaded simultaneously. 32 KB blocks were also shown to be most effective in \cite{32_kb_blocks}.
+are downloaded simultaneously. 32 KB blocks were also shown to be most effective in \cite{zappala}.
 
 <%= figure_directory 'vr_unnamed240998_blockSize', 'vary_block_size', 'Varying block size', 'download_times' => true  %>
 
