@@ -1,20 +1,16 @@
 ====================actually really todo (in order of priority):
 
-Presentation that papers
-
 Presentation that rox
 
-Fix that one graph for the real thesis.
-
 ------------maybe don't have to? --------------------
-
-add transition causes for my p2p run (interesting graph)
 
 note: no intelligent peer selection
 
 do a 30 MB run with a single cheater or something like that. Yeah.
 
-add a "real" comparison graph
+add a "real" comparison graph, since it was so popular
+
+
 
 note: system can be gamed quite easily currently, I'd imagine (even destructively)
 
@@ -44,6 +40,7 @@ add a stat on how much overall was wasted...oh wait you can calculate that anywa
 with start and end times, can I find a correlation (30MB)
 
 %% TODO could put in some cool graphs of a single run of p2p vs. cs--at least the first few files that is quite interesting :)
+
 %% TODO we never got the stats for > 25 peers/s for yanc transfer
 
 an opendht how you do stink test
