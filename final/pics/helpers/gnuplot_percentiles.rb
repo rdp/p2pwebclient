@@ -133,8 +133,8 @@ class P2PPlot
     end
 
     def setup_normal plot
-#      plot.terminal 'pdf monochrome'
-      plot.terminal 'pdf'    
+      plot.terminal 'pdf monochrome'
+#      plot.terminal 'pdf'    
     end
 
     #
