@@ -1,16 +1,23 @@
 ====================actually really todo (in order of priority):
 
-Presentation that rox
-
 ------------maybe don't have to? --------------------
 
 note: no intelligent peer selection
 
+
 do a 30 MB run with a single cheater or something like that. Yeah.
 
-add a "real" comparison graph, since it was so popular
+add a "real" comparison graph, since it was so popular in the pres.
+
+re-run initial test with "optimal" discovered params.
 
 
+
+
+also is BT slow *only* because of lack of seeds, or is it also the warmup phase (if the latter, that's another reason why things
+should change and BT isn't a good fit for small files).
+
+empirical, real world tests that BT is slower for OO downloads, like "it really is" (even for openoffice, a relatively )
 
 note: system can be gamed quite easily currently, I'd imagine (even destructively)
 
