@@ -1,7 +1,0 @@
-I think that backing off the origin is only useful for when there are not very many peers listed and more than a few are trying to get a block--i.e. at the beginning of a large hit, or just randomly every so often.  So I would say it tends to not matter as much.
-
-on windows wired conns it only uses like 75% of links, anyway [fix]
-
-better than TCP?
-
-Multiple connections, too? (I have this IP address on this other interface LOL).
